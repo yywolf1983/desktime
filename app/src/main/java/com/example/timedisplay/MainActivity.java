@@ -1,0 +1,1041 @@
+package com.example.timedisplay;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.app.AlertDialog;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class MainActivity extends Activity {
+
+    public SevenSegmentDisplay hour1TextView;
+    public SevenSegmentDisplay hour2TextView;
+    public SevenSegmentDisplay minute1TextView;
+    public SevenSegmentDisplay minute2TextView;
+    public SevenSegmentDisplay second1TextView;
+    public SevenSegmentDisplay second2TextView;
+    public ColonDisplay colon1TextView;
+    public ColonDisplay colon2TextView;
+    public TextView dateTextView;
+    public TextView fourPillarsTextView;
+    public TextView ninePalaceExplanation;
+    public TextView detailedInterpretation;
+    public NinePalacePanel ninePalacePanel;
+    private LinearLayout mainLayout;
+    private TimeHandler handler;
+    
+    // 上一次的时间值，用于比较哪些部分发生了变化
+    private int lastHour = -1;
+    private int lastMinute = -1;
+    private int lastSecond = -1;
+    private int lastHour1 = -1;
+    private int lastHour2 = -1;
+    private int lastMinute1 = -1;
+    private int lastMinute2 = -1;
+    private int lastSecond1 = -1;
+    private int lastSecond2 = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        hour1TextView = (SevenSegmentDisplay) findViewById(R.id.hour1TextView);
+        hour2TextView = (SevenSegmentDisplay) findViewById(R.id.hour2TextView);
+        minute1TextView = (SevenSegmentDisplay) findViewById(R.id.minute1TextView);
+        minute2TextView = (SevenSegmentDisplay) findViewById(R.id.minute2TextView);
+        second1TextView = (SevenSegmentDisplay) findViewById(R.id.second1TextView);
+        second2TextView = (SevenSegmentDisplay) findViewById(R.id.second2TextView);
+        colon1TextView = (ColonDisplay) findViewById(R.id.colon1TextView);
+        colon2TextView = (ColonDisplay) findViewById(R.id.colon2TextView);
+        dateTextView = findViewById(R.id.dateTextView);
+        fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
+        ninePalaceExplanation = findViewById(R.id.ninePalaceExplanation);
+        ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
+        mainLayout = findViewById(R.id.mainLayout);
+        
+        // 为九宫格添加点击事件监听器，点击时显示详细解读
+        ninePalacePanel.setOnClickListener(v -> {
+            try {
+                showDetailedInterpretation();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 初始化Handler
+        handler = new TimeHandler(this);
+
+        // 添加触摸监听器，实现触摸唤醒功能
+        mainLayout.setOnTouchListener(new TouchListener(this));
+
+        // 只更新一次时间
+        updateDateTime();
+
+        // 启动时间更新线程
+        TimeRunnable timeRunnable = new TimeRunnable(this);
+        Thread thread = new Thread(timeRunnable);
+        thread.start();
+    }
+
+    // 唤醒设备的方法
+    public void wakeUpDevice() {
+        try {
+            // 获取PowerManager实例
+            android.os.PowerManager powerManager = (android.os.PowerManager) getSystemService(POWER_SERVICE);
+            boolean isScreenOn = powerManager.isInteractive();
+
+            if (!isScreenOn) {
+                // 唤醒屏幕
+                android.os.PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
+                        android.os.PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                                android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                                android.os.PowerManager.ON_AFTER_RELEASE,
+                        "TimeDisplay:WakeLock");
+                wakeLock.acquire(1000); // 保持唤醒1秒钟
+                wakeLock.release();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 公开方法，以便TimeHandler类可以访问它
+    public void updateDateTime() {
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+
+        // 获取当前时间的各个部分
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+        int currentSecond = calendar.get(Calendar.SECOND);
+
+        // 分解每个部分为单个数字
+        int currentHour1 = currentHour / 10;
+        int currentHour2 = currentHour % 10;
+        int currentMinute1 = currentMinute / 10;
+        int currentMinute2 = currentMinute % 10;
+        int currentSecond1 = currentSecond / 10;
+        int currentSecond2 = currentSecond % 10;
+
+        // 格式化日期：yyyy年MM月dd日 EEEE
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA);
+        String dateString = dateFormat.format(now);
+
+        // 检查哪些数字发生了变化
+        if (lastHour1 != currentHour1) {
+            // 小时的第一个数字发生了变化，应用翻页动画
+            animateTimeChange(hour1TextView, currentHour1);
+            lastHour1 = currentHour1;
+        }
+
+        if (lastHour2 != currentHour2) {
+            // 小时的第二个数字发生了变化，应用翻页动画
+            animateTimeChange(hour2TextView, currentHour2);
+            lastHour2 = currentHour2;
+        }
+
+        if (lastMinute1 != currentMinute1) {
+            // 分钟的第一个数字发生了变化，应用翻页动画
+            animateTimeChange(minute1TextView, currentMinute1);
+            lastMinute1 = currentMinute1;
+        }
+
+        if (lastMinute2 != currentMinute2) {
+            // 分钟的第二个数字发生了变化，应用翻页动画
+            animateTimeChange(minute2TextView, currentMinute2);
+            lastMinute2 = currentMinute2;
+        }
+
+        if (lastSecond1 != currentSecond1) {
+            // 秒的第一个数字发生了变化，应用翻页动画
+            animateTimeChange(second1TextView, currentSecond1);
+            lastSecond1 = currentSecond1;
+        }
+
+        if (lastSecond2 != currentSecond2) {
+            // 秒的第二个数字发生了变化，应用翻页动画
+            animateTimeChange(second2TextView, currentSecond2);
+            lastSecond2 = currentSecond2;
+        }
+
+        // 更新日期
+        dateTextView.setText(dateString);
+
+        // 更新四柱显示
+        updateFourPillars(now);
+
+        // 更新背景为黑色
+        updateBackground();
+    }
+
+    // 对单个时间部分应用七段管风格的切换动画
+    private void animateTimeChange(final SevenSegmentDisplay display, final int newDigit) {
+        // 创建七段管风格的切换动画
+        android.animation.AnimatorSet animatorSet = new android.animation.AnimatorSet();
+        
+        // 1. 先将亮度降低，模拟关闭效果
+        android.animation.ObjectAnimator alphaOut = android.animation.ObjectAnimator.ofFloat(display, "alpha", 1f, 0.2f);
+        
+        // 设置动画参数
+        alphaOut.setDuration(150);
+        
+        // 播放关闭动画
+        animatorSet.play(alphaOut);
+        animatorSet.start();
+
+        // 使用单独的监听器类，避免匿名内部类
+        animatorSet.addListener(new TimePartUpdateListener(display, newDigit));
+    }
+
+    // 单独的动画监听器类，用于处理单个时间部分的七段管风格切换效果
+    private static class TimePartUpdateListener extends android.animation.AnimatorListenerAdapter {
+        private SevenSegmentDisplay display;
+        private int newDigit;
+
+        public TimePartUpdateListener(SevenSegmentDisplay display, int newDigit) {
+            this.display = display;
+            this.newDigit = newDigit;
+        }
+
+        @Override
+        public void onAnimationEnd(android.animation.Animator animation) {
+            // 动画结束后更新数字
+            display.setDigit(newDigit);
+
+            // 创建七段管风格的点亮动画
+            android.animation.AnimatorSet animatorSet = new android.animation.AnimatorSet();
+            
+            // 2. 恢复亮度，模拟七段管点亮效果
+            android.animation.ObjectAnimator alphaIn = android.animation.ObjectAnimator.ofFloat(display, "alpha", 0.2f, 1f);
+            
+            // 设置动画参数
+            alphaIn.setDuration(150);
+            
+            // 播放点亮动画
+            animatorSet.play(alphaIn);
+            animatorSet.start();
+        }
+    }
+
+    // 更新背景为深蓝色，保持沉稳风格
+    private void updateBackground() {
+        // 设置背景为深蓝色
+        mainLayout.setBackgroundColor(0xFF0A0A14);
+
+        // 设置七段数码管的固定亮度
+        hour1TextView.setBrightness(0.9f);
+        hour2TextView.setBrightness(0.9f);
+        minute1TextView.setBrightness(0.9f);
+        minute2TextView.setBrightness(0.9f);
+        second1TextView.setBrightness(0.9f);
+        second2TextView.setBrightness(0.9f);
+        
+        // 设置九宫格亮度
+        ninePalacePanel.setBrightness(0.9f);
+        
+        // 设置冒号亮度，与七段数码管保持一致
+        if (colon1TextView != null) {
+            colon1TextView.setBrightness(0.9f);
+        }
+        if (colon2TextView != null) {
+            colon2TextView.setBrightness(0.9f);
+        }
+        
+        // 设置日期和四柱文字颜色，使用新添加的颜色资源
+        dateTextView.setTextColor(0xFF87CEEB); // sky_blue
+        fourPillarsTextView.setTextColor(0xFFADD8E6); // light_blue
+        ninePalaceExplanation.setTextColor(0xFF00BFFF); // deep_sky_blue
+    }
+
+    // 更新四柱显示
+    private void updateFourPillars(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // 转换为1-12
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        
+        // 计算四柱
+        String yearPillar = calculateYearPillar(year, month, day);
+        String monthPillar = calculateMonthPillar(year, month, day, yearPillar.substring(0, 1));
+        String dayPillar = calculateDayPillar(year, month, day);
+        String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
+        
+        // 格式化四柱显示，移除"年月日时"几个字
+        String fourPillars = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
+        fourPillarsTextView.setText(fourPillars);
+        
+        // 更新奇门派盘
+        ninePalacePanel.calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar);
+
+        // 更新九宫格解释
+        updateNinePalaceExplanation(yearPillar, monthPillar, dayPillar, timePillar);
+    }
+
+    // 天干数组
+    private static final String[] TIANGAN = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
+    // 地支数组
+    private static final String[] DIZHI = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
+    // 月支表
+    private static final String[] MONTH_ZHI_LIST = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
+    // 五虎遁诀
+    private static final java.util.HashMap<String, String> WUHUDUN = new java.util.HashMap<String, String>();
+    // 日上起时法
+    private static final java.util.HashMap<String, String> WUSHUDUN_MAP = new java.util.HashMap<String, String>();
+    
+    // 月份到月支的映射
+    private static final java.util.HashMap<Integer, String> MONTH_ZHI_MAP = new java.util.HashMap<Integer, String>();
+    
+    // 静态初始化块
+    static {
+        // 初始化五虎遁诀
+        WUHUDUN.put("甲", "丙");
+        WUHUDUN.put("己", "丙");
+        WUHUDUN.put("乙", "戊");
+        WUHUDUN.put("庚", "戊");
+        WUHUDUN.put("丙", "庚");
+        WUHUDUN.put("辛", "庚");
+        WUHUDUN.put("丁", "壬");
+        WUHUDUN.put("壬", "壬");
+        WUHUDUN.put("戊", "甲");
+        WUHUDUN.put("癸", "甲");
+        
+        // 初始化日上起时法
+        WUSHUDUN_MAP.put("甲", "甲");
+        WUSHUDUN_MAP.put("己", "甲");
+        WUSHUDUN_MAP.put("乙", "丙");
+        WUSHUDUN_MAP.put("庚", "丙");
+        WUSHUDUN_MAP.put("丙", "戊");
+        WUSHUDUN_MAP.put("辛", "戊");
+        WUSHUDUN_MAP.put("丁", "庚");
+        WUSHUDUN_MAP.put("壬", "庚");
+        WUSHUDUN_MAP.put("戊", "壬");
+        WUSHUDUN_MAP.put("癸", "壬");
+        
+        // 初始化月份到月支的映射
+        MONTH_ZHI_MAP.put(1, "丑");
+        MONTH_ZHI_MAP.put(2, "寅");
+        MONTH_ZHI_MAP.put(3, "卯");
+        MONTH_ZHI_MAP.put(4, "辰");
+        MONTH_ZHI_MAP.put(5, "巳");
+        MONTH_ZHI_MAP.put(6, "午");
+        MONTH_ZHI_MAP.put(7, "未");
+        MONTH_ZHI_MAP.put(8, "申");
+        MONTH_ZHI_MAP.put(9, "酉");
+        MONTH_ZHI_MAP.put(10, "戌");
+        MONTH_ZHI_MAP.put(11, "亥");
+        MONTH_ZHI_MAP.put(12, "子");
+    }
+
+    // 计算年柱
+    private String calculateYearPillar(int year, int month, int day) {
+        // 以立春为年分界
+        if (month < 2 || (month == 2 && day < 4)) {
+            year = year - 1;
+        }
+        
+        // 计算年干支（1900年为庚子年）
+        int baseYear = 1900; // 庚子年
+        int baseIndex = 36;  // 庚子年在60甲子中的索引
+        
+        int yearDiff = year - baseYear;
+        int yearIndex = (baseIndex + yearDiff) % 60;
+        
+        int yearGanIndex = yearIndex % 10;
+        int yearZhiIndex = yearIndex % 12;
+        
+        String yearGan = TIANGAN[yearGanIndex];
+        String yearZhi = DIZHI[yearZhiIndex];
+        
+        return yearGan + yearZhi;
+    }
+    
+    // 获取月支
+    private String getMonthZhi(int month, int day) {
+        // 2月4日立春后为寅月
+        if (month == 2 && day >= 4) {
+            return "寅";
+        } else if (month == 2 && day < 4) {
+            return "丑";
+        }
+        
+        return MONTH_ZHI_MAP.get(month);
+    }
+
+    // 计算月柱
+    private String calculateMonthPillar(int year, int month, int day, String yearGan) {
+        String monthZhi = getMonthZhi(month, day);
+        
+        // 使用五虎遁诀计算月干
+        String yinMonthGan = WUHUDUN.get(yearGan);
+        if (yinMonthGan == null) {
+            yinMonthGan = "丙";
+        }
+        int yinGanIndex = java.util.Arrays.asList(TIANGAN).indexOf(yinMonthGan);
+        
+        // 计算月支对应的偏移量
+        int monthZhiIndex = java.util.Arrays.asList(MONTH_ZHI_LIST).indexOf(monthZhi);
+        int monthGanIndex = (yinGanIndex + monthZhiIndex) % 10;
+        String monthGan = TIANGAN[monthGanIndex];
+        
+        return monthGan + monthZhi;
+    }
+
+    // 计算日柱
+    private String calculateDayPillar(int year, int month, int day) {
+        try {
+            // 创建目标日期
+            java.util.Calendar targetCalendar = java.util.Calendar.getInstance();
+            targetCalendar.set(year, month - 1, day);
+            
+            // 创建基准日期（1900年1月1日为甲午日）
+            java.util.Calendar baseCalendar = java.util.Calendar.getInstance();
+            baseCalendar.set(1900, 0, 1);
+            
+            // 计算与基准日期的天数差
+            long targetTime = targetCalendar.getTimeInMillis();
+            long baseTime = baseCalendar.getTimeInMillis();
+            long daysDiff = (targetTime - baseTime) / (1000 * 60 * 60 * 24);
+            
+            // 计算干支索引（1900年1月1日为甲午日，索引为30）
+            int baseGanzhiIndex = 30;
+            int ganzhiIndex = (baseGanzhiIndex + (int)daysDiff) % 60;
+            
+            // 计算天干地支
+            int dayGanIndex = ganzhiIndex % 10;
+            int dayZhiIndex = ganzhiIndex % 12;
+            
+            String dayGan = TIANGAN[dayGanIndex];
+            String dayZhi = DIZHI[dayZhiIndex];
+            
+            return dayGan + dayZhi;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "甲午"; // 默认值
+        }
+    }
+
+    // 计算时柱（带日柱天干）
+    private String calculateTimePillar(int hour, int minute, String dayGan) {
+        // 处理分钟，45分后进入下一个时辰
+        int adjustedHour = hour;
+        if (minute >= 45) {
+            adjustedHour = (hour + 1) % 24;
+        }
+        
+        // 确定时支
+        String hourZhi = "子";
+        int hourZhiIndex = 0;
+        
+        // 时辰对应表
+        String[][] shizhiTable = {
+            {"子", "23", "1", "0"},
+            {"丑", "1", "3", "1"},
+            {"寅", "3", "5", "2"},
+            {"卯", "5", "7", "3"},
+            {"辰", "7", "9", "4"},
+            {"巳", "9", "11", "5"},
+            {"午", "11", "13", "6"},
+            {"未", "13", "15", "7"},
+            {"申", "15", "17", "8"},
+            {"酉", "17", "19", "9"},
+            {"戌", "19", "21", "10"},
+            {"亥", "21", "23", "11"}
+        };
+        
+        for (String[] entry : shizhiTable) {
+            String zhi = entry[0];
+            int start = Integer.parseInt(entry[1]);
+            int end = Integer.parseInt(entry[2]);
+            int index = Integer.parseInt(entry[3]);
+            
+            if (start <= end) {
+                if (start <= adjustedHour && adjustedHour < end) {
+                    hourZhi = zhi;
+                    hourZhiIndex = index;
+                    break;
+                }
+            } else {
+                if (adjustedHour >= start || adjustedHour < end) {
+                    hourZhi = zhi;
+                    hourZhiIndex = index;
+                    break;
+                }
+            }
+        }
+        
+        // 计算时干（日上起时法）
+        String startGan = WUSHUDUN_MAP.get(dayGan);
+        if (startGan == null) {
+            startGan = "甲";
+        }
+        int startGanIndex = java.util.Arrays.asList(TIANGAN).indexOf(startGan);
+        
+        // 计算时干
+        int hourGanIndex = (startGanIndex + hourZhiIndex) % 10;
+        String hourGan = TIANGAN[hourGanIndex];
+        
+        return hourGan + hourZhi;
+    }
+
+    // 更新九宫格解释
+    private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
+        // 基于实际派盘数据生成综合运势分析
+        StringBuilder explanation = new StringBuilder();
+        explanation.append("🌟 当前运势\n");
+        explanation.append("----------------\n");
+        
+        // 计算实际的派盘数据
+        String monthZhi = (monthPillar != null && monthPillar.length() >= 2) ? monthPillar.substring(1, 2) : "子";
+        boolean isYangDun = isYangDun(monthZhi);
+        int ju = getJuShu(monthZhi, isYangDun);
+        
+        // 提取时间柱的天干地支
+        String timeGan = timePillar != null && timePillar.length() >= 1 ? timePillar.substring(0, 1) : "甲";
+        String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
+        
+        // 计算九宫格数据
+        int[] doorPositions = arrangeEightDoors(ju, isYangDun, timeZhi);
+        int[] starPositions = arrangeNineStars(ju, isYangDun, timeGan);
+        Object[] xunShouInfo = getXunShouInfo(timeGan, timeZhi);
+        int zhiFuStarIndex = (int) xunShouInfo[2];
+        
+        // 确定值符星所在宫位
+        int zhiFuPalace = -1;
+        for (int i = 0; i < 9; i++) {
+            if (starPositions[i] == zhiFuStarIndex) {
+                zhiFuPalace = i;
+                break;
+            }
+        }
+        if (zhiFuPalace == -1) {
+            zhiFuPalace = 4; // 默认使用中五宫
+        }
+        
+        // 方位信息
+        String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
+        
+        // 找出吉门方位
+        int luckyCount = 0;
+        for (int i = 0; i < 9; i++) {
+            int doorIndex = doorPositions[i];
+            String door = getDoorName(doorIndex);
+            if (door.equals("开") || door.equals("休") || door.equals("生")) {
+                luckyCount++;
+            }
+        }
+        
+        // 生成综合运势分析
+        if (luckyCount >= 3) {
+            explanation.append("📊 整体：运势上扬，机遇显现\n");
+            explanation.append("🎯 建议：把握" + (isYangDun ? "阳遁" : "阴遁") + ju + "局优势\n");
+            explanation.append("🚀 方向：宜主动出击，拓展发展\n");
+        } else if (luckyCount >= 1) {
+            explanation.append("📊 整体：运势平稳，稳中有进\n");
+            explanation.append("🎯 建议：在" + (isYangDun ? "阳遁" : "阴遁") + ju + "局中稳步前行\n");
+            explanation.append("🛡️ 策略：抓住机遇，防范风险\n");
+        } else {
+            explanation.append("📊 整体：运势低迷，需谨慎行事\n");
+            explanation.append("🎯 建议：在" + (isYangDun ? "阳遁" : "阴遁") + ju + "局中养精蓄锐\n");
+            explanation.append("🛡️ 策略：守正出奇，等待时机\n");
+        }
+        
+        // 贵人提示
+        explanation.append("👑 贵人：" + DIRECTIONS[zhiFuPalace] + "方位有助力\n");
+        
+        // 设置解释文本
+        ninePalaceExplanation.setText(explanation.toString());
+        // 优化字体显示
+        ninePalaceExplanation.setTextSize(11);
+        ninePalaceExplanation.setTypeface(ninePalaceExplanation.getTypeface(), android.graphics.Typeface.BOLD);
+    }
+    
+    // 获取门名称
+    private String getDoorName(int doorIndex) {
+        String[] EIGHT_DOORS = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
+        if (doorIndex >= 0 && doorIndex < EIGHT_DOORS.length) {
+            return EIGHT_DOORS[doorIndex];
+        }
+        return "未知";
+    }
+    
+    // 基于九宫格星门组合计算吉凶分数
+    private int calculateLuckScore(String[][] palaceData) {
+        // 吉星：天辅、天心、天禽、天任
+        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
+        // 吉门：开、休、生
+        String[] luckyDoors = {"开", "休", "生"};
+        
+        int score = 0;
+        
+        // 计算每个宫位的吉凶分数
+        for (int i = 0; i < 9; i++) {
+            String star = palaceData[i][0];
+            String door = palaceData[i][1];
+            
+            // 吉星加1分
+            for (String luckyStar : luckyStars) {
+                if (luckyStar.equals(star)) {
+                    score++;
+                    break;
+                }
+            }
+            
+            // 吉门加1分
+            for (String luckyDoor : luckyDoors) {
+                if (luckyDoor.equals(door)) {
+                    score++;
+                    break;
+                }
+            }
+        }
+        
+        return score;
+    }
+
+    // 根据时间调整屏幕亮度
+    private void adjustScreenBrightness() {
+        try {
+            // 获取Window实例
+            android.view.Window window = getWindow();
+            android.view.WindowManager.LayoutParams layoutParams = window.getAttributes();
+
+            // 设置中等亮度，平衡显示效果和电池消耗
+            layoutParams.screenBrightness = 0.5f;
+
+            // 应用亮度设置
+            window.setAttributes(layoutParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 从线程中调用的方法，用于发送消息更新时间
+    public void sendMessageToUpdateTime() {
+        Message message = handler.obtainMessage();
+        message.what = 1;
+        handler.sendMessage(message);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 应用进入后台时，减少资源消耗
+        // 注意：由于我们使用的是后台线程，这里可以考虑暂停线程
+        // 但为了简单起见，我们暂时不做修改，因为线程会在应用销毁时自动停止
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 应用回到前台时，立即更新时间
+        updateDateTime();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 应用销毁时，清理资源
+        handler.removeCallbacksAndMessages(null);
+    }
+    
+    // 显示当前派盘的详细解读
+    private void showDetailedInterpretation() {
+        // 获取当前时间的四柱
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // 转换为1-12
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        
+        // 计算四柱
+        String yearPillar = calculateYearPillar(year, month, day);
+        String monthPillar = calculateMonthPillar(year, month, day, yearPillar.substring(0, 1));
+        String dayPillar = calculateDayPillar(year, month, day);
+        String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
+        
+        // 生成详细解读
+        String interpretation = generateDetailedInterpretation(yearPillar, monthPillar, dayPillar, timePillar);
+        
+        // 显示解读对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("奇门遁甲详细解读")
+               .setMessage(interpretation)
+               .setPositiveButton("确定", null)
+               .show();
+    }
+    
+    // 生成详细解读
+    private String generateDetailedInterpretation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
+        StringBuilder sb = new StringBuilder();
+        
+        // 基本信息（简要）
+        sb.append("当前四柱: " + (yearPillar != null ? yearPillar : "未知") + " " + (monthPillar != null ? monthPillar : "未知") + " " + (dayPillar != null ? dayPillar : "未知") + " " + (timePillar != null ? timePillar : "未知") + "\n\n");
+        
+        // 阴阳遁和用局数
+        String monthZhi = (monthPillar != null && monthPillar.length() >= 2) ? monthPillar.substring(1, 2) : "子";
+        boolean isYangDun = isYangDun(monthZhi);
+        int ju = getJuShu(monthZhi, isYangDun);
+        
+        sb.append("奇门盘: " + (isYangDun ? "阳遁" : "阴遁") + ju + "局\n\n");
+        
+        // 使用实际的奇门遁甲算法计算九宫信息
+        String[] NINE_STARS = {"天蓬", "天芮", "天冲", "天辅", "天禽", "天心", "天柱", "天任", "天英"};
+        String[] EIGHT_DOORS = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
+        String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
+        
+        // 提取四柱的天干地支
+        String timeGan = timePillar != null && timePillar.length() >= 1 ? timePillar.substring(0, 1) : "甲";
+        String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
+        
+        // 计算九宫格数据
+        String[] diPanTianGan = arrangeDiPanTianGan(ju, isYangDun);
+        int[] starPositions = arrangeNineStars(ju, isYangDun, timeGan);
+        int[] doorPositions = arrangeEightDoors(ju, isYangDun, timeZhi);
+        
+        // 确定值符值使
+        Object[] xunShouInfo = getXunShouInfo(timeGan, timeZhi);
+        int zhiFuStarIndex = (int) xunShouInfo[2];
+        int zhiShiDoorIndex = (int) xunShouInfo[3];
+        
+        // 找到值符星所在宫位
+        int zhiFuPalace = -1;
+        for (int i = 0; i < 9; i++) {
+            if (starPositions[i] == zhiFuStarIndex) {
+                zhiFuPalace = i;
+                break;
+            }
+        }
+        
+        // 确保值符宫位有效
+        if (zhiFuPalace == -1) {
+            zhiFuPalace = 4; // 默认使用中五宫
+        }
+        
+        // 排八神
+        int[] godPositions = arrangeEightGods(zhiFuPalace, isYangDun, timeGan);
+        
+        // 找出吉门方位
+        StringBuilder luckyDirections = new StringBuilder();
+        boolean first = true;
+        for (int i = 0; i < 9; i++) {
+            int doorIndex = doorPositions[i];
+            String door = EIGHT_DOORS[doorIndex];
+            if (door.equals("开") || door.equals("休") || door.equals("生")) {
+                if (!first) {
+                    luckyDirections.append("、");
+                }
+                luckyDirections.append(DIRECTIONS[i]);
+                first = false;
+            }
+        }
+        
+        // 找出凶门方位
+        StringBuilder unluckyDirections = new StringBuilder();
+        first = true;
+        for (int i = 0; i < 9; i++) {
+            int doorIndex = doorPositions[i];
+            String door = EIGHT_DOORS[doorIndex];
+            if (door.equals("死") || door.equals("惊") || door.equals("伤")) {
+                if (!first) {
+                    unluckyDirections.append("、");
+                }
+                unluckyDirections.append(DIRECTIONS[i]);
+                first = false;
+            }
+        }
+        
+        // 核心建议
+        sb.append("📋 核心建议\n");
+        sb.append("==================\n\n");
+        
+        // 方位建议
+        sb.append("🧭 方位建议\n");
+        if (luckyDirections.length() > 0) {
+            sb.append("✅ 吉方: " + luckyDirections.toString() + "，适宜开展重要活动\n");
+        }
+        if (unluckyDirections.length() > 0) {
+            sb.append("⚠️  凶方: " + unluckyDirections.toString() + "，宜避开\n");
+        }
+        sb.append("✅ 首选：东方、东南方\n");
+        sb.append("⚠️ 次选：西南方、中方、西北方\n");
+        sb.append("❌ 避开：北方、西方、东北方、南方\n\n");
+        
+        // 时间建议
+        sb.append("⏰ 时间建议\n");
+        sb.append("✅ 吉时：上午9-11点、下午1-3点\n");
+        sb.append("❌ 凶时：晚上7-9点、晚上9-11点\n\n");
+        
+        // 事项建议
+        sb.append("📝 事项建议\n");
+        sb.append("✅ 适宜：商务活动、求职面试、学习考试、健康调理、文化教育\n");
+        sb.append("⚠️ 注意：财务安全、身体健康、人际关系、交通安全、防小人\n\n");
+        
+        // 贵人提示
+        sb.append("🌟 贵人提示\n");
+        sb.append("值符(" + NINE_STARS[zhiFuStarIndex] + ")、值使(" + EIGHT_DOORS[zhiShiDoorIndex] + ")所在方位易得助力\n\n");
+        
+        // 总结
+        sb.append("💡 总结\n");
+        sb.append("==================\n\n");
+        sb.append("整体运势平稳，东方、东南方为大吉方位。\n");
+        sb.append("选择吉方办事，避开凶方，关注贵人方位。\n");
+        sb.append("结合自身情况，趋吉避凶，灵活应对。\n\n");
+        sb.append("🎊 祝福：愿吉星高照，万事如意！\n");
+        
+        return sb.toString();
+    }
+    
+    // 排地盘天干
+    private String[] arrangeDiPanTianGan(int ju, boolean isYangDun) {
+        String[] baseTianGan = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        String[] result = new String[9];
+        
+        if (isYangDun) {
+            // 阳遁：从用局数-1的位置开始
+            int startIndex = ju - 1;
+            for (int i = 0; i < 9; i++) {
+                result[(startIndex + i) % 9] = baseTianGan[i];
+            }
+        } else {
+            // 阴遁：从9-用局数的位置开始
+            int startIndex = 9 - ju;
+            for (int i = 0; i < 9; i++) {
+                result[(startIndex + i) % 9] = baseTianGan[i];
+            }
+        }
+        
+        return result;
+    }
+    
+    // 排九星
+    private int[] arrangeNineStars(int ju, boolean isYangDun, String timeGan) {
+        int[] baseStars = {0, 1, 2, 3, 4, 5, 6, 7, 8}; // 天蓬、天任、天冲、天辅、天英、天芮、天柱、天心、天禽
+        int[] result = new int[9];
+        
+        if (isYangDun) {
+            // 阳遁：顺排
+            int startIndex = ju - 1;
+            for (int i = 0; i < 9; i++) {
+                result[(startIndex + i) % 9] = baseStars[i];
+            }
+        } else {
+            // 阴遁：逆排
+            int startIndex = 9 - ju;
+            for (int i = 0; i < 9; i++) {
+                result[(startIndex + i) % 9] = baseStars[8 - i];
+            }
+        }
+        
+        return result;
+    }
+    
+    // 排八门
+    private int[] arrangeEightDoors(int ju, boolean isYangDun, String timeZhi) {
+        int[] baseDoors = {0, 1, 2, 3, 4, 5, 6, 7}; // 休、生、伤、杜、景、死、惊、开
+        int[] result = new int[9];
+        
+        if (isYangDun) {
+            // 阳遁：顺排
+            int startIndex = ju - 1;
+            for (int i = 0; i < 8; i++) {
+                result[(startIndex + i) % 9] = baseDoors[i];
+            }
+        } else {
+            // 阴遁：逆排
+            int startIndex = 9 - ju;
+            for (int i = 0; i < 8; i++) {
+                result[(startIndex + i) % 9] = baseDoors[7 - i];
+            }
+        }
+        
+        // 中五宫借用坤二宫的门
+        result[4] = result[1];
+        
+        return result;
+    }
+    
+    // 获取旬首信息
+    private Object[] getXunShouInfo(String timeGan, String timeZhi) {
+        String[][] xunShouTable = {
+            {"甲", "子", "戊", "0", "1"},
+            {"甲", "戌", "戊", "0", "1"},
+            {"甲", "申", "戊", "0", "1"},
+            {"甲", "午", "戊", "0", "1"},
+            {"甲", "辰", "戊", "0", "1"},
+            {"甲", "寅", "戊", "0", "1"},
+            {"乙", "丑", "己", "1", "2"},
+            {"乙", "亥", "己", "1", "2"},
+            {"乙", "酉", "己", "1", "2"},
+            {"乙", "未", "己", "1", "2"},
+            {"乙", "巳", "己", "1", "2"},
+            {"乙", "卯", "己", "1", "2"},
+            {"丙", "寅", "庚", "2", "3"},
+            {"丙", "子", "庚", "2", "3"},
+            {"丙", "戌", "庚", "2", "3"},
+            {"丙", "申", "庚", "2", "3"},
+            {"丙", "午", "庚", "2", "3"},
+            {"丙", "辰", "庚", "2", "3"},
+            {"丁", "卯", "辛", "3", "4"},
+            {"丁", "丑", "辛", "3", "4"},
+            {"丁", "亥", "辛", "3", "4"},
+            {"丁", "酉", "辛", "3", "4"},
+            {"丁", "未", "辛", "3", "4"},
+            {"丁", "巳", "辛", "3", "4"},
+            {"戊", "辰", "壬", "4", "5"},
+            {"戊", "寅", "壬", "4", "5"},
+            {"戊", "子", "壬", "4", "5"},
+            {"戊", "戌", "壬", "4", "5"},
+            {"戊", "申", "壬", "4", "5"},
+            {"戊", "午", "壬", "4", "5"},
+            {"己", "巳", "癸", "5", "6"},
+            {"己", "卯", "癸", "5", "6"},
+            {"己", "丑", "癸", "5", "6"},
+            {"己", "亥", "癸", "5", "6"},
+            {"己", "酉", "癸", "5", "6"},
+            {"己", "未", "癸", "5", "6"},
+            {"庚", "午", "丁", "6", "7"},
+            {"庚", "辰", "丁", "6", "7"},
+            {"庚", "寅", "丁", "6", "7"},
+            {"庚", "子", "丁", "6", "7"},
+            {"庚", "戌", "丁", "6", "7"},
+            {"庚", "申", "丁", "6", "7"},
+            {"辛", "未", "丙", "7", "0"},
+            {"辛", "巳", "丙", "7", "0"},
+            {"辛", "卯", "丙", "7", "0"},
+            {"辛", "丑", "丙", "7", "0"},
+            {"辛", "亥", "丙", "7", "0"},
+            {"辛", "酉", "丙", "7", "0"},
+            {"壬", "申", "乙", "8", "1"},
+            {"壬", "午", "乙", "8", "1"},
+            {"壬", "辰", "乙", "8", "1"},
+            {"壬", "寅", "乙", "8", "1"},
+            {"壬", "子", "乙", "8", "1"},
+            {"壬", "戌", "乙", "8", "1"},
+            {"癸", "酉", "甲", "8", "2"},
+            {"癸", "未", "甲", "8", "2"},
+            {"癸", "巳", "甲", "8", "2"},
+            {"癸", "卯", "甲", "8", "2"},
+            {"癸", "丑", "甲", "8", "2"},
+            {"癸", "亥", "甲", "8", "2"}
+        };
+        
+        for (String[] entry : xunShouTable) {
+            if (entry[0].equals(timeGan) && entry[1].equals(timeZhi)) {
+                return new Object[]{entry[2], entry[1], Integer.parseInt(entry[3]), Integer.parseInt(entry[4])};
+            }
+        }
+        
+        // 默认返回甲子旬
+        return new Object[]{"戊", "子", 0, 1};
+    }
+    
+    // 排八神
+    private int[] arrangeEightGods(int zhiFuPalace, boolean isYangDun, String timeGan) {
+        int[] baseGods = {0, 1, 2, 3, 4, 5, 6, 7}; // 值符、螣蛇、太阴、六合、白虎、玄武、九地、九天
+        int[] result = new int[9];
+        
+        if (isYangDun) {
+            // 阳遁：顺排
+            for (int i = 0; i < 8; i++) {
+                result[(zhiFuPalace + i) % 9] = baseGods[i];
+            }
+        } else {
+            // 阴遁：逆排
+            for (int i = 0; i < 8; i++) {
+                result[(zhiFuPalace + i) % 9] = baseGods[7 - i];
+            }
+        }
+        
+        // 中五宫借用坤二宫的神
+        result[4] = result[1];
+        
+        return result;
+    }
+    
+    // 计算吉凶
+    private String calculateLuck(String star, String door, String god) {
+        // 吉星
+        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
+        // 吉门
+        String[] luckyDoors = {"开", "休", "生"};
+        // 吉神
+        String[] luckyGods = {"值符", "太阴", "六合", "九天"};
+        
+        int score = 0;
+        
+        // 吉星加1分
+        for (String luckyStar : luckyStars) {
+            if (luckyStar.equals(star)) {
+                score++;
+                break;
+            }
+        }
+        
+        // 吉门加1分
+        for (String luckyDoor : luckyDoors) {
+            if (luckyDoor.equals(door)) {
+                score++;
+                break;
+            }
+        }
+        
+        // 吉神加1分
+        for (String luckyGod : luckyGods) {
+            if (luckyGod.equals(god)) {
+                score++;
+                break;
+            }
+        }
+        
+        if (score >= 3) {
+            return "大吉";
+        } else if (score >= 2) {
+            return "吉";
+        } else if (score >= 1) {
+            return "平";
+        } else {
+            return "凶";
+        }
+    }
+    
+    // 判断是否为阳遁
+    private boolean isYangDun(String monthZhi) {
+        if (monthZhi == null) {
+            return true;
+        }
+        int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(monthZhi);
+        return zhiIndex >= 1 && zhiIndex <= 6; // 2月(卯)到7月(申)为阳遁
+    }
+    
+    // 获取用局数
+    private int getJuShu(String monthZhi, boolean isYangDun) {
+        if (monthZhi == null) {
+            return 1;
+        }
+        int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(monthZhi);
+        int month = (zhiIndex + 2) % 12 + 1; // 转换为1-12月
+        
+        // 直接使用月份对应传统用局表
+        int[] MONTH_JU = {1, 8, 1, 3, 4, 6, 9, 2, 9, 7, 6, 4};
+        return MONTH_JU[month - 1];
+    }
+}
