@@ -1,0 +1,19 @@
+package com.example.timedisplay;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
+public class BootReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
+                "android.intent.action.QUICKBOOT_POWERON".equals(intent.getAction()) ||
+                "com.htc.intent.action.QUICKBOOT_POWERON".equals(intent.getAction())) {
+            // 开机完成后启动MainActivity
+            Intent startIntent = new Intent(context, MainActivity.class);
+            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(startIntent);
+        }
+    }
+}
