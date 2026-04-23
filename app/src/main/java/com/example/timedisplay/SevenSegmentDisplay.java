@@ -47,7 +47,7 @@ public class SevenSegmentDisplay extends View {
 
     private void init() {
         segmentPaint = new Paint();
-        segmentPaint.setColor(Color.rgb(180, 180, 180));
+        segmentPaint.setColor(Color.rgb(230, 230, 230));
         segmentPaint.setStyle(Paint.Style.FILL);
         segmentPaint.setAntiAlias(true);
 
@@ -93,7 +93,7 @@ public class SevenSegmentDisplay extends View {
 
         drawSegmentsOutline(canvas, width, height, segmentWidth, segmentMargin, segmentRadius);
 
-        int segmentColor = Color.argb((int)(brightness * 255), 180, 180, 180);
+        int segmentColor = Color.argb((int)(brightness * 255), 230, 230, 230);
         segmentPaint.setColor(segmentColor);
 
         if (segments[0]) {

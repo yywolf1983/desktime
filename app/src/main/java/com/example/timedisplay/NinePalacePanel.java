@@ -337,13 +337,13 @@ public class NinePalacePanel extends View {
     
     // 获取用局数
     private int getJuShu(String monthZhi, boolean isYangDun) {
-        // 根据qimen.py的月份对应用局表
-        // 月份：1 2 3 4 5 6 7 8 9 10 11 12
-        // 用局：1 8 1 3 4 6 9 2 9 7  6  4
-        int[] monthJuMap = {1, 8, 1, 3, 4, 6, 9, 2, 9, 7, 6, 4};
-        
-        // 直接使用当前月份（根据qimen.py输出，当前是2月，用局数是8）
-        return 8;
+        if (monthZhi == null) {
+            return 1;
+        }
+        int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(monthZhi);
+        // 直接使用月份对应传统用局表
+        int[] MONTH_JU = {1, 8, 1, 3, 4, 6, 9, 2, 9, 7, 6, 4};
+        return MONTH_JU[zhiIndex];
     }
     
     // 排地盘天干
