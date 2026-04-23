@@ -29,7 +29,7 @@ public class ColonDisplay extends View {
 
     private void init() {
         colonPaint = new Paint();
-        colonPaint.setColor(Color.rgb(180, 180, 180));
+        colonPaint.setColor(Color.rgb(230, 230, 230));
         colonPaint.setStyle(Paint.Style.FILL);
         colonPaint.setAntiAlias(true);
 
@@ -67,7 +67,7 @@ public class ColonDisplay extends View {
         float topDotCenter = height / 3.0f;
         float bottomDotCenter = height * 2.0f / 3.0f;
 
-        int colonColor = Color.argb((int)(brightness * 255), 180, 180, 180);
+        int colonColor = Color.argb((int)(brightness * 255), 230, 230, 230);
         colonPaint.setColor(colonColor);
 
         canvas.drawCircle(

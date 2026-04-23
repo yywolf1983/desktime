@@ -227,7 +227,9 @@ public class FullNinePalaceActivity extends Activity {
             return true;
         }
         int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(monthZhi);
-        return zhiIndex >= 1 && zhiIndex <= 6;
+        // 2-7月为阳遁，其他月份为阴遁
+        // 寅(2)=1月, 卯(3)=2月, 辰(4)=3月, 巳(5)=4月, 午(6)=5月, 未(7)=6月, 申(8)=7月
+        return zhiIndex >= 2 && zhiIndex <= 8; // 1月(寅)到7月(申)为阳遁
     }
 
     private int getJuShu(String monthZhi, boolean isYangDun) {
@@ -235,9 +237,9 @@ public class FullNinePalaceActivity extends Activity {
             return 1;
         }
         int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(monthZhi);
-        int month = (zhiIndex + 2) % 12 + 1;
+        // 直接使用月份对应传统用局表
         int[] MONTH_JU = {1, 8, 1, 3, 4, 6, 9, 2, 9, 7, 6, 4};
-        return MONTH_JU[month - 1];
+        return MONTH_JU[zhiIndex];
     }
 
     private void calculateAndSetPalaceData(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
@@ -285,7 +287,7 @@ public class FullNinePalaceActivity extends Activity {
             String tianGan = tianPanTianGan[i];
             String diGan = diPanTianGan[i];
 
-            String luck = getLuckSymbol(star, door, god);
+            String luck = getLuckSymbol(star, door);
             String palaceName = PALACE_NAMES[i] + DIRECTIONS[i];
 
             palaceData[i][0] = palaceName;
@@ -297,55 +299,99 @@ public class FullNinePalaceActivity extends Activity {
     }
 
     private String[] arrangeDiPanTianGan(int ju, boolean isYangDun) {
-        String[] baseTianGan = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
-        String[] result = new String[9];
+        String[] diPan = new String[9];
+        String[] tianGanOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        
+        // 确定起始宫位（用局数减1，因为数组从0开始）
+        int startPalace = ju - 1;
+        
         if (isYangDun) {
-            int startIndex = ju - 1;
+            // 阳遁：顺时针排列
             for (int i = 0; i < 9; i++) {
-                result[(startIndex + i) % 9] = baseTianGan[i];
+                int palace = (startPalace + i) % 9;
+                diPan[palace] = tianGanOrder[i];
             }
         } else {
-            int startIndex = 9 - ju;
+            // 阴遁：逆时针排列
             for (int i = 0; i < 9; i++) {
-                result[(startIndex + i) % 9] = baseTianGan[i];
+                int palace = (startPalace - i + 9) % 9;
+                diPan[palace] = tianGanOrder[i];
             }
         }
-        return result;
+        
+        return diPan;
     }
 
     private String[] arrangeNineStars(int ju, boolean isYangDun, String timeGan) {
-        String[] baseStars = {"天蓬", "天芮", "天冲", "天辅", "天禽", "天心", "天柱", "天任", "天英"};
-        String[] result = new String[9];
+        String[] nineStars = new String[9];
+        
+        // 传统九星顺序（与qimen.py一致：天蓬、天芮、天冲、天辅、天禽、天心、天柱、天任、天英）
+        String[] jiuxingOrder = {"天蓬", "天芮", "天冲", "天辅", "天禽", "天心", "天柱", "天任", "天英"};
+        
+        // 按用局数确定起始宫位
+        int startGong = ju - 1;
+        
+        // 阳遁顺排，阴遁逆排
         if (isYangDun) {
-            int startIndex = ju - 1;
             for (int i = 0; i < 9; i++) {
-                result[(startIndex + i) % 9] = baseStars[i];
+                int gongPos = (startGong + i) % 9;
+                nineStars[gongPos] = jiuxingOrder[i];
             }
         } else {
-            int startIndex = 9 - ju;
             for (int i = 0; i < 9; i++) {
-                result[(startIndex + i) % 9] = baseStars[i];
+                int gongPos = (startGong - i + 9) % 9;
+                nineStars[gongPos] = jiuxingOrder[i];
             }
         }
-        return result;
+        
+        return nineStars;
     }
 
     private String[] arrangeEightDoors(int ju, boolean isYangDun, String timeZhi) {
-        String[] baseDoors = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
-        String[] result = new String[9];
-        if (isYangDun) {
-            int startIndex = ju - 1;
-            for (int i = 0; i < 8; i++) {
-                result[(startIndex + i) % 9] = baseDoors[i];
+        String[] eightDoors = new String[9];
+        
+        // 传统八门顺序
+        String[] bamenOrder = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
+        
+        // 时支对应当起始门
+        java.util.Map<String, Integer> shizhiMenMap = new java.util.HashMap<>();
+        shizhiMenMap.put("子", 0);
+        shizhiMenMap.put("丑", 1);
+        shizhiMenMap.put("寅", 2);
+        shizhiMenMap.put("卯", 3);
+        shizhiMenMap.put("辰", 4);
+        shizhiMenMap.put("巳", 5);
+        shizhiMenMap.put("午", 6);
+        shizhiMenMap.put("未", 7);
+        shizhiMenMap.put("申", 0);
+        shizhiMenMap.put("酉", 1);
+        shizhiMenMap.put("戌", 2);
+        shizhiMenMap.put("亥", 3);
+        
+        int startDoor = shizhiMenMap.getOrDefault(timeZhi, 0);
+        
+        // 计算八门位置
+        for (int i = 0; i < 9; i++) {
+            if (i == 4) { // 中五宫
+                eightDoors[i] = "生"; // 传统规则：中五宫借用生门
+                continue;
             }
-        } else {
-            int startIndex = 9 - ju;
-            for (int i = 0; i < 8; i++) {
-                result[(startIndex + i) % 9] = baseDoors[i];
+            
+            int doorIndex;
+            if (isYangDun) {
+                // 阳遁顺排
+                doorIndex = (startDoor + i) % 8;
+            } else {
+                // 阴遁逆排
+                doorIndex = (startDoor - i) % 8;
+                if (doorIndex < 0) {
+                    doorIndex += 8;
+                }
             }
+            eightDoors[i] = bamenOrder[doorIndex];
         }
-        result[4] = result[1];
-        return result;
+        
+        return eightDoors;
     }
 
     private Object[] getXunShouInfo(String timeGan, String timeZhi) {
@@ -422,59 +468,97 @@ public class FullNinePalaceActivity extends Activity {
     }
 
     private String[] arrangeEightGods(int zhiFuPalace, boolean isYangDun, String timeGan) {
-        String[] baseGods = {"值符", "螣蛇", "太阴", "六合", "白虎", "玄武", "九地", "九天"};
-        String[] result = new String[9];
-        if (isYangDun) {
-            for (int i = 0; i < 8; i++) {
-                result[(zhiFuPalace + i) % 9] = baseGods[i];
+        String[] eightGods = new String[9];
+        
+        // 八神顺序：值符、螣蛇、太阴、六合、白虎、玄武、九地、九天
+        String[] bashenOrder = {"值符", "螣蛇", "太阴", "六合", "白虎", "玄武", "九地", "九天"};
+        
+        for (int i = 0; i < 9; i++) {
+            int currentPos;
+            if (isYangDun) {
+                // 阳遁顺排八神
+                currentPos = (zhiFuPalace + i) % 9;
+            } else {
+                // 阴遁逆排八神
+                currentPos = (zhiFuPalace - i) % 9;
+                if (currentPos < 0) {
+                    currentPos += 9;
+                }
             }
-        } else {
-            for (int i = 0; i < 8; i++) {
-                result[(zhiFuPalace + i) % 9] = baseGods[i];
-            }
+            eightGods[currentPos] = bashenOrder[i % 8];
         }
-        result[4] = result[1];
-        return result;
+        
+        return eightGods;
     }
 
     private String[] arrangeTianPanTianGan(String[] diPanTianGan, String timeGan, boolean isYangDun, String[] nineStars, int zhiFuPalace) {
-        String[] result = new String[9];
+        String[] tianPanTianGan = new String[9];
+        
+        // 找到时干在地盘上的位置
+        int shiGanGong = -1;
         for (int i = 0; i < 9; i++) {
-            result[i] = diPanTianGan[i];
+            if (diPanTianGan[i].equals(timeGan)) {
+                shiGanGong = i;
+                break;
+            }
         }
-        return result;
+        
+        // 如果没找到时干在地盘的位置，默认在坎宫
+        if (shiGanGong == -1) {
+            shiGanGong = 0;
+        }
+        
+        // 计算转动量：从值符当前位置转到时干宫位的偏移量
+        int rotation = shiGanGong - zhiFuPalace;
+        
+        // 转动天盘（九星带动天干）
+        for (int i = 0; i < 9; i++) {
+            int sourceIdx;
+            if (isYangDun) {
+                // 阳遁顺转
+                sourceIdx = (i - rotation) % 9;
+                if (sourceIdx < 0) {
+                    sourceIdx += 9;
+                }
+            } else {
+                // 阴遁逆转
+                sourceIdx = (i + rotation) % 9;
+                if (sourceIdx < 0) {
+                    sourceIdx += 9;
+                }
+            }
+            tianPanTianGan[i] = diPanTianGan[sourceIdx];
+        }
+        
+        return tianPanTianGan;
     }
 
     private String getLuckSymbol(String star, String door, String god) {
-        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
-        String[] luckyDoors = {"开", "休", "生"};
-        String[] luckyGods = {"值符", "太阴", "六合", "九天"};
-
-        int score = 0;
-        for (String luckyStar : luckyStars) {
-            if (luckyStar.equals(star)) {
-                score++;
-                break;
-            }
-        }
-        for (String luckyDoor : luckyDoors) {
-            if (luckyDoor.equals(door)) {
-                score++;
-                break;
-            }
-        }
-        for (String luckyGod : luckyGods) {
-            if (luckyGod.equals(god)) {
-                score++;
-                break;
-            }
-        }
-
-        if (score >= 3) {
-            return "大吉";
-        } else if (score >= 2) {
+        // 简单的吉凶判断算法
+        // 吉星：天辅、天心、天禽、天任
+        // 吉门：开、休、生
+        boolean isLuckyStar = (star.equals("天辅") || star.equals("天心") || star.equals("天禽") || star.equals("天任"));
+        boolean isLuckyDoor = (door.equals("开") || door.equals("休") || door.equals("生"));
+        
+        if (isLuckyStar && isLuckyDoor) {
             return "吉";
-        } else if (score >= 1) {
+        } else if (isLuckyStar || isLuckyDoor) {
+            return "平";
+        } else {
+            return "凶";
+        }
+    }
+    
+    private String getLuckSymbol(String star, String door) {
+        // 简单的吉凶判断算法
+        // 吉星：天辅、天心、天禽、天任
+        // 吉门：开、休、生
+        boolean isLuckyStar = (star.equals("天辅") || star.equals("天心") || star.equals("天禽") || star.equals("天任"));
+        boolean isLuckyDoor = (door.equals("开") || door.equals("休") || door.equals("生"));
+        
+        if (isLuckyStar && isLuckyDoor) {
+            return "吉";
+        } else if (isLuckyStar || isLuckyDoor) {
             return "平";
         } else {
             return "凶";
@@ -501,7 +585,7 @@ public class FullNinePalaceActivity extends Activity {
         String[] EIGHT_DOORS = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
         
-        sb.append("═══════ 当前运势解读 ═══════\n\n");
+        sb.append("🔮 当前运势解读 🔮\n\n");
         
         sb.append("【值符值使】\n");
         sb.append("值符星: ").append(zhiFuStar).append(" - ");

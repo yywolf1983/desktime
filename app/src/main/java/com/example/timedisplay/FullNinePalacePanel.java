@@ -45,21 +45,21 @@ public class FullNinePalacePanel extends View {
 
     private void init() {
         gridPaint = new Paint();
-        gridPaint.setColor(Color.argb((int)(brightness * 120), 0, 191, 255));
+        gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setStrokeWidth(2);
         gridPaint.setAntiAlias(true);
 
         textPaint = new Paint();
-        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
+        textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(12);
+        textPaint.setTextSize(11);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
 
         centerPaint = new Paint();
-        centerPaint.setColor(Color.argb((int)(brightness * 180), 0, 102, 255));
+        centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
 
@@ -147,9 +147,9 @@ public class FullNinePalacePanel extends View {
 
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
-        gridPaint.setColor(Color.argb((int)(brightness * 120), 0, 191, 255));
-        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
-        centerPaint.setColor(Color.argb((int)(brightness * 180), 0, 102, 255));
+        gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
+        textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
+        centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
         invalidate();
     }
 }
