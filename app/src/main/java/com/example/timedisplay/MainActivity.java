@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
+import android.content.Intent;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,7 +30,7 @@ public class MainActivity extends Activity {
     public TextView ninePalaceExplanation;
     public TextView detailedInterpretation;
     public NinePalacePanel ninePalacePanel;
-    private LinearLayout mainLayout;
+    private android.view.ViewGroup mainLayout;
     private TimeHandler handler;
     
     // 上一次的时间值，用于比较哪些部分发生了变化
@@ -65,7 +66,8 @@ public class MainActivity extends Activity {
         // 为九宫格添加点击事件监听器，点击时显示详细解读
         ninePalacePanel.setOnClickListener(v -> {
             try {
-                showDetailedInterpretation();
+                Intent intent = new Intent(MainActivity.this, FullNinePalaceActivity.class);
+                startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -494,74 +496,8 @@ public class MainActivity extends Activity {
 
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
-        // 基于实际派盘数据生成综合运势分析
-        StringBuilder explanation = new StringBuilder();
-        explanation.append("🌟 当前运势\n");
-        explanation.append("----------------\n");
-        
-        // 计算实际的派盘数据
-        String monthZhi = (monthPillar != null && monthPillar.length() >= 2) ? monthPillar.substring(1, 2) : "子";
-        boolean isYangDun = isYangDun(monthZhi);
-        int ju = getJuShu(monthZhi, isYangDun);
-        
-        // 提取时间柱的天干地支
-        String timeGan = timePillar != null && timePillar.length() >= 1 ? timePillar.substring(0, 1) : "甲";
-        String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
-        
-        // 计算九宫格数据
-        int[] doorPositions = arrangeEightDoors(ju, isYangDun, timeZhi);
-        int[] starPositions = arrangeNineStars(ju, isYangDun, timeGan);
-        Object[] xunShouInfo = getXunShouInfo(timeGan, timeZhi);
-        int zhiFuStarIndex = (int) xunShouInfo[2];
-        
-        // 确定值符星所在宫位
-        int zhiFuPalace = -1;
-        for (int i = 0; i < 9; i++) {
-            if (starPositions[i] == zhiFuStarIndex) {
-                zhiFuPalace = i;
-                break;
-            }
-        }
-        if (zhiFuPalace == -1) {
-            zhiFuPalace = 4; // 默认使用中五宫
-        }
-        
-        // 方位信息
-        String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
-        
-        // 找出吉门方位
-        int luckyCount = 0;
-        for (int i = 0; i < 9; i++) {
-            int doorIndex = doorPositions[i];
-            String door = getDoorName(doorIndex);
-            if (door.equals("开") || door.equals("休") || door.equals("生")) {
-                luckyCount++;
-            }
-        }
-        
-        // 生成综合运势分析
-        if (luckyCount >= 3) {
-            explanation.append("📊 整体：运势上扬，机遇显现\n");
-            explanation.append("🎯 建议：把握" + (isYangDun ? "阳遁" : "阴遁") + ju + "局优势\n");
-            explanation.append("🚀 方向：宜主动出击，拓展发展\n");
-        } else if (luckyCount >= 1) {
-            explanation.append("📊 整体：运势平稳，稳中有进\n");
-            explanation.append("🎯 建议：在" + (isYangDun ? "阳遁" : "阴遁") + ju + "局中稳步前行\n");
-            explanation.append("🛡️ 策略：抓住机遇，防范风险\n");
-        } else {
-            explanation.append("📊 整体：运势低迷，需谨慎行事\n");
-            explanation.append("🎯 建议：在" + (isYangDun ? "阳遁" : "阴遁") + ju + "局中养精蓄锐\n");
-            explanation.append("🛡️ 策略：守正出奇，等待时机\n");
-        }
-        
-        // 贵人提示
-        explanation.append("👑 贵人：" + DIRECTIONS[zhiFuPalace] + "方位有助力\n");
-        
-        // 设置解释文本
-        ninePalaceExplanation.setText(explanation.toString());
-        // 优化字体显示
-        ninePalaceExplanation.setTextSize(11);
-        ninePalaceExplanation.setTypeface(ninePalaceExplanation.getTypeface(), android.graphics.Typeface.BOLD);
+        // 不显示任何运势文字
+        ninePalaceExplanation.setText("");
     }
     
     // 获取门名称

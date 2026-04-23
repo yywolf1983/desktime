@@ -15,4 +15,14 @@
     <color name="light_cyan">#FFE0FFFF</color>
     <color name="electric_blue">#FF0066FF</color>
     <color name="navy_blue">#FF000080</color>
+
+    <!-- 科技感配色 -->
+    <color name="tech_blue">#FF4A90D9</color>
+    <color name="tech_cyan">#FF2CC7C2</color>
+    <color name="tech_purple">#FF9B59B6</color>
+    <color name="tech_silver">#FFA0AEC0</color>
+    <color name="tech_dark">#FF1A1A2E</color>
+    <color name="tech_gray">#FF4A5568</color>
+    <color name="tech_light_blue">#FF6B9BDB</color>
+    <color name="tech_dark_blue">#FF2D3748</color>
 </resources>

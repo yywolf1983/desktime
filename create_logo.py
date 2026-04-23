@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+import math
+
+def create_logo():
+    width = 512
+    height = 512
+    
+    # Create SVG content
+    svg_content = '''<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A0A14;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFA500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8E8E8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#B8B8B8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E8E8E8;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bgGradient)"/>
+  
+  <!-- Outer circle with glow -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="url(#goldGradient)" stroke-width="2" filter="url(#glow)" opacity="0.8"/>
+  
+  <!-- Inner decorative circles -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#87CEEB" stroke-width="1" opacity="0.3"/>
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#87CEEB" stroke-width="0.5" opacity="0.2"/>
+  
+  <!-- Nine Palace Grid (simplified) -->
+  <g transform="translate(176, 176)">
+    <!-- Grid lines -->
+    <rect x="0" y="0" width="160" height="160" fill="none" stroke="url(#silverGradient)" stroke-width="1.5" opacity="0.6"/>
+    <line x1="53.33" y1="0" x2="53.33" y2="160" stroke="url(#silverGradient)" stroke-width="0.8" opacity="0.4"/>
+    <line x1="106.66" y1="0" x2="106.66" y2="160" stroke="url(#silverGradient)" stroke-width="0.8" opacity="0.4"/>
+    <line x1="0" y1="53.33" x2="160" y2="53.33" stroke="url(#silverGradient)" stroke-width="0.8" opacity="0.4"/>
+    <line x1="0" y1="106.66" x2="160" y2="106.66" stroke="url(#silverGradient)" stroke-width="0.8" opacity="0.4"/>
+    
+    <!-- Center point -->
+    <circle cx="80" cy="80" r="8" fill="url(#goldGradient)" filter="url(#glow)"/>
+    
+    <!-- Eight trigrams positions (simplified dots) -->
+    <circle cx="80" cy="26.67" r="4" fill="#87CEEB" opacity="0.8"/>
+    <circle cx="133.33" cy="80" r="4" fill="#87CEEB" opacity="0.8"/>
+    <circle cx="80" cy="133.33" r="4" fill="#87CEEB" opacity="0.8"/>
+    <circle cx="26.67" cy="80" r="4" fill="#87CEEB" opacity="0.8"/>
+    
+    <!-- Corner dots -->
+    <circle cx="26.67" cy="26.67" r="3" fill="#ADD8E6" opacity="0.6"/>
+    <circle cx="133.33" cy="26.67" r="3" fill="#ADD8E6" opacity="0.6"/>
+    <circle cx="26.67" cy="133.33" r="3" fill="#ADD8E6" opacity="0.6"/>
+    <circle cx="133.33" cy="133.33" r="3" fill="#ADD8E6" opacity="0.6"/>
+  </g>
+  
+  <!-- Time indicator - clock hands style -->
+  <g transform="translate(256, 256)">
+    <!-- Hour hand -->
+    <line x1="0" y1="0" x2="0" y2="-60" stroke="url(#goldGradient)" stroke-width="4" stroke-linecap="round" filter="url(#glow)" transform="rotate(-30)"/>
+    <!-- Minute hand -->
+    <line x1="0" y1="0" x2="0" y2="-90" stroke="url(#silverGradient)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" transform="rotate(60)"/>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="6" fill="url(#goldGradient)" filter="url(#glow)"/>
+  </g>
+  
+  <!-- Decorative outer ring segments -->
+  <g filter="url(#softGlow)">
+    <path d="M 256 56 A 200 200 0 0 1 456 256" fill="none" stroke="url(#goldGradient)" stroke-width="3" opacity="0.6"/>
+    <path d="M 256 456 A 200 200 0 0 1 56 256" fill="none" stroke="url(#goldGradient)" stroke-width="3" opacity="0.6"/>
+  </g>
+  
+  <!-- Yin-Yang inspired accent -->
+  <circle cx="256" cy="130" r="6" fill="#87CEEB" opacity="0.7"/>
+  <circle cx="256" cy="382" r="6" fill="#FFD700" opacity="0.7"/>
+  
+  <!-- Subtle text -->
+  <text x="256" y="470" text-anchor="middle" font-family="serif" font-size="14" fill="#87CEEB" opacity="0.6">奇门遁甲</text>
+  
+</svg>'''
+    
+    with open('/Users/yy/pro-test/time2/logo.svg', 'w', encoding='utf-8') as f:
+        f.write(svg_content)
+    
+    print("Logo SVG created: logo.svg")
+
+if __name__ == "__main__":
+    create_logo()
