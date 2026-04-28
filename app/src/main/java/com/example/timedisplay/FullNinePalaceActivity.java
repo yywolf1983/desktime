@@ -15,6 +15,7 @@ public class FullNinePalaceActivity extends Activity {
     private TextView fullPageTitle;
     private TextView fullPageFourPillars;
     private TextView fullPagePanelInfo;
+    private TextView fullPageDunType;
     private TextView fullPageExplanation;
 
     private static final String[] TIANGAN = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
@@ -70,6 +71,7 @@ public class FullNinePalaceActivity extends Activity {
         fullPageTitle = (TextView) findViewById(R.id.fullPageTitle);
         fullPageFourPillars = (TextView) findViewById(R.id.fullPageFourPillars);
         fullPagePanelInfo = (TextView) findViewById(R.id.fullPagePanelInfo);
+        fullPageDunType = (TextView) findViewById(R.id.fullPageDunType);
         fullPageExplanation = (TextView) findViewById(R.id.fullPageExplanation);
 
         updateFullNinePalace();
@@ -97,7 +99,8 @@ public class FullNinePalaceActivity extends Activity {
         String monthZhi = (monthPillar != null && monthPillar.length() >= 2) ? monthPillar.substring(1, 2) : "子";
         boolean isYangDun = isYangDun(monthZhi);
         int ju = getJuShu(monthZhi, isYangDun);
-        fullPagePanelInfo.setText((isYangDun ? "阳遁" : "阴遁") + ju + "局");
+        fullPageDunType.setText(isYangDun ? "阳遁" : "阴遁");
+        fullPagePanelInfo.setText(ju + "局");
 
         calculateAndSetPalaceData(yearPillar, monthPillar, dayPillar, timePillar);
 

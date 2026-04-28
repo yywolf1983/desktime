@@ -14,89 +14,78 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp">
 
-        <!-- 左侧：九宫格 -->
+        <!-- 左侧：时间信息 -->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginEnd="24dp">
 
-            <com.example.timedisplay.NinePalacePanel
-                android:id="@+id/ninePalacePanel"
-                android:layout_width="220dp"
-                android:layout_height="220dp" />
-
-        </LinearLayout>
-
-        <!-- 右侧：时间信息 -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="start|center_vertical"
-            android:paddingStart="4dp">
-
+            <!-- 时间容器 -->
             <LinearLayout
                 android:id="@+id/timeContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:layout_marginBottom="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="@android:color/transparent">
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/hour1TextView"
-                    android:layout_width="100dp"
-                    android:layout_height="120dp" />
+                    android:layout_width="48dp"
+                    android:layout_height="60dp" />
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/hour2TextView"
-                    android:layout_width="100dp"
-                    android:layout_height="120dp" />
+                    android:layout_width="48dp"
+                    android:layout_height="60dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=":"
-                    android:textSize="80sp"
+                    android:textSize="36sp"
                     android:textColor="#FF87CEEB"
                     android:fontFamily="sans-serif-black"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:shadowColor="#FF87CEEB"
                     android:shadowDx="0"
                     android:shadowDy="0"
-                    android:shadowRadius="6" />
+                    android:shadowRadius="4" />
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/minute1TextView"
-                    android:layout_width="100dp"
-                    android:layout_height="120dp" />
+                    android:layout_width="48dp"
+                    android:layout_height="60dp" />
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/minute2TextView"
-                    android:layout_width="100dp"
-                    android:layout_height="120dp" />
+                    android:layout_width="48dp"
+                    android:layout_height="60dp" />
 
             </LinearLayout>
 
+            <!-- 日期显示 -->
             <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
+                android:textSize="14sp"
                 android:textColor="@color/tech_blue"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:layout_marginTop="16dp"
+                android:layout_marginVertical="4dp"
                 android:letterSpacing="0.08"
                 android:shadowColor="@color/tech_blue"
                 android:shadowDx="0"
@@ -104,15 +93,16 @@
                 android:shadowRadius="3"
                 tools:text="2024年12月31日 星期二" />
 
+            <!-- 四柱显示 -->
             <TextView
                 android:id="@+id/fourPillarsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/tech_cyan"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:layout_marginTop="12dp"
+                android:layout_marginVertical="4dp"
                 android:letterSpacing="0.08"
                 android:shadowColor="@color/tech_cyan"
                 android:shadowDx="0"
@@ -120,25 +110,34 @@
                 android:shadowRadius="3"
                 tools:text="甲辰年 丙子月 乙未日 甲申时" />
 
+            <!-- 九宫格解释 -->
             <TextView
                 android:id="@+id/ninePalaceExplanation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textColor="@color/tech_silver"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:layout_marginTop="4dp"
+                android:layout_marginVertical="4dp"
                 android:letterSpacing="0.08"
-                tools:text="九宫格基于当前四柱信息" />
-
-            <TextView
-                android:id="@+id/detailedInterpretation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                tools:text="九宫格基于当前四柱信息计算" />
 
         </LinearLayout>
+
+        <!-- 右侧：九宫格 -->
+        <com.example.timedisplay.NinePalacePanel
+            android:id="@+id/ninePalacePanel"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center" />
+
+        <!-- 详细解读 -->
+        <TextView
+            android:id="@+id/detailedInterpretation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
     </LinearLayout>
 

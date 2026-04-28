@@ -8,79 +8,93 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:id="@+id/fullNinePalaceLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:gravity="center"
         android:padding="12dp">
 
-        <LinearLayout
+        <!-- 左侧：九宫格 -->
+        <com.example.timedisplay.FullNinePalacePanel
+            android:id="@+id/fullNinePalacePanel"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginEnd="24dp"/>
+
+        <!-- 右侧：信息（可滚动） -->
+        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/fullPageTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="奇门遁甲排盘"
-                android:textColor="#87CEEB"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+            android:fillViewport="true">
 
             <LinearLayout
+                android:id="@+id/fullNinePalaceLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="8dp">
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
 
                 <TextView
-                    android:id="@+id/fullPageFourPillars"
+                    android:id="@+id/fullPageTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ADD8E6"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="16dp"/>
+                    android:text="奇门遁甲排盘"
+                    android:textColor="#87CEEB"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
 
-                <TextView
-                    android:id="@+id/fullPagePanelInfo"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#00BFFF"
-                    android:textSize="13sp"/>
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/fullPageFourPillars"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ADD8E6"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="4dp"/>
 
-            <com.example.timedisplay.FullNinePalacePanel
-                android:id="@+id/fullNinePalacePanel"
-                android:layout_width="200dp"
-                android:layout_height="200dp"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/fullPageDunType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#00BFFF"
+                            android:textSize="18sp"
+                            android:layout_marginEnd="4dp"/>
 
-        <ScrollView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingStart="16dp">
+                        <TextView
+                            android:id="@+id/fullPagePanelInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#00BFFF"
+                            android:textSize="18sp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start">
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/fullPageExplanation"
-                    android:layout_width="wrap_content"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:textColor="#87CEEB"
-                    android:textSize="18sp"
-                    android:lineSpacingExtra="8dp"/>
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="4dp"
+                    android:padding="8dp"/>
 
             </LinearLayout>
+
         </ScrollView>
 
     </LinearLayout>
