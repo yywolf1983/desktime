@@ -42,6 +42,7 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour1TextView"
+<<<<<<< HEAD
                 android:layout_width="80dp"
                 android:layout_height="100dp" />
 
@@ -49,12 +50,25 @@
                 android:id="@+id/hour2TextView"
                 android:layout_width="80dp"
                 android:layout_height="100dp" />
+=======
+                android:layout_width="96dp"
+                android:layout_height="120dp" />
+
+            <com.example.timedisplay.SevenSegmentDisplay
+                android:id="@+id/hour2TextView"
+                android:layout_width="96dp"
+                android:layout_height="120dp" />
+>>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" : "
+<<<<<<< HEAD
                 android:textSize="44sp"
+=======
+                android:textSize="56sp"
+>>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
                 android:textColor="#FF87CEEB"
                 android:fontFamily="sans-serif-light"
                 android:layout_marginStart="4dp"
@@ -62,6 +76,7 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute1TextView"
+<<<<<<< HEAD
                 android:layout_width="80dp"
                 android:layout_height="100dp" />
 
@@ -69,6 +84,15 @@
                 android:id="@+id/minute2TextView"
                 android:layout_width="80dp"
                 android:layout_height="100dp" />
+=======
+                android:layout_width="96dp"
+                android:layout_height="120dp" />
+
+            <com.example.timedisplay.SevenSegmentDisplay
+                android:id="@+id/minute2TextView"
+                android:layout_width="96dp"
+                android:layout_height="120dp" />
+>>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
         </LinearLayout>
 
@@ -77,11 +101,19 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:textSize="22sp"
             android:textColor="@color/tech_blue"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:layout_marginTop="16dp"
+=======
+            android:textSize="18sp"
+            android:textColor="@color/tech_blue"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginTop="12dp"
+>>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
             android:letterSpacing="0.08"
             android:shadowColor="@color/tech_blue"
             android:shadowDx="0"
@@ -94,11 +126,19 @@
             android:id="@+id/fourPillarsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:textSize="20sp"
             android:textColor="@color/tech_cyan"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:layout_marginTop="12dp"
+=======
+            android:textSize="16sp"
+            android:textColor="@color/tech_cyan"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+>>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
             android:letterSpacing="0.08"
             android:shadowColor="@color/tech_cyan"
             android:shadowDx="0"
