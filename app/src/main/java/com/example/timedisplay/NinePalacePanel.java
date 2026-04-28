@@ -88,23 +88,23 @@ public class NinePalacePanel extends View {
     private void init() {
         // 初始化网格画笔
         gridPaint = new Paint();
-        gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
+        gridPaint.setColor(Color.argb((int)(brightness * 150), 0, 191, 255));
         gridPaint.setStyle(Paint.Style.STROKE);
-        gridPaint.setStrokeWidth(2);
+        gridPaint.setStrokeWidth(3);
         gridPaint.setAntiAlias(true);
 
         // 初始化文字画笔
         textPaint = new Paint();
-        textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
+        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(11);
+        textPaint.setTextSize(13);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
 
         // 初始化中宫画笔
         centerPaint = new Paint();
-        centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
+        centerPaint.setColor(Color.argb((int)(brightness * 100), 0, 191, 255));
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
 
@@ -114,7 +114,7 @@ public class NinePalacePanel extends View {
             palaceData[i][0] = PALACE_NAMES[i];
             palaceData[i][1] = "--";
         }
-        
+
         // 设置九宫格为可点击
         setClickable(true);
     }
@@ -212,9 +212,9 @@ public class NinePalacePanel extends View {
     // 设置亮度
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
-        gridPaint.setColor(Color.argb((int)(brightness * 120), 0, 191, 255)); // deep_sky_blue
-        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235)); // sky_blue
-        centerPaint.setColor(Color.argb((int)(brightness * 180), 0, 102, 255)); // electric_blue
+        gridPaint.setColor(Color.argb((int)(brightness * 150), 0, 191, 255));
+        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
+        centerPaint.setColor(Color.argb((int)(brightness * 100), 0, 191, 255));
         invalidate();
     }
     

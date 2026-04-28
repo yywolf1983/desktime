@@ -26,6 +26,10 @@
             android:name=".FullNinePalaceActivity"
             android:exported="false"
             android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".StopwatchActivity"
+            android:exported="false"
+            android:screenOrientation="fullSensor" />
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
