@@ -21,28 +21,24 @@ public class MainActivity extends Activity {
     public SevenSegmentDisplay hour2TextView;
     public SevenSegmentDisplay minute1TextView;
     public SevenSegmentDisplay minute2TextView;
-    public SevenSegmentDisplay second1TextView;
-    public SevenSegmentDisplay second2TextView;
-    public ColonDisplay colon1TextView;
-    public ColonDisplay colon2TextView;
     public TextView dateTextView;
     public TextView fourPillarsTextView;
     public TextView ninePalaceExplanation;
     public TextView detailedInterpretation;
     public NinePalacePanel ninePalacePanel;
     private android.view.ViewGroup mainLayout;
+    private LinearLayout timeContainer;
     private TimeHandler handler;
-    
+    private TimeRunnable timeRunnable;
+    private Thread thread;
+
     // 上一次的时间值，用于比较哪些部分发生了变化
     private int lastHour = -1;
     private int lastMinute = -1;
-    private int lastSecond = -1;
     private int lastHour1 = -1;
     private int lastHour2 = -1;
     private int lastMinute1 = -1;
     private int lastMinute2 = -1;
-    private int lastSecond1 = -1;
-    private int lastSecond2 = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +49,23 @@ public class MainActivity extends Activity {
         hour2TextView = (SevenSegmentDisplay) findViewById(R.id.hour2TextView);
         minute1TextView = (SevenSegmentDisplay) findViewById(R.id.minute1TextView);
         minute2TextView = (SevenSegmentDisplay) findViewById(R.id.minute2TextView);
-        second1TextView = (SevenSegmentDisplay) findViewById(R.id.second1TextView);
-        second2TextView = (SevenSegmentDisplay) findViewById(R.id.second2TextView);
-        colon1TextView = (ColonDisplay) findViewById(R.id.colon1TextView);
-        colon2TextView = (ColonDisplay) findViewById(R.id.colon2TextView);
         dateTextView = findViewById(R.id.dateTextView);
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
         ninePalaceExplanation = findViewById(R.id.ninePalaceExplanation);
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
         mainLayout = findViewById(R.id.mainLayout);
-        
+        timeContainer = findViewById(R.id.timeContainer);
+
+        // 点击时间容器跳转到秒表页面
+        timeContainer.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, StopwatchActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         // 为九宫格添加点击事件监听器，点击时显示详细解读
         ninePalacePanel.setOnClickListener(v -> {
             try {
@@ -83,8 +86,8 @@ public class MainActivity extends Activity {
         updateDateTime();
 
         // 启动时间更新线程
-        TimeRunnable timeRunnable = new TimeRunnable(this);
-        Thread thread = new Thread(timeRunnable);
+        timeRunnable = new TimeRunnable(this);
+        thread = new Thread(timeRunnable);
         thread.start();
     }
 
@@ -96,14 +99,11 @@ public class MainActivity extends Activity {
             boolean isScreenOn = powerManager.isInteractive();
 
             if (!isScreenOn) {
-                // 唤醒屏幕
+                // 使用PARTIAL_WAKE_LOCK唤醒CPU，但不保持屏幕常亮
                 android.os.PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
-                        android.os.PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
-                                android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                                android.os.PowerManager.ON_AFTER_RELEASE,
+                        android.os.PowerManager.PARTIAL_WAKE_LOCK,
                         "TimeDisplay:WakeLock");
-                wakeLock.acquire(1000); // 保持唤醒1秒钟
-                wakeLock.release();
+                wakeLock.acquire(500); // 保持唤醒0.5秒钟，足够处理触摸事件
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +112,8 @@ public class MainActivity extends Activity {
 
     // 公开方法，以便TimeHandler类可以访问它
     public void updateDateTime() {
+        if (hour1TextView == null || dateTextView == null) return;
+
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
@@ -119,15 +121,12 @@ public class MainActivity extends Activity {
         // 获取当前时间的各个部分
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
-        int currentSecond = calendar.get(Calendar.SECOND);
 
         // 分解每个部分为单个数字
         int currentHour1 = currentHour / 10;
         int currentHour2 = currentHour % 10;
         int currentMinute1 = currentMinute / 10;
         int currentMinute2 = currentMinute % 10;
-        int currentSecond1 = currentSecond / 10;
-        int currentSecond2 = currentSecond % 10;
 
         // 格式化日期：yyyy年MM月dd日 EEEE
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA);
@@ -158,18 +157,6 @@ public class MainActivity extends Activity {
             lastMinute2 = currentMinute2;
         }
 
-        if (lastSecond1 != currentSecond1) {
-            // 秒的第一个数字发生了变化，应用翻页动画
-            animateTimeChange(second1TextView, currentSecond1);
-            lastSecond1 = currentSecond1;
-        }
-
-        if (lastSecond2 != currentSecond2) {
-            // 秒的第二个数字发生了变化，应用翻页动画
-            animateTimeChange(second2TextView, currentSecond2);
-            lastSecond2 = currentSecond2;
-        }
-
         // 更新日期
         dateTextView.setText(dateString);
 
@@ -182,50 +169,12 @@ public class MainActivity extends Activity {
 
     // 对单个时间部分应用七段管风格的切换动画
     private void animateTimeChange(final SevenSegmentDisplay display, final int newDigit) {
-        // 创建七段管风格的切换动画
-        android.animation.AnimatorSet animatorSet = new android.animation.AnimatorSet();
-        
-        // 1. 先将亮度降低，模拟关闭效果
-        android.animation.ObjectAnimator alphaOut = android.animation.ObjectAnimator.ofFloat(display, "alpha", 1f, 0.2f);
-        
-        // 设置动画参数
-        alphaOut.setDuration(150);
-        
-        // 播放关闭动画
-        animatorSet.play(alphaOut);
-        animatorSet.start();
+        if (display == null) return;
 
-        // 使用单独的监听器类，避免匿名内部类
-        animatorSet.addListener(new TimePartUpdateListener(display, newDigit));
-    }
-
-    // 单独的动画监听器类，用于处理单个时间部分的七段管风格切换效果
-    private static class TimePartUpdateListener extends android.animation.AnimatorListenerAdapter {
-        private SevenSegmentDisplay display;
-        private int newDigit;
-
-        public TimePartUpdateListener(SevenSegmentDisplay display, int newDigit) {
-            this.display = display;
-            this.newDigit = newDigit;
-        }
-
-        @Override
-        public void onAnimationEnd(android.animation.Animator animation) {
-            // 动画结束后更新数字
+        try {
             display.setDigit(newDigit);
-
-            // 创建七段管风格的点亮动画
-            android.animation.AnimatorSet animatorSet = new android.animation.AnimatorSet();
-            
-            // 2. 恢复亮度，模拟七段管点亮效果
-            android.animation.ObjectAnimator alphaIn = android.animation.ObjectAnimator.ofFloat(display, "alpha", 0.2f, 1f);
-            
-            // 设置动画参数
-            alphaIn.setDuration(150);
-            
-            // 播放点亮动画
-            animatorSet.play(alphaIn);
-            animatorSet.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -234,25 +183,15 @@ public class MainActivity extends Activity {
         // 设置背景为深蓝色
         mainLayout.setBackgroundColor(0xFF0A0A14);
 
-        // 设置七段数码管的固定亮度
-        hour1TextView.setBrightness(0.9f);
-        hour2TextView.setBrightness(0.9f);
-        minute1TextView.setBrightness(0.9f);
-        minute2TextView.setBrightness(0.9f);
-        second1TextView.setBrightness(0.9f);
-        second2TextView.setBrightness(0.9f);
-        
+        // 设置七段数码管的亮度（降低亮度以节省电量）
+        hour1TextView.setBrightness(0.7f);
+        hour2TextView.setBrightness(0.7f);
+        minute1TextView.setBrightness(0.7f);
+        minute2TextView.setBrightness(0.7f);
+
         // 设置九宫格亮度
-        ninePalacePanel.setBrightness(0.9f);
-        
-        // 设置冒号亮度，与七段数码管保持一致
-        if (colon1TextView != null) {
-            colon1TextView.setBrightness(0.9f);
-        }
-        if (colon2TextView != null) {
-            colon2TextView.setBrightness(0.9f);
-        }
-        
+        ninePalacePanel.setBrightness(0.7f);
+
         // 设置日期和四柱文字颜色，使用新添加的颜色资源
         dateTextView.setTextColor(0xFF87CEEB); // sky_blue
         fourPillarsTextView.setTextColor(0xFFADD8E6); // light_blue
@@ -570,16 +509,23 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        // 应用进入后台时，减少资源消耗
-        // 注意：由于我们使用的是后台线程，这里可以考虑暂停线程
-        // 但为了简单起见，我们暂时不做修改，因为线程会在应用销毁时自动停止
+        // 应用进入后台时，停止时间更新线程
+        if (timeRunnable != null) {
+            timeRunnable.stop();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // 应用回到前台时，立即更新时间
+        // 应用回到前台时，立即更新时间并重启线程
         updateDateTime();
+        // 如果线程已停止或不存在，重新启动
+        if (thread == null || !thread.isAlive()) {
+            timeRunnable = new TimeRunnable(this);
+            thread = new Thread(timeRunnable);
+            thread.start();
+        }
     }
 
     @Override
@@ -587,6 +533,13 @@ public class MainActivity extends Activity {
         super.onDestroy();
         // 应用销毁时，清理资源
         handler.removeCallbacksAndMessages(null);
+        // 停止时间更新线程
+        if (timeRunnable != null) {
+            timeRunnable.stop();
+        }
+        if (thread != null) {
+            thread.interrupt();
+        }
     }
     
     // 显示当前派盘的详细解读
