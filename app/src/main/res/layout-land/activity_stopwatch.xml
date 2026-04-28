@@ -3,32 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FF0A0A14">
+    android:background="#FF0A0A14"
+    android:padding="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← 返回"
-            android:textSize="14sp"
-            android:textColor="#FF87CEEB"
-            android:padding="8dp" />
-
-    </LinearLayout>
+        android:text="← 返回"
+        android:textSize="14sp"
+        android:textColor="#FF87CEEB"
+        android:padding="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,19 +31,19 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchHour1"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="68dp"
+                android:layout_height="85dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchHour2"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="68dp"
+                android:layout_height="85dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-                android:textSize="32sp"
+                android:textSize="36sp"
                 android:textColor="#FF87CEEB"
                 android:fontFamily="sans-serif-light"
                 android:layout_marginStart="4dp"
@@ -58,19 +51,19 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchMinute1"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="68dp"
+                android:layout_height="85dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchMinute2"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="68dp"
+                android:layout_height="85dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-                android:textSize="32sp"
+                android:textSize="36sp"
                 android:textColor="#FF87CEEB"
                 android:fontFamily="sans-serif-light"
                 android:layout_marginStart="4dp"
@@ -78,69 +71,48 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchSecond1"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="68dp"
+                android:layout_height="85dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchSecond2"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="68dp"
+                android:layout_height="85dp" />
 
         </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:maxHeight="100dp">
-
-            <LinearLayout
-                android:id="@+id/lapListContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal" />
-
-        </ScrollView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
-        android:paddingBottom="32dp">
-
-        <TextView
-            android:id="@+id/resetButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="重置"
-            android:textSize="16sp"
-            android:textColor="#FFFFFFFF"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:gravity="center"
-            android:background="@drawable/button_secondary_background" />
+            android:layout_marginTop="12dp">
 
-        <View
-            android:layout_width="16dp"
-            android:layout_height="52dp" />
+            <TextView
+                android:id="@+id/resetButton"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:text="重置"
+                android:textSize="16sp"
+                android:textColor="#FFFFFFFF"
+                android:gravity="center"
+                android:background="@drawable/button_secondary_background" />
 
-        <TextView
-            android:id="@+id/startStopButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="开始"
-            android:textSize="16sp"
-            android:textColor="#FF0A0A14"
-            android:gravity="center"
-            android:background="@drawable/button_primary_background" />
+            <View
+                android:layout_width="20dp"
+                android:layout_height="1dp" />
+
+            <TextView
+                android:id="@+id/startStopButton"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:text="开始"
+                android:textSize="16sp"
+                android:textColor="#FF0A0A14"
+                android:gravity="center"
+                android:background="@drawable/button_primary_background" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
