@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
-    android:background="#FF0A0A14"
     tools:context=".MainActivity">
 
-    <com.example.timedisplay.NinePalacePanel
+    <com.example.timedisplay.FrostedGlassBackground
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <com.example.timedisplay.NinePalacePanel
         android:id="@+id/ninePalacePanel"
         android:layout_width="140dp"
         android:layout_height="140dp"
@@ -50,12 +57,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" : "
-                android:textSize="44sp"
+                android:text=":"
+                android:textSize="64sp"
                 android:textColor="#FF87CEEB"
-                android:fontFamily="sans-serif-light"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:fontFamily="sans-serif-black"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:shadowColor="#FF87CEEB"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute1TextView"
@@ -116,9 +127,11 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/detailedInterpretation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+            android:id="@+id/detailedInterpretation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>
