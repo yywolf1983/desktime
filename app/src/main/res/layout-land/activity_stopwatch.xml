@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
-=======
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/stopwatchLayout"
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FF0A0A14"
-<<<<<<< HEAD
     android:padding="16dp">
 
     <TextView
@@ -21,49 +15,18 @@
         android:textColor="#FF87CEEB"
         android:padding="8dp" />
 
-=======
-    tools:context=".StopwatchActivity">
-
-    <!-- 顶部：返回按钮在左上角 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← 返回"
-            android:textSize="14sp"
-            android:textColor="#FF87CEEB"
-            android:padding="8dp" />
-
-    </LinearLayout>
-
-    <!-- 中间：时间显示 -->
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-<<<<<<< HEAD
         android:gravity="center"
         android:paddingBottom="16dp">
 
-=======
-        android:gravity="center">
-
-        <!-- 时间显示 HH : MM : SS -->
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-<<<<<<< HEAD
             android:gravity="center">
 
             <com.example.timedisplay.SevenSegmentDisplay
@@ -75,30 +38,12 @@
                 android:id="@+id/stopwatchHour2"
                 android:layout_width="68dp"
                 android:layout_height="85dp" />
-=======
-            android:gravity="center"
-            android:layout_gravity="center">
-
-            <com.example.timedisplay.SevenSegmentDisplay
-                android:id="@+id/stopwatchHour1"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
-
-            <com.example.timedisplay.SevenSegmentDisplay
-                android:id="@+id/stopwatchHour2"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-<<<<<<< HEAD
                 android:textSize="36sp"
-=======
-                android:textSize="32sp"
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
                 android:textColor="#FF87CEEB"
                 android:fontFamily="sans-serif-light"
                 android:layout_marginStart="4dp"
@@ -106,7 +51,6 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchMinute1"
-<<<<<<< HEAD
                 android:layout_width="68dp"
                 android:layout_height="85dp" />
 
@@ -114,25 +58,12 @@
                 android:id="@+id/stopwatchMinute2"
                 android:layout_width="68dp"
                 android:layout_height="85dp" />
-=======
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
-
-            <com.example.timedisplay.SevenSegmentDisplay
-                android:id="@+id/stopwatchMinute2"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-<<<<<<< HEAD
                 android:textSize="36sp"
-=======
-                android:textSize="32sp"
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
                 android:textColor="#FF87CEEB"
                 android:fontFamily="sans-serif-light"
                 android:layout_marginStart="4dp"
@@ -140,7 +71,6 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchSecond1"
-<<<<<<< HEAD
                 android:layout_width="68dp"
                 android:layout_height="85dp" />
 
@@ -181,61 +111,9 @@
                 android:textColor="#FF0A0A14"
                 android:gravity="center"
                 android:background="@drawable/button_primary_background" />
-=======
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
-
-            <com.example.timedisplay.SevenSegmentDisplay
-                android:id="@+id/stopwatchSecond2"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
         </LinearLayout>
 
     </LinearLayout>
 
-<<<<<<< HEAD
-=======
-    <!-- 底部：控制按钮 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
-        android:paddingBottom="32dp">
-
-        <TextView
-            android:id="@+id/resetButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="重置"
-            android:textSize="16sp"
-            android:textColor="#FFFFFFFF"
-            android:gravity="center"
-            android:background="@drawable/button_secondary_background"
-            android:enabled="false"
-            android:alpha="0.5" />
-
-        <View
-            android:layout_width="16dp"
-            android:layout_height="1dp" />
-
-        <TextView
-            android:id="@+id/startStopButton"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:text="开始"
-            android:textSize="16sp"
-            android:textColor="#FF0A0A14"
-            android:gravity="center"
-            android:background="@drawable/button_primary_background" />
-
-    </LinearLayout>
-
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 </LinearLayout>

@@ -16,7 +16,6 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <!-- 返回按钮 -->
         <TextView
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
@@ -27,7 +26,6 @@
             android:padding="8dp"
             android:layout_marginBottom="8dp" />
 
-        <!-- 时间显示 HH : MM : SS -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +85,6 @@
 
         </LinearLayout>
 
-        <!-- 控制按钮 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -95,12 +92,8 @@
             android:gravity="center"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-<<<<<<< HEAD
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
-=======
-            android:paddingTop="16dp">
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
             <TextView
                 android:id="@+id/resetButton"
@@ -113,20 +106,12 @@
                 android:gravity="center"
                 android:background="@drawable/button_secondary_background"
                 android:enabled="false"
-<<<<<<< HEAD
                 android:alpha="0.5"
                 android:clickable="true" />
 
             <View
                 android:layout_width="12dp"
                 android:layout_height="44dp" />
-=======
-                android:alpha="0.5" />
-
-            <View
-                android:layout_width="12dp"
-                android:layout_height="1dp" />
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
             <TextView
                 android:id="@+id/startStopButton"
@@ -137,24 +122,15 @@
                 android:textSize="14sp"
                 android:textColor="#FF0A0A14"
                 android:gravity="center"
-<<<<<<< HEAD
                 android:background="@drawable/button_primary_background"
                 android:clickable="true" />
-=======
-                android:background="@drawable/button_primary_background" />
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
 
         </LinearLayout>
 
-        <!-- 计次列表 -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-<<<<<<< HEAD
             android:layout_marginTop="16dp"
-=======
-            android:layout_marginTop="12dp"
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:maxHeight="100dp">

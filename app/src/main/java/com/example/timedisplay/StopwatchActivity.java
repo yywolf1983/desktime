@@ -171,18 +171,8 @@ public class StopwatchActivity extends Activity {
         } else {
             startStopButton.setText("开始");
             startStopButton.setTextColor(0xFF0A0A14);
-<<<<<<< HEAD
             resetButton.setEnabled(true);
             resetButton.setAlpha(1.0f);
-=======
-            if (elapsedTime > 0) {
-                resetButton.setEnabled(true);
-                resetButton.setAlpha(1.0f);
-            } else {
-                resetButton.setEnabled(false);
-                resetButton.setAlpha(0.5f);
-            }
->>>>>>> 7d815f07c8614514e3813e90a1967792d56ee227
         }
     }
 
