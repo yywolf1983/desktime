@@ -42,23 +42,23 @@
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/hour1TextView"
-                    android:layout_width="48dp"
-                    android:layout_height="60dp" />
+                    android:layout_width="84dp"
+                    android:layout_height="105dp" />
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/hour2TextView"
-                    android:layout_width="48dp"
-                    android:layout_height="60dp" />
+                    android:layout_width="84dp"
+                    android:layout_height="105dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=":"
-                    android:textSize="36sp"
+                    android:textSize="64sp"
                     android:textColor="#FF87CEEB"
                     android:fontFamily="sans-serif-black"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginEnd="2dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:shadowColor="#FF87CEEB"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -66,13 +66,13 @@
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/minute1TextView"
-                    android:layout_width="48dp"
-                    android:layout_height="60dp" />
+                    android:layout_width="84dp"
+                    android:layout_height="105dp" />
 
                 <com.example.timedisplay.SevenSegmentDisplay
                     android:id="@+id/minute2TextView"
-                    android:layout_width="48dp"
-                    android:layout_height="60dp" />
+                    android:layout_width="84dp"
+                    android:layout_height="105dp" />
 
             </LinearLayout>
 
@@ -81,7 +81,7 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 android:textColor="@color/tech_blue"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
