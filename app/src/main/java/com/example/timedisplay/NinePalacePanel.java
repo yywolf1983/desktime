@@ -15,7 +15,7 @@ public class NinePalacePanel extends View {
     private Paint centerPaint;
     private String[][] palaceData;
     private float brightness = 1.0f;
-    private boolean isSimpleMode = true;
+    private boolean isSimpleMode = false;
 
     // 九宫格布局位置（按照指南针顺序：上北下南，左西右东）
     // 索引对应qimen.py的宫位顺序：0=坎一宫, 1=坤二宫, 2=震三宫, 3=巽四宫, 4=中五宫, 5=乾六宫, 6=兑七宫, 7=艮八宫, 8=离九宫
@@ -88,23 +88,23 @@ public class NinePalacePanel extends View {
     private void init() {
         // 初始化网格画笔
         gridPaint = new Paint();
-        gridPaint.setColor(Color.argb((int)(brightness * 150), 0, 191, 255));
+        gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
         gridPaint.setStyle(Paint.Style.STROKE);
-        gridPaint.setStrokeWidth(3);
+        gridPaint.setStrokeWidth(2);
         gridPaint.setAntiAlias(true);
 
         // 初始化文字画笔
         textPaint = new Paint();
-        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
+        textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(13);
+        textPaint.setTextSize(28);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
 
         // 初始化中宫画笔
         centerPaint = new Paint();
-        centerPaint.setColor(Color.argb((int)(brightness * 100), 0, 191, 255));
+        centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
 
@@ -170,28 +170,16 @@ public class NinePalacePanel extends View {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
             }
 
-            if (isSimpleMode) {
-                // 绘制宫名
-                canvas.drawText(PALACE_NAMES[i], x, y, textPaint);
-                y += 12;
-                
-                // 绘制方向符号
-                String[] directionSymbols = {"⬆", "↙", "➡", "↘", "●", "↖", "⬅", "↗", "⬇"};
-                canvas.drawText(directionSymbols[i], x, y, textPaint);
-                y += 12;
-                
-                // 绘制吉凶
-                canvas.drawText(luck, x, y, textPaint);
-            } else {
-                canvas.drawText(palaceData[i][0], x, y, textPaint);
-                if (dataParts.length > 0) {
-                    y += 14;
-                    canvas.drawText(dataParts[0], x, y, textPaint);
-                }
-                if (dataParts.length > 1) {
-                    y += 14;
-                    canvas.drawText(dataParts[1], x, y, textPaint);
-                }
+            canvas.drawText(palaceData[i][0], x, y, textPaint);
+
+            if (dataParts.length > 0) {
+                y += 32;
+                canvas.drawText(dataParts[0], x, y, textPaint);
+            }
+
+            if (dataParts.length > 1) {
+                y += 32;
+                canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }
     }
@@ -212,9 +200,9 @@ public class NinePalacePanel extends View {
     // 设置亮度
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
-        gridPaint.setColor(Color.argb((int)(brightness * 150), 0, 191, 255));
-        textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
-        centerPaint.setColor(Color.argb((int)(brightness * 100), 0, 191, 255));
+        gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
+        textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
+        centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
         invalidate();
     }
     

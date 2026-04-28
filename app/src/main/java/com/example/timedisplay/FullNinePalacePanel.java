@@ -53,7 +53,7 @@ public class FullNinePalacePanel extends View {
         textPaint = new Paint();
         textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(11);
+        textPaint.setTextSize(28);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
@@ -122,12 +122,12 @@ public class FullNinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += 14;
+                y += 32;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += 14;
+                y += 32;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }

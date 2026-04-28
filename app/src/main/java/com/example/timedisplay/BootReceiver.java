@@ -3,6 +3,7 @@ package com.example.timedisplay;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 public class BootReceiver extends BroadcastReceiver {
     @Override
@@ -10,10 +11,19 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
                 "android.intent.action.QUICKBOOT_POWERON".equals(intent.getAction()) ||
                 "com.htc.intent.action.QUICKBOOT_POWERON".equals(intent.getAction())) {
-            // 开机完成后启动MainActivity
             Intent startIntent = new Intent(context, MainActivity.class);
             startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(startIntent);
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS);
+                try {
+                    context.startActivity(startIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                context.startActivity(startIntent);
+            }
         }
     }
 }

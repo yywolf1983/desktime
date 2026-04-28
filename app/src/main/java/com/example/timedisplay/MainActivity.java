@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,6 +18,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
+
+    private static final int REQUEST_PERMISSIONS_CODE = 1001;
 
     public SevenSegmentDisplay hour1TextView;
     public SevenSegmentDisplay hour2TextView;
@@ -44,6 +48,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        requestPermissionsIfNeeded();
 
         hour1TextView = (SevenSegmentDisplay) findViewById(R.id.hour1TextView);
         hour2TextView = (SevenSegmentDisplay) findViewById(R.id.hour2TextView);
@@ -107,6 +113,40 @@ public class MainActivity extends Activity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void requestPermissionsIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        REQUEST_PERMISSIONS_CODE
+                );
+            }
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (checkSelfPermission(android.Manifest.permission.SCHEDULE_EXACT_ALARM)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.SCHEDULE_EXACT_ALARM},
+                        REQUEST_PERMISSIONS_CODE
+                );
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS_CODE) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    // 权限被拒绝，可以显示提示或继续正常运行（功能可能受限）
+                }
+            }
         }
     }
 

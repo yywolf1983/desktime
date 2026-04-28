@@ -38,7 +38,7 @@ echo "输出目录：$OUT_DIR"
 
 # 设置构建工具路径
 BUILD_TOOLS_DIR="$ANDROID_HOME/build-tools/34.0.0"
-PLATFORM_DIR="$ANDROID_HOME/platforms/android-33"
+PLATFORM_DIR="$ANDROID_HOME/platforms/android-34"
 
 # 检查构建工具是否存在
 if [ ! -d "$BUILD_TOOLS_DIR" ]; then
@@ -58,7 +58,7 @@ echo "使用Android平台版本：33"
 echo "编译资源..."
 AAPT2="$BUILD_TOOLS_DIR/aapt2"
 
-# 编译资源
+# 编译应用资源
 "$AAPT2" compile --dir "$RES_DIR" -o "$OUT_DIR/res/resources.zip"
 
 if [ $? -ne 0 ]; then
@@ -90,13 +90,29 @@ if [ -z "$JAVAC" ]; then
     exit 1
 fi
 
+# 使用项目中预下载的AndroidX库
+ANDROIDX_DIR="$APP_DIR/../libs/appcompat"
+ANDROIDX_JAR="$ANDROIDX_DIR/classes.jar"
+
+if [ -f "$ANDROIDX_JAR" ]; then
+    echo "使用项目中的AndroidX Appcompat库"
+else
+    echo "未找到AndroidX库，使用纯Android API"
+    ANDROIDX_JAR=""
+fi
+
 # 收集所有Java文件
 JAVA_FILES=$(find "$JAVA_DIR" -name "*.java")
 GEN_JAVA_FILES=$(find "$OUT_DIR/gen" -name "*.java")
 
 # 编译Java文件
+CLASSPATH="$PLATFORM_DIR/android.jar:$OUT_DIR/classes"
+if [ -n "$ANDROIDX_JAR" ]; then
+    CLASSPATH="$CLASSPATH:$ANDROIDX_JAR"
+fi
+
 "$JAVAC" -d "$OUT_DIR/classes" \
-    -classpath "$PLATFORM_DIR/android.jar:$OUT_DIR/classes" \
+    -classpath "$CLASSPATH" \
     -source 1.8 -target 1.8 \
     $JAVA_FILES $GEN_JAVA_FILES
 

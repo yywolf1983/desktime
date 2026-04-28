@@ -45,7 +45,7 @@ public class FrostedGlassBackground extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         centerX = w / 2;
         centerY = h / 2;
-        radius = Math.min(w, h) * 0.4f;
+        radius = Math.min(w, h) * 0.55f;
         
         setupPaints(w, h);
     }
@@ -66,7 +66,7 @@ public class FrostedGlassBackground extends View {
             Shader.TileMode.CLAMP
         );
         glowPaint.setShader(glowGradient);
-        glowPaint.setAlpha(150);
+        glowPaint.setAlpha(100);
         
         gridPaint.setColor(0x104A70A0);
         gridPaint.setStrokeWidth(1f);
@@ -123,24 +123,24 @@ public class FrostedGlassBackground extends View {
         
         Paint symbolPaint = new Paint();
         symbolPaint.setColor(0x306A90B0);
-        symbolPaint.setTextSize(20f);
+        symbolPaint.setTextSize(44f);
         symbolPaint.setAntiAlias(true);
         symbolPaint.setTextAlign(Paint.Align.CENTER);
         
         Paint namePaint = new Paint();
         namePaint.setColor(0x255A80A0);
-        namePaint.setTextSize(16f);
+        namePaint.setTextSize(36f);
         namePaint.setAntiAlias(true);
         namePaint.setTextAlign(Paint.Align.CENTER);
         
-        float symbolRadius = radius * 0.6f;
+        float symbolRadius = radius * 0.65f;
         for (int i = 0; i < 8; i++) {
             double angle = Math.PI * 2 * i / 8 - Math.PI / 2;
             float x = (float) (centerX + symbolRadius * Math.cos(angle));
             float y = (float) (centerY + symbolRadius * Math.sin(angle));
             
-            canvas.drawText(baGuaSymbols[i], x, y - 8, symbolPaint);
-            canvas.drawText(baGuaNames[i], x, y + 20, namePaint);
+            canvas.drawText(baGuaSymbols[i], x, y - 16, symbolPaint);
+            canvas.drawText(baGuaNames[i], x, y + 36, namePaint);
         }
         
         Paint linePaint = new Paint();
