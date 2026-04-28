@@ -95,7 +95,8 @@
             android:gravity="center"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:paddingTop="16dp">
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/resetButton"
@@ -108,11 +109,12 @@
                 android:gravity="center"
                 android:background="@drawable/button_secondary_background"
                 android:enabled="false"
-                android:alpha="0.5" />
+                android:alpha="0.5"
+                android:clickable="true" />
 
             <View
                 android:layout_width="12dp"
-                android:layout_height="1dp" />
+                android:layout_height="44dp" />
 
             <TextView
                 android:id="@+id/startStopButton"
@@ -123,7 +125,8 @@
                 android:textSize="14sp"
                 android:textColor="#FF0A0A14"
                 android:gravity="center"
-                android:background="@drawable/button_primary_background" />
+                android:background="@drawable/button_primary_background"
+                android:clickable="true" />
 
         </LinearLayout>
 
@@ -131,7 +134,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:maxHeight="100dp">

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/stopwatchLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FF0A0A14"
-    tools:context=".StopwatchActivity">
+    android:background="#FF0A0A14">
 
-    <!-- 顶部：返回按钮在左上角 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +23,6 @@
 
     </LinearLayout>
 
-    <!-- 中间：时间显示 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -35,13 +30,11 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- 时间显示 HH : MM : SS -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_gravity="center">
+            android:gravity="center">
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchHour1"
@@ -95,9 +88,25 @@
 
         </LinearLayout>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:maxHeight="100dp">
+
+            <LinearLayout
+                android:id="@+id/lapListContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal" />
+
+        </ScrollView>
+
     </LinearLayout>
 
-    <!-- 底部：控制按钮 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -116,13 +125,11 @@
             android:textSize="16sp"
             android:textColor="#FFFFFFFF"
             android:gravity="center"
-            android:background="@drawable/button_secondary_background"
-            android:enabled="false"
-            android:alpha="0.5" />
+            android:background="@drawable/button_secondary_background" />
 
         <View
             android:layout_width="16dp"
-            android:layout_height="1dp" />
+            android:layout_height="52dp" />
 
         <TextView
             android:id="@+id/startStopButton"

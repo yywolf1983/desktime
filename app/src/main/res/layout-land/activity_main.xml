@@ -42,19 +42,19 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour1TextView"
-                android:layout_width="96dp"
-                android:layout_height="120dp" />
+                android:layout_width="80dp"
+                android:layout_height="100dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour2TextView"
-                android:layout_width="96dp"
-                android:layout_height="120dp" />
+                android:layout_width="80dp"
+                android:layout_height="100dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" : "
-                android:textSize="56sp"
+                android:textSize="44sp"
                 android:textColor="#FF87CEEB"
                 android:fontFamily="sans-serif-light"
                 android:layout_marginStart="4dp"
@@ -62,13 +62,13 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute1TextView"
-                android:layout_width="96dp"
-                android:layout_height="120dp" />
+                android:layout_width="80dp"
+                android:layout_height="100dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute2TextView"
-                android:layout_width="96dp"
-                android:layout_height="120dp" />
+                android:layout_width="80dp"
+                android:layout_height="100dp" />
 
         </LinearLayout>
 
@@ -77,11 +77,11 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="22sp"
             android:textColor="@color/tech_blue"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:letterSpacing="0.08"
             android:shadowColor="@color/tech_blue"
             android:shadowDx="0"
@@ -94,11 +94,11 @@
             android:id="@+id/fourPillarsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textColor="@color/tech_cyan"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:letterSpacing="0.08"
             android:shadowColor="@color/tech_cyan"
             android:shadowDx="0"
