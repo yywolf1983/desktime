@@ -74,8 +74,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#87CEEB"
-            android:textSize="16sp"
-            android:lineSpacingExtra="6dp"
+            android:textSize="20sp"
+            android:lineSpacingExtra="8dp"
             android:padding="12dp"/>
 
         </LinearLayout>
