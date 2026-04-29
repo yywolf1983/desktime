@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
+import android.os.SystemClock;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -94,18 +94,23 @@ public class FullNinePalaceActivity extends Activity {
             @Override
             public void run() {
                 updateFullNinePalace();
-                updateHandler.postDelayed(this, UPDATE_INTERVAL);
+                long nextSecond = ((SystemClock.uptimeMillis() / 1000) + 1) * 1000;
+                updateHandler.postAtTime(this, nextSecond);
             }
         };
 
         updateFullNinePalace();
+        long first = ((SystemClock.uptimeMillis() / 1000) + 1) * 1000;
+        updateHandler.postAtTime(updateRunnable, first);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateHandler.removeCallbacks(updateRunnable);
-        updateHandler.post(updateRunnable);
+        updateFullNinePalace();
+        long next = ((SystemClock.uptimeMillis() / 1000) + 1) * 1000;
+        updateHandler.postAtTime(updateRunnable, next);
     }
 
     @Override

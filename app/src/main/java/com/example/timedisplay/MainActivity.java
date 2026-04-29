@@ -32,9 +32,8 @@ public class MainActivity extends Activity {
     public NinePalacePanel ninePalacePanel;
     private android.view.ViewGroup mainLayout;
     private LinearLayout timeContainer;
-    private TimeHandler handler;
-    private TimeRunnable timeRunnable;
-    private Thread thread;
+    private android.os.Handler handler;
+    private Runnable timeRunnable;
 
     // 上一次的时间值，用于比较哪些部分发生了变化
     private int lastHour = -1;
@@ -83,18 +82,19 @@ public class MainActivity extends Activity {
         });
 
         // 初始化Handler
-        handler = new TimeHandler(this);
+        handler = new android.os.Handler(android.os.Looper.getMainLooper());
+        timeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateDateTime();
+                handler.postDelayed(this, 1000);
+            }
+        };
 
-        // 添加触摸监听器，实现触摸唤醒功能
         mainLayout.setOnTouchListener(new TouchListener(this));
 
-        // 只更新一次时间
         updateDateTime();
-
-        // 启动时间更新线程
-        timeRunnable = new TimeRunnable(this);
-        thread = new Thread(timeRunnable);
-        thread.start();
+        handler.postDelayed(timeRunnable, 1000);
     }
 
     // 唤醒设备的方法
@@ -158,52 +158,45 @@ public class MainActivity extends Activity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
 
-        // 获取当前时间的各个部分
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
 
-        // 分解每个部分为单个数字
         int currentHour1 = currentHour / 10;
         int currentHour2 = currentHour % 10;
         int currentMinute1 = currentMinute / 10;
         int currentMinute2 = currentMinute % 10;
 
-        // 格式化日期：yyyy年MM月dd日 EEEE
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA);
         String dateString = dateFormat.format(now);
 
-        // 检查哪些数字发生了变化
+        boolean minuteChanged = (lastMinute1 != currentMinute1) || (lastMinute2 != currentMinute2);
+
         if (lastHour1 != currentHour1) {
-            // 小时的第一个数字发生了变化，应用翻页动画
             animateTimeChange(hour1TextView, currentHour1);
             lastHour1 = currentHour1;
         }
 
         if (lastHour2 != currentHour2) {
-            // 小时的第二个数字发生了变化，应用翻页动画
             animateTimeChange(hour2TextView, currentHour2);
             lastHour2 = currentHour2;
         }
 
         if (lastMinute1 != currentMinute1) {
-            // 分钟的第一个数字发生了变化，应用翻页动画
             animateTimeChange(minute1TextView, currentMinute1);
             lastMinute1 = currentMinute1;
         }
 
         if (lastMinute2 != currentMinute2) {
-            // 分钟的第二个数字发生了变化，应用翻页动画
             animateTimeChange(minute2TextView, currentMinute2);
             lastMinute2 = currentMinute2;
         }
 
-        // 更新日期
         dateTextView.setText(dateString);
 
-        // 更新四柱显示
-        updateFourPillars(now);
+        if (minuteChanged) {
+            updateFourPillars(now);
+        }
 
-        // 更新背景为黑色
         updateBackground();
     }
 
@@ -543,33 +536,23 @@ public class MainActivity extends Activity {
         }
     }
 
-    // 从线程中调用的方法，用于发送消息更新时间
+    // 兼容性方法，防止旧代码报错
     public void sendMessageToUpdateTime() {
-        Message message = handler.obtainMessage();
-        message.what = 1;
-        handler.sendMessage(message);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // 应用进入后台时，停止时间更新线程
-        if (timeRunnable != null) {
-            timeRunnable.stop();
-        }
+        // 应用进入后台时，停止时间更新
+        handler.removeCallbacks(timeRunnable);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // 应用回到前台时，立即更新时间并重启线程
         updateDateTime();
-        // 如果线程已停止或不存在，重新启动
-        if (thread == null || !thread.isAlive()) {
-            timeRunnable = new TimeRunnable(this);
-            thread = new Thread(timeRunnable);
-            thread.start();
-        }
+        handler.removeCallbacks(timeRunnable);
+        handler.postDelayed(timeRunnable, 1000);
     }
 
     @Override
@@ -577,13 +560,6 @@ public class MainActivity extends Activity {
         super.onDestroy();
         // 应用销毁时，清理资源
         handler.removeCallbacksAndMessages(null);
-        // 停止时间更新线程
-        if (timeRunnable != null) {
-            timeRunnable.stop();
-        }
-        if (thread != null) {
-            thread.interrupt();
-        }
     }
     
     // 显示当前派盘的详细解读
