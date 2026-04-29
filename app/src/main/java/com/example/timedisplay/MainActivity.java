@@ -270,6 +270,15 @@ public class MainActivity extends Activity {
     private static final String[] TIANGAN = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
     // 地支数组
     private static final String[] DIZHI = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
+    // 60甲子数组
+    private static final String[] LIUJIAZI = {
+        "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉",
+        "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未",
+        "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳",
+        "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯",
+        "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑",
+        "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
+    };
     // 月支表
     private static final String[] MONTH_ZHI_LIST = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
     // 五虎遁诀
@@ -382,7 +391,7 @@ public class MainActivity extends Activity {
             java.util.Calendar targetCalendar = java.util.Calendar.getInstance();
             targetCalendar.set(year, month - 1, day);
             
-            // 创建基准日期（1900年1月1日为甲午日）
+            // 创建基准日期（1900年1月1日为甲戌日）
             java.util.Calendar baseCalendar = java.util.Calendar.getInstance();
             baseCalendar.set(1900, 0, 1);
             
@@ -391,18 +400,13 @@ public class MainActivity extends Activity {
             long baseTime = baseCalendar.getTimeInMillis();
             long daysDiff = (targetTime - baseTime) / (1000 * 60 * 60 * 24);
             
-            // 计算干支索引（1900年1月1日为甲午日，索引为30）
-            int baseGanzhiIndex = 30;
+            // 计算干支索引（1900年1月1日为甲戌日，索引为10）
+            int baseGanzhiIndex = 10;
             int ganzhiIndex = (baseGanzhiIndex + (int)daysDiff) % 60;
+            if (ganzhiIndex < 0) ganzhiIndex += 60;
             
-            // 计算天干地支
-            int dayGanIndex = ganzhiIndex % 10;
-            int dayZhiIndex = ganzhiIndex % 12;
-            
-            String dayGan = TIANGAN[dayGanIndex];
-            String dayZhi = DIZHI[dayZhiIndex];
-            
-            return dayGan + dayZhi;
+            // 直接从60甲子数组中取
+            return LIUJIAZI[ganzhiIndex];
             
         } catch (Exception e) {
             e.printStackTrace();

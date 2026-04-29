@@ -18,13 +18,13 @@ public class TimeRunnable implements Runnable {
         while (running) {
             try {
                 if (isFirstRun) {
-                    // 首次运行立即更新，然后每60秒更新一次
+                    // 首次运行立即更新，然后每秒更新一次
                     isFirstRun = false;
                     activity.sendMessageToUpdateTime();
-                    Thread.sleep(60000);
+                    Thread.sleep(1000);
                 } else {
-                    // 之后每60秒更新一次（分钟变化时）
-                    Thread.sleep(60000);
+                    // 每秒更新一次
+                    Thread.sleep(1000);
                     if (running) {
                         activity.sendMessageToUpdateTime();
                     }

@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,8 +21,20 @@ public class FullNinePalaceActivity extends Activity {
     private TextView fullPageDunType;
     private TextView fullPageExplanation;
 
+    private static final long UPDATE_INTERVAL = 1000;
+    private Handler updateHandler;
+    private Runnable updateRunnable;
+
     private static final String[] TIANGAN = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
     private static final String[] DIZHI = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
+    private static final String[] LIUJIAZI = {
+        "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉",
+        "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未",
+        "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳",
+        "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯",
+        "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑",
+        "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
+    };
     private static final String[] MONTH_ZHI_LIST = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
     private static final java.util.HashMap<String, String> WUHUDUN = new java.util.HashMap<String, String>();
     private static final java.util.HashMap<String, String> WUSHUDUN_MAP = new java.util.HashMap<String, String>();
@@ -74,7 +89,29 @@ public class FullNinePalaceActivity extends Activity {
         fullPageDunType = (TextView) findViewById(R.id.fullPageDunType);
         fullPageExplanation = (TextView) findViewById(R.id.fullPageExplanation);
 
+        updateHandler = new Handler(Looper.getMainLooper());
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateFullNinePalace();
+                updateHandler.postDelayed(this, UPDATE_INTERVAL);
+            }
+        };
+
         updateFullNinePalace();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateHandler.removeCallbacks(updateRunnable);
+        updateHandler.post(updateRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        updateHandler.removeCallbacks(updateRunnable);
     }
 
     private void updateFullNinePalace() {
@@ -158,13 +195,9 @@ public class FullNinePalaceActivity extends Activity {
             long targetTime = targetCalendar.getTimeInMillis();
             long baseTime = baseCalendar.getTimeInMillis();
             long daysDiff = (targetTime - baseTime) / (1000 * 60 * 60 * 24);
-            int baseGanzhiIndex = 30;
+            int baseGanzhiIndex = 10;
             int ganzhiIndex = (baseGanzhiIndex + (int)daysDiff) % 60;
-            int dayGanIndex = ganzhiIndex % 10;
-            int dayZhiIndex = ganzhiIndex % 12;
-            String dayGan = TIANGAN[dayGanIndex];
-            String dayZhi = DIZHI[dayZhiIndex];
-            return dayGan + dayZhi;
+            return LIUJIAZI[ganzhiIndex];
         } catch (Exception e) {
             e.printStackTrace();
             return "甲午";
