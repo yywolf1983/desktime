@@ -252,8 +252,11 @@ public class MainActivity extends Activity {
         String fourPillars = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
         fourPillarsTextView.setText(fourPillars);
         
-        // 更新奇门派盘
-        ninePalacePanel.calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar);
+        // 获取当前节气
+        String jieqi = getJieqi(year, month, day);
+        
+        // 更新奇门派盘（传入节气参数）
+        ninePalacePanel.calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
 
         // 更新九宫格解释
         updateNinePalaceExplanation(yearPillar, monthPillar, dayPillar, timePillar);
@@ -946,5 +949,61 @@ public class MainActivity extends Activity {
         // 直接使用月份对应传统用局表
         int[] MONTH_JU = {1, 8, 1, 3, 4, 6, 9, 2, 9, 7, 6, 4};
         return MONTH_JU[month - 1];
+    }
+    
+    // 获取节气（基于日期）
+    private String getJieqi(int year, int month, int day) {
+        // 节气日期表（简化版，基于公历）
+        // 每个节气的日期范围（月/日）
+        String[][] jieqiDates = {
+            {"立春", "2", "4", "2", "18"},
+            {"雨水", "2", "19", "3", "5"},
+            {"惊蛰", "3", "6", "3", "20"},
+            {"春分", "3", "21", "4", "4"},
+            {"清明", "4", "5", "4", "19"},
+            {"谷雨", "4", "20", "5", "5"},
+            {"立夏", "5", "6", "5", "20"},
+            {"小满", "5", "21", "6", "5"},
+            {"芒种", "6", "6", "6", "20"},
+            {"夏至", "6", "21", "7", "6"},
+            {"小暑", "7", "7", "7", "22"},
+            {"大暑", "7", "23", "8", "7"},
+            {"立秋", "8", "8", "8", "22"},
+            {"处暑", "8", "23", "8", "31"},
+            {"白露", "9", "1", "9", "16"},
+            {"秋分", "9", "17", "10", "7"},
+            {"寒露", "10", "8", "10", "23"},
+            {"霜降", "10", "24", "11", "7"},
+            {"立冬", "11", "8", "11", "22"},
+            {"小雪", "11", "23", "12", "6"},
+            {"大雪", "12", "7", "12", "21"},
+            {"冬至", "12", "22", "1", "4"},
+            {"小寒", "1", "5", "1", "19"},
+            {"大寒", "1", "20", "2", "3"}
+        };
+        
+        for (String[] jieqiEntry : jieqiDates) {
+            String jieqiName = jieqiEntry[0];
+            int startMonth = Integer.parseInt(jieqiEntry[1]);
+            int startDay = Integer.parseInt(jieqiEntry[2]);
+            int endMonth = Integer.parseInt(jieqiEntry[3]);
+            int endDay = Integer.parseInt(jieqiEntry[4]);
+            
+            // 判断日期是否在节气范围内
+            if (startMonth == endMonth) {
+                if (month == startMonth && day >= startDay && day <= endDay) {
+                    return jieqiName;
+                }
+            } else {
+                // 跨月份的情况（如冬至跨12月和1月）
+                if ((month == startMonth && day >= startDay) ||
+                    (month == endMonth && day <= endDay)) {
+                    return jieqiName;
+                }
+            }
+        }
+        
+        // 默认返回立春
+        return "立春";
     }
 }

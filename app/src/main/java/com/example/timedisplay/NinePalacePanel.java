@@ -222,8 +222,8 @@ public class NinePalacePanel extends View {
         return super.onTouchEvent(event);
     }
 
-    // 计算奇门派盘（基于完整传统奇门遁甲理论，与qimen.py算法完全匹配）
-    public void calculateQiMenPanel(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
+    // 计算奇门派盘（基于正统拆补法时家转盘奇门遁甲标准算法）
+    public void calculateQiMenPanel(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
         // 基于四柱信息计算九宫格数据
         String[][] data = new String[9][2];
         
@@ -237,50 +237,45 @@ public class NinePalacePanel extends View {
         String timeGan = timePillar.substring(0, 1);
         String timeZhi = timePillar.substring(1, 2);
         
-        // 1. 确定阴阳遁和用局数
-        boolean isYangDun = isYangDun(monthZhi);
-        int ju = getJuShu(monthZhi, isYangDun);
+        // 1. 确定阴阳遁（根据节气判断）
+        boolean isYangDun = isYangDunByJieqi(jieqi);
         
-        // 2. 排地盘天干（戊、己、庚、辛、壬、癸、丁、丙、乙）
-        String[] diPanTianGan = arrangeDiPanTianGan(ju, isYangDun);
+        // 2. 确定用局数（根据节气和三元）
+        int ju = getJuShuByJieqi(jieqi);
         
-        // 3. 排九星（天蓬、天芮、天冲、天辅、天禽、天心、天柱、天任、天英）
-        String[] nineStars = arrangeNineStars(ju, isYangDun, timeGan);
+        // 3. 排地盘天干（戊、己、庚、辛、壬、癸、丁、丙、乙）
+        // 规则：几局 = 戊落第几宫
+        String[] diPanTianGan = arrangeDiPanTianGanStandard(ju);
         
-        // 4. 排八门（休、生、伤、杜、景、死、惊、开）
-        String[] eightDoors = arrangeEightDoors(ju, isYangDun, timeZhi);
-        
-        // 5. 确定值符值使
+        // 4. 确定旬首、值符、值使
         Object[] xunShouInfo = getXunShouInfo(timeGan, timeZhi);
-        String xunGan = (String) xunShouInfo[0];
-        String xunZhi = (String) xunShouInfo[1];
+        String xunShou = (String) xunShouInfo[0] + (String) xunShouInfo[1];
         String zhiFuStar = (String) xunShouInfo[2];
         String zhiShiDoor = (String) xunShouInfo[3];
         
-        // 找到值符星所在宫位
-        int zhiFuPalace = -1;
-        for (int i = 0; i < 9; i++) {
-            if (nineStars[i].equals(zhiFuStar)) {
-                zhiFuPalace = i;
-                break;
-            }
-        }
+        // 5. 值符落宫：时干在地盘的位置
+        int zhiFuPalace = getShiGanPosition(diPanTianGan, timeGan);
         
-        // 确保值符宫位有效
-        if (zhiFuPalace == -1) {
-            zhiFuPalace = 4; // 默认使用中五宫
-        }
+        // 6. 值使落宫：从旬首宫位顺/逆数时支步数
+        int xunShouPalace = getXunShouPalace(xunShou);
+        int zhiShiPalace = getZhiShiPalace(xunShouPalace, timeZhi, isYangDun);
         
-        // 6. 排天盘（值符加临时干）
-        String[] tianPanTianGan = arrangeTianPanTianGan(diPanTianGan, timeGan, isYangDun, nineStars, zhiFuPalace);
+        // 7. 排九星（值符随时干）
+        String[] nineStars = arrangeNineStarsStandard(zhiFuStar, zhiFuPalace, isYangDun);
         
-        // 7. 排八神（值符、螣蛇、太阴、六合、白虎、玄武、九地、九天）
-        String[] eightGods = arrangeEightGods(zhiFuPalace, isYangDun, timeGan);
+        // 8. 排八门（值使随时支）
+        String[] eightDoors = arrangeEightDoorsStandard(zhiShiDoor, zhiShiPalace, isYangDun);
         
-        // 8. 判断旺衰
+        // 9. 排天盘天干（星动仪随）
+        String[] tianPanTianGan = arrangeTianPanTianGanStandard(diPanTianGan, timeGan, zhiFuPalace, isYangDun);
+        
+        // 10. 排八神（从值符落宫开始）
+        String[] eightGods = arrangeEightGodsStandard(zhiFuPalace, isYangDun);
+        
+        // 11. 判断旺衰
         String[] wangCui = calculateWangCui(dayGan);
         
-        // 9. 计算九宫格数据（按照qimen.py的宫位顺序）
+        // 12. 计算九宫格数据（按照qimen.py的宫位顺序）
         String[] gongwei = {"坎", "坤", "震", "巽", "中", "乾", "兑", "艮", "离"};
         for (int i = 0; i < 9; i++) {
             // 获取当前宫位的星、门、神
@@ -313,6 +308,12 @@ public class NinePalacePanel extends View {
         }
 
         setPalaceData(data);
+    }
+    
+    // 重载方法：兼容旧接口
+    public void calculateQiMenPanel(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
+        // 默认使用春分作为节气（阳遁3局）进行计算
+        calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar, "春分");
     }
     
     // 判断是否为阳遁（立春到立秋之间）
@@ -503,23 +504,31 @@ public class NinePalacePanel extends View {
     
     // 获取旬首信息（基于qimen.py的算法）
     private Object[] getXunShouInfo(String timeGan, String timeZhi) {
-        // 六甲旬首：甲子、甲戌、甲申、甲午、甲辰、甲寅
-        java.util.Map<String, String> liujiaMap = new java.util.HashMap<>();
-        liujiaMap.put("子", "甲子");
-        liujiaMap.put("戌", "甲戌");
-        liujiaMap.put("申", "甲申");
-        liujiaMap.put("午", "甲午");
-        liujiaMap.put("辰", "甲辰");
-        liujiaMap.put("寅", "甲寅");
-        liujiaMap.put("丑", "甲子");
-        liujiaMap.put("亥", "甲戌");
-        liujiaMap.put("酉", "甲申");
-        liujiaMap.put("未", "甲午");
-        liujiaMap.put("巳", "甲辰");
-        liujiaMap.put("卯", "甲寅");
+        String[] liujiazi = {
+            "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉",
+            "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未",
+            "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳",
+            "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯",
+            "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑",
+            "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
+        };
         
-        // 根据时支确定旬首
-        String xunShou = liujiaMap.getOrDefault(timeZhi, "甲子");
+        String shiGanzhi = timeGan + timeZhi;
+        int shiIdx = -1;
+        for (int i = 0; i < liujiazi.length; i++) {
+            if (liujiazi[i].equals(shiGanzhi)) {
+                shiIdx = i;
+                break;
+            }
+        }
+        
+        // 计算属于哪一旬（0-5）
+        String[] xunshouList = {"甲子", "甲戌", "甲申", "甲午", "甲辰", "甲寅"};
+        String xunShou = "甲子";
+        if (shiIdx >= 0) {
+            int xunIndex = shiIdx / 10;
+            xunShou = xunshouList[xunIndex];
+        }
         
         String xunGan = xunShou.substring(0, 1);
         String xunZhi = xunShou.substring(1, 2);
@@ -654,5 +663,242 @@ public class NinePalacePanel extends View {
         } else {
             return "凶";
         }
+    }
+    
+    // ==================== 标准算法方法 ====================
+    
+    // 根据节气判断阴阳遁
+    private boolean isYangDunByJieqi(String jieqi) {
+        String[] yangDunJieqi = {"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", 
+                                "春分", "清明", "谷雨", "立夏", "小满", "芒种"};
+        for (String jq : yangDunJieqi) {
+            if (jq.equals(jieqi)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // 根据节气确定用局数
+    private int getJuShuByJieqi(String jieqi) {
+        java.util.Map<String, Integer> jieqiJuMap = new java.util.HashMap<>();
+        // 阳遁用局表
+        jieqiJuMap.put("冬至", 1);
+        jieqiJuMap.put("小寒", 2);
+        jieqiJuMap.put("大寒", 3);
+        jieqiJuMap.put("立春", 8);
+        jieqiJuMap.put("雨水", 9);
+        jieqiJuMap.put("惊蛰", 1);
+        jieqiJuMap.put("春分", 3);
+        jieqiJuMap.put("清明", 4);
+        jieqiJuMap.put("谷雨", 5);
+        jieqiJuMap.put("立夏", 4);
+        jieqiJuMap.put("小满", 5);
+        jieqiJuMap.put("芒种", 6);
+        // 阴遁用局表
+        jieqiJuMap.put("夏至", 9);
+        jieqiJuMap.put("小暑", 8);
+        jieqiJuMap.put("大暑", 7);
+        jieqiJuMap.put("立秋", 2);
+        jieqiJuMap.put("处暑", 1);
+        jieqiJuMap.put("白露", 9);
+        jieqiJuMap.put("秋分", 7);
+        jieqiJuMap.put("寒露", 6);
+        jieqiJuMap.put("霜降", 5);
+        jieqiJuMap.put("立冬", 6);
+        jieqiJuMap.put("小雪", 5);
+        jieqiJuMap.put("大雪", 4);
+        
+        return jieqiJuMap.getOrDefault(jieqi, 1);
+    }
+    
+    // 排地盘天干（标准算法）
+    // 传统规则：戊一宫、己二宫、庚三宫、辛四宫、壬五宫、癸六宫、丁七宫、丙八宫、乙九宫
+    // 无论阳遁阴遁，地盘天干顺序固定不变
+    private String[] arrangeDiPanTianGanStandard(int ju) {
+        // 地盘天干固定顺序（宫位0-8对应坎一到离九宫）
+        return new String[]{"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+    }
+    
+    // 获取时干在地盘的位置
+    private int getShiGanPosition(String[] diPan, String shiGan) {
+        for (int i = 0; i < 9; i++) {
+            if (diPan[i].equals(shiGan)) {
+                return i;
+            }
+        }
+        return 0; // 默认坎一宫
+    }
+    
+    // 获取旬首所在宫位（六甲遁）
+    private int getXunShouPalace(String xunShou) {
+        java.util.Map<String, Integer> xunShouPalaceMap = new java.util.HashMap<>();
+        // 六甲遁：甲子→戊(坎一)、甲戌→己(坤二)、甲申→庚(震三)
+        //        甲午→辛(巽四)、甲辰→壬(中五)、甲寅→癸(乾六)
+        xunShouPalaceMap.put("甲子", 0);
+        xunShouPalaceMap.put("甲戌", 1);
+        xunShouPalaceMap.put("甲申", 2);
+        xunShouPalaceMap.put("甲午", 3);
+        xunShouPalaceMap.put("甲辰", 4);
+        xunShouPalaceMap.put("甲寅", 5);
+        
+        return xunShouPalaceMap.getOrDefault(xunShou, 0);
+    }
+    
+    // 计算值使落宫
+    private int getZhiShiPalace(int xunShouPalace, String timeZhi, boolean isYangDun) {
+        // 计算时辰数（子=1, 丑=2, ..., 亥=12）
+        int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(timeZhi);
+        int shiCheng = (zhiIndex + 1) % 12;
+        if (shiCheng == 0) {
+            shiCheng = 12;
+        }
+        
+        // 值使落宫：阳遁顺时针数，阴遁逆时针数
+        if (isYangDun) {
+            return (xunShouPalace + shiCheng - 1) % 9;
+        } else {
+            return (xunShouPalace - shiCheng + 1 + 9) % 9;
+        }
+    }
+    
+    // 排九星（标准算法）
+    private String[] arrangeNineStarsStandard(String zhiFuStar, int zhiFuPalace, boolean isYangDun) {
+        String[] nineStars = new String[9];
+        String[] jiuxingOrder = {"天蓬", "天芮", "天冲", "天辅", "天禽", "天心", "天柱", "天任", "天英"};
+        
+        // 找到值符星在九星顺序中的位置
+        int zhiFuIndex = -1;
+        for (int i = 0; i < jiuxingOrder.length; i++) {
+            if (jiuxingOrder[i].equals(zhiFuStar)) {
+                zhiFuIndex = i;
+                break;
+            }
+        }
+        if (zhiFuIndex == -1) {
+            zhiFuIndex = 0;
+        }
+        
+        // 从值符落宫开始排布九星
+        if (isYangDun) {
+            // 阳遁顺时针
+            for (int i = 0; i < 9; i++) {
+                int pos = (zhiFuPalace + i) % 9;
+                nineStars[pos] = jiuxingOrder[(zhiFuIndex + i) % 9];
+            }
+        } else {
+            // 阴遁逆时针
+            for (int i = 0; i < 9; i++) {
+                int pos = (zhiFuPalace - i + 9) % 9;
+                nineStars[pos] = jiuxingOrder[(zhiFuIndex + i) % 9];
+            }
+        }
+        
+        return nineStars;
+    }
+    
+    // 排八门（标准算法）
+    private String[] arrangeEightDoorsStandard(String zhiShiDoor, int zhiShiPalace, boolean isYangDun) {
+        String[] eightDoors = new String[9];
+        String[] bamenOrder = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
+        
+        // 找到值使门在八门顺序中的位置
+        int zhiShiIndex = -1;
+        for (int i = 0; i < bamenOrder.length; i++) {
+            if (bamenOrder[i].equals(zhiShiDoor)) {
+                zhiShiIndex = i;
+                break;
+            }
+        }
+        if (zhiShiIndex == -1) {
+            zhiShiIndex = 0;
+        }
+        
+        // 从值使落宫开始排布八门
+        int currentDoorIndex = zhiShiIndex;
+        for (int i = 0; i < 9; i++) {
+            int pos;
+            if (isYangDun) {
+                pos = (zhiShiPalace + i) % 9;
+            } else {
+                pos = (zhiShiPalace - i + 9) % 9;
+            }
+            
+            if (pos == 4) {
+                eightDoors[pos] = ""; // 中五宫无门
+            } else {
+                eightDoors[pos] = bamenOrder[currentDoorIndex];
+                currentDoorIndex = (currentDoorIndex + 1) % 8;
+            }
+        }
+        
+        return eightDoors;
+    }
+    
+    // 排天盘天干（标准算法）
+    private String[] arrangeTianPanTianGanStandard(String[] diPan, String timeGan, int zhiFuPalace, boolean isYangDun) {
+        String[] tianPan = new String[9];
+        String[] tianGanOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        
+        // 找到时干在天盘顺序中的位置
+        int shiGanIndex = -1;
+        for (int i = 0; i < tianGanOrder.length; i++) {
+            if (tianGanOrder[i].equals(timeGan)) {
+                shiGanIndex = i;
+                break;
+            }
+        }
+        if (shiGanIndex == -1) {
+            shiGanIndex = 0;
+        }
+        
+        // 从值符落宫开始排布天盘
+        if (isYangDun) {
+            for (int i = 0; i < 9; i++) {
+                int pos = (zhiFuPalace + i) % 9;
+                tianPan[pos] = tianGanOrder[(shiGanIndex + i) % 9];
+            }
+        } else {
+            for (int i = 0; i < 9; i++) {
+                int pos = (zhiFuPalace - i + 9) % 9;
+                tianPan[pos] = tianGanOrder[(shiGanIndex + i) % 9];
+            }
+        }
+        
+        return tianPan;
+    }
+    
+    // 排八神（标准算法）
+    private String[] arrangeEightGodsStandard(int zhiFuPalace, boolean isYangDun) {
+        String[] eightGods = new String[9];
+        String[] bashenOrder = {"值符", "螣蛇", "太阴", "六合", "白虎", "玄武", "九地", "九天"};
+        
+        if (isYangDun) {
+            // 阳遁：从值符落宫开始顺时针排布八神，跳过中五宫
+            int currentGodIndex = 0;
+            int pos = zhiFuPalace;
+            while (currentGodIndex < 8) {
+                if (pos != 4) {
+                    eightGods[pos] = bashenOrder[currentGodIndex];
+                    currentGodIndex++;
+                }
+                pos = (pos + 1) % 9;
+            }
+        } else {
+            // 阴遁：从值符落宫开始逆时针排布八神，跳过中五宫
+            String[] bashenOrderYin = {"值符", "九天", "九地", "玄武", "白虎", "六合", "太阴", "螣蛇"};
+            int currentGodIndex = 0;
+            int pos = zhiFuPalace;
+            while (currentGodIndex < 8) {
+                if (pos != 4) {
+                    eightGods[pos] = bashenOrderYin[currentGodIndex];
+                    currentGodIndex++;
+                }
+                pos = (pos - 1 + 9) % 9;
+            }
+        }
+        // 中五宫无神
+        eightGods[4] = "";
+        return eightGods;
     }
 }
