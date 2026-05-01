@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="12dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/fullPageTitle"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="奇门遁甲排盘"
             android:textColor="#87CEEB"
-            android:textSize="26sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp"/>
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#ADD8E6"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
         <LinearLayout
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#00BFFF"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_marginEnd="4dp"/>
 
             <TextView
@@ -59,23 +59,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#00BFFF"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
 
         </LinearLayout>
 
         <com.example.timedisplay.FullNinePalacePanel
             android:id="@+id/fullNinePalacePanel"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:layout_marginStart="-20dp"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:id="@+id/fullPageExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#87CEEB"
-            android:textSize="20sp"
-            android:lineSpacingExtra="8dp"
+            android:textSize="15sp"
+            android:lineSpacingExtra="6dp"
             android:padding="12dp"/>
 
         </LinearLayout>

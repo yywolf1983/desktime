@@ -656,7 +656,8 @@ public class FullNinePalaceActivity extends Activity {
         
         String timeGan = timePillar != null && timePillar.length() >= 1 ? timePillar.substring(0, 1) : "甲";
         String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
-        
+        String dayGan = dayPillar != null && dayPillar.length() >= 1 ? dayPillar.substring(0, 1) : "甲";
+
         String[] diPanTianGan = arrangeDiPanTianGanStandard();
         Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi);
         String zhiFuStar = (String) xunShouInfo[1];
@@ -674,47 +675,72 @@ public class FullNinePalaceActivity extends Activity {
         
         sb.append("🔮 当前运势解读 🔮\n\n");
         
-        sb.append("【值符值使】\n");
-        sb.append("值符星: ").append(zhiFuStar).append(" - ");
-        sb.append(getStarMeaning(zhiFuStar)).append("\n");
-        sb.append("值使门: ").append(zhiShiDoor).append(" - ");
-        sb.append(getDoorMeaning(zhiShiDoor)).append("\n\n");
+        sb.append("【📅 今日基本信息】\n");
+        sb.append("四柱: ").append(yearPillar).append(" ")
+           .append(monthPillar).append(" ")
+           .append(dayPillar).append(" ")
+           .append(timePillar).append("\n");
+        sb.append("节气: ").append(jieqi).append("\n");
+        sb.append("遁局: ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局\n");
+        sb.append("旬首: ").append(xunShou).append("\n\n");
+        
+        sb.append("【🌟 值符值使】\n");
+        sb.append("值符星: ").append(zhiFuStar).append("\n");
+        sb.append(getStarMeaningDetailed(zhiFuStar)).append("\n");
+        sb.append("值使门: ").append(zhiShiDoor).append("\n");
+        sb.append(getDoorMeaningDetailed(zhiShiDoor)).append("\n\n");
         
         StringBuilder luckyDirections = new StringBuilder();
         StringBuilder unluckyDirections = new StringBuilder();
+        StringBuilder neutralDirections = new StringBuilder();
         for (int i = 0; i < 9; i++) {
             String door = eightDoors[i];
             if (door == null || door.isEmpty()) continue;
             if (door.equals("开") || door.equals("休") || door.equals("生")) {
                 if (luckyDirections.length() > 0) luckyDirections.append("、");
-                luckyDirections.append(DIRECTIONS[i]);
-            }
-            if (door.equals("死") || door.equals("惊") || door.equals("伤")) {
+                luckyDirections.append(DIRECTIONS[i]).append("(").append(door).append("门)");
+            } else if (door.equals("死") || door.equals("惊") || door.equals("伤")) {
                 if (unluckyDirections.length() > 0) unluckyDirections.append("、");
-                unluckyDirections.append(DIRECTIONS[i]);
+                unluckyDirections.append(DIRECTIONS[i]).append("(").append(door).append("门)");
+            } else {
+                if (neutralDirections.length() > 0) neutralDirections.append("、");
+                neutralDirections.append(DIRECTIONS[i]).append("(").append(door).append("门)");
             }
         }
         
-        sb.append("【方位吉凶】\n");
+        sb.append("【🧭 方位吉凶】\n");
         if (luckyDirections.length() > 0) {
-            sb.append("✓ 吉方: ").append(luckyDirections.toString()).append("\n");
-            sb.append("  适宜: 求财、谈判、出行、开业\n");
+            sb.append("✅ 大吉方位:\n").append(luckyDirections.toString()).append("\n");
+            sb.append("适宜: 求财交易\n商务谈判\n出行远行\n开业创业\n\n");
+        }
+        if (neutralDirections.length() > 0) {
+            sb.append("⚪ 平平方位:\n").append(neutralDirections.toString()).append("\n");
+            sb.append("适宜: 日常活动\n文书处理\n人际沟通\n\n");
         }
         if (unluckyDirections.length() > 0) {
-            sb.append("✗ 凶方: ").append(unluckyDirections.toString()).append("\n");
-            sb.append("  宜避: 重要决策、远行、投资\n");
+            sb.append("❌ 凶险方位:\n").append(unluckyDirections.toString()).append("\n");
+            sb.append("宜避: 重要决策\n签约投资\n远行迁徙\n\n");
+        }
+        
+        sb.append("【📋 今日宜忌】\n");
+        sb.append("宜:\n");
+        String[] yiItems = getYiActivitiesDetailed(zhiFuStar, zhiShiDoor);
+        for (String item : yiItems) {
+            sb.append("• ").append(item).append("\n");
+        }
+        sb.append("\n忌:\n");
+        String[] jiItems = getJiActivitiesDetailed(zhiFuStar, zhiShiDoor);
+        for (String item : jiItems) {
+            sb.append("• ").append(item).append("\n");
         }
         sb.append("\n");
         
-        sb.append("【今日宜忌】\n");
-        sb.append("宜: ").append(getYiActivities(zhiFuStar, zhiShiDoor)).append("\n");
-        sb.append("忌: ").append(getJiActivities(zhiFuStar, zhiShiDoor)).append("\n\n");
+        sb.append("【⏰ 时辰运势详解】\n");
+        sb.append("当前时辰: ").append(getShichenName(timeZhi)).append("\n");
+        sb.append(getTimeFortuneDetailed(timeZhi)).append("\n\n");
         
-        sb.append("【时辰运势】\n");
-        sb.append(getTimeFortune(timeZhi)).append("\n\n");
-        
-        sb.append("【综合建议】\n");
-        sb.append(getOverallAdvice(isYangDun, ju, zhiFuStar, zhiShiDoor));
+        sb.append("【🌈 综合运势建议】\n");
+        sb.append(getOverallAdviceDetailed(isYangDun, ju, zhiFuStar, zhiShiDoor, dayGan));
         
         return sb.toString();
     }
@@ -839,5 +865,232 @@ public class FullNinePalaceActivity extends Activity {
         }
         
         return sb.toString();
+    }
+
+    
+    private String getStarMeaningDetailed(String star) {
+        if (star == null) return "吉星高照\n运势极佳";
+        switch (star) {
+            case "天蓬": return "智慧之星\n头脑聪明\n适合策划谋略";
+            case "天芮": return "疾病之星\n身体较弱\n注意健康保养";
+            case "天冲": return "冲动之星\n行动派\n需防冲动误事";
+            case "天辅": return "辅佐之星\n贵人相助\n利人际交往";
+            case "天禽": return "中正之星\n为人正直\n运势平稳";
+            case "天心": return "仁慈之星\n有爱心\n利医疗养生";
+            case "天柱": return "刚直之星\n性格刚强\n利于决断";
+            case "天任": return "任劳之星\n勤奋努力\n财运不错";
+            case "天英": return "文明之星\n利考试文化\n利创作";
+            default: return "吉星高照\n运势极佳";
+        }
+    }
+    
+    private String getDoorMeaningDetailed(String door) {
+        if (door == null) return "中平之门\n运势一般";
+        switch (door) {
+            case "休": return "休养生息\n利于休息疗养\n调整状态";
+            case "生": return "生机勃勃\n大吉之门\n利创业发展";
+            case "伤": return "伤害损耗\n破财之星\n需谨慎行事";
+            case "杜": return "阻塞不通\n宜静不宜动\n避免冒险";
+            case "景": return "光明景象\n利考试表演\n利展示";
+            case "死": return "死气沉沉\n诸事不宜\n保守为上";
+            case "惊": return "惊恐不安\n防口舌是非\n防纠纷";
+            case "开": return "开放顺利\n大吉之门\n百事皆宜";
+            default: return "中平之门\n运势一般";
+        }
+    }
+    
+    private String[] getYiActivitiesDetailed(String star, String door) {
+        java.util.ArrayList<String> yiList = new java.util.ArrayList<>();
+        
+        if (door != null) {
+            if (door.equals("开") || door.equals("生")) {
+                yiList.add("开业创业");
+                yiList.add("商务洽谈");
+                yiList.add("签订合同");
+                yiList.add("投资理财");
+            }
+            if (door.equals("休")) {
+                yiList.add("休息疗养");
+                yiList.add("调养身体");
+                yiList.add("学习进修");
+                yiList.add("考试面试");
+            }
+            if (door.equals("景")) {
+                yiList.add("文化教育");
+                yiList.add("考试培训");
+                yiList.add("展示才华");
+                yiList.add("社交应酬");
+            }
+        }
+        
+        if (star != null) {
+            if (star.equals("天辅") || star.equals("天心")) {
+                yiList.add("求医问诊");
+                yiList.add("医疗养生");
+                yiList.add("贵人相助");
+            }
+            if (star.equals("天任") || star.equals("天蓬")) {
+                yiList.add("勤奋工作");
+                yiList.add("创业发展");
+                yiList.add("开拓市场");
+            }
+            if (star.equals("天英")) {
+                yiList.add("文化创作");
+                yiList.add("艺术表演");
+                yiList.add("品牌宣传");
+            }
+        }
+        
+        yiList.add("祭祀祈福");
+        yiList.add("行善积德");
+        yiList.add("拜访长辈");
+        yiList.add("孝敬父母");
+        
+        return yiList.toArray(new String[0]);
+    }
+    
+    private String[] getJiActivitiesDetailed(String star, String door) {
+        java.util.ArrayList<String> jiList = new java.util.ArrayList<>();
+        
+        if (door != null) {
+            if (door.equals("死") || door.equals("惊") || door.equals("伤")) {
+                jiList.add("重大决策");
+                jiList.add("重要签约");
+                jiList.add("冒险投资");
+                jiList.add("远行迁徙");
+            }
+        }
+        
+        if (star != null) {
+            if (star.equals("天芮")) {
+                jiList.add("动土施工");
+                jiList.add("外科手术");
+                jiList.add("暴饮暴食");
+            }
+            if (star.equals("天冲")) {
+                jiList.add("冲动决策");
+                jiList.add("争执纠纷");
+                jiList.add("高风险投资");
+            }
+            if (star.equals("天柱")) {
+                jiList.add("固执己见");
+                jiList.add("盲目投资");
+            }
+        }
+        
+        jiList.add("赌博投机");
+        jiList.add("诉讼纠纷");
+        jiList.add("口舌是非");
+        
+        return jiList.toArray(new String[0]);
+    }
+    
+    private String getShichenName(String timeZhi) {
+        if (timeZhi == null) return "子时";
+        switch (timeZhi) {
+            case "子": return "子时 (23:00-01:00)";
+            case "丑": return "丑时 (01:00-03:00)";
+            case "寅": return "寅时 (03:00-05:00)";
+            case "卯": return "卯时 (05:00-07:00)";
+            case "辰": return "辰时 (07:00-09:00)";
+            case "巳": return "巳时 (09:00-11:00)";
+            case "午": return "午时 (11:00-13:00)";
+            case "未": return "未时 (13:00-15:00)";
+            case "申": return "申时 (15:00-17:00)";
+            case "酉": return "酉时 (17:00-19:00)";
+            case "戌": return "戌时 (19:00-21:00)";
+            case "亥": return "亥时 (21:00-23:00)";
+            default: return timeZhi + "时";
+        }
+    }
+    
+    private String getTimeFortuneDetailed(String timeZhi) {
+        if (timeZhi == null) return "时辰吉利\n运势平稳";
+        switch (timeZhi) {
+            case "子": return "一阳初生\n阴气最盛\n宜静养安神\n利于思考规划\n忌：剧烈运动\n提示：适合冥想打坐";
+            case "丑": return "丑土藏金\n肝经当令\n宜深度睡眠\n利于身体修复\n忌：熬夜通宵\n提示：保持充足睡眠";
+            case "寅": return "肺经当令\n朝气蓬勃\n宜早起活动\n利于户外运动\n忌：赖床不起\n提示：早起迎曙光";
+            case "卯": return "大肠经当令\n朝阳升起\n宜排便清肠\n利于排毒养颜\n忌：憋便忍尿\n提示：定时排便习惯";
+            case "辰": return "胃经当令\n早餐时分\n宜进食营养\n利于消化吸收\n忌：不吃早餐\n提示：早餐要吃好";
+            case "巳": return "脾经当令\n精力充沛\n宜勤奋工作\n利于脑力劳动\n忌：懒散拖延\n提示：黄金工作时段";
+            case "午": return "心经当令\n阳气最盛\n宜适当休息\n利于午间小憩\n忌：剧烈运动\n提示：午睡养心护神";
+            case "未": return "小肠经当令\n午餐消化\n宜清淡饮食\n利于营养吸收\n忌：午餐过饱\n提示：午餐适量为宜";
+            case "申": return "膀胱经当令\n运动好时机\n宜适量运动\n利于体育锻炼\n忌：久坐不动\n提示：运动量力而行";
+            case "酉": return "肾经当令\n日落时分\n宜休息放松\n利于养精蓄锐\n忌：剧烈运动\n提示：早睡养肾根本";
+            case "戌": return "心包经当令\n夜幕降临\n宜放松娱乐\n利于社交活动\n忌：情绪低落\n提示：与亲友交流";
+            case "亥": return "三焦经当令\n万物归宁\n宜准备休息\n利于按时入睡\n忌：熬夜加班\n提示：亥时入睡养生";
+            default: return "时辰吉利\n运势平稳\n平安顺利";
+        }
+    }
+    
+    private String getOverallAdviceDetailed(boolean isYangDun, int ju, String star, String door, String dayGan) {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("📊 命盘分析:\n");
+        
+        if (isYangDun) {
+            sb.append("当前为阳遁").append(ju).append("局\n");
+            sb.append("阳气旺盛\n利主动出击\n建议：积极行动\n把握机遇\n\n");
+        } else {
+            sb.append("当前为阴遁").append(ju).append("局\n");
+            sb.append("阴气收敛\n利静心守成\n建议：沉稳低调\n蓄势待发\n\n");
+        }
+        
+        sb.append("⭐ 星门吉凶:\n");
+        
+        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
+        String[] luckyDoors = {"开", "休", "生"};
+        String[] neutralDoors = {"杜", "景"};
+        
+        boolean isLuckyStar = false, isLuckyDoor = false;
+        boolean isNeutralDoor = false;
+        
+        if (star != null) {
+            for (String s : luckyStars) if (s.equals(star)) isLuckyStar = true;
+        }
+        if (door != null) {
+            for (String d : luckyDoors) if (d.equals(door)) isLuckyDoor = true;
+            for (String d : neutralDoors) if (d.equals(door)) isNeutralDoor = true;
+        }
+        
+        if (isLuckyStar && isLuckyDoor) {
+            sb.append("★★★ 大吉 ★★★\n");
+            sb.append("值符值使皆吉\n今日运势极佳\n宜把握机遇\n\n");
+        } else if (isLuckyStar || isLuckyDoor) {
+            sb.append("★★ 小吉 ★★\n");
+            sb.append("星门一吉一平\n运势良好\n稳中求进\n\n");
+        } else if (isNeutralDoor) {
+            sb.append("★ 平平 ★\n");
+            sb.append("星门无大凶\n运势一般\n谨慎行事\n\n");
+        } else {
+            sb.append("⚠ 注意 ⚠\n");
+            sb.append("星门欠佳\n运势低迷\n宜守不宜动\n\n");
+        }
+        
+        sb.append("💡 综合建议:\n");
+        sb.append("• ").append(getDayAdvice(star, door, dayGan)).append("\n");
+        sb.append("• 注意调理身心\n");
+        sb.append("• 宜在东方活动\n");
+        sb.append("• 避开西方北方\n");
+        
+        return sb.toString();
+    }
+    
+    private String getDayAdvice(String star, String door, String dayGan) {
+        if (star == null || door == null) return "运势平稳";
+        
+        if (door.equals("开") || door.equals("生")) {
+            return "大吉之门\n适合开创事业";
+        } else if (door.equals("休")) {
+            return "休养之门\n适合学习进修";
+        } else if (door.equals("死") || door.equals("惊") || door.equals("伤")) {
+            return "凶险之门\n宜静不宜动";
+        } else if (door.equals("景")) {
+            return "光明之门\n适合展示才华";
+        } else if (door.equals("杜")) {
+            return "阻塞之门\n宜防守不宜进攻";
+        }
+        
+        return "运势平稳";
     }
 }

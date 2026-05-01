@@ -53,7 +53,7 @@ public class FullNinePalacePanel extends View {
         textPaint = new Paint();
         textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(40);
+        textPaint.setTextSize(35);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
@@ -84,21 +84,24 @@ public class FullNinePalacePanel extends View {
 
         int width = getWidth();
         int height = getHeight();
-        int cellSize = (int)(Math.min(width, height) / 3.0 * 1.05);
+        float padding = 15f;
+        int cellSize = (int)((Math.min(width, height) - padding * 2) / 3.0);
+        float offsetX = (width - cellSize * 3) / 2;
+        float offsetY = (height - cellSize * 3) / 2;
 
         for (int i = 0; i <= 3; i++) {
-            canvas.drawLine(0, i * cellSize, width, i * cellSize, gridPaint);
-            canvas.drawLine(i * cellSize, 0, i * cellSize, height, gridPaint);
+            canvas.drawLine(offsetX, offsetY + i * cellSize, offsetX + cellSize * 3, offsetY + i * cellSize, gridPaint);
+            canvas.drawLine(offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + cellSize * 3, gridPaint);
         }
 
-        RectF centerRect = new RectF(cellSize, cellSize, cellSize * 2, cellSize * 2);
+        RectF centerRect = new RectF(offsetX + cellSize, offsetY + cellSize, offsetX + cellSize * 2, offsetY + cellSize * 2);
         canvas.drawRect(centerRect, centerPaint);
 
         for (int i = 0; i < 9; i++) {
             int row = PALACE_POSITIONS[i][0];
             int col = PALACE_POSITIONS[i][1];
-            float x = (col + 0.5f) * cellSize;
-            float y = (row + 0.25f) * cellSize;
+            float x = offsetX + (col + 0.5f) * cellSize;
+            float y = offsetY + (row + 0.28f) * cellSize;
 
             String luck = "平";
             String[] dataParts = palaceData[i][1].split("\\n");
@@ -122,12 +125,12 @@ public class FullNinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += 45;
+                y += 38;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += 45;
+                y += 38;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }
