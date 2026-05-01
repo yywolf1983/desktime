@@ -19,6 +19,7 @@ public class StopwatchActivity extends Activity {
     private SevenSegmentDisplay stopwatchMinute2;
     private SevenSegmentDisplay stopwatchSecond1;
     private SevenSegmentDisplay stopwatchSecond2;
+    private TextView stopwatchMillis;
     private LinearLayout lapListContainer;
     private TextView startStopButton;
     private TextView resetButton;
@@ -38,6 +39,7 @@ public class StopwatchActivity extends Activity {
     private int lastMinute2 = -1;
     private int lastSecond1 = -1;
     private int lastSecond2 = -1;
+    private int lastMillis = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class StopwatchActivity extends Activity {
         stopwatchMinute2 = findViewById(R.id.stopwatchMinute2);
         stopwatchSecond1 = findViewById(R.id.stopwatchSecond1);
         stopwatchSecond2 = findViewById(R.id.stopwatchSecond2);
+        stopwatchMillis = findViewById(R.id.stopwatchMillis);
         lapListContainer = findViewById(R.id.lapListContainer);
         startStopButton = findViewById(R.id.startStopButton);
         resetButton = findViewById(R.id.resetButton);
@@ -128,6 +131,7 @@ public class StopwatchActivity extends Activity {
         int hours = (int) (millis / 3600000);
         int minutes = (int) ((millis % 3600000) / 60000);
         int seconds = (int) ((millis % 60000) / 1000);
+        int millisPart = (int) ((millis % 1000) / 10); // 获取2位毫秒
 
         int hour1 = hours / 10;
         int hour2 = hours % 10;
@@ -159,6 +163,10 @@ public class StopwatchActivity extends Activity {
         if (lastSecond2 != second2) {
             stopwatchSecond2.setDigit(second2);
             lastSecond2 = second2;
+        }
+        if (lastMillis != millisPart) {
+            stopwatchMillis.setText(String.format(".%02d", millisPart));
+            lastMillis = millisPart;
         }
     }
 
