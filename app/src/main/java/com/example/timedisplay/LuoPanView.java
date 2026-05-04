@@ -35,6 +35,10 @@ public class LuoPanView extends View {
         "己", "庚", "辛", "壬", "癸"
     };
     
+    private static final String[] EIGHT_DIRECTIONS = {
+        "北", "东北", "东", "东南", "南", "西南", "西", "西北"
+    };
+    
     private float rotation = 0;
 
     public LuoPanView(Context context) {
@@ -113,7 +117,8 @@ public class LuoPanView extends View {
         drawTwelveZhi(canvas, centerX, centerY, radius);
         drawEightTrigrams(canvas, centerX, centerY, radius);
         drawTenGan(canvas, centerX, centerY, radius);
-        drawCenter(canvas, centerX, centerY);
+        drawEightDirections(canvas, centerX, centerY, radius);
+        drawCenter(canvas, centerX, centerY, radius);
 
         canvas.restore();
         
@@ -123,7 +128,7 @@ public class LuoPanView extends View {
     private void drawConcentricCircles(Canvas canvas, int cx, int cy, float r) {
         canvas.drawCircle(cx, cy, r, outerCirclePaint);
         
-        float[] radii = {r * 0.90f, r * 0.80f, r * 0.70f, r * 0.58f, r * 0.42f};
+        float[] radii = {r * 0.90f, r * 0.78f, r * 0.65f, r * 0.50f, r * 0.33f, r * 0.20f};
         for (float radius : radii) {
             canvas.drawCircle(cx, cy, radius, circlePaint);
         }
@@ -136,8 +141,8 @@ public class LuoPanView extends View {
         
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
-            float startX = cx + (float) (r * 0.42f * Math.cos(angle));
-            float startY = cy + (float) (r * 0.42f * Math.sin(angle));
+            float startX = cx + (float) (r * 0.20f * Math.cos(angle));
+            float startY = cy + (float) (r * 0.20f * Math.sin(angle));
             float endX = cx + (float) (r * 0.90f * Math.cos(angle));
             float endY = cy + (float) (r * 0.90f * Math.sin(angle));
             canvas.drawLine(startX, startY, endX, endY, linePaint);
@@ -145,7 +150,7 @@ public class LuoPanView extends View {
     }
 
     private void drawTwentyFourMountains(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.85f;
+        float textRadius = r * 0.84f;
         for (int i = 0; i < 24; i++) {
             double angle = Math.toRadians(i * 15 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -162,14 +167,14 @@ public class LuoPanView extends View {
                 textPaint.setColor(Color.CYAN);
             }
             
-            textPaint.setTextSize(36);
-            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + 13, textPaint);
+            textPaint.setTextSize(34);
+            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + 12, textPaint);
             canvas.restore();
         }
     }
     
     private void drawTwelveZhi(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.75f;
+        float textRadius = r * 0.71f;
         for (int i = 0; i < 12; i++) {
             double angle = Math.toRadians(i * 30 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -178,15 +183,15 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 30, x, y);
             
-            textPaint.setTextSize(32);
+            textPaint.setTextSize(30);
             textPaint.setColor(Color.rgb(255, 182, 193));
-            canvas.drawText(TWELVE_ZHI[i], x, y + 12, textPaint);
+            canvas.drawText(TWELVE_ZHI[i], x, y + 11, textPaint);
             canvas.restore();
         }
     }
     
     private void drawEightTrigrams(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.64f;
+        float textRadius = r * 0.57f;
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -195,15 +200,15 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 45, x, y);
             
-            textPaint.setTextSize(48);
+            textPaint.setTextSize(44);
             textPaint.setColor(Color.rgb(74, 144, 217));
-            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + 17, textPaint);
+            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + 16, textPaint);
             canvas.restore();
         }
     }
     
     private void drawTenGan(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.50f;
+        float textRadius = r * 0.41f;
         for (int i = 0; i < 10; i++) {
             double angle = Math.toRadians(i * 36 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -212,24 +217,42 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 36, x, y);
             
-            textPaint.setTextSize(28);
+            textPaint.setTextSize(24);
             textPaint.setColor(Color.rgb(173, 255, 47));
-            canvas.drawText(TEN_GAN[i], x, y + 11, textPaint);
+            canvas.drawText(TEN_GAN[i], x, y + 9, textPaint);
+            canvas.restore();
+        }
+    }
+    
+    private void drawEightDirections(Canvas canvas, int cx, int cy, float r) {
+        float textRadius = r * 0.26f;
+        for (int i = 0; i < 8; i++) {
+            double angle = Math.toRadians(i * 45 - 90);
+            float x = cx + (float) (textRadius * Math.cos(angle));
+            float y = cy + (float) (textRadius * Math.sin(angle));
+            
+            canvas.save();
+            canvas.rotate(i * 45, x, y);
+            
+            textPaint.setTextSize(20);
+            textPaint.setColor(Color.WHITE);
+            textPaint.setFakeBoldText(true);
+            canvas.drawText(EIGHT_DIRECTIONS[i], x, y + 7, textPaint);
             canvas.restore();
         }
     }
 
-    private void drawCenter(Canvas canvas, int cx, int cy) {
-        canvas.drawCircle(cx, cy, 35, centerPaint);
+    private void drawCenter(Canvas canvas, int cx, int cy, float r) {
+        canvas.drawCircle(cx, cy, 18, centerPaint);
         
         Paint taijiPaint = new Paint();
         taijiPaint.setColor(Color.WHITE);
         taijiPaint.setStyle(Paint.Style.FILL);
         taijiPaint.setAntiAlias(true);
-        canvas.drawCircle(cx, cy, 14, taijiPaint);
+        canvas.drawCircle(cx, cy, 7, taijiPaint);
         
         taijiPaint.setColor(Color.BLACK);
-        canvas.drawCircle(cx, cy, 7, taijiPaint);
+        canvas.drawCircle(cx, cy, 3, taijiPaint);
     }
     
     private void drawFixedPointer(Canvas canvas, int cx, int cy, float r) {
