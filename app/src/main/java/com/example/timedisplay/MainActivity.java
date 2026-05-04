@@ -63,6 +63,18 @@ public class MainActivity extends Activity {
         mainLayout = findViewById(R.id.mainLayout);
         timeContainer = findViewById(R.id.timeContainer);
 
+        // 点击四柱跳转到九宫格落盘页面
+        fourPillarsTextView.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, FullNinePalaceActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        fourPillarsTextView.setClickable(true);
+        fourPillarsTextView.setFocusable(true);
+
         // 点击时间容器跳转到秒表页面
         timeContainer.setOnClickListener(v -> {
             try {
@@ -82,6 +94,20 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         });
+        
+        // 为时辰运势添加点击事件监听器，点击时显示五运六气
+        timeFortuneTextView.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, WuyunLiuqiActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        
+        // 设置时辰运势TextView可点击
+        timeFortuneTextView.setClickable(true);
+        timeFortuneTextView.setFocusable(true);
 
         // 初始化Handler
         handler = new android.os.Handler(android.os.Looper.getMainLooper());

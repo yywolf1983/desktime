@@ -44,6 +44,14 @@
             android:name=".StopwatchActivity"
             android:exported="false"
             android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".WuyunLiuqiActivity"
+            android:exported="false"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".LuoPanActivity"
+            android:exported="false"
+            android:screenOrientation="fullSensor" />
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
