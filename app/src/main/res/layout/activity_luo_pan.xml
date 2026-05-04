@@ -1,149 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
-    <com.example.timedisplay.FrostedGlassBackground
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <com.example.timedisplay.LuoPanView
-            android:id="@+id/luoPanView"
+        <com.example.timedisplay.FrostedGlassBackground
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center" />
+            android:layout_height="match_parent" />
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:padding="16dp">
+
+            <com.example.timedisplay.LuoPanView
+                android:id="@+id/luoPanView"
+                android:layout_width="340dp"
+                android:layout_height="340dp"
+                android:layout_gravity="center_horizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp"
-                android:background="#1A000000">
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:background="#28000000"
+                android:gravity="center">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/titleInfo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📜 罗盘使用说明"
+                    android:text="━ 罗盘信息 ━"
                     android:textSize="20sp"
                     android:textColor="#FFD700"
                     android:textStyle="bold"
+                    android:paddingBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/directionInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="方位: 坎(北)"
+                        android:textSize="17sp"
+                        android:textColor="#FFD700"
+                        android:paddingRight="20dp" />
+
+                    <TextView
+                        android:id="@+id/mountainInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="坐山: 子"
+                        android:textSize="17sp"
+                        android:textColor="#87CEEB" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#40FFFFFF"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/wuxingInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="五行: 水"
+                        android:textSize="15sp"
+                        android:textColor="#00CED1"
+                        android:paddingRight="16dp" />
+
+                    <TextView
+                        android:id="@+id/shierZhixingInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="十二支: 子"
+                        android:textSize="15sp"
+                        android:textColor="#DDA0DD"
+                        android:paddingRight="16dp" />
+
+                    <TextView
+                        android:id="@+id/tianganInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="天干: 壬"
+                        android:textSize="15sp"
+                        android:textColor="#98FB98" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/luopanTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="子: 正北水位，阴阳交界，万物根基"
+                    android:textSize="14sp"
+                    android:textColor="#ADD8E6"
                     android:gravity="center"
-                    android:paddingBottom="8dp" />
+                    android:paddingTop="12dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/detailInfo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🧭 基本操作"
-                    android:textSize="16sp"
-                    android:textColor="#87CEEB"
-                    android:textStyle="bold"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• 触摸并拖动罗盘可以旋转查看不同方位\n• 红色箭头指向正南方向，固定不动\n• 罗盘可360度自由旋转"
-                    android:textSize="14sp"
-                    android:textColor="#ADD8E6"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingLeft="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="🗺️ 罗盘层次"
-                    android:textSize="16sp"
-                    android:textColor="#87CEEB"
-                    android:textStyle="bold"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• 最外层：二十四山向（天地人三元）\n• 第二层：八卦符号\n• 第三层：八宫方位\n• 第四层：十二地支\n• 第五层：十天干\n• 中心：太极点"
-                    android:textSize="14sp"
-                    android:textColor="#ADD8E6"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingLeft="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="⚡ 二十四山向"
-                    android:textSize="16sp"
-                    android:textColor="#87CEEB"
-                    android:textStyle="bold"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="壬子癸 丑艮寅 甲卯乙 辰巽巳 丙午丁 未坤申 庚酉辛 戌乾亥\n\n每个方位15度，共24个方位，对应二十四节气"
-                    android:textSize="14sp"
-                    android:textColor="#ADD8E6"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingLeft="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="📖 八卦含义"
-                    android:textSize="16sp"
-                    android:textColor="#87CEEB"
-                    android:textStyle="bold"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="☰ 乾-西北-天 ☷ 坤-西南-地 ☳ 震-东方-雷 ☴ 巽-东南-风\n☵ 坎-北方-水 ☲ 离-南方-火 ☶ 艮-东北-山 ☱ 兑-西方-泽"
-                    android:textSize="14sp"
-                    android:textColor="#ADD8E6"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingLeft="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="🔮 使用提示"
-                    android:textSize="16sp"
-                    android:textColor="#87CEEB"
-                    android:textStyle="bold"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• 可用于风水方位勘察\n• 查找建筑物的坐山朝向\n• 配合日课时使用更佳\n• 旋转时保持心静气和"
-                    android:textSize="14sp"
-                    android:textColor="#ADD8E6"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingBottom="8dp" />
+                    android:text="详细说明"
+                    android:textSize="13sp"
+                    android:textColor="#B0C4DE"
+                    android:gravity="center"
+                    android:paddingTop="10dp" />
 
             </LinearLayout>
-        </ScrollView>
 
-    </LinearLayout>
+        </LinearLayout>
 
-</LinearLayout>
+    </FrameLayout>
+
+</ScrollView>
