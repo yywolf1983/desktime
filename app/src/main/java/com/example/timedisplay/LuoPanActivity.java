@@ -20,6 +20,8 @@ public class LuoPanActivity extends Activity {
     private float currentRotation = 0;
     private float lastAngle = 0;
     private boolean isRotating = false;
+    
+    private static final String KEY_ROTATION = "current_rotation";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +38,19 @@ public class LuoPanActivity extends Activity {
         luopanTips = findViewById(R.id.luopanTips);
         detailInfo = findViewById(R.id.detailInfo);
         
+        if (savedInstanceState != null) {
+            currentRotation = savedInstanceState.getFloat(KEY_ROTATION, 0);
+            luoPanView.setRotation(currentRotation);
+        }
+        
         updateInfo();
         setupTouchListener();
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putFloat(KEY_ROTATION, currentRotation);
     }
     
     private void updateInfo() {
