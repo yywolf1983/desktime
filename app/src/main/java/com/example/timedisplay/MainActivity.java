@@ -63,10 +63,10 @@ public class MainActivity extends Activity {
         mainLayout = findViewById(R.id.mainLayout);
         timeContainer = findViewById(R.id.timeContainer);
 
-        // 点击四柱跳转到九宫格落盘页面
+        // 点击四柱跳转到罗盘页面
         fourPillarsTextView.setOnClickListener(v -> {
             try {
-                Intent intent = new Intent(MainActivity.this, FullNinePalaceActivity.class);
+                Intent intent = new Intent(MainActivity.this, LuoPanActivity.class);
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
