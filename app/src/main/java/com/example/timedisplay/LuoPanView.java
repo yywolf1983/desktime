@@ -113,7 +113,7 @@ public class LuoPanView extends View {
         canvas.save();
         canvas.rotate(rotation, centerX, centerY);
 
-        // 绘制多层圆形
+        // 绘制多层圆圈
         drawConcentricCircles(canvas, centerX, centerY, radius);
         
         // 绘制二十四山
@@ -122,13 +122,19 @@ public class LuoPanView extends View {
         // 绘制八卦
         drawEightTrigrams(canvas, centerX, centerY, radius);
         
+        // 绘制十二地支
+        drawTwelveZhi(canvas, centerX, centerY, radius);
+        
+        // 绘制十天干
+        drawTenGan(canvas, centerX, centerY, radius);
+        
         // 绘制中心
         drawCenter(canvas, centerX, centerY);
-        
-        // 绘制指针（固定在南方）
-        drawPointer(canvas, centerX, centerY, radius);
 
         canvas.restore();
+        
+        // 绘制固定在外面的指针（不随罗盘旋转）
+        drawFixedPointer(canvas, centerX, centerY, radius);
     }
 
     private void drawConcentricCircles(Canvas canvas, int centerX, int centerY, float radius) {
@@ -136,10 +142,137 @@ public class LuoPanView extends View {
         canvas.drawCircle(centerX, centerY, radius, outerCirclePaint);
         
         // 绘制多层同心圆
-        float[] radii = {radius * 0.92f, radius * 0.78f, radius * 0.62f, radius * 0.48f, radius * 0.25f};
+        float[] radii = {
+            radius * 0.95f,  // 最外层装饰圈
+            radius * 0.88f,  // 二十四山圈
+            radius * 0.78f,  // 分界线
+            radius * 0.68f,  // 八卦圈
+            radius * 0.58f,  // 十二地支圈
+            radius * 0.45f,  // 十天干圈
+            radius * 0.30f,  // 内圈
+            radius * 0.20f   // 中心圈
+        };
         for (float r : radii) {
             canvas.drawCircle(centerX, centerY, r, circlePaint);
         }
+        
+        // 绘制六十四卦的分隔线
+        drawDividingLines(canvas, centerX, centerY, radius);
+    }
+    
+    private void drawDividingLines(Canvas canvas, int centerX, int centerY, float radius) {
+        // 绘制8个主方向线
+        float angleStep = 360 / 8;
+        for (int i = 0; i < 8; i++) {
+            float angle = (float) Math.toRadians(i * angleStep - 90);
+            float startX = centerX + (float) (radius * 0.20f * Math.cos(angle));
+            float startY = centerY + (float) (radius * 0.20f * Math.sin(angle));
+            float endX = centerX + (float) (radius * 0.95f * Math.cos(angle));
+            float endY = centerY + (float) (radius * 0.95f * Math.sin(angle));
+            
+            Paint linePaint = new Paint();
+            linePaint.setColor(Color.argb(150, 255, 215, 0));
+            linePaint.setStyle(Paint.Style.STROKE);
+            linePaint.setStrokeWidth(2);
+            linePaint.setAntiAlias(true);
+            
+            canvas.drawLine(startX, startY, endX, endY, linePaint);
+        }
+        
+        // 绘制16个次方向线
+        angleStep = 360 / 16;
+        for (int i = 0; i < 16; i++) {
+            if (i % 2 == 0) continue; // 跳过已绘制的主方向
+            float angle = (float) Math.toRadians(i * angleStep - 90);
+            float startX = centerX + (float) (radius * 0.30f * Math.cos(angle));
+            float startY = centerY + (float) (radius * 0.30f * Math.sin(angle));
+            float endX = centerX + (float) (radius * 0.88f * Math.cos(angle));
+            float endY = centerY + (float) (radius * 0.88f * Math.sin(angle));
+            
+            Paint linePaint = new Paint();
+            linePaint.setColor(Color.argb(80, 135, 206, 235));
+            linePaint.setStyle(Paint.Style.STROKE);
+            linePaint.setStrokeWidth(1);
+            linePaint.setAntiAlias(true);
+            
+            canvas.drawLine(startX, startY, endX, endY, linePaint);
+        }
+    }
+    
+    private void drawTwelveZhi(Canvas canvas, int centerX, int centerY, float radius) {
+        String[] TWELVE_ZHI = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
+        float angleStep = 360 / 12;
+        float textRadius = radius * 0.62f;
+        
+        for (int i = 0; i < 12; i++) {
+            float angle = (float) Math.toRadians(i * angleStep - 90);
+            float x = centerX + (float) (textRadius * Math.cos(angle));
+            float y = centerY + (float) (textRadius * Math.sin(angle));
+            
+            canvas.save();
+            canvas.rotate(i * angleStep, x, y);
+            
+            textPaint.setTextSize(26);
+            textPaint.setColor(Color.argb(255, 255, 182, 193)); // 粉红色
+            canvas.drawText(TWELVE_ZHI[i], x, y + 9, textPaint);
+            canvas.restore();
+        }
+    }
+    
+    private void drawTenGan(Canvas canvas, int centerX, int centerY, float radius) {
+        String[] TEN_GAN = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
+        float angleStep = 360 / 10;
+        float textRadius = radius * 0.50f;
+        
+        for (int i = 0; i < 10; i++) {
+            float angle = (float) Math.toRadians(i * angleStep - 90);
+            float x = centerX + (float) (textRadius * Math.cos(angle));
+            float y = centerY + (float) (textRadius * Math.sin(angle));
+            
+            canvas.save();
+            canvas.rotate(i * angleStep, x, y);
+            
+            textPaint.setTextSize(22);
+            textPaint.setColor(Color.argb(255, 173, 255, 47)); // 绿黄色
+            canvas.drawText(TEN_GAN[i], x, y + 8, textPaint);
+            canvas.restore();
+        }
+    }
+    
+    private void drawFixedPointer(Canvas canvas, int centerX, int centerY, float radius) {
+        // 绘制固定在外面的指针（指向正南）
+        Paint pointerPaint = new Paint();
+        pointerPaint.setColor(Color.argb(255, 255, 70, 70));
+        pointerPaint.setStyle(Paint.Style.FILL);
+        pointerPaint.setAntiAlias(true);
+        
+        // 指针在罗盘外面
+        float pointerStart = radius * 1.02f;
+        float pointerEnd = radius * 1.15f;
+        
+        // 绘制指针三角形（指向南方）
+        float angle = (float) Math.toRadians(90);
+        float tipX = centerX + (float) (pointerEnd * Math.cos(angle));
+        float tipY = centerY + (float) (pointerEnd * Math.sin(angle));
+        
+        float baseAngle1 = (float) Math.toRadians(90 - 15);
+        float baseAngle2 = (float) Math.toRadians(90 + 15);
+        float base1X = centerX + (float) (pointerStart * Math.cos(baseAngle1));
+        float base1Y = centerY + (float) (pointerStart * Math.sin(baseAngle1));
+        float base2X = centerX + (float) (pointerStart * Math.cos(baseAngle2));
+        float base2Y = centerY + (float) (pointerStart * Math.sin(baseAngle2));
+        
+        android.graphics.Path path = new android.graphics.Path();
+        path.moveTo(tipX, tipY);
+        path.lineTo(base1X, base1Y);
+        path.lineTo(base2X, base2Y);
+        path.close();
+        canvas.drawPath(path, pointerPaint);
+        
+        // 绘制"南"字标记
+        textPaint.setTextSize(28);
+        textPaint.setColor(Color.argb(255, 255, 70, 70));
+        canvas.drawText("南", tipX, tipY + 40, textPaint);
     }
 
     private void drawTwentyFourMountains(Canvas canvas, int centerX, int centerY, float radius) {
@@ -219,41 +352,6 @@ public class LuoPanView extends View {
         
         taijiPaint.setColor(Color.argb(255, 0, 0, 0));
         canvas.drawCircle(centerX, centerY, 10, taijiPaint);
-    }
-
-    private void drawPointer(Canvas canvas, int centerX, int centerY, float radius) {
-        // 绘制固定的指针（指向正南）
-        Paint pointerPaint = new Paint();
-        pointerPaint.setColor(Color.argb(255, 255, 70, 70));
-        pointerPaint.setStyle(Paint.Style.FILL);
-        pointerPaint.setAntiAlias(true);
-        
-        // 绘制指针形状
-        float pointerLength = radius * 0.85f;
-        float pointerWidth = 20;
-        
-        // 保存画布状态并旋转指针到正南方向
-        canvas.save();
-        canvas.rotate(180, centerX, centerY);
-        
-        // 绘制指针三角形头部
-        android.graphics.Path path = new android.graphics.Path();
-        path.moveTo(centerX, centerY - pointerLength - 30);
-        path.lineTo(centerX - pointerWidth, centerY - pointerLength);
-        path.lineTo(centerX + pointerWidth, centerY - pointerLength);
-        path.close();
-        canvas.drawPath(path, pointerPaint);
-        
-        // 绘制指针尾部
-        RectF pointerRect = new RectF(
-            centerX - pointerWidth / 2,
-            centerY - pointerLength,
-            centerX + pointerWidth / 2,
-            centerY
-        );
-        canvas.drawRect(pointerRect, pointerPaint);
-        
-        canvas.restore();
     }
 
     public void setRotation(float rotation) {
