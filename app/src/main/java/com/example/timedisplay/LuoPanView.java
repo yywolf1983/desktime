@@ -134,18 +134,24 @@ public class LuoPanView extends View {
         }
         
         Paint linePaint = new Paint();
-        linePaint.setColor(Color.argb(160, 255, 215, 0));
+        linePaint.setColor(Color.argb(120, 255, 215, 0));
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(1.5f);
+        linePaint.setStrokeWidth(1.2f);
         linePaint.setAntiAlias(true);
         
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
             float startX = cx + (float) (r * 0.20f * Math.cos(angle));
             float startY = cy + (float) (r * 0.20f * Math.sin(angle));
+            float midX = cx + (float) (r * 0.50f * Math.cos(angle));
+            float midY = cy + (float) (r * 0.50f * Math.sin(angle));
+            float mid2X = cx + (float) (r * 0.65f * Math.cos(angle));
+            float mid2Y = cy + (float) (r * 0.65f * Math.sin(angle));
             float endX = cx + (float) (r * 0.90f * Math.cos(angle));
             float endY = cy + (float) (r * 0.90f * Math.sin(angle));
-            canvas.drawLine(startX, startY, endX, endY, linePaint);
+            
+            canvas.drawLine(startX, startY, midX, midY, linePaint);
+            canvas.drawLine(mid2X, mid2Y, endX, endY, linePaint);
         }
     }
 
@@ -256,46 +262,50 @@ public class LuoPanView extends View {
     }
     
     private void drawFixedPointer(Canvas canvas, int cx, int cy, float r) {
-        Paint linePaint = new Paint();
-        linePaint.setColor(Color.RED);
-        linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(4);
-        linePaint.setAntiAlias(true);
+        Paint arrowPaint = new Paint();
+        arrowPaint.setColor(Color.RED);
+        arrowPaint.setStyle(Paint.Style.FILL);
+        arrowPaint.setAntiAlias(true);
         
-        float pStart = r * 1.01f;
-        float pEnd = r * 1.12f;
+        float baseRadius = r * 0.96f;
+        float tipRadius = r * 1.01f;
+        float shoulderRadius = r * 0.985f;
         
-        double angle = Math.toRadians(-90);
-        float startX = cx + (float) (pStart * Math.cos(angle));
-        float startY = cy + (float) (pStart * Math.sin(angle));
-        float endX = cx + (float) (pEnd * Math.cos(angle));
-        float endY = cy + (float) (pEnd * Math.sin(angle));
+        double upAngle = Math.toRadians(-90);
+        double leftAngle = Math.toRadians(-90 - 7);
+        double rightAngle = Math.toRadians(-90 + 7);
         
-        canvas.drawLine(startX, startY, endX, endY, linePaint);
+        float tipX = cx + (float) (tipRadius * Math.cos(upAngle));
+        float tipY = cy + (float) (tipRadius * Math.sin(upAngle));
         
-        Paint tipPaint = new Paint();
-        tipPaint.setColor(Color.RED);
-        tipPaint.setStyle(Paint.Style.FILL);
-        tipPaint.setAntiAlias(true);
+        float baseX = cx + (float) (baseRadius * Math.cos(upAngle));
+        float baseY = cy + (float) (baseRadius * Math.sin(upAngle));
         
-        float tipSize = 8;
-        double tipAngle1 = Math.toRadians(-90 - 15);
-        double tipAngle2 = Math.toRadians(-90 + 15);
-        float tipX1 = endX - (float) (tipSize * Math.cos(tipAngle1));
-        float tipY1 = endY - (float) (tipSize * Math.sin(tipAngle1));
-        float tipX2 = endX - (float) (tipSize * Math.cos(tipAngle2));
-        float tipY2 = endY - (float) (tipSize * Math.sin(tipAngle2));
+        float shoulderLeftX = cx + (float) (shoulderRadius * Math.cos(leftAngle));
+        float shoulderLeftY = cy + (float) (shoulderRadius * Math.sin(leftAngle));
         
-        android.graphics.Path tipPath = new android.graphics.Path();
-        tipPath.moveTo(endX, endY);
-        tipPath.lineTo(tipX1, tipY1);
-        tipPath.lineTo(tipX2, tipY2);
-        tipPath.close();
-        canvas.drawPath(tipPath, tipPaint);
+        float shoulderRightX = cx + (float) (shoulderRadius * Math.cos(rightAngle));
+        float shoulderRightY = cy + (float) (shoulderRadius * Math.sin(rightAngle));
         
-        textPaint.setTextSize(19);
+        android.graphics.Path arrowPath = new android.graphics.Path();
+        arrowPath.moveTo(tipX, tipY);
+        arrowPath.lineTo(shoulderLeftX, shoulderLeftY);
+        arrowPath.lineTo(baseX, baseY);
+        arrowPath.lineTo(shoulderRightX, shoulderRightY);
+        arrowPath.close();
+        canvas.drawPath(arrowPath, arrowPaint);
+        
+        Paint borderPaint = new Paint();
+        borderPaint.setColor(Color.rgb(180, 0, 0));
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeWidth(0.8f);
+        borderPaint.setAntiAlias(true);
+        canvas.drawPath(arrowPath, borderPaint);
+        
+        textPaint.setTextSize(9);
         textPaint.setColor(Color.RED);
-        canvas.drawText("北", endX, endY - 20, textPaint);
+        textPaint.setFakeBoldText(true);
+        canvas.drawText("北", tipX, tipY - 3, textPaint);
     }
 
     public void setRotation(float rotation) {
@@ -308,14 +318,14 @@ public class LuoPanView extends View {
     }
     
     public String getCurrentMountain() {
-        float normalizedRotation = (rotation % 360 + 360) % 360;
+        float normalizedRotation = (-rotation % 360 + 360) % 360;
         int index = Math.round(normalizedRotation / 15f) % 24;
         if (index < 0) index += 24;
         return TWENTY_FOUR_MOUNTAINS[index];
     }
     
     public String getCurrentDirection() {
-        float normalizedRotation = (rotation % 360 + 360) % 360;
+        float normalizedRotation = (-rotation % 360 + 360) % 360;
         int index = Math.round(normalizedRotation / 45f) % 8;
         if (index < 0) index += 8;
         String[] directions = {"坎(北)", "艮(东北)", "震(东)", "巽(东南)", "离(南)", "坤(西南)", "兑(西)", "乾(西北)"};
