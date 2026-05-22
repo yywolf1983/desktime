@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
     public SevenSegmentDisplay minute1TextView;
     public SevenSegmentDisplay minute2TextView;
     public TextView dateTextView;
+    public TextView jieqiTextView;
     public TextView fourPillarsTextView;
     public TextView ninePalaceExplanation;
     public TextView detailedInterpretation;
@@ -62,6 +63,7 @@ public class MainActivity extends Activity {
         minute1TextView = (SevenSegmentDisplay) findViewById(R.id.minute1TextView);
         minute2TextView = (SevenSegmentDisplay) findViewById(R.id.minute2TextView);
         dateTextView = findViewById(R.id.dateTextView);
+        jieqiTextView = findViewById(R.id.jieqiTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
         copyButton = findViewById(R.id.copyButton);
@@ -133,6 +135,20 @@ public class MainActivity extends Activity {
         // 设置时辰运势TextView可点击
         timeFortuneTextView.setClickable(true);
         timeFortuneTextView.setFocusable(true);
+
+        // 为节气TextView添加点击事件监听器，点击时跳转到节气详情页面
+        if (jieqiTextView != null) {
+            jieqiTextView.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(MainActivity.this, JieqiActivity.class);
+                    String jieqi = jieqiTextView.getText().toString().replace("·", "").trim();
+                    intent.putExtra("jieqi", jieqi);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
 
         // 点击复制按钮复制派盘信息
         if (copyButton != null) {
@@ -257,6 +273,12 @@ public class MainActivity extends Activity {
         }
 
         dateTextView.setText(dateString);
+
+        // 更新节气显示
+        String jieqi = JieqiData.getCurrentJieqi(displayCalendar);
+        if (jieqiTextView != null) {
+            jieqiTextView.setText(jieqi);
+        }
 
         // 四柱排盘：使用自定义时间（如有）或当前时间
         Date fourPillarsDate = isCustomTime ? customCalendar.getTime() : now;

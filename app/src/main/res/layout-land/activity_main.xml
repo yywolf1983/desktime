@@ -12,6 +12,7 @@
             </LinearLayout>
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginVertical="4dp">
                 <TextView android:id="@+id/dateTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="16sp" android:textColor="@color/tech_blue" android:fontFamily="sans-serif-light" android:gravity="center" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground" tools:text="2024年12月31日 星期二"/>
+                <TextView android:id="@+id/jieqiTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp" android:textColor="#FFD700" android:fontFamily="sans-serif-light" android:gravity="center" android:paddingStart="8dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground" tools:text="立春"/>
                 <TextView android:id="@+id/resetTimeButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⟳" android:textSize="20sp" android:textColor="#FF87CEEB" android:paddingStart="8dp" android:paddingEnd="8dp" android:visibility="gone" android:clickable="true" android:focusable="true"/>
             </LinearLayout>
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginVertical="4dp">
