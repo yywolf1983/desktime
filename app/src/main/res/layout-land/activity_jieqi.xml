@@ -38,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="二十四"
+                android:text="二十四节气"
                 android:textSize="18sp"
                 android:textColor="#FF87CEEB"
                 android:gravity="center"

@@ -227,7 +227,7 @@ public class JieqiActivity extends Activity {
                     1
                 );
                 boxParams.setMargins(4, 4, 4, 4);
-                boxParams.height = 80;
+                boxParams.height = 120;
                 jieqiBox.setLayoutParams(boxParams);
                 jieqiBox.setBackgroundColor(Color.parseColor("#1a1a2e"));
                 jieqiBox.setPadding(4, 8, 4, 8);
