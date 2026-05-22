@@ -37,22 +37,22 @@ echo "应用目录：$APP_DIR"
 echo "输出目录：$OUT_DIR"
 
 # 设置构建工具路径
-BUILD_TOOLS_DIR="$ANDROID_HOME/build-tools/34.0.0"
+BUILD_TOOLS_DIR="$ANDROID_HOME/build-tools/35.0.0"
 PLATFORM_DIR="$ANDROID_HOME/platforms/android-34"
 
 # 检查构建工具是否存在
 if [ ! -d "$BUILD_TOOLS_DIR" ]; then
-    echo "错误：未找到build-tools 34.0.0"
+    echo "错误：未找到build-tools 35.0.0"
     exit 1
 fi
 
 if [ ! -d "$PLATFORM_DIR" ]; then
-    echo "错误：未找到android-33平台"
+    echo "错误：未找到android-34平台"
     exit 1
 fi
 
-echo "使用build-tools版本：34.0.0"
-echo "使用Android平台版本：33"
+echo "使用build-tools版本：35.0.0"
+echo "使用Android平台版本：34"
 
 # 编译资源并生成R.java
 echo "编译资源..."
@@ -113,7 +113,7 @@ fi
 
 "$JAVAC" -d "$OUT_DIR/classes" \
     -classpath "$CLASSPATH" \
-    -source 1.8 -target 1.8 \
+    --release 8 \
     $JAVA_FILES $GEN_JAVA_FILES
 
 if [ $? -ne 0 ]; then

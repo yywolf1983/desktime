@@ -13,6 +13,11 @@ public class LuoPanView extends View {
     private Paint textPaint;
     private Paint centerPaint;
     private Paint outerCirclePaint;
+    private Paint linePaint;
+    private Paint arrowPaint;
+    private Paint borderPaint;
+    private Paint bgPaint;
+    private Paint taijiPaint;
     
     private static final String[] TWENTY_FOUR_MOUNTAINS = {
         "壬", "子", "癸", "丑", "艮", "寅",
@@ -82,6 +87,33 @@ public class LuoPanView extends View {
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
         
+        linePaint = new Paint();
+        linePaint.setColor(Color.argb(120, 255, 215, 0));
+        linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setStrokeWidth(1.2f);
+        linePaint.setAntiAlias(true);
+        
+        arrowPaint = new Paint();
+        arrowPaint.setColor(Color.RED);
+        arrowPaint.setStyle(Paint.Style.FILL);
+        arrowPaint.setAntiAlias(true);
+        
+        borderPaint = new Paint();
+        borderPaint.setColor(Color.rgb(180, 0, 0));
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeWidth(0.8f);
+        borderPaint.setAntiAlias(true);
+        
+        bgPaint = new Paint();
+        bgPaint.setColor(Color.argb(40, 135, 206, 235));
+        bgPaint.setStyle(Paint.Style.FILL);
+        bgPaint.setAntiAlias(true);
+        
+        taijiPaint = new Paint();
+        taijiPaint.setColor(Color.WHITE);
+        taijiPaint.setStyle(Paint.Style.FILL);
+        taijiPaint.setAntiAlias(true);
+        
         setBackgroundColor(Color.TRANSPARENT);
     }
 
@@ -103,10 +135,6 @@ public class LuoPanView extends View {
         int centerY = height / 2;
         float radius = Math.min(width, height) / 2 - 25;
 
-        Paint bgPaint = new Paint();
-        bgPaint.setColor(Color.argb(40, 135, 206, 235));
-        bgPaint.setStyle(Paint.Style.FILL);
-        bgPaint.setAntiAlias(true);
         canvas.drawCircle(centerX, centerY, radius, bgPaint);
 
         canvas.save();
@@ -133,11 +161,7 @@ public class LuoPanView extends View {
             canvas.drawCircle(cx, cy, radius, circlePaint);
         }
         
-        Paint linePaint = new Paint();
-        linePaint.setColor(Color.argb(120, 255, 215, 0));
-        linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(1.2f);
-        linePaint.setAntiAlias(true);
+
         
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
@@ -251,10 +275,7 @@ public class LuoPanView extends View {
     private void drawCenter(Canvas canvas, int cx, int cy, float r) {
         canvas.drawCircle(cx, cy, 18, centerPaint);
         
-        Paint taijiPaint = new Paint();
         taijiPaint.setColor(Color.WHITE);
-        taijiPaint.setStyle(Paint.Style.FILL);
-        taijiPaint.setAntiAlias(true);
         canvas.drawCircle(cx, cy, 7, taijiPaint);
         
         taijiPaint.setColor(Color.BLACK);
@@ -262,11 +283,6 @@ public class LuoPanView extends View {
     }
     
     private void drawFixedPointer(Canvas canvas, int cx, int cy, float r) {
-        Paint arrowPaint = new Paint();
-        arrowPaint.setColor(Color.RED);
-        arrowPaint.setStyle(Paint.Style.FILL);
-        arrowPaint.setAntiAlias(true);
-        
         float baseRadius = r * 0.96f;
         float tipRadius = r * 1.01f;
         float shoulderRadius = r * 0.985f;
@@ -295,17 +311,13 @@ public class LuoPanView extends View {
         arrowPath.close();
         canvas.drawPath(arrowPath, arrowPaint);
         
-        Paint borderPaint = new Paint();
-        borderPaint.setColor(Color.rgb(180, 0, 0));
-        borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(0.8f);
-        borderPaint.setAntiAlias(true);
         canvas.drawPath(arrowPath, borderPaint);
         
-        textPaint.setTextSize(9);
+        textPaint.setTextSize(14);
         textPaint.setColor(Color.RED);
         textPaint.setFakeBoldText(true);
-        canvas.drawText("北", tipX, tipY - 3, textPaint);
+        float textY = cy - r * 1.1f;
+        canvas.drawText("北", cx, textY, textPaint);
     }
 
     public void setRotation(float rotation) {

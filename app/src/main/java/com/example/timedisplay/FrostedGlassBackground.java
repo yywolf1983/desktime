@@ -14,6 +14,14 @@ public class FrostedGlassBackground extends View {
     private Paint gradientPaint;
     private Paint glowPaint;
     private Paint gridPaint;
+    private Paint ringPaint;
+    private Paint symbolPaint;
+    private Paint namePaint;
+    private Paint baguaLinePaint;
+    private Paint arcPaint;
+    private Paint taijiPaint;
+    private Paint overlayPaint;
+    private Paint gradientOverlayPaint;
     private int centerX, centerY;
     private float radius;
     
@@ -36,6 +44,41 @@ public class FrostedGlassBackground extends View {
         gradientPaint = new Paint();
         glowPaint = new Paint();
         gridPaint = new Paint();
+        
+        ringPaint = new Paint();
+        ringPaint.setStyle(Paint.Style.STROKE);
+        ringPaint.setAntiAlias(true);
+        
+        symbolPaint = new Paint();
+        symbolPaint.setColor(0x306A90B0);
+        symbolPaint.setTextSize(44f);
+        symbolPaint.setAntiAlias(true);
+        symbolPaint.setTextAlign(Paint.Align.CENTER);
+        
+        namePaint = new Paint();
+        namePaint.setColor(0x255A80A0);
+        namePaint.setTextSize(36f);
+        namePaint.setAntiAlias(true);
+        namePaint.setTextAlign(Paint.Align.CENTER);
+        
+        baguaLinePaint = new Paint();
+        baguaLinePaint.setColor(0x0A3A6080);
+        baguaLinePaint.setStrokeWidth(1f);
+        
+        arcPaint = new Paint();
+        arcPaint.setStyle(Paint.Style.STROKE);
+        arcPaint.setColor(0x104A7090);
+        arcPaint.setStrokeWidth(1f);
+        
+        taijiPaint = new Paint();
+        taijiPaint.setStyle(Paint.Style.FILL);
+        taijiPaint.setAntiAlias(true);
+        
+        overlayPaint = new Paint();
+        overlayPaint.setColor(0x10FFFFFF);
+        
+        gradientOverlayPaint = new Paint();
+        
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         setAlpha(0.9f);
     }
@@ -102,10 +145,6 @@ public class FrostedGlassBackground extends View {
     }
     
     private void drawBaGuaArray(Canvas canvas) {
-        Paint ringPaint = new Paint();
-        ringPaint.setStyle(Paint.Style.STROKE);
-        ringPaint.setAntiAlias(true);
-        
         float[] ringRadii = {radius * 0.35f, radius * 0.55f, radius * 0.75f, radius * 0.95f};
         int[] ringColors = {0x255A80C0, 0x1A4A70A0, 0x103A6080, 0x0A2A5060};
         int[] ringWidths = {2, 2, 1, 1};
@@ -121,18 +160,6 @@ public class FrostedGlassBackground extends View {
         String[] baGuaSymbols = {"☰", "☱", "☲", "☳", "☴", "☵", "☶", "☷"};
         String[] baGuaNames = {"乾", "兑", "离", "震", "巽", "坎", "艮", "坤"};
         
-        Paint symbolPaint = new Paint();
-        symbolPaint.setColor(0x306A90B0);
-        symbolPaint.setTextSize(44f);
-        symbolPaint.setAntiAlias(true);
-        symbolPaint.setTextAlign(Paint.Align.CENTER);
-        
-        Paint namePaint = new Paint();
-        namePaint.setColor(0x255A80A0);
-        namePaint.setTextSize(36f);
-        namePaint.setAntiAlias(true);
-        namePaint.setTextAlign(Paint.Align.CENTER);
-        
         float symbolRadius = radius * 0.65f;
         for (int i = 0; i < 8; i++) {
             double angle = Math.PI * 2 * i / 8 - Math.PI / 2;
@@ -143,21 +170,12 @@ public class FrostedGlassBackground extends View {
             canvas.drawText(baGuaNames[i], x, y + 36, namePaint);
         }
         
-        Paint linePaint = new Paint();
-        linePaint.setColor(0x0A3A6080);
-        linePaint.setStrokeWidth(1f);
-        
         for (int i = 0; i < 8; i++) {
             double angle = Math.PI * 2 * i / 8 - Math.PI / 2;
             float x = (float) (centerX + radius * 0.9f * Math.cos(angle));
             float y = (float) (centerY + radius * 0.9f * Math.sin(angle));
-            canvas.drawLine(centerX, centerY, x, y, linePaint);
+            canvas.drawLine(centerX, centerY, x, y, baguaLinePaint);
         }
-        
-        Paint arcPaint = new Paint();
-        arcPaint.setStyle(Paint.Style.STROKE);
-        arcPaint.setColor(0x104A7090);
-        arcPaint.setStrokeWidth(1f);
         
         float arcRadius = radius * 0.85f;
         for (int i = 0; i < 8; i++) {
@@ -174,55 +192,49 @@ public class FrostedGlassBackground extends View {
     }
     
     private void drawTaiChi(Canvas canvas, float size) {
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(true);
-        
         float halfSize = size / 2;
         
         canvas.save();
         canvas.rotate(-90, centerX, centerY);
         
+        taijiPaint.setColor(0xFF0A0A12);
         canvas.drawArc(
             centerX - size, centerY - size,
             centerX + size, centerY + size,
-            0, 180, true, paint
+            0, 180, true, taijiPaint
         );
         
-        paint.setColor(0x205A80B0);
+        taijiPaint.setColor(0x205A80B0);
         canvas.drawArc(
             centerX - size, centerY - size,
             centerX + size, centerY + size,
-            180, 180, true, paint
+            180, 180, true, taijiPaint
         );
         
-        paint.setColor(0xFF0A0A12);
-        canvas.drawCircle(centerX, centerY - halfSize, halfSize, paint);
+        taijiPaint.setColor(0xFF0A0A12);
+        canvas.drawCircle(centerX, centerY - halfSize, halfSize, taijiPaint);
         
-        paint.setColor(0x205A80B0);
-        canvas.drawCircle(centerX, centerY + halfSize, halfSize, paint);
+        taijiPaint.setColor(0x205A80B0);
+        canvas.drawCircle(centerX, centerY + halfSize, halfSize, taijiPaint);
         
-        paint.setColor(0x205A80B0);
-        canvas.drawCircle(centerX, centerY - halfSize, halfSize * 0.3f, paint);
+        taijiPaint.setColor(0x205A80B0);
+        canvas.drawCircle(centerX, centerY - halfSize, halfSize * 0.3f, taijiPaint);
         
-        paint.setColor(0xFF0A0A12);
-        canvas.drawCircle(centerX, centerY + halfSize, halfSize * 0.3f, paint);
+        taijiPaint.setColor(0xFF0A0A12);
+        canvas.drawCircle(centerX, centerY + halfSize, halfSize * 0.3f, taijiPaint);
         
         canvas.restore();
     }
     
     private void drawFrostedOverlay(Canvas canvas, int w, int h) {
-        Paint overlayPaint = new Paint();
-        overlayPaint.setColor(0x10FFFFFF);
         canvas.drawRect(0, 0, w, h, overlayPaint);
         
-        Paint gradientOverlay = new Paint();
         LinearGradient lg = new LinearGradient(
             0, 0, w, h,
             0x15FFFFFF, 0x00FFFFFF,
             Shader.TileMode.CLAMP
         );
-        gradientOverlay.setShader(lg);
-        canvas.drawRect(0, 0, w, h, gradientOverlay);
+        gradientOverlayPaint.setShader(lg);
+        canvas.drawRect(0, 0, w, h, gradientOverlayPaint);
     }
 }
