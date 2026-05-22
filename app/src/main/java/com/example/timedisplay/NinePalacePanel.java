@@ -354,9 +354,9 @@ public class NinePalacePanel extends View {
             // 第三行：天盘天干/地盘天干 + 吉凶 + 旺衰
             String guaSymbol = getGuaSymbol(i);
             
-            // 生成宫位数据
+            // 生成宫位数据（去掉天干，八门放在第三行）
             data[i][0] = palaceName;
-            data[i][1] = god + " " + star + " " + door + "\n" + tianGan + "/" + diGan + " " + luck + " " + wangCuiValue;
+            data[i][1] = god + " " + star + "\n" + (door != null && !door.isEmpty() ? door : " ") + " " + luck + " " + wangCuiValue;
         }
 
         setPalaceData(data);
@@ -507,7 +507,7 @@ public class NinePalacePanel extends View {
     // 获取方位符号（按照qimen.py的宫位顺序）
     private String getDirectionSymbol(int palaceIndex) {
         // 为每个宫位添加对应的方位符号
-        String[] symbols = {"⬆", "⤢", "➡", "↘", "●", "↖", "⬅", "↗", "⬇"};
+        String[] symbols = {"↑", "↙", "→", "↘", "●", "↖", "←", "↗", "↓"};
         return symbols[palaceIndex];
     }
     

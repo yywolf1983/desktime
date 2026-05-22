@@ -346,22 +346,20 @@ public class FullNinePalaceActivity extends Activity {
         String[] PALACE_NAMES = {"坎", "坤", "震", "巽", "中", "乾", "兑", "艮", "离"};
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
         String[] GUA_SYMBOLS = {"☵", "☷", "☳", "☴", "", "☰", "☱", "☶", "☲"};
-        String[] DIRECTION_SYMBOLS = {"⬆", "⤢", "➡", "↘", "●", "↖", "⬅", "↗", "⬇"};
+        String[] DIRECTION_SYMBOLS = {"↑", "↙", "→", "↘", "●", "↖", "←", "↗", "↓"};
 
         String[][] palaceData = new String[9][2];
         for (int i = 0; i < 9; i++) {
             String star = nineStars[i];
             String door = eightDoors[i];
             String god = eightGods[i];
-            String tianGan = tianPanTianGan[i];
-            String diGan = diPanTianGan[i];
 
             String luck = getLuckSymbol(star, door);
             String directionSymbol = DIRECTION_SYMBOLS[i];
             String palaceName = PALACE_NAMES[i] + " " + directionSymbol + " " + DIRECTIONS[i];
 
             palaceData[i][0] = palaceName;
-            palaceData[i][1] = god + " " + star + " " + door + "\n" + tianGan + "/" + diGan + " " + luck + " " + wangCui[i];
+            palaceData[i][1] = god + " " + star + "\n" + (door != null && !door.isEmpty() ? door : " ") + " " + luck + " " + wangCui[i];
         }
 
         fullNinePalacePanel.setPalaceData(palaceData);
