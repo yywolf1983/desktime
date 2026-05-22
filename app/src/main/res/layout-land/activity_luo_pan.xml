@@ -36,16 +36,6 @@
                 android:background="#28000000"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/titleInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="━ 罗盘信息 ━"
-                    android:textSize="20sp"
-                    android:textColor="#FFD700"
-                    android:textStyle="bold"
-                    android:paddingBottom="12dp" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -121,6 +111,13 @@
                     android:textColor="#ADD8E6"
                     android:gravity="center"
                     android:paddingTop="12dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#40FFFFFF"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp" />
 
                 <TextView
                     android:id="@+id/detailInfo"

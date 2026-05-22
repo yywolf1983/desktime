@@ -104,6 +104,25 @@ public class FullNinePalaceActivity extends Activity {
         updateHandler.postAtTime(updateRunnable, first);
     }
 
+    // 获取自定义时间（如果有）
+    private Calendar getDisplayCalendar() {
+        android.content.Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("custom_year")) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(
+                intent.getIntExtra("custom_year", cal.get(Calendar.YEAR)),
+                intent.getIntExtra("custom_month", cal.get(Calendar.MONTH) + 1) - 1,
+                intent.getIntExtra("custom_day", cal.get(Calendar.DAY_OF_MONTH)),
+                intent.getIntExtra("custom_hour", cal.get(Calendar.HOUR_OF_DAY)),
+                intent.getIntExtra("custom_minute", cal.get(Calendar.MINUTE)),
+                0
+            );
+            cal.set(Calendar.MILLISECOND, 0);
+            return cal;
+        }
+        return Calendar.getInstance();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -120,9 +139,8 @@ public class FullNinePalaceActivity extends Activity {
     }
 
     private void updateFullNinePalace() {
-        Date now = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
+        Calendar calendar = getDisplayCalendar();
+        Date now = calendar.getTime();
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
@@ -339,10 +357,11 @@ public class FullNinePalaceActivity extends Activity {
             String diGan = diPanTianGan[i];
 
             String luck = getLuckSymbol(star, door);
-            String palaceName = PALACE_NAMES[i] + DIRECTIONS[i];
+            String directionSymbol = DIRECTION_SYMBOLS[i];
+            String palaceName = PALACE_NAMES[i] + " " + directionSymbol + " " + DIRECTIONS[i];
 
             palaceData[i][0] = palaceName;
-            palaceData[i][1] = star + door + "\n" + tianGan + " " + luck + " " + GUA_SYMBOLS[i] + DIRECTION_SYMBOLS[i];
+            palaceData[i][1] = god + " " + star + " " + door + "\n" + tianGan + "/" + diGan + " " + luck + " " + wangCui[i];
         }
 
         fullNinePalacePanel.setPalaceData(palaceData);
@@ -594,12 +613,12 @@ public class FullNinePalaceActivity extends Activity {
                 pos = (pos + 1) % 9;
             }
         } else {
-            String[] bashenOrderYin = {"值符", "九天", "九地", "玄武", "白虎", "六合", "太阴", "螣蛇"};
+            // 阴遁：顺序与阳遁相同，只改变方向
             int currentGodIndex = 0;
             int pos = zhiFuPalace;
             while (currentGodIndex < 8) {
                 if (pos != 4) {
-                    eightGods[pos] = bashenOrderYin[currentGodIndex];
+                    eightGods[pos] = bashenOrder[currentGodIndex];
                     currentGodIndex++;
                 }
                 pos = (pos - 1 + 9) % 9;
@@ -612,8 +631,57 @@ public class FullNinePalaceActivity extends Activity {
     // 计算旺衰
     private String[] calculateWangCui(String dayGan) {
         String[] wangCui = new String[9];
-        java.util.Arrays.fill(wangCui, "旺相");
+        String[] PALACE_WUXING = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
+        String riGanWuXing = getWuXing(dayGan);
+        
+        for (int i = 0; i < 9; i++) {
+            String gongWuXing = PALACE_WUXING[i];
+            if (riGanWuXing.equals(gongWuXing)) {
+                wangCui[i] = "旺";
+            } else if (isSheng(gongWuXing, riGanWuXing)) {
+                wangCui[i] = "相";
+            } else if (isSheng(riGanWuXing, gongWuXing)) {
+                wangCui[i] = "休";
+            } else if (isKe(gongWuXing, riGanWuXing)) {
+                wangCui[i] = "囚";
+            } else if (isKe(riGanWuXing, gongWuXing)) {
+                wangCui[i] = "死";
+            } else {
+                wangCui[i] = "平";
+            }
+        }
         return wangCui;
+    }
+    
+    // 获取天干五行
+    private String getWuXing(String gan) {
+        if (gan == null) return "土";
+        switch (gan) {
+            case "甲": case "乙": return "木";
+            case "丙": case "丁": return "火";
+            case "戊": case "己": return "土";
+            case "庚": case "辛": return "金";
+            case "壬": case "癸": return "水";
+            default: return "土";
+        }
+    }
+    
+    // 判断五行生克关系（a生b）
+    private boolean isSheng(String a, String b) {
+        return (a.equals("木") && b.equals("火")) ||
+               (a.equals("火") && b.equals("土")) ||
+               (a.equals("土") && b.equals("金")) ||
+               (a.equals("金") && b.equals("水")) ||
+               (a.equals("水") && b.equals("木"));
+    }
+    
+    // 判断五行生克关系（a克b）
+    private boolean isKe(String a, String b) {
+        return (a.equals("木") && b.equals("土")) ||
+               (a.equals("火") && b.equals("金")) ||
+               (a.equals("土") && b.equals("水")) ||
+               (a.equals("金") && b.equals("木")) ||
+               (a.equals("水") && b.equals("火"));
     }
 
     private String getLuckSymbol(String star, String door, String god) {
@@ -670,6 +738,8 @@ public class FullNinePalaceActivity extends Activity {
         int xunShouPalace = getXunShouPalace(xunShou);
         int zhiShiPalace = getZhiShiPalace(xunShouPalace, timeZhi, isYangDun);
         String[] eightDoors = arrangeEightDoorsStandard(zhiShiDoor, zhiShiPalace, isYangDun);
+        String[] eightGods = arrangeEightGodsStandard(zhiFuPalace, isYangDun);
+        String[] wangCui = calculateWangCui(dayGan);
         
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
         
@@ -722,6 +792,42 @@ public class FullNinePalaceActivity extends Activity {
             sb.append("忌远行迁徙  忌重大行动\n\n");
         }
         
+        // 旺衰分析
+        sb.append("【📈 旺衰分析】\n");
+        String dayGanWuXing = getWuXing(dayGan);
+        sb.append("日干 ").append(dayGan).append("(").append(dayGanWuXing).append(")\n");
+        StringBuilder wangPositions = new StringBuilder();
+        StringBuilder xiuPositions = new StringBuilder();
+        StringBuilder qiuPositions = new StringBuilder();
+        StringBuilder siPositions = new StringBuilder();
+        StringBuilder xiangPositions = new StringBuilder();
+        for (int i = 0; i < 9; i++) {
+            if (i == 4) continue; // 跳过中宫
+            String wc = wangCui[i];
+            if (wc.equals("旺")) {
+                if (wangPositions.length() > 0) wangPositions.append("、");
+                wangPositions.append(DIRECTIONS[i]);
+            } else if (wc.equals("相")) {
+                if (xiangPositions.length() > 0) xiangPositions.append("、");
+                xiangPositions.append(DIRECTIONS[i]);
+            } else if (wc.equals("休")) {
+                if (xiuPositions.length() > 0) xiuPositions.append("、");
+                xiuPositions.append(DIRECTIONS[i]);
+            } else if (wc.equals("囚")) {
+                if (qiuPositions.length() > 0) qiuPositions.append("、");
+                qiuPositions.append(DIRECTIONS[i]);
+            } else if (wc.equals("死")) {
+                if (siPositions.length() > 0) siPositions.append("、");
+                siPositions.append(DIRECTIONS[i]);
+            }
+        }
+        if (wangPositions.length() > 0) sb.append("旺位：").append(wangPositions).append(" 利于行动\n");
+        if (xiangPositions.length() > 0) sb.append("相位：").append(xiangPositions).append(" 得助力\n");
+        if (xiuPositions.length() > 0) sb.append("休位：").append(xiuPositions).append(" 宜休息\n");
+        if (qiuPositions.length() > 0) sb.append("囚位：").append(qiuPositions).append(" 受制约\n");
+        if (siPositions.length() > 0) sb.append("死位：").append(siPositions).append(" 宜避开\n");
+        sb.append("\n");
+        
         sb.append("【📋 今日宜忌】\n");
         sb.append("宜:\n");
         String[] yiItems = getYiActivitiesShort(zhiFuStar, zhiShiDoor);
@@ -735,12 +841,18 @@ public class FullNinePalaceActivity extends Activity {
         }
         sb.append("\n");
         
+        // 八神分析
+        sb.append("【🔮 八神分布】\n");
+        String zhiFuGod = eightGods[zhiFuPalace];
+        sb.append("值符宫八神：").append(zhiFuGod != null ? zhiFuGod : "无").append("\n");
+        sb.append(getGodMeaningShort(zhiFuGod)).append("\n\n");
+        
         sb.append("【⏰ 时辰运势】\n");
         sb.append(getShichenName(timeZhi)).append("\n");
         sb.append(getTimeFortuneShort(timeZhi)).append("\n\n");
         
         sb.append("【🌈 综合建议】\n");
-        sb.append(getOverallAdviceShort(isYangDun, ju, zhiFuStar, zhiShiDoor, dayGan));
+        sb.append(getOverallAdviceShort(isYangDun, ju, zhiFuStar, zhiShiDoor, zhiFuGod, dayGan));
         
         return sb.toString();
     }
@@ -1076,6 +1188,51 @@ public class FullNinePalaceActivity extends Activity {
         return sb.toString();
     }
     
+    private String getDayAdviceByAll(String star, String door, String god, String dayGan) {
+        StringBuilder sb = new StringBuilder();
+        
+        // 根据门给出建议
+        if (door != null) {
+            switch (door) {
+                case "开": sb.append("开门大吉 宜开创事业\n"); break;
+                case "休": sb.append("休门利养 宜休息调整\n"); break;
+                case "生": sb.append("生门兴旺 宜求财发展\n"); break;
+                case "伤": sb.append("伤门有损 防破财受伤\n"); break;
+                case "杜": sb.append("杜门闭塞 宜静守等待\n"); break;
+                case "景": sb.append("景门光明 利考试展示\n"); break;
+                case "死": sb.append("死门不利 诸事需谨慎\n"); break;
+                case "惊": sb.append("惊门不安 防口舌是非\n"); break;
+            }
+        }
+        
+        // 根据神给出建议
+        if (god != null) {
+            switch (god) {
+                case "值符": sb.append("值符贵人 利领导决策\n"); break;
+                case "螣蛇": sb.append("螣蛇虚诈 防欺骗陷阱\n"); break;
+                case "太阴": sb.append("太阴暗助 利隐秘行事\n"); break;
+                case "六合": sb.append("六合和合 利合作婚姻\n"); break;
+                case "白虎": sb.append("白虎凶险 谨慎防意外\n"); break;
+                case "玄武": sb.append("玄武盗贼 防财物损失\n"); break;
+                case "九地": sb.append("九地稳固 利根基建设\n"); break;
+                case "九天": sb.append("九天高远 利开拓发展\n"); break;
+            }
+        }
+        
+        // 根据日干给出建议
+        String wuxing = getWuXing(dayGan);
+        sb.append("日干").append(dayGan).append("(").append(wuxing).append(") ");
+        switch (wuxing) {
+            case "木": sb.append("利东方 春季\n"); break;
+            case "火": sb.append("利南方 夏季\n"); break;
+            case "土": sb.append("利中央 四季\n"); break;
+            case "金": sb.append("利西方 秋季\n"); break;
+            case "水": sb.append("利北方 冬季\n"); break;
+        }
+        
+        return sb.toString();
+    }
+    
     private String getDayAdvice(String star, String door, String dayGan) {
         if (star == null || door == null) return "运势平稳";
         
@@ -1168,7 +1325,22 @@ public class FullNinePalaceActivity extends Activity {
         }
     }
     
-    private String getOverallAdviceShort(boolean isYangDun, int ju, String star, String door, String dayGan) {
+    private String getGodMeaningShort(String god) {
+        if (god == null || god.isEmpty()) return "无神临宫";
+        switch (god) {
+            case "值符": return "领导贵人 大事可成";
+            case "螣蛇": return "虚诈多变 小心陷阱";
+            case "太阴": return "暗中助力 隐秘行事";
+            case "六合": return "合作顺利 婚姻和谐";
+            case "白虎": return "凶险压力 谨慎应对";
+            case "玄武": return "盗贼欺骗 防范小人";
+            case "九地": return "稳定持久 根基深厚";
+            case "九天": return "高远发展 上升空间";
+            default: return "神煞临宫";
+        }
+    }
+    
+    private String getOverallAdviceShort(boolean isYangDun, int ju, String star, String door, String god, String dayGan) {
         StringBuilder sb = new StringBuilder();
         
         sb.append("📊 命盘分析:\n");
@@ -1181,13 +1353,14 @@ public class FullNinePalaceActivity extends Activity {
             sb.append("利静心守成 蓄势待发\n\n");
         }
         
-        sb.append("⭐ 星门吉凶:\n");
+        sb.append("⭐ 星门神吉凶:\n");
         
         String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
         String[] luckyDoors = {"开", "休", "生"};
         String[] neutralDoors = {"杜", "景"};
+        String[] luckyGods = {"值符", "太阴", "六合", "九地", "九天"};
         
-        boolean isLuckyStar = false, isLuckyDoor = false;
+        boolean isLuckyStar = false, isLuckyDoor = false, isLuckyGod = false;
         boolean isNeutralDoor = false;
         
         if (star != null) {
@@ -1197,24 +1370,28 @@ public class FullNinePalaceActivity extends Activity {
             for (String d : luckyDoors) if (d.equals(door)) isLuckyDoor = true;
             for (String d : neutralDoors) if (d.equals(door)) isNeutralDoor = true;
         }
+        if (god != null) {
+            for (String g : luckyGods) if (g.equals(god)) isLuckyGod = true;
+        }
         
-        if (isLuckyStar && isLuckyDoor) {
+        int luckyCount = (isLuckyStar ? 1 : 0) + (isLuckyDoor ? 1 : 0) + (isLuckyGod ? 1 : 0);
+        
+        if (luckyCount >= 3) {
             sb.append("★★★ 大吉 ★★★\n");
-            sb.append("值符值使皆吉 运势极佳\n把握机遇  积极行动\n\n");
-        } else if (isLuckyStar || isLuckyDoor) {
+            sb.append("星门神皆吉 运势极佳\n把握机遇  积极行动\n\n");
+        } else if (luckyCount == 2) {
             sb.append("★★ 小吉 ★★\n");
-            sb.append("星门一吉一平 运势良好\n稳中求进  顺势而为\n\n");
-        } else if (isNeutralDoor) {
+            sb.append("多数吉利 运势良好\n稳中求进  顺势而为\n\n");
+        } else if (luckyCount == 1 || isNeutralDoor) {
             sb.append("★ 平平 ★\n");
-            sb.append("星门无大凶 运势一般\n谨慎行事  稳扎稳打\n\n");
+            sb.append("运势一般 谨慎行事\n稳扎稳打  低调为宜\n\n");
         } else {
             sb.append("⚠ 注意 ⚠\n");
-            sb.append("星门欠佳 运势低迷\n宜守不宜动  趋吉避凶\n\n");
+            sb.append("运势低迷 宜守不宜动\n趋吉避凶  化解不利\n\n");
         }
         
         sb.append("💡 综合建议:\n");
-        sb.append("调理身心  保持乐观\n");
-        sb.append("顺势而为  把握机遇\n");
+        sb.append(getDayAdviceByAll(star, door, god, dayGan));
         
         return sb.toString();
     }

@@ -176,6 +176,76 @@ public class NinePalacePanel extends View {
         }
     }
 
+    private String copyJieqi = "";
+    private int copyJu = 1;
+    private boolean copyIsYangDun = true;
+
+    // 获取当前派盘信息的文本（用于复制）- 标准派盘格式
+    public String getCopyText() {
+        StringBuilder sb = new StringBuilder();
+        // 九宫顺序：按宫位数排列
+        String[] gongwei = {"坎一宫", "坤二宫", "震三宫", "巽四宫", "中五宫", "乾六宫", "兑七宫", "艮八宫", "离九宫"};
+        String[] directions = {"北", "西南", "东", "东南", "中", "西北", "西", "东北", "南"};
+        
+        for (int i = 0; i < 9; i++) {
+            // 解析 palaceData[i][1] 获取各元素
+            String data = palaceData[i][1];
+            String god = "", star = "", door = "";
+            String tianGan = "", diGan = "", luck = "", wangCuiVal = "";
+            
+            if (data != null && !data.equals("--")) {
+                String[] lines = data.split("\n");
+                if (lines.length >= 1) {
+                    String[] parts = lines[0].trim().split("\\s+");
+                    if (parts.length >= 3) {
+                        god = parts[0];
+                        star = parts[1];
+                        door = parts[2];
+                    } else if (parts.length == 2) {
+                        star = parts[0];
+                        door = parts[1];
+                    }
+                }
+                if (lines.length >= 2) {
+                    String[] parts = lines[1].trim().split("\\s+");
+                    if (parts.length >= 1) {
+                        String ganPart = parts[0]; // e.g. "戊/戊"
+                        String[] gans = ganPart.split("/");
+                        if (gans.length == 2) {
+                            tianGan = gans[0];
+                            diGan = gans[1];
+                        }
+                    }
+                    if (parts.length >= 2) luck = parts[1];
+                    if (parts.length >= 3) wangCuiVal = parts[2];
+                }
+            }
+            
+            // 格式化一行：宫位(方位) 八神 天盘/地盘 九星 八门 吉凶
+            sb.append(gongwei[i]).append("(").append(directions[i]).append(")");
+            if (!god.isEmpty()) sb.append(" ").append(god);
+            if (!tianGan.isEmpty() && !diGan.isEmpty()) {
+                sb.append(" ").append(tianGan).append("/").append(diGan);
+            }
+            if (!star.isEmpty()) sb.append(" ").append(star);
+            if (!door.isEmpty()) sb.append(" ").append(door);
+            if (!luck.isEmpty()) sb.append(" ").append(luck);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    // 设置复制用的节气信息
+    public void setCopyInfo(String jieqi, int ju, boolean isYangDun) {
+        this.copyJieqi = jieqi;
+        this.copyJu = ju;
+        this.copyIsYangDun = isYangDun;
+    }
+
+    public String getCopyJieqi() { return copyJieqi; }
+    public int getCopyJu() { return copyJu; }
+    public boolean getCopyIsYangDun() { return copyIsYangDun; }
+
     // 设置亮度
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
@@ -221,6 +291,9 @@ public class NinePalacePanel extends View {
         
         // 2. 确定用局数（根据节气和三元）
         int ju = getJuShuByJieqi(jieqi);
+        
+        // 保存节气信息用于复制
+        setCopyInfo(jieqi, ju, isYangDun);
         
         // 3. 排地盘天干（戊、己、庚、辛、壬、癸、丁、丙、乙）
         // 规则：几局 = 戊落第几宫
@@ -272,18 +345,18 @@ public class NinePalacePanel extends View {
             // 计算吉凶标识（基于星门组合）
             String luck = getLuckSymbol(star, door);
             
-            // 第一行：宫名 + 方位文字
+            // 第一行：宫名 + 方位符号 + 方位文字
             String directionText = getDirectionText(i);
-            String palaceName = gongwei[i] + directionText;
-            
-            // 第二行：星门组合
-            // 第三行：天干 + 吉凶 + 卦象符号 + 方位符号
-            String guaSymbol = getGuaSymbol(i);
             String directionSymbol = getDirectionSymbol(i);
+            String palaceName = gongwei[i] + " " + directionSymbol + " " + directionText;
             
-            // 生成宫位数据（与qimen.py显示格式一致）
+            // 第二行：八神 + 九星 + 八门
+            // 第三行：天盘天干/地盘天干 + 吉凶 + 旺衰
+            String guaSymbol = getGuaSymbol(i);
+            
+            // 生成宫位数据
             data[i][0] = palaceName;
-            data[i][1] = star + door + "\n" + tianGan + " " + luck + " " + guaSymbol + directionSymbol;
+            data[i][1] = god + " " + star + " " + door + "\n" + tianGan + "/" + diGan + " " + luck + " " + wangCuiValue;
         }
 
         setPalaceData(data);
@@ -683,12 +756,11 @@ public class NinePalacePanel extends View {
             }
         } else {
             // 阴遁：从值符落宫开始逆时针排布八神，跳过中五宫
-            String[] bashenOrderYin = {"值符", "九天", "九地", "玄武", "白虎", "六合", "太阴", "螣蛇"};
             int currentGodIndex = 0;
             int pos = zhiFuPalace;
             while (currentGodIndex < 8) {
                 if (pos != 4) {
-                    eightGods[pos] = bashenOrderYin[currentGodIndex];
+                    eightGods[pos] = bashenOrder[currentGodIndex];
                     currentGodIndex++;
                 }
                 pos = (pos - 1 + 9) % 9;

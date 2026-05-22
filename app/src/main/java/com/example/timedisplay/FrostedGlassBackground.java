@@ -51,13 +51,13 @@ public class FrostedGlassBackground extends View {
         
         symbolPaint = new Paint();
         symbolPaint.setColor(0x306A90B0);
-        symbolPaint.setTextSize(44f);
+        symbolPaint.setTextSize(80f);
         symbolPaint.setAntiAlias(true);
         symbolPaint.setTextAlign(Paint.Align.CENTER);
         
         namePaint = new Paint();
         namePaint.setColor(0x255A80A0);
-        namePaint.setTextSize(36f);
+        namePaint.setTextSize(64f);
         namePaint.setAntiAlias(true);
         namePaint.setTextAlign(Paint.Align.CENTER);
         
@@ -145,7 +145,7 @@ public class FrostedGlassBackground extends View {
     }
     
     private void drawBaGuaArray(Canvas canvas) {
-        float[] ringRadii = {radius * 0.35f, radius * 0.55f, radius * 0.75f, radius * 0.95f};
+        float[] ringRadii = {radius * 0.3f, radius * 0.5f, radius * 0.7f, radius * 0.85f};
         int[] ringColors = {0x255A80C0, 0x1A4A70A0, 0x103A6080, 0x0A2A5060};
         int[] ringWidths = {2, 2, 1, 1};
         
@@ -157,8 +157,9 @@ public class FrostedGlassBackground extends View {
         
         drawTaiChi(canvas, radius * 0.25f);
         
-        String[] baGuaSymbols = {"☰", "☱", "☲", "☳", "☴", "☵", "☶", "☷"};
-        String[] baGuaNames = {"乾", "兑", "离", "震", "巽", "坎", "艮", "坤"};
+        // 后天八卦排列：从北开始顺时针 - 坎、艮、震、巽、离、坤、兑、乾
+        String[] baGuaSymbols = {"☵", "☶", "☳", "☴", "☲", "☷", "☱", "☰"};
+        String[] baGuaNames = {"坎", "艮", "震", "巽", "离", "坤", "兑", "乾"};
         
         float symbolRadius = radius * 0.65f;
         for (int i = 0; i < 8; i++) {
@@ -166,18 +167,18 @@ public class FrostedGlassBackground extends View {
             float x = (float) (centerX + symbolRadius * Math.cos(angle));
             float y = (float) (centerY + symbolRadius * Math.sin(angle));
             
-            canvas.drawText(baGuaSymbols[i], x, y - 16, symbolPaint);
-            canvas.drawText(baGuaNames[i], x, y + 36, namePaint);
+            canvas.drawText(baGuaSymbols[i], x, y - 20, symbolPaint);
+            canvas.drawText(baGuaNames[i], x, y + 48, namePaint);
         }
         
         for (int i = 0; i < 8; i++) {
             double angle = Math.PI * 2 * i / 8 - Math.PI / 2;
-            float x = (float) (centerX + radius * 0.9f * Math.cos(angle));
-            float y = (float) (centerY + radius * 0.9f * Math.sin(angle));
+            float x = (float) (centerX + radius * 0.8f * Math.cos(angle));
+            float y = (float) (centerY + radius * 0.8f * Math.sin(angle));
             canvas.drawLine(centerX, centerY, x, y, baguaLinePaint);
         }
         
-        float arcRadius = radius * 0.85f;
+        float arcRadius = radius * 0.75f;
         for (int i = 0; i < 8; i++) {
             double startAngle = Math.PI * 2 * i / 8 - Math.PI / 2 - 0.1f;
             double sweepAngle = Math.PI * 2 / 8 + 0.2f;

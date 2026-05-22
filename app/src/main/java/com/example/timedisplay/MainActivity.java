@@ -35,6 +35,12 @@ public class MainActivity extends Activity {
     private LinearLayout timeContainer;
     private android.os.Handler handler;
     private Runnable timeRunnable;
+    private TextView copyButton;
+
+    // 自定义时间状态（用于排盘）
+    private boolean isCustomTime = false;
+    private Calendar customCalendar = null;
+    private TextView resetTimeButton;
 
     // 上一次的时间值，用于比较哪些部分发生了变化
     private int lastHour = -1;
@@ -56,7 +62,9 @@ public class MainActivity extends Activity {
         minute1TextView = (SevenSegmentDisplay) findViewById(R.id.minute1TextView);
         minute2TextView = (SevenSegmentDisplay) findViewById(R.id.minute2TextView);
         dateTextView = findViewById(R.id.dateTextView);
+        resetTimeButton = findViewById(R.id.resetTimeButton);
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
+        copyButton = findViewById(R.id.copyButton);
         ninePalaceExplanation = findViewById(R.id.ninePalaceExplanation);
         timeFortuneTextView = findViewById(R.id.timeFortuneTextView);
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
@@ -75,6 +83,16 @@ public class MainActivity extends Activity {
         fourPillarsTextView.setClickable(true);
         fourPillarsTextView.setFocusable(true);
 
+        // 点击日期弹出日期时间选择器
+        if (dateTextView != null) {
+            dateTextView.setOnClickListener(v -> showDateTimePicker());
+        }
+
+        // 点击返回按钮恢复当前时间
+        if (resetTimeButton != null) {
+            resetTimeButton.setOnClickListener(v -> resetToCurrentTime());
+        }
+
         // 点击时间容器跳转到秒表页面
         timeContainer.setOnClickListener(v -> {
             try {
@@ -89,6 +107,13 @@ public class MainActivity extends Activity {
         ninePalacePanel.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(MainActivity.this, FullNinePalaceActivity.class);
+                if (isCustomTime && customCalendar != null) {
+                    intent.putExtra("custom_year", customCalendar.get(Calendar.YEAR));
+                    intent.putExtra("custom_month", customCalendar.get(Calendar.MONTH) + 1);
+                    intent.putExtra("custom_day", customCalendar.get(Calendar.DAY_OF_MONTH));
+                    intent.putExtra("custom_hour", customCalendar.get(Calendar.HOUR_OF_DAY));
+                    intent.putExtra("custom_minute", customCalendar.get(Calendar.MINUTE));
+                }
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -108,6 +133,11 @@ public class MainActivity extends Activity {
         // 设置时辰运势TextView可点击
         timeFortuneTextView.setClickable(true);
         timeFortuneTextView.setFocusable(true);
+
+        // 点击复制按钮复制派盘信息
+        if (copyButton != null) {
+            copyButton.setOnClickListener(v -> copyPaiPanInfo());
+        }
 
         // 初始化Handler
         handler = new android.os.Handler(android.os.Looper.getMainLooper());
@@ -182,20 +212,27 @@ public class MainActivity extends Activity {
     public void updateDateTime() {
         if (hour1TextView == null || dateTextView == null) return;
 
+        // 大时钟始终显示真实时间
         Date now = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
+        Calendar realCalendar = Calendar.getInstance();
+        realCalendar.setTime(now);
 
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currentMinute = calendar.get(Calendar.MINUTE);
+        int currentHour = realCalendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = realCalendar.get(Calendar.MINUTE);
 
         int currentHour1 = currentHour / 10;
         int currentHour2 = currentHour % 10;
         int currentMinute1 = currentMinute / 10;
         int currentMinute2 = currentMinute % 10;
 
+        // 日期显示：如果自定义时间则显示自定义日期，否则显示当前日期
+        Calendar displayCalendar = isCustomTime ? customCalendar : realCalendar;
+        Date displayDate = displayCalendar.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA);
-        String dateString = dateFormat.format(now);
+        String dateString = dateFormat.format(displayDate);
+        if (isCustomTime) {
+            dateString = "✎ " + dateString;
+        }
 
         boolean minuteChanged = (lastMinute1 != currentMinute1) || (lastMinute2 != currentMinute2);
 
@@ -221,8 +258,10 @@ public class MainActivity extends Activity {
 
         dateTextView.setText(dateString);
 
-        if (minuteChanged) {
-            updateFourPillars(now);
+        // 四柱排盘：使用自定义时间（如有）或当前时间
+        Date fourPillarsDate = isCustomTime ? customCalendar.getTime() : now;
+        if (minuteChanged || isCustomTime) {
+            updateFourPillars(fourPillarsDate);
         }
 
         updateBackground();
@@ -237,6 +276,93 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // 显示日期时间选择器
+    private void showDateTimePicker() {
+        Calendar current = isCustomTime ? customCalendar : Calendar.getInstance();
+
+        // 先选择日期
+        new android.app.DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {
+            // 再选择时间
+            new android.app.TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
+                customCalendar = Calendar.getInstance();
+                customCalendar.set(year, month, dayOfMonth, hourOfDay, minute, 0);
+                customCalendar.set(Calendar.MILLISECOND, 0);
+                isCustomTime = true;
+                if (resetTimeButton != null) {
+                    resetTimeButton.setVisibility(View.VISIBLE);
+                }
+                // 立即更新四柱和排盘
+                updateFourPillars(customCalendar.getTime());
+                updateDateTime();
+            }, current.get(Calendar.HOUR_OF_DAY), current.get(Calendar.MINUTE), true).show();
+        }, current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    // 恢复当前时间
+    private void resetToCurrentTime() {
+        isCustomTime = false;
+        customCalendar = null;
+        if (resetTimeButton != null) {
+            resetTimeButton.setVisibility(View.GONE);
+        }
+        // 立即更新四柱和排盘
+        updateFourPillars(new Date());
+        updateDateTime();
+    }
+
+    // 复制派盘信息到剪贴板 - 标准派盘文本格式
+    private void copyPaiPanInfo() {
+        StringBuilder sb = new StringBuilder();
+        
+        // 日期信息
+        Calendar displayCalendar = isCustomTime ? customCalendar : Calendar.getInstance();
+        Date displayDate = displayCalendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.CHINA);
+        
+        // 四柱信息
+        String fourPillars = fourPillarsTextView.getText().toString();
+        
+        // 节气和局数
+        String jieqi = ninePalacePanel.getCopyJieqi();
+        int ju = ninePalacePanel.getCopyJu();
+        boolean isYangDun = ninePalacePanel.getCopyIsYangDun();
+        
+        // 时辰
+        String timeFortune = timeFortuneTextView.getText().toString();
+        String shichen = "";
+        if (timeFortune != null && timeFortune.length() >= 2) {
+            shichen = timeFortune.substring(0, 2); // 取"子时"等前两字
+        }
+        
+        // === 组装标准派盘文本 ===
+        sb.append("【奇门遁甲排盘】\n");
+        sb.append("━━━━━━━━━━━━━━━\n");
+        sb.append("时间：").append(dateFormat.format(displayDate));
+        sb.append(" ").append(timeFormat.format(displayDate));
+        if (!shichen.isEmpty()) sb.append(" ").append(shichen);
+        sb.append("\n");
+        sb.append("四柱：").append(fourPillars).append("\n");
+        sb.append("节气：").append(jieqi);
+        sb.append("  ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局");
+        sb.append("\n\n");
+        
+        // 九宫排盘
+        sb.append("【九宫排盘】\n");
+        sb.append("─────────────\n");
+        sb.append(ninePalacePanel.getCopyText());
+        
+        String copyText = sb.toString();
+        
+        // 复制到剪贴板
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("派盘信息", copyText);
+        clipboard.setPrimaryClip(clip);
+        
+        // 显示提示
+        android.widget.Toast.makeText(this, "已复制派盘信息", android.widget.Toast.LENGTH_SHORT).show();
     }
 
     // 更新背景为深蓝色，保持沉稳风格

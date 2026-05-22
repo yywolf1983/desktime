@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 public class LuoPanActivity extends Activity {
     private LuoPanView luoPanView;
-    private TextView titleInfo;
+
     private TextView directionInfo;
     private TextView mountainInfo;
     private TextView wuxingInfo;
@@ -29,7 +29,7 @@ public class LuoPanActivity extends Activity {
         setContentView(R.layout.activity_luo_pan);
         
         luoPanView = findViewById(R.id.luoPanView);
-        titleInfo = findViewById(R.id.titleInfo);
+
         directionInfo = findViewById(R.id.directionInfo);
         mountainInfo = findViewById(R.id.mountainInfo);
         wuxingInfo = findViewById(R.id.wuxingInfo);
@@ -63,7 +63,13 @@ public class LuoPanActivity extends Activity {
         shierZhixingInfo.setText("十二支: " + getShierZhi(mountain));
         tianganInfo.setText("天干: " + getTiangan(mountain));
         luopanTips.setText(getMountainTip(mountain));
-        detailInfo.setText(getDetailInfo(mountain));
+        
+        // 增加纳音和神煞信息
+        String nayin = getNayin(mountain);
+        String shensha = getShensha(mountain);
+        String jixiong = getJixiong(mountain);
+        
+        detailInfo.setText(getDetailInfo(mountain) + "\n\n【纳音】" + nayin + "\n【神煞】" + shensha + "\n【吉凶】" + jixiong);
     }
     
     private String getWuxing(String mountain) {
@@ -213,6 +219,72 @@ public class LuoPanActivity extends Activity {
         for (int i = 0; i < mountains.length; i++) {
             if (mountains[i].equals(mountain)) {
                 return details[i];
+            }
+        }
+        return "";
+    }
+    
+    private String getNayin(String mountain) {
+        String[] nayinMap = {
+            "桑柘木", "桑柘木", "桑柘木", "桑柘木", "大溪水", "大溪水",
+            "大溪水", "大溪水", "覆灯火", "覆灯火", "覆灯火", "覆灯火",
+            "天河水", "天河水", "天河水", "天河水", "山下火", "山下火",
+            "山下火", "山下火", "钗钏金", "钗钏金", "钗钏金", "钗钏金"
+        };
+        String[] mountains = {
+            "壬", "子", "癸", "丑", "艮", "寅",
+            "甲", "卯", "乙", "辰", "巽", "巳",
+            "丙", "午", "丁", "未", "坤", "申",
+            "庚", "酉", "辛", "戌", "乾", "亥"
+        };
+        
+        for (int i = 0; i < mountains.length; i++) {
+            if (mountains[i].equals(mountain)) {
+                return nayinMap[i];
+            }
+        }
+        return "";
+    }
+    
+    private String getShensha(String mountain) {
+        String[] shenshaMap = {
+            "天德、月德", "天德、月德", "天德、月德", "天德、月德", "天德、月德", "天德、月德",
+            "天乙贵人", "天乙贵人", "天乙贵人", "天乙贵人", "天乙贵人", "天乙贵人",
+            "天德、月德", "天德、月德", "天德、月德", "天德、月德", "天德、月德", "天德、月德",
+            "天乙贵人", "天乙贵人", "天乙贵人", "天乙贵人", "天乙贵人", "天乙贵人"
+        };
+        String[] mountains = {
+            "壬", "子", "癸", "丑", "艮", "寅",
+            "甲", "卯", "乙", "辰", "巽", "巳",
+            "丙", "午", "丁", "未", "坤", "申",
+            "庚", "酉", "辛", "戌", "乾", "亥"
+        };
+        
+        for (int i = 0; i < mountains.length; i++) {
+            if (mountains[i].equals(mountain)) {
+                return shenshaMap[i];
+            }
+        }
+        return "";
+    }
+    
+    private String getJixiong(String mountain) {
+        String[] jixiongMap = {
+            "吉", "吉", "吉", "吉", "吉", "吉",
+            "吉", "吉", "吉", "吉", "吉", "吉",
+            "吉", "吉", "吉", "吉", "吉", "吉",
+            "吉", "吉", "吉", "吉", "吉", "吉"
+        };
+        String[] mountains = {
+            "壬", "子", "癸", "丑", "艮", "寅",
+            "甲", "卯", "乙", "辰", "巽", "巳",
+            "丙", "午", "丁", "未", "坤", "申",
+            "庚", "酉", "辛", "戌", "乾", "亥"
+        };
+        
+        for (int i = 0; i < mountains.length; i++) {
+            if (mountains[i].equals(mountain)) {
+                return jixiongMap[i];
             }
         }
         return "";
