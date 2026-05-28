@@ -1,137 +1,326 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.example.timedisplay.FrostedGlassBackground
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <!-- 罗盘 - 固定位置，不随滚动 -->
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+        
         <com.example.timedisplay.LuoPanView
             android:id="@+id/luoPanView"
-            android:layout_width="340dp"
-            android:layout_height="340dp"
-            android:layout_gravity="center_horizontal" />
-
-        <!-- 信息部分 - 可滚动 -->
-        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="20dp">
+            android:layout_height="match_parent"
+            android:maxWidth="400dp"
+            android:maxHeight="400dp" />
+        
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="#28000000">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="#28000000"
-                android:gravity="center">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/directionInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="方位: 坎(北)"
-                        android:textSize="17sp"
-                        android:textColor="#FFD700"
-                        android:paddingRight="20dp" />
-
-                    <TextView
-                        android:id="@+id/mountainInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="坐山: 子"
-                        android:textSize="17sp"
-                        android:textColor="#87CEEB" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#40FFFFFF"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/wuxingInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="五行: 水"
-                        android:textSize="15sp"
-                        android:textColor="#00CED1"
-                        android:paddingRight="16dp" />
-
-                    <TextView
-                        android:id="@+id/shierZhixingInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="十二支: 子"
-                        android:textSize="15sp"
-                        android:textColor="#DDA0DD"
-                        android:paddingRight="16dp" />
-
-                    <TextView
-                        android:id="@+id/tianganInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="天干: 壬"
-                        android:textSize="15sp"
-                        android:textColor="#98FB98" />
-
-                </LinearLayout>
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/luopanTips"
+                    android:id="@+id/directionInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="子: 正北水位，阴阳交界，万物根基"
-                    android:textSize="14sp"
-                    android:textColor="#ADD8E6"
-                    android:gravity="center"
-                    android:paddingTop="12dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#40FFFFFF"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp" />
+                    android:text="坎(北)"
+                    android:textSize="22sp"
+                    android:textColor="#FFD700"
+                    android:layout_marginRight="16dp" />
 
                 <TextView
-                    android:id="@+id/detailInfo"
+                    android:id="@+id/mountainInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="详细说明"
-                    android:textSize="13sp"
-                    android:textColor="#B0C4DE"
-                    android:gravity="center"
-                    android:paddingTop="10dp" />
+                    android:text="坐山: 子"
+                    android:textSize="18sp"
+                    android:textColor="#87CEEB" />
 
             </LinearLayout>
 
-        </ScrollView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#40FFFFFF"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
-</FrameLayout>
+                <TextView
+                    android:id="@+id/wuxingInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="五行: 水"
+                    android:textSize="14sp"
+                    android:textColor="#00CED1" />
+
+                <TextView
+                    android:id="@+id/shierZhixingInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="地支: 子"
+                    android:textSize="14sp"
+                    android:textColor="#DDA0DD" />
+
+                <TextView
+                    android:id="@+id/tianganInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="天干: 壬"
+                    android:textSize="14sp"
+                    android:textColor="#98FB98" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/baguaInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="八卦: 坎"
+                    android:textSize="14sp"
+                    android:textColor="#FFB6C1" />
+
+                <TextView
+                    android:id="@+id/chaoXiangInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="朝向: 午"
+                    android:textSize="14sp"
+                    android:textColor="#90EE90" />
+
+                <TextView
+                    android:id="@+id/nayinInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="纳音: 桑柘木"
+                    android:textSize="14sp"
+                    android:textColor="#DAA520" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/shenshaInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="神煞: 天德"
+                    android:textSize="14sp"
+                    android:textColor="#FFA500" />
+
+                <TextView
+                    android:id="@+id/jixiongInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="吉凶: 吉"
+                    android:textSize="14sp"
+                    android:textColor="#90EE90" />
+
+                <TextView
+                    android:id="@+id/diguiInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="归藏: 水"
+                    android:textSize="14sp"
+                    android:textColor="#87CEEB" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#40FFFFFF"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/luopanTips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="子: 正北水位，阴阳交界，万物根基"
+                android:textSize="14sp"
+                android:textColor="#ADD8E6" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#40FFFFFF"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="【坐向分析】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/zhaoxiangAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="坐子向午，水火既济，主富贵双全"
+                android:textSize="14sp"
+                android:textColor="#B0C4DE"
+                android:lineSpacingExtra="4sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n【砂水判断】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/shuishaAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="北方宜有水，南方宜有山，青龙高耸，白虎柔顺"
+                android:textSize="14sp"
+                android:textColor="#B0C4DE"
+                android:lineSpacingExtra="4sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n【八宅吉凶】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bazhaiAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="生气在巽，天医在震，延年在艮，伏位在坎，祸害在乾，六煞在兑，五鬼在离，绝命在坤"
+                android:textSize="14sp"
+                android:textColor="#B0C4DE"
+                android:lineSpacingExtra="4sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n【九星飞宫】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/jiuxingAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫"
+                android:textSize="14sp"
+                android:textColor="#B0C4DE"
+                android:lineSpacingExtra="4sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n【八门遁法】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bamenAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="休门在坎，生门在艮，伤门在震，杜门在巽，景门在离，死门在坤，惊门在兑，开门在乾"
+                android:textSize="14sp"
+                android:textColor="#B0C4DE"
+                android:lineSpacingExtra="4sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n【建筑建议】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/buildingAdvice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="宜坐北朝南，大门宜开南方或东南方，忌开北方"
+                android:textSize="14sp"
+                android:textColor="#90EE90"
+                android:lineSpacingExtra="4sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n【命理提示】"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="6dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mingliInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="子年生人属鼠，五行属水，性格聪明伶俐，机智灵活，善于社交，处事圆滑，富有创造力"
+                android:textSize="14sp"
+                android:textColor="#FFB6C1"
+                android:lineSpacingExtra="4sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -13,15 +13,14 @@
 bin/
 gen/
 out/
-release/
 build_output/
+build/
+app/build/
 
 # Gradle files
 .gradle/
 build/
-/*/build/
-/*/*/build/
-gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -38,53 +37,60 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# IntelliJ
+# IntelliJ IDEA
 *.iml
+.idea/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/encodings.xml
-.idea/inspectionProfiles
-.idea/misc.xml
-.idea/modules.xml
-.idea/runConfigurations.xml
-.idea/vcs.xml
-.idea/caches
-.idea/codeStyles/Project.xml
-.idea/sonarlint
-.idea/.name
+
+# Keystore files
+*.jks
+*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 .cxx/
 
-# Google Services (e.g. Firebase)
+# Google Services (e.g. APIs or Firebase)
 google-services.json
-app/google-services.json
 
-# Firebase App Distribution
-app/distribution/
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
 
-# Keystore files
-*.jks
-*.keystore
-*_keystore.properties
-keystore.properties
-
-# Fastlane
+# fastlane
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 
-# APK Signing
-signing.properties
+# Version control
+vcs.xml
 
-# OS specific files
+# lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
+# Android Profiler
+*.hprof
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*

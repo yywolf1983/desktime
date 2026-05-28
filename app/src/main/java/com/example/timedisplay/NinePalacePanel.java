@@ -183,6 +183,11 @@ public class NinePalacePanel extends View {
     private String copyJieqi = "";
     private int copyJu = 1;
     private boolean copyIsYangDun = true;
+    private String copyXunShou = "";
+    private String copyZhiFu = "";
+    private String copyZhiShi = "";
+    // 存储每宫完整的复制数据: [0]八神 [1]九星 [2]八门 [3]天盘天干 [4]地盘天干 [5]吉凶 [6]旺衰
+    private String[][] copyPalaceData = new String[9][7];
 
     // 获取当前派盘信息的文本（用于复制）- 标准派盘格式
     public String getCopyText() {
@@ -192,48 +197,24 @@ public class NinePalacePanel extends View {
         String[] directions = {"北", "西南", "东", "东南", "中", "西北", "西", "东北", "南"};
         
         for (int i = 0; i < 9; i++) {
-            // 解析 palaceData[i][1] 获取各元素
-            String data = palaceData[i][1];
-            String god = "", star = "", door = "";
-            String tianGan = "", diGan = "", luck = "", wangCuiVal = "";
+            String god = copyPalaceData[i][0] != null ? copyPalaceData[i][0] : "";
+            String star = copyPalaceData[i][1] != null ? copyPalaceData[i][1] : "";
+            String door = copyPalaceData[i][2] != null ? copyPalaceData[i][2] : "";
+            String tianGan = copyPalaceData[i][3] != null ? copyPalaceData[i][3] : "";
+            String diGan = copyPalaceData[i][4] != null ? copyPalaceData[i][4] : "";
+            String luck = copyPalaceData[i][5] != null ? copyPalaceData[i][5] : "";
+            String wangCuiVal = copyPalaceData[i][6] != null ? copyPalaceData[i][6] : "";
             
-            if (data != null && !data.equals("--")) {
-                String[] lines = data.split("\n");
-                if (lines.length >= 1) {
-                    String[] parts = lines[0].trim().split("\\s+");
-                    if (parts.length >= 3) {
-                        god = parts[0];
-                        star = parts[1];
-                        door = parts[2];
-                    } else if (parts.length == 2) {
-                        star = parts[0];
-                        door = parts[1];
-                    }
-                }
-                if (lines.length >= 2) {
-                    String[] parts = lines[1].trim().split("\\s+");
-                    if (parts.length >= 1) {
-                        String ganPart = parts[0]; // e.g. "戊/戊"
-                        String[] gans = ganPart.split("/");
-                        if (gans.length == 2) {
-                            tianGan = gans[0];
-                            diGan = gans[1];
-                        }
-                    }
-                    if (parts.length >= 2) luck = parts[1];
-                    if (parts.length >= 3) wangCuiVal = parts[2];
-                }
-            }
-            
-            // 格式化一行：宫位(方位) 八神 天盘/地盘 九星 八门 吉凶
+            // 格式化一行：宫位(方位) 八神 九星 天盘/地盘 八门 吉凶 旺衰
             sb.append(gongwei[i]).append("(").append(directions[i]).append(")");
             if (!god.isEmpty()) sb.append(" ").append(god);
+            if (!star.isEmpty()) sb.append(" ").append(star);
+            if (!door.isEmpty()) sb.append(" ").append(door);
             if (!tianGan.isEmpty() && !diGan.isEmpty()) {
                 sb.append(" ").append(tianGan).append("/").append(diGan);
             }
-            if (!star.isEmpty()) sb.append(" ").append(star);
-            if (!door.isEmpty()) sb.append(" ").append(door);
             if (!luck.isEmpty()) sb.append(" ").append(luck);
+            if (!wangCuiVal.isEmpty()) sb.append(" ").append(wangCuiVal);
             sb.append("\n");
         }
         return sb.toString();
@@ -249,6 +230,9 @@ public class NinePalacePanel extends View {
     public String getCopyJieqi() { return copyJieqi; }
     public int getCopyJu() { return copyJu; }
     public boolean getCopyIsYangDun() { return copyIsYangDun; }
+    public String getCopyXunShou() { return copyXunShou; }
+    public String getCopyZhiFu() { return copyZhiFu; }
+    public String getCopyZhiShi() { return copyZhiShi; }
 
     // 设置亮度
     public void setBrightness(float brightness) {
@@ -309,6 +293,11 @@ public class NinePalacePanel extends View {
         String zhiFuStar = (String) xunShouInfo[2];
         String zhiShiDoor = (String) xunShouInfo[3];
         
+        // 保存旬首/值符/值使用于复制
+        copyXunShou = xunShou;
+        copyZhiFu = zhiFuStar;
+        copyZhiShi = zhiShiDoor;
+        
         // 5. 值符落宫：时干在地盘的位置
         int zhiFuPalace = getShiGanPosition(diPanTianGan, timeGan);
         
@@ -361,6 +350,15 @@ public class NinePalacePanel extends View {
             // 生成宫位数据（去掉天干，八门放在第三行）
             data[i][0] = palaceName;
             data[i][1] = god + " " + star + "\n" + (door != null && !door.isEmpty() ? door : " ") + " " + luck + " " + wangCuiValue;
+            
+            // 存储完整数据用于复制
+            copyPalaceData[i][0] = god;
+            copyPalaceData[i][1] = star;
+            copyPalaceData[i][2] = door;
+            copyPalaceData[i][3] = tianGan;
+            copyPalaceData[i][4] = diGan;
+            copyPalaceData[i][5] = luck;
+            copyPalaceData[i][6] = wangCuiValue;
         }
 
         setPalaceData(data);

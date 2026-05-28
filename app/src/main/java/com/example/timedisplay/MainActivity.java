@@ -352,6 +352,11 @@ public class MainActivity extends Activity {
         int ju = ninePalacePanel.getCopyJu();
         boolean isYangDun = ninePalacePanel.getCopyIsYangDun();
         
+        // 旬首、值符、值使
+        String xunShou = ninePalacePanel.getCopyXunShou();
+        String zhiFu = ninePalacePanel.getCopyZhiFu();
+        String zhiShi = ninePalacePanel.getCopyZhiShi();
+        
         // 时辰
         String timeFortune = timeFortuneTextView.getText().toString();
         String shichen = "";
@@ -369,6 +374,10 @@ public class MainActivity extends Activity {
         sb.append("四柱：").append(fourPillars).append("\n");
         sb.append("节气：").append(jieqi);
         sb.append("  ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局");
+        sb.append("\n");
+        sb.append("旬首：").append(xunShou);
+        sb.append("  值符：").append(zhiFu);
+        sb.append("  值使：").append(zhiShi).append("门");
         sb.append("\n\n");
         
         // 九宫排盘

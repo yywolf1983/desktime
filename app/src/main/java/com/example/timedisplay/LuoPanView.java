@@ -44,7 +44,23 @@ public class LuoPanView extends View {
         "北", "东北", "东", "东南", "南", "西南", "西", "西北"
     };
     
+    private static final String[] NINE_STARS = {
+        "蓬", "芮", "冲", "辅", "禽", "心", "柱", "任", "英"
+    };
+    
+    private static final String[] EIGHT_DOORS = {
+        "休", "生", "伤", "杜", "景", "死", "惊", "开"
+    };
+    
     private float rotation = 0;
+    
+    private boolean showTwentyFourMountains = true;
+    private boolean showTwelveZhi = true;
+    private boolean showEightTrigrams = true;
+    private boolean showTenGan = true;
+    private boolean showEightDirections = true;
+    private boolean showNineStars = false;
+    private boolean showEightDoors = false;
 
     public LuoPanView(Context context) {
         super(context);
@@ -144,11 +160,29 @@ public class LuoPanView extends View {
         canvas.rotate(rotation, centerX, centerY);
 
         drawConcentricCircles(canvas, centerX, centerY, radius);
-        drawTwentyFourMountains(canvas, centerX, centerY, radius);
-        drawTwelveZhi(canvas, centerX, centerY, radius);
-        drawEightTrigrams(canvas, centerX, centerY, radius);
-        drawTenGan(canvas, centerX, centerY, radius);
-        drawEightDirections(canvas, centerX, centerY, radius);
+        
+        if (showTwentyFourMountains) {
+            drawTwentyFourMountains(canvas, centerX, centerY, radius);
+        }
+        if (showTwelveZhi) {
+            drawTwelveZhi(canvas, centerX, centerY, radius);
+        }
+        if (showEightTrigrams) {
+            drawEightTrigrams(canvas, centerX, centerY, radius);
+        }
+        if (showTenGan) {
+            drawTenGan(canvas, centerX, centerY, radius);
+        }
+        if (showEightDirections) {
+            drawEightDirections(canvas, centerX, centerY, radius);
+        }
+        if (showNineStars) {
+            drawNineStars(canvas, centerX, centerY, radius);
+        }
+        if (showEightDoors) {
+            drawEightDoors(canvas, centerX, centerY, radius);
+        }
+        
         drawCenter(canvas, centerX, centerY, radius);
 
         canvas.restore();
@@ -301,6 +335,42 @@ public class LuoPanView extends View {
             canvas.restore();
         }
     }
+    
+    private void drawNineStars(Canvas canvas, int cx, int cy, float r) {
+        float textRadius = r * 0.15f;
+        for (int i = 0; i < 9; i++) {
+            double angle = Math.toRadians(i * 40 - 90);
+            float x = cx + (float) (textRadius * Math.cos(angle));
+            float y = cy + (float) (textRadius * Math.sin(angle));
+            
+            canvas.save();
+            canvas.rotate(i * 40, x, y);
+            
+            textPaint.setTextSize(r * 0.07f);
+            textPaint.setColor(Color.rgb(255, 165, 0));
+            textPaint.setFakeBoldText(true);
+            canvas.drawText("天" + NINE_STARS[i], x, y + r * 0.025f, textPaint);
+            canvas.restore();
+        }
+    }
+    
+    private void drawEightDoors(Canvas canvas, int cx, int cy, float r) {
+        float textRadius = r * 0.07f;
+        for (int i = 0; i < 8; i++) {
+            double angle = Math.toRadians(i * 45 - 90);
+            float x = cx + (float) (textRadius * Math.cos(angle));
+            float y = cy + (float) (textRadius * Math.sin(angle));
+            
+            canvas.save();
+            canvas.rotate(i * 45, x, y);
+            
+            textPaint.setTextSize(r * 0.06f);
+            textPaint.setColor(Color.rgb(255, 215, 0));
+            textPaint.setFakeBoldText(true);
+            canvas.drawText(EIGHT_DOORS[i] + "门", x, y + r * 0.022f, textPaint);
+            canvas.restore();
+        }
+    }
 
     private void drawCenter(Canvas canvas, int cx, int cy, float r) {
         canvas.drawCircle(cx, cy, r * 0.045f, centerPaint);
@@ -372,5 +442,79 @@ public class LuoPanView extends View {
         if (index < 0) index += 8;
         String[] directions = {"坎(北)", "艮(东北)", "震(东)", "巽(东南)", "离(南)", "坤(西南)", "兑(西)", "乾(西北)"};
         return directions[index];
+    }
+    
+    public void setShowTwentyFourMountains(boolean show) {
+        showTwentyFourMountains = show;
+        invalidate();
+    }
+    
+    public void setShowTwelveZhi(boolean show) {
+        showTwelveZhi = show;
+        invalidate();
+    }
+    
+    public void setShowEightTrigrams(boolean show) {
+        showEightTrigrams = show;
+        invalidate();
+    }
+    
+    public void setShowTenGan(boolean show) {
+        showTenGan = show;
+        invalidate();
+    }
+    
+    public void setShowEightDirections(boolean show) {
+        showEightDirections = show;
+        invalidate();
+    }
+    
+    public void setShowNineStars(boolean show) {
+        showNineStars = show;
+        invalidate();
+    }
+    
+    public void setShowEightDoors(boolean show) {
+        showEightDoors = show;
+        invalidate();
+    }
+    
+    public boolean isShowTwentyFourMountains() {
+        return showTwentyFourMountains;
+    }
+    
+    public boolean isShowTwelveZhi() {
+        return showTwelveZhi;
+    }
+    
+    public boolean isShowEightTrigrams() {
+        return showEightTrigrams;
+    }
+    
+    public boolean isShowTenGan() {
+        return showTenGan;
+    }
+    
+    public boolean isShowEightDirections() {
+        return showEightDirections;
+    }
+    
+    public boolean isShowNineStars() {
+        return showNineStars;
+    }
+    
+    public boolean isShowEightDoors() {
+        return showEightDoors;
+    }
+    
+    public void resetLayers() {
+        showTwentyFourMountains = true;
+        showTwelveZhi = true;
+        showEightTrigrams = true;
+        showTenGan = true;
+        showEightDirections = true;
+        showNineStars = false;
+        showEightDoors = false;
+        invalidate();
     }
 }
