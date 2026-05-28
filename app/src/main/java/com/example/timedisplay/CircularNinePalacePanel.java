@@ -112,10 +112,9 @@ public class CircularNinePalacePanel extends View {
         
         int width = getWidth();
         int height = getHeight();
-        scale = Math.min(width, height) / 400f; // 基准尺寸400px
         int centerX = width / 2;
         int centerY = height / 2;
-        float radius = Math.min(width, height) / 2 - 10 * scale;
+        float radius = Math.min(width, height) / 2 - 10;
         
         // 绘制多层同心圆
         drawConcentricCircles(canvas, centerX, centerY, radius);
@@ -225,35 +224,35 @@ public class CircularNinePalacePanel extends View {
         }
         
         // 绘制宫位名称
-        textPaint.setTextSize(18 * scale);
-        canvas.drawText(palaceData[palaceIndex][0], x, y - 15 * scale, textPaint);
+        textPaint.setTextSize(radius * 0.045f);
+        canvas.drawText(palaceData[palaceIndex][0], x, y - radius * 0.038f, textPaint);
         
         // 绘制八卦符号
         if (palaceIndex < GUA_SYMBOLS.length && !GUA_SYMBOLS[palaceIndex].isEmpty()) {
-            textPaint.setTextSize(22 * scale);
-            canvas.drawText(GUA_SYMBOLS[palaceIndex], x, y + 8 * scale, textPaint);
+            textPaint.setTextSize(radius * 0.055f);
+            canvas.drawText(GUA_SYMBOLS[palaceIndex], x, y + radius * 0.02f, textPaint);
         }
         
         // 绘制星门信息（第一行）
         if (dataParts.length > 0) {
-            textPaint.setTextSize(12 * scale);
-            canvas.drawText(dataParts[0], x, y + 25 * scale, textPaint);
+            textPaint.setTextSize(radius * 0.03f);
+            canvas.drawText(dataParts[0], x, y + radius * 0.063f, textPaint);
         }
         
         // 绘制第二行信息（天干等）
         if (dataParts.length > 1) {
-            textPaint.setTextSize(10 * scale);
-            canvas.drawText(dataParts[1], x, y + 38 * scale, textPaint);
+            textPaint.setTextSize(radius * 0.025f);
+            canvas.drawText(dataParts[1], x, y + radius * 0.095f, textPaint);
         }
         
         // 在外圈绘制方位名称
         float outerRadius = radius * 0.85f;
         float outerX = centerX + (float)(outerRadius * Math.cos(midAngle));
         float outerY = centerY + (float)(outerRadius * Math.sin(midAngle));
-        textPaint.setTextSize(11 * scale);
+        textPaint.setTextSize(radius * 0.028f);
         textPaint.setColor(Color.argb((int)(brightness * 255), 255, 215, 0));
         if (palaceIndex < DIRECTIONS.length) {
-            canvas.drawText(DIRECTIONS[palaceIndex], outerX, outerY + 4 * scale, textPaint);
+            canvas.drawText(DIRECTIONS[palaceIndex], outerX, outerY + radius * 0.01f, textPaint);
         }
     }
     
@@ -284,18 +283,18 @@ public class CircularNinePalacePanel extends View {
         }
         
         // 绘制宫位名称
-        textPaint.setTextSize(20 * scale);
-        canvas.drawText(palaceData[palaceIndex][0], centerX, centerY - 10 * scale, textPaint);
+        textPaint.setTextSize(radius * 0.05f);
+        canvas.drawText(palaceData[palaceIndex][0], centerX, centerY - radius * 0.025f, textPaint);
         
         // 绘制星门信息
         if (dataParts.length > 0) {
-            textPaint.setTextSize(13 * scale);
-            canvas.drawText(dataParts[0], centerX, centerY + 8 * scale, textPaint);
+            textPaint.setTextSize(radius * 0.033f);
+            canvas.drawText(dataParts[0], centerX, centerY + radius * 0.02f, textPaint);
         }
         
         if (dataParts.length > 1) {
-            textPaint.setTextSize(11 * scale);
-            canvas.drawText(dataParts[1], centerX, centerY + 22 * scale, textPaint);
+            textPaint.setTextSize(radius * 0.028f);
+            canvas.drawText(dataParts[1], centerX, centerY + radius * 0.055f, textPaint);
         }
     }
 

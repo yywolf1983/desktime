@@ -136,7 +136,7 @@ public class LuoPanView extends View {
         scale = Math.min(width, height) / 400f; // 基准尺寸400px
         int centerX = width / 2;
         int centerY = height / 2;
-        float radius = Math.min(width, height) / 2 - 25 * scale;
+        float radius = Math.min(width, height) / 2 - 10;
 
         canvas.drawCircle(centerX, centerY, radius, bgPaint);
 
@@ -164,7 +164,34 @@ public class LuoPanView extends View {
             canvas.drawCircle(cx, cy, radius, circlePaint);
         }
         
-
+        // 外圈每5度刻度标记（以北为准）
+        Paint tickPaint = new Paint();
+        tickPaint.setColor(Color.YELLOW);
+        tickPaint.setStrokeWidth(2);
+        tickPaint.setAntiAlias(true);
+        
+        for (int deg = 0; deg < 360; deg += 5) {
+            double angle = Math.toRadians(deg - 90); // 以北为0度
+            float innerR, outerR;
+            if (deg % 15 == 0) {
+                // 每15度（二十四山位置）长刻度
+                innerR = r * 0.95f;
+                outerR = r * 1.0f;
+                tickPaint.setStrokeWidth(3);
+            } else if (deg % 5 == 0) {
+                // 每5度短刻度
+                innerR = r * 0.97f;
+                outerR = r * 1.0f;
+                tickPaint.setStrokeWidth(1.5f);
+            } else {
+                continue;
+            }
+            float startX = cx + (float) (innerR * Math.cos(angle));
+            float startY = cy + (float) (innerR * Math.sin(angle));
+            float endX = cx + (float) (outerR * Math.cos(angle));
+            float endY = cy + (float) (outerR * Math.sin(angle));
+            canvas.drawLine(startX, startY, endX, endY, tickPaint);
+        }
         
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
@@ -200,8 +227,8 @@ public class LuoPanView extends View {
                 textPaint.setColor(Color.CYAN);
             }
             
-            textPaint.setTextSize(34 * scale);
-            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + 12 * scale, textPaint);
+            textPaint.setTextSize(r * 0.1f);
+            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + r * 0.035f, textPaint);
             canvas.restore();
         }
     }
@@ -216,9 +243,9 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 30, x, y);
             
-            textPaint.setTextSize(30 * scale);
+            textPaint.setTextSize(r * 0.09f);
             textPaint.setColor(Color.rgb(255, 182, 193));
-            canvas.drawText(TWELVE_ZHI[i], x, y + 11 * scale, textPaint);
+            canvas.drawText(TWELVE_ZHI[i], x, y + r * 0.033f, textPaint);
             canvas.restore();
         }
     }
@@ -233,9 +260,9 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 45, x, y);
             
-            textPaint.setTextSize(44 * scale);
+            textPaint.setTextSize(r * 0.13f);
             textPaint.setColor(Color.rgb(74, 144, 217));
-            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + 16 * scale, textPaint);
+            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + r * 0.047f, textPaint);
             canvas.restore();
         }
     }
@@ -250,9 +277,9 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 36, x, y);
             
-            textPaint.setTextSize(24 * scale);
+            textPaint.setTextSize(r * 0.09f);
             textPaint.setColor(Color.rgb(173, 255, 47));
-            canvas.drawText(TEN_GAN[i], x, y + 9 * scale, textPaint);
+            canvas.drawText(TEN_GAN[i], x, y + r * 0.033f, textPaint);
             canvas.restore();
         }
     }
@@ -267,22 +294,22 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 45, x, y);
             
-            textPaint.setTextSize(20 * scale);
+            textPaint.setTextSize(r * 0.085f);
             textPaint.setColor(Color.WHITE);
             textPaint.setFakeBoldText(true);
-            canvas.drawText(EIGHT_DIRECTIONS[i], x, y + 7 * scale, textPaint);
+            canvas.drawText(EIGHT_DIRECTIONS[i], x, y + r * 0.03f, textPaint);
             canvas.restore();
         }
     }
 
     private void drawCenter(Canvas canvas, int cx, int cy, float r) {
-        canvas.drawCircle(cx, cy, 18 * scale, centerPaint);
+        canvas.drawCircle(cx, cy, r * 0.045f, centerPaint);
         
         taijiPaint.setColor(Color.WHITE);
-        canvas.drawCircle(cx, cy, 7 * scale, taijiPaint);
+        canvas.drawCircle(cx, cy, r * 0.018f, taijiPaint);
         
         taijiPaint.setColor(Color.BLACK);
-        canvas.drawCircle(cx, cy, 3 * scale, taijiPaint);
+        canvas.drawCircle(cx, cy, r * 0.008f, taijiPaint);
     }
     
     private void drawFixedPointer(Canvas canvas, int cx, int cy, float r) {
@@ -316,7 +343,7 @@ public class LuoPanView extends View {
         
         canvas.drawPath(arrowPath, borderPaint);
         
-        textPaint.setTextSize(14 * scale);
+        textPaint.setTextSize(r * 0.035f);
         textPaint.setColor(Color.RED);
         textPaint.setFakeBoldText(true);
         float textY = cy - r * 1.1f;

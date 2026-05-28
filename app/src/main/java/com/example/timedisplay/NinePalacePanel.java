@@ -114,8 +114,10 @@ public class NinePalacePanel extends View {
 
         int width = getWidth();
         int height = getHeight();
-        scale = Math.min(width, height) / 400f; // 基准尺寸400px
         int cellSize = Math.min(width, height) / 3;
+
+        // 根据cellSize动态设置文字大小
+        textPaint.setTextSize(cellSize * 0.19f);
 
         // 绘制九宫格网格
         for (int i = 0; i <= 3; i++) {
@@ -154,12 +156,12 @@ public class NinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += 45 * scale;
+                y += cellSize * 0.28f;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += 45 * scale;
+                y += cellSize * 0.28f;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }

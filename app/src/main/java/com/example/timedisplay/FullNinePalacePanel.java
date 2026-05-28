@@ -85,11 +85,13 @@ public class FullNinePalacePanel extends View {
 
         int width = getWidth();
         int height = getHeight();
-        scale = Math.min(width, height) / 400f; // 基准尺寸400px
-        float padding = 15f * scale;
+        float padding = 15f;
         int cellSize = (int)((Math.min(width, height) - padding * 2) / 3.0);
         float offsetX = (width - cellSize * 3) / 2;
         float offsetY = (height - cellSize * 3) / 2;
+
+        // 根据cellSize动态设置文字大小
+        textPaint.setTextSize(cellSize * 0.20f);
 
         for (int i = 0; i <= 3; i++) {
             canvas.drawLine(offsetX, offsetY + i * cellSize, offsetX + cellSize * 3, offsetY + i * cellSize, gridPaint);
@@ -127,12 +129,12 @@ public class FullNinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += 38 * scale;
+                y += cellSize * 0.26f;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += 38 * scale;
+                y += cellSize * 0.26f;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }
