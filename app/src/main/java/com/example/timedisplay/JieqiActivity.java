@@ -230,19 +230,19 @@ public class JieqiActivity extends Activity {
                 );
                 int marginPx = (int) (4 * density);
                 boxParams.setMargins(marginPx, marginPx, marginPx, marginPx);
-                boxParams.height = (int) (75 * density); // 75dp
+                boxParams.height = (int) (60 * density); // 60dp
                 jieqiBox.setLayoutParams(boxParams);
                 jieqiBox.setClickable(true);
                 jieqiBox.setBackgroundColor(Color.parseColor("#1a1a2e"));
 
                 TextView jieqiName = new TextView(JieqiActivity.this);
                 jieqiName.setText(jieqi);
-                jieqiName.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 14);
+                jieqiName.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 16);
                 jieqiName.setGravity(android.view.Gravity.CENTER);
                 
                 TextView jieqiDate = new TextView(JieqiActivity.this);
                 jieqiDate.setText(jieqiMonth + "/" + jieqiDay);
-                jieqiDate.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 11);
+                jieqiDate.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 13);
                 jieqiDate.setGravity(android.view.Gravity.CENTER);
                 int paddingPx = (int) (2 * density);
                 jieqiDate.setPadding(0, paddingPx, 0, 0);
