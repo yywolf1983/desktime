@@ -14,6 +14,7 @@ public class FullNinePalacePanel extends View {
     private Paint centerPaint;
     private String[][] palaceData;
     private float brightness = 1.0f;
+    private float scale = 1f;
 
     // 九宫格布局位置（按照指南针顺序：上北下南，左西右东）
     private static final int[][] PALACE_POSITIONS = {
@@ -84,7 +85,8 @@ public class FullNinePalacePanel extends View {
 
         int width = getWidth();
         int height = getHeight();
-        float padding = 15f;
+        scale = Math.min(width, height) / 400f; // 基准尺寸400px
+        float padding = 15f * scale;
         int cellSize = (int)((Math.min(width, height) - padding * 2) / 3.0);
         float offsetX = (width - cellSize * 3) / 2;
         float offsetY = (height - cellSize * 3) / 2;
@@ -125,12 +127,12 @@ public class FullNinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += 38;
+                y += 38 * scale;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += 38;
+                y += 38 * scale;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }

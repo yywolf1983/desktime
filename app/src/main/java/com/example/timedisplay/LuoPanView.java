@@ -61,6 +61,8 @@ public class LuoPanView extends View {
         init();
     }
 
+    private float scale = 1f;
+
     private void init() {
         outerCirclePaint = new Paint();
         outerCirclePaint.setColor(Color.YELLOW);
@@ -131,9 +133,10 @@ public class LuoPanView extends View {
 
         int width = getWidth();
         int height = getHeight();
+        scale = Math.min(width, height) / 400f; // 基准尺寸400px
         int centerX = width / 2;
         int centerY = height / 2;
-        float radius = Math.min(width, height) / 2 - 25;
+        float radius = Math.min(width, height) / 2 - 25 * scale;
 
         canvas.drawCircle(centerX, centerY, radius, bgPaint);
 
@@ -197,8 +200,8 @@ public class LuoPanView extends View {
                 textPaint.setColor(Color.CYAN);
             }
             
-            textPaint.setTextSize(34);
-            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + 12, textPaint);
+            textPaint.setTextSize(34 * scale);
+            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + 12 * scale, textPaint);
             canvas.restore();
         }
     }
@@ -213,9 +216,9 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 30, x, y);
             
-            textPaint.setTextSize(30);
+            textPaint.setTextSize(30 * scale);
             textPaint.setColor(Color.rgb(255, 182, 193));
-            canvas.drawText(TWELVE_ZHI[i], x, y + 11, textPaint);
+            canvas.drawText(TWELVE_ZHI[i], x, y + 11 * scale, textPaint);
             canvas.restore();
         }
     }
@@ -230,9 +233,9 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 45, x, y);
             
-            textPaint.setTextSize(44);
+            textPaint.setTextSize(44 * scale);
             textPaint.setColor(Color.rgb(74, 144, 217));
-            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + 16, textPaint);
+            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + 16 * scale, textPaint);
             canvas.restore();
         }
     }
@@ -247,9 +250,9 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 36, x, y);
             
-            textPaint.setTextSize(24);
+            textPaint.setTextSize(24 * scale);
             textPaint.setColor(Color.rgb(173, 255, 47));
-            canvas.drawText(TEN_GAN[i], x, y + 9, textPaint);
+            canvas.drawText(TEN_GAN[i], x, y + 9 * scale, textPaint);
             canvas.restore();
         }
     }
@@ -264,22 +267,22 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 45, x, y);
             
-            textPaint.setTextSize(20);
+            textPaint.setTextSize(20 * scale);
             textPaint.setColor(Color.WHITE);
             textPaint.setFakeBoldText(true);
-            canvas.drawText(EIGHT_DIRECTIONS[i], x, y + 7, textPaint);
+            canvas.drawText(EIGHT_DIRECTIONS[i], x, y + 7 * scale, textPaint);
             canvas.restore();
         }
     }
 
     private void drawCenter(Canvas canvas, int cx, int cy, float r) {
-        canvas.drawCircle(cx, cy, 18, centerPaint);
+        canvas.drawCircle(cx, cy, 18 * scale, centerPaint);
         
         taijiPaint.setColor(Color.WHITE);
-        canvas.drawCircle(cx, cy, 7, taijiPaint);
+        canvas.drawCircle(cx, cy, 7 * scale, taijiPaint);
         
         taijiPaint.setColor(Color.BLACK);
-        canvas.drawCircle(cx, cy, 3, taijiPaint);
+        canvas.drawCircle(cx, cy, 3 * scale, taijiPaint);
     }
     
     private void drawFixedPointer(Canvas canvas, int cx, int cy, float r) {
@@ -313,7 +316,7 @@ public class LuoPanView extends View {
         
         canvas.drawPath(arrowPath, borderPaint);
         
-        textPaint.setTextSize(14);
+        textPaint.setTextSize(14 * scale);
         textPaint.setColor(Color.RED);
         textPaint.setFakeBoldText(true);
         float textY = cy - r * 1.1f;

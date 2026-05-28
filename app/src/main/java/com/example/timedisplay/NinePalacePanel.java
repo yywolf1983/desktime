@@ -15,6 +15,7 @@ public class NinePalacePanel extends View {
     private Paint centerPaint;
     private String[][] palaceData;
     private float brightness = 1.0f;
+    private float scale = 1f;
 
 
     // 九宫格布局位置（按照指南针顺序：上北下南，左西右东）
@@ -113,6 +114,7 @@ public class NinePalacePanel extends View {
 
         int width = getWidth();
         int height = getHeight();
+        scale = Math.min(width, height) / 400f; // 基准尺寸400px
         int cellSize = Math.min(width, height) / 3;
 
         // 绘制九宫格网格
@@ -152,12 +154,12 @@ public class NinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += 45;
+                y += 45 * scale;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += 45;
+                y += 45 * scale;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }
