@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇门遁甲排盘</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-content">
+                <h1 class="title">奇门遁甲</h1>
+                <p class="subtitle">洞察天地 · 运筹帷幄</p>
+                
+                <!-- 主标签页切换 -->
+                <div class="main-tabs">
+                    <button class="main-tab-btn active" data-tab="qimenTab">奇门排盘</button>
+                    <button class="main-tab-btn" data-tab="basicsTab">基础概念</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 时间显示区域 -->
+        <div class="time-display-section">
+            <div id="clickableTime" class="time-display">
+                <span class="seven-segment" id="hour1">0</span>
+                <span class="seven-segment" id="hour2">0</span>
+                <span class="colon">:</span>
+                <span class="seven-segment" id="minute1">0</span>
+                <span class="seven-segment" id="minute2">0</span>
+            </div>
+            <div class="date-display" id="dateDisplay">2026年6月3日 星期二</div>
+            <div class="click-hint">点击时间可修改排盘时间</div>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 奇门排盘标签页 -->
+            <div id="qimenTab" class="tab-content active">
+                <div class="qimen-container">
+                    <!-- 排盘信息 -->
+                    <div class="qimen-info-card time-card qimen-info-full">
+                        <div class="info-label">排盘信息</div>
+                        <div class="qimen-info-body">
+                            <div class="qimen-info-left">
+                                <div class="time-content">
+                                    <div class="time-date" id="paiPanDate">2026-06-03</div>
+                                    <div class="time-time" id="paiPanTimeDisplay">12:00</div>
+                                </div>
+                                <div class="info-row">
+                                    <span>节气：</span><strong id="qimenJieqi">--</strong>
+                                </div>
+                                <div class="info-row">
+                                    <span>遁局：</span><strong id="qimenDun">--</strong><strong id="qimenJu">--</strong>
+                                </div>
+                            </div>
+                            <div class="qimen-info-divider"></div>
+                            <div class="qimen-info-right">
+                                <div class="info-row">
+                                    <span>旬首：</span><strong id="xunshou">--</strong>
+                                </div>
+                                <div class="info-row">
+                                    <span>值符：</span><strong id="zhifu">--</strong>
+                                </div>
+                                <div class="info-row">
+                                    <span>值使：</span><strong id="zhishi">--</strong>
+                                </div>
+                                <div class="info-row">
+                                    <span>四柱：</span><strong id="sizhu">--</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 九宫格 -->
+                    <div class="nine-palace-container">
+                        <div id="ninePalace" class="nine-palace"></div>
+                    </div>
+
+                    <!-- 复制按钮 -->
+                    <div class="copy-section">
+                        <button id="copyPaiPan" class="copy-btn">复制排盘信息</button>
+                    </div>
+
+                    <!-- 当前排盘解析 -->
+                    <div class="analysis-section">
+                        <h3>当前排盘解析</h3>
+                        <div id="analysisGrid" class="analysis-grid">
+                            <div class="analysis-summary">
+                                <h4>📅 加载中...</h4>
+                                <p>正在计算排盘信息，请稍候...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 基础概念标签页 -->
+            <div id="basicsTab" class="tab-content">
+                <div class="basics-container">
+                    <h3>奇门遁甲基础概念</h3>
+                    
+                    <div class="explanation-tabs">
+                        <button class="exp-tab-btn active" data-exp-tab="stars">九星详解</button>
+                        <button class="exp-tab-btn" data-exp-tab="doors">八门详解</button>
+                        <button class="exp-tab-btn" data-exp-tab="gods">八神详解</button>
+                        <button class="exp-tab-btn" data-exp-tab="palaces">九宫详解</button>
+                    </div>
+
+                    <div class="explanation-content">
+                        <div id="exp-stars" class="exp-content active">
+                            <div id="starsGrid" class="exp-grid"></div>
+                        </div>
+                        <div id="exp-doors" class="exp-content">
+                            <div id="doorsGrid" class="exp-grid"></div>
+                        </div>
+                        <div id="exp-gods" class="exp-content">
+                            <div id="godsGrid" class="exp-grid"></div>
+                        </div>
+                        <div id="exp-palaces" class="exp-content">
+                            <div id="palacesGrid" class="exp-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>奇门遁甲 · 古法智慧</p>
+        </div>
+    </div>
+
+    <!-- 时间选择弹窗 -->
+    <div id="timeModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>选择排盘时间</h3>
+                <button id="closeModal" class="close-btn">×</button>
+            </div>
+
+            <!-- 日期选择器 -->
+            <div class="date-picker-container">
+                <div class="click-picker">
+                    <div class="click-picker-label">年</div>
+                    <div id="yearPicker" class="click-picker-value">2026</div>
+                    <div id="yearOptions" class="click-picker-options"></div>
+                </div>
+                <span class="picker-separator">/</span>
+                <div class="click-picker">
+                    <div class="click-picker-label">月</div>
+                    <div id="monthPicker" class="click-picker-value">06</div>
+                    <div id="monthOptions" class="click-picker-options">
+                        <button class="option-btn">1</button>
+                        <button class="option-btn">2</button>
+                        <button class="option-btn">3</button>
+                        <button class="option-btn">4</button>
+                        <button class="option-btn">5</button>
+                        <button class="option-btn">6</button>
+                        <button class="option-btn">7</button>
+                        <button class="option-btn">8</button>
+                        <button class="option-btn">9</button>
+                        <button class="option-btn">10</button>
+                        <button class="option-btn">11</button>
+                        <button class="option-btn">12</button>
+                    </div>
+                </div>
+                <span class="picker-separator">/</span>
+                <div class="click-picker">
+                    <div class="click-picker-label">日</div>
+                    <div id="dayPicker" class="click-picker-value">03</div>
+                    <div id="dayOptions" class="click-picker-options"></div>
+                </div>
+            </div>
+
+            <!-- 时间选择器 -->
+            <div class="time-picker-container">
+                <div class="click-picker">
+                    <div class="click-picker-label">时</div>
+                    <div id="hourPicker" class="click-picker-value">12</div>
+                    <div id="hourOptions" class="click-picker-options">
+                        <button class="option-btn">0</button>
+                        <button class="option-btn">1</button>
+                        <button class="option-btn">2</button>
+                        <button class="option-btn">3</button>
+                        <button class="option-btn">4</button>
+                        <button class="option-btn">5</button>
+                        <button class="option-btn">6</button>
+                        <button class="option-btn">7</button>
+                        <button class="option-btn">8</button>
+                        <button class="option-btn">9</button>
+                        <button class="option-btn">10</button>
+                        <button class="option-btn">11</button>
+                        <button class="option-btn">12</button>
+                        <button class="option-btn">13</button>
+                        <button class="option-btn">14</button>
+                        <button class="option-btn">15</button>
+                        <button class="option-btn">16</button>
+                        <button class="option-btn">17</button>
+                        <button class="option-btn">18</button>
+                        <button class="option-btn">19</button>
+                        <button class="option-btn">20</button>
+                        <button class="option-btn">21</button>
+                        <button class="option-btn">22</button>
+                        <button class="option-btn">23</button>
+                    </div>
+                </div>
+                <span class="picker-separator">:</span>
+                <div class="click-picker">
+                    <div class="click-picker-label">分</div>
+                    <div id="minutePicker" class="click-picker-value">00</div>
+                    <div id="minuteOptions" class="click-picker-options">
+                        <button class="option-btn">0</button>
+                        <button class="option-btn">5</button>
+                        <button class="option-btn">10</button>
+                        <button class="option-btn">15</button>
+                        <button class="option-btn">20</button>
+                        <button class="option-btn">25</button>
+                        <button class="option-btn">30</button>
+                        <button class="option-btn">35</button>
+                        <button class="option-btn">40</button>
+                        <button class="option-btn">45</button>
+                        <button class="option-btn">50</button>
+                        <button class="option-btn">55</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速选择 -->
+            <div class="quick-select">
+                <button id="quickNow" class="quick-btn">当前时间</button>
+            </div>
+
+            <!-- 确认按钮 -->
+            <div class="modal-footer">
+                <button id="confirmTime" class="btn primary">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏的排盘时间字段 -->
+    <div id="paiPanTime" style="display: none;"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
