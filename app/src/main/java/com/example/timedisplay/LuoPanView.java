@@ -35,6 +35,10 @@ public class LuoPanView extends View {
         "☵", "☶", "☳", "☴", "☲", "☷", "☱", "☰"
     };
     
+    private static final String[] EIGHT_TRIGRAMS_NAMES = {
+        "坎", "艮", "震", "巽", "离", "坤", "兑", "乾"
+    };
+    
     private static final String[] TEN_GAN = {
         "甲", "乙", "丙", "丁", "戊",
         "己", "庚", "辛", "壬", "癸"
@@ -193,7 +197,7 @@ public class LuoPanView extends View {
     private void drawConcentricCircles(Canvas canvas, int cx, int cy, float r) {
         canvas.drawCircle(cx, cy, r, outerCirclePaint);
         
-        float[] radii = {r * 0.90f, r * 0.78f, r * 0.65f, r * 0.50f, r * 0.33f, r * 0.20f};
+        float[] radii = {r * 0.92f, r * 0.80f, r * 0.68f, r * 0.52f, r * 0.38f, r * 0.22f};
         for (float radius : radii) {
             canvas.drawCircle(cx, cy, radius, circlePaint);
         }
@@ -229,14 +233,14 @@ public class LuoPanView extends View {
         
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
-            float startX = cx + (float) (r * 0.20f * Math.cos(angle));
-            float startY = cy + (float) (r * 0.20f * Math.sin(angle));
-            float midX = cx + (float) (r * 0.50f * Math.cos(angle));
-            float midY = cy + (float) (r * 0.50f * Math.sin(angle));
-            float mid2X = cx + (float) (r * 0.65f * Math.cos(angle));
-            float mid2Y = cy + (float) (r * 0.65f * Math.sin(angle));
-            float endX = cx + (float) (r * 0.90f * Math.cos(angle));
-            float endY = cy + (float) (r * 0.90f * Math.sin(angle));
+            float startX = cx + (float) (r * 0.22f * Math.cos(angle));
+            float startY = cy + (float) (r * 0.22f * Math.sin(angle));
+            float midX = cx + (float) (r * 0.52f * Math.cos(angle));
+            float midY = cy + (float) (r * 0.52f * Math.sin(angle));
+            float mid2X = cx + (float) (r * 0.68f * Math.cos(angle));
+            float mid2Y = cy + (float) (r * 0.68f * Math.sin(angle));
+            float endX = cx + (float) (r * 0.92f * Math.cos(angle));
+            float endY = cy + (float) (r * 0.92f * Math.sin(angle));
             
             canvas.drawLine(startX, startY, midX, midY, linePaint);
             canvas.drawLine(mid2X, mid2Y, endX, endY, linePaint);
@@ -244,7 +248,7 @@ public class LuoPanView extends View {
     }
 
     private void drawTwentyFourMountains(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.84f;
+        float textRadius = r * 0.86f;
         for (int i = 0; i < 24; i++) {
             double angle = Math.toRadians(i * 15 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -261,14 +265,16 @@ public class LuoPanView extends View {
                 textPaint.setColor(Color.CYAN);
             }
             
-            textPaint.setTextSize(r * 0.1f);
-            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, y + r * 0.035f, textPaint);
+            textPaint.setTextSize(r * 0.09f);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
     
     private void drawTwelveZhi(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.71f;
+        float textRadius = r * 0.74f;
         for (int i = 0; i < 12; i++) {
             double angle = Math.toRadians(i * 30 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -277,15 +283,17 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 30, x, y);
             
-            textPaint.setTextSize(r * 0.09f);
+            textPaint.setTextSize(r * 0.085f);
             textPaint.setColor(Color.rgb(255, 182, 193));
-            canvas.drawText(TWELVE_ZHI[i], x, y + r * 0.033f, textPaint);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(TWELVE_ZHI[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
     
     private void drawEightTrigrams(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.57f;
+        float textRadius = r * 0.60f;
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -294,15 +302,23 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 45, x, y);
             
-            textPaint.setTextSize(r * 0.13f);
+            textPaint.setTextSize(r * 0.12f);
             textPaint.setColor(Color.rgb(74, 144, 217));
-            canvas.drawText(EIGHT_TRIGRAMS[i], x, y + r * 0.047f, textPaint);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(EIGHT_TRIGRAMS[i], x - r * 0.05f, centerY, textPaint);
+            
+            textPaint.setTextSize(r * 0.08f);
+            textPaint.setColor(Color.rgb(191, 160, 85));
+            fm = textPaint.getFontMetrics();
+            centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(EIGHT_TRIGRAMS_NAMES[i], x + r * 0.05f, centerY, textPaint);
             canvas.restore();
         }
     }
     
     private void drawTenGan(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.41f;
+        float textRadius = r * 0.45f;
         for (int i = 0; i < 10; i++) {
             double angle = Math.toRadians(i * 36 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -311,15 +327,17 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 36, x, y);
             
-            textPaint.setTextSize(r * 0.09f);
+            textPaint.setTextSize(r * 0.075f);
             textPaint.setColor(Color.rgb(173, 255, 47));
-            canvas.drawText(TEN_GAN[i], x, y + r * 0.033f, textPaint);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(TEN_GAN[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
     
     private void drawEightDirections(Canvas canvas, int cx, int cy, float r) {
-        float textRadius = r * 0.26f;
+        float textRadius = r * 0.28f;
         for (int i = 0; i < 8; i++) {
             double angle = Math.toRadians(i * 45 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
@@ -331,7 +349,9 @@ public class LuoPanView extends View {
             textPaint.setTextSize(r * 0.085f);
             textPaint.setColor(Color.WHITE);
             textPaint.setFakeBoldText(true);
-            canvas.drawText(EIGHT_DIRECTIONS[i], x, y + r * 0.03f, textPaint);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(EIGHT_DIRECTIONS[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -349,7 +369,9 @@ public class LuoPanView extends View {
             textPaint.setTextSize(r * 0.07f);
             textPaint.setColor(Color.rgb(255, 165, 0));
             textPaint.setFakeBoldText(true);
-            canvas.drawText("天" + NINE_STARS[i], x, y + r * 0.025f, textPaint);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText("天" + NINE_STARS[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -367,7 +389,9 @@ public class LuoPanView extends View {
             textPaint.setTextSize(r * 0.06f);
             textPaint.setColor(Color.rgb(255, 215, 0));
             textPaint.setFakeBoldText(true);
-            canvas.drawText(EIGHT_DOORS[i] + "门", x, y + r * 0.022f, textPaint);
+            Paint.FontMetrics fm = textPaint.getFontMetrics();
+            float centerY = y - (fm.ascent + fm.descent) / 2;
+            canvas.drawText(EIGHT_DOORS[i] + "门", x, centerY, textPaint);
             canvas.restore();
         }
     }
