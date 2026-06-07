@@ -550,7 +550,8 @@ function updateQiMen(date) {
     const shiChen = getShiChen(date.getHours(), date.getMinutes());
     
     document.getElementById('paiPanDate').textContent = `${year}-${month}-${day}`;
-    document.getElementById('paiPanTimeDisplay').textContent = `${hours}:${minutes} ${shiChen}`;
+    document.getElementById('paiPanTimeDisplay').textContent = `${hours}:${minutes}`;
+    document.getElementById('paiPanShiChen').textContent = shiChen;
     document.getElementById('paiPanTime').textContent = `${year}-${month}-${day} ${hours}:${minutes} ${shiChen}`;
 
     const jieqi = currentJieqiData.jieqi;
@@ -575,8 +576,88 @@ function updateQiMen(date) {
     const sizhuStr = currentJieqiData.yearPillar + ' ' + currentJieqiData.monthPillar + ' ' + currentJieqiData.dayPillar + ' ' + currentJieqiData.timePillar;
     document.getElementById('sizhu').textContent = sizhuStr;
 
+    // 计算空亡
+    const kongwang = getKongWang(currentJieqiData.dayPillar);
+    document.getElementById('kongwang').textContent = kongwang;
+
+    // 计算马星
+    const maxing = getMaXing(currentJieqiData.dayPillar);
+    document.getElementById('maxing').textContent = maxing;
+
+    // 获取日干和时干
+    const dayPillar = currentJieqiData.dayPillar;
+    const riGan = dayPillar[0];
+    const riZhi = dayPillar[1];
+    document.getElementById('riGan').textContent = riGan + riZhi;
+
+    const shiGan = timePillar[0];
+    document.getElementById('shiGan').textContent = shiGan + timeZhi;
+
     const palaceData = calculateQiMenPanel(currentJieqiData.yearPillar, currentJieqiData.monthPillar, currentJieqiData.dayPillar, timePillar, jieqi);
+    
+    // 获取落宫信息
+    const gongwei = ['坎一宫', '坤二宫', '震三宫', '巽四宫', '中五宫', '乾六宫', '兑七宫', '艮八宫', '离九宫'];
+    let zhifuPalace = '';
+    let zhishiPalace = '';
+    let riGanPalace = '';
+    let shiGanPalace = '';
+
+    palaceData.forEach((data, index) => {
+        if (data.star === xunshouInfo.star) {
+            zhifuPalace = gongwei[index];
+        }
+        if (data.door === xunshouInfo.door) {
+            zhishiPalace = gongwei[index];
+        }
+        if (data.tianGan === riGan) {
+            riGanPalace = gongwei[index];
+        }
+        if (data.tianGan === shiGan) {
+            shiGanPalace = gongwei[index];
+        }
+    });
+
+    document.getElementById('zhifuPalace').textContent = zhifuPalace;
+    document.getElementById('zhishiPalace').textContent = zhishiPalace;
+    document.getElementById('riGanPalace').textContent = riGanPalace;
+    document.getElementById('shiGanPalace').textContent = shiGanPalace;
+
     renderNinePalace(palaceData);
+}
+
+// 获取空亡
+function getKongWang(dayPillar) {
+    const xunshouList = ['甲子', '甲戌', '甲申', '甲午', '甲辰', '甲寅'];
+    const kongwangMap = {
+        '甲子': '戌亥',
+        '甲戌': '申酉',
+        '甲申': '午未',
+        '甲午': '辰巳',
+        '甲辰': '寅卯',
+        '甲寅': '子丑'
+    };
+    
+    const dayGan = dayPillar[0];
+    const dayZhi = dayPillar[1];
+    const shiGanzhi = dayGan + dayZhi;
+    let shiIndex = LIUJIAZI.indexOf(shiGanzhi);
+    if (shiIndex === -1) shiIndex = 0;
+    const xunIndex = Math.floor(shiIndex / 10);
+    const xunshou = xunshouList[xunIndex] || '甲子';
+    
+    return kongwangMap[xunshou] || '--';
+}
+
+// 获取马星
+function getMaXing(dayPillar) {
+    const maXingMap = {
+        '申': '寅', '子': '午', '辰': '申',
+        '寅': '午', '午': '申', '戌': '子',
+        '巳': '亥', '酉': '巳', '丑': '酉',
+        '亥': '巳', '卯': '酉', '未': '亥'
+    };
+    const dayZhi = dayPillar[1];
+    return maXingMap[dayZhi] || '--';
 }
 
 // 获取旬首
@@ -827,10 +908,24 @@ function renderNinePalace(palaceData) {
 
         div.className = classes.join(' ');
         div.innerHTML = `
-            <div class="palace-name">${data.palaceName} ${data.directionSymbol} ${data.direction}</div>
-            <div class="palace-content">
-                ${data.god ? data.god + ' ' : ''}${data.star}<br>
-                ${data.door ? data.door + ' ' : ''}${data.tianGan}/${data.diGan} ${data.luck} ${data.wangCui}
+            <div class="palace-header">
+                <span class="palace-name">${data.palaceName}</span>
+                <span class="palace-number">${getPalaceNumber(index)}</span>
+                <span class="palace-direction">${data.directionSymbol} ${data.direction}</span>
+            </div>
+            <div class="palace-body">
+                <div class="palace-god-row">${data.god || ''}</div>
+                <div class="palace-star-row">${data.star}</div>
+                <div class="palace-door-row">${data.door || '—'}门</div>
+                <div class="palace-gan-row">
+                    <span class="tian-gan">${data.tianGan}</span>
+                    <span class="gan-divider">/</span>
+                    <span class="di-gan">${data.diGan}</span>
+                </div>
+                <div class="palace-footer">
+                    <span class="palace-wangcui">${data.wangCui}</span>
+                    <span class="palace-luck ${data.luck.toLowerCase()}">${data.luck}</span>
+                </div>
             </div>
         `;
         container.appendChild(div);
@@ -840,6 +935,12 @@ function renderNinePalace(palaceData) {
 
     // 更新当前排盘解析
     renderAnalysisGrid(palaceData);
+}
+
+// 获取宫位编号
+function getPalaceNumber(index) {
+    const numbers = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
+    return numbers[index];
 }
 
 // 复制排盘信息
@@ -1048,6 +1149,14 @@ function renderAnalysisGrid(palaceData) {
     const zhishi = document.getElementById('zhishi')?.textContent || '--';
     const sizhu = document.getElementById('sizhu')?.textContent || '--';
     const paiPanTime = document.getElementById('paiPanTime')?.textContent || '--';
+    const kongwang = document.getElementById('kongwang')?.textContent || '--';
+    const maxing = document.getElementById('maxing')?.textContent || '--';
+    const riGan = document.getElementById('riGan')?.textContent || '--';
+    const shiGan = document.getElementById('shiGan')?.textContent || '--';
+    const riGanPalace = document.getElementById('riGanPalace')?.textContent || '--';
+    const shiGanPalace = document.getElementById('shiGanPalace')?.textContent || '--';
+    const zhifuPalace = document.getElementById('zhifuPalace')?.textContent || '--';
+    const zhishiPalace = document.getElementById('zhishiPalace')?.textContent || '--';
 
     // 分析各宫吉凶
     let luckyPalaces = [];
@@ -1067,24 +1176,11 @@ function renderAnalysisGrid(palaceData) {
         }
     });
 
-    // 找到值符和值使所在宫
-    let zhifuPalace = '';
-    let zhishiPalace = '';
-    let zhifuData = null;
-    let zhishiData = null;
-    palaceData.forEach((data, index) => {
-        if (data.star === zhifu.replace('星', '')) {
-            zhifuPalace = gongwei[index];
-            zhifuData = data;
-        }
-        if (data.door === zhishi.replace('门', '')) {
-            zhishiPalace = gongwei[index];
-            zhishiData = data;
-        }
-    });
-
     // 生成详细运势指导
     const dailyGuide = generateDailyGuide(palaceData, zhifu, zhishi, dun, ju, jieqi);
+
+    // 生成各宫详细分析
+    const palaceAnalysis = generatePalaceAnalysis(palaceData, gongwei);
 
     // 生成整体分析报告
     let analysisHtml = `
@@ -1112,13 +1208,48 @@ function renderAnalysisGrid(palaceData) {
                 <h5>🌟 值符：${zhifu}</h5>
                 <p><strong>落宫：</strong>${zhifuPalace}</p>
                 <p><strong>含义：</strong>${getStarMeaning(zhifu.replace('星', ''))}</p>
+                <p><strong>详细解释：</strong>${getStarDetail(zhifu.replace('星', ''))}</p>
                 <p><strong>当前启示：</strong>${getZhifuAdvice(zhifu)}</p>
             </div>
             <div class="detail-section">
                 <h5>🚪 值使：${zhishi}</h5>
                 <p><strong>落宫：</strong>${zhishiPalace}</p>
                 <p><strong>含义：</strong>${getDoorMeaning(zhishi.replace('门', ''))}</p>
+                <p><strong>详细解释：</strong>${getDoorDetail(zhishi.replace('门', ''))}</p>
                 <p><strong>当前启示：</strong>${getZhishiAdvice(zhishi)}</p>
+            </div>
+            <div class="detail-section">
+                <h5>📅 旬首：${xunshou}</h5>
+                <p><strong>含义：</strong>${getXunshouInfo(xunshou)}</p>
+                <p><strong>空亡：</strong><span style="color: var(--red);">${kongwang}</span> - ${getKongWangAdvice(kongwang)}</p>
+                <p><strong>马星：</strong><span style="color: var(--blue);">${maxing}</span> - ${getMaXingAdvice(maxing)}</p>
+            </div>
+        </div>
+
+        <div class="analysis-summary">
+            <h4>👤 日干与时干分析</h4>
+            <div class="detail-section">
+                <h5>🌞 日干：${riGan}</h5>
+                <p><strong>落宫：</strong>${riGanPalace}</p>
+                <p><strong>含义：</strong>日干代表求测人自身，落宫状态反映自身处境。</p>
+                <p><strong>当前启示：</strong>${getRiGanAdvice(riGan[0], palaceData)}</p>
+            </div>
+            <div class="detail-section">
+                <h5>🌙 时干：${shiGan}</h5>
+                <p><strong>落宫：</strong>${shiGanPalace}</p>
+                <p><strong>含义：</strong>时干代表所求之事或他人，落宫状态反映事情发展。</p>
+                <p><strong>当前启示：</strong>${getShiGanAdvice(shiGan[0], palaceData)}</p>
+            </div>
+            <div class="detail-section">
+                <h5>🔗 日时关系</h5>
+                <p>${getRiShiRelationship(riGan[0], shiGan[0], riGanPalace, shiGanPalace)}</p>
+            </div>
+        </div>
+
+        <div class="analysis-summary">
+            <h4>🗺️ 各宫详细分析</h4>
+            <div class="palace-analysis-grid">
+                ${palaceAnalysis}
             </div>
         </div>
 
@@ -1169,6 +1300,20 @@ function renderAnalysisGrid(palaceData) {
         </div>
 
         <div class="analysis-summary">
+            <h4>📝 今日宜忌</h4>
+            <div class="daily-guide">
+                <div class="guide-section">
+                    <h5>✅ 今日宜</h5>
+                    <p>${generateYi(zhishi.replace('门', ''), dun)}</p>
+                </div>
+                <div class="guide-section">
+                    <h5>❌ 今日忌</h5>
+                    <p>${generateJi(zhishi.replace('门', ''), dun)}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-summary">
             <h4>💡 当前寄语</h4>
             <div class="daily-message">
                 <p>${dailyGuide.message}</p>
@@ -1177,6 +1322,187 @@ function renderAnalysisGrid(palaceData) {
     `;
 
     grid.innerHTML = analysisHtml;
+}
+
+// 生成各宫详细分析
+function generatePalaceAnalysis(palaceData, gongwei) {
+    let html = '';
+    const displayOrder = [5, 0, 7, 2, 4, 6, 1, 8, 3];
+    
+    displayOrder.forEach((index) => {
+        const data = palaceData[index];
+        const gongName = gongwei[index];
+        const luckColor = data.luck === '吉' ? 'color: var(--green)' : data.luck === '凶' ? 'color: var(--red)' : 'color: var(--gold)';
+        
+        html += `
+            <div class="palace-analysis-card">
+                <div class="palace-analysis-header">
+                    <span class="palace-analysis-name">${gongName}</span>
+                    <span class="palace-analysis-luck" style="${luckColor}">${data.luck}</span>
+                </div>
+                <div class="palace-analysis-body">
+                    <div class="palace-analysis-row">
+                        <span>八神：</span><strong>${data.god || '—'}</strong>
+                    </div>
+                    <div class="palace-analysis-row">
+                        <span>九星：</span><strong>${data.star}</strong>
+                    </div>
+                    <div class="palace-analysis-row">
+                        <span>八门：</span><strong>${data.door || '—'}门</strong>
+                    </div>
+                    <div class="palace-analysis-row">
+                        <span>天干：</span><strong>${data.tianGan}/${data.diGan}</strong>
+                    </div>
+                    <div class="palace-analysis-row">
+                        <span>旺衰：</span><strong>${data.wangCui}</strong>
+                    </div>
+                </div>
+                <div class="palace-analysis-footer">
+                    ${getPalaceAdvice(data)}
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+// 获取宫位建议
+function getPalaceAdvice(data) {
+    const advice = [];
+    
+    if (data.luck === '吉') {
+        advice.push('此宫吉庆，诸事顺遂');
+    } else if (data.luck === '凶') {
+        advice.push('此宫凶险，宜谨慎行事');
+    } else {
+        advice.push('此宫平平，稳守为宜');
+    }
+    
+    if (data.wangCui === '旺') {
+        advice.push('得令而旺，气势充足');
+    } else if (data.wangCui === '相') {
+        advice.push('得生而相，有助益');
+    } else if (data.wangCui === '休') {
+        advice.push('休养生息，不宜强求');
+    } else if (data.wangCui === '囚') {
+        advice.push('被囚受制，事多阻碍');
+    } else if (data.wangCui === '死') {
+        advice.push('处死地，事难有成');
+    }
+    
+    return `<p>${advice.join('。')}</p>`;
+}
+
+// 获取空亡建议
+function getKongWangAdvice(kongwang) {
+    if (kongwang === '--') return '';
+    return `空亡之地，主事虚耗、信息不实，宜谨慎决策。`;
+}
+
+// 获取马星建议
+function getMaXingAdvice(maxing) {
+    if (maxing === '--') return '';
+    return `马星动，主变动、出行、信息传递，宜把握时机行动。`;
+}
+
+// 获取日干建议
+function getRiGanAdvice(riGan, palaceData) {
+    const advice = {
+        '甲': '甲木为参天大树，主贵人、领袖。当前宜积极进取，发挥领导力。',
+        '乙': '乙木为花草之木，主柔顺、仁慈。当前宜以柔克刚，耐心处事。',
+        '丙': '丙火为太阳之火，主光明、热情。当前宜展现才华，积极向上。',
+        '丁': '丁火为灯烛之火，主文明、细致。当前宜注重细节，精益求精。',
+        '戊': '戊土为大地之土，主稳重、诚信。当前宜脚踏实地，诚实守信。',
+        '己': '己土为田园之土，主包容、厚德。当前宜宽厚待人，积累福报。',
+        '庚': '庚金为刀剑之金，主果断、刚毅。当前宜当机立断，勇往直前。',
+        '辛': '辛金为首饰之金，主精致、细腻。当前宜注重品质，精益求精。',
+        '壬': '壬水为江海之水，主智慧、流动。当前宜灵活变通，顺势而为。',
+        '癸': '癸水为雨露之水，主聪明、神秘。当前宜低调行事，暗中谋划。'
+    };
+    return advice[riGan] || '日干为自身，当前宜审视自身状态，做出合适调整。';
+}
+
+// 获取时干建议
+function getShiGanAdvice(shiGan, palaceData) {
+    const advice = {
+        '甲': '甲木主事，主贵人相助，事情有望得到有力支持。',
+        '乙': '乙木主事，主事情柔顺发展，需要耐心等待。',
+        '丙': '丙火主事，主事情明朗，进展迅速，机遇显现。',
+        '丁': '丁火主事，主事情需要细致处理，注重细节方能成功。',
+        '戊': '戊土主事，主事情稳重推进，根基稳固，不易动摇。',
+        '己': '己土主事，主事情需要包容忍耐，以柔克刚。',
+        '庚': '庚金主事，主事情需要果断决策，勇往直前。',
+        '辛': '辛金主事，主事情需要精益求精，注重品质。',
+        '壬': '壬水主事，主事情变化多端，需要灵活应对。',
+        '癸': '癸水主事，主事情暗藏玄机，需要谨慎分析。'
+    };
+    return advice[shiGan] || '时干主事，当前宜关注事情发展动向。';
+}
+
+// 获取日时关系
+function getRiShiRelationship(riGan, shiGan, riGanPalace, shiGanPalace) {
+    if (riGan === shiGan) {
+        return '<strong>日时比和：</strong>事情容易达成，自身与事情协调一致，成功率高。';
+    }
+    
+    const shengMap = {
+        '木': '火', '火': '土', '土': '金', '金': '水', '水': '木'
+    };
+    const ganWuxing = {
+        '甲': '木', '乙': '木', '丙': '火', '丁': '火',
+        '戊': '土', '己': '土', '庚': '金', '辛': '金',
+        '壬': '水', '癸': '水'
+    };
+    
+    const riWuxing = ganWuxing[riGan];
+    const shiWuxing = ganWuxing[shiGan];
+    
+    if (shengMap[riWuxing] === shiWuxing) {
+        return '<strong>日生时：</strong>自身生助事情，需要付出努力方能成事，虽有消耗但终能成功。';
+    }
+    
+    if (shengMap[shiWuxing] === riWuxing) {
+        return '<strong>时生日：</strong>事情生助自身，事半功倍，易得他人帮助，事情顺利。';
+    }
+    
+    return '<strong>日时关系一般：</strong>需要努力争取，保持耐心，顺其自然。';
+}
+
+// 生成宜做事项
+function generateYi(door, dun) {
+    const yiMap = {
+        '开': '开业、求职、出行、嫁娶、求财、见贵、签约、谈判',
+        '生': '经商、投资、置业、求财、出行、求医、合作、谈判',
+        '休': '休息、休养、谈判、嫁娶、聚会、访友、规划、思考',
+        '伤': '捕捉、讨债、竞技、运动、搬迁、修理、短途出行',
+        '杜': '隐藏、保密、防守、学习、研究、策划、内部整顿',
+        '景': '上书、诉讼、献策、考试、宣传、演讲、文化交流',
+        '死': '吊丧、行刑、收敛、清理、结算、整理、反思',
+        '惊': '捕捉、诉讼、辩论、演讲、讨债、防患、应对'
+    };
+    
+    const additionalYi = dun === '阳遁' ? '主动出击、公开行事、开拓创新' : '守静待时、暗中谋划、积蓄力量';
+    
+    return `${yiMap[door] || '谨慎行事'}。${additionalYi}。`;
+}
+
+// 生成忌做事项
+function generateJi(door, dun) {
+    const jiMap = {
+        '开': '不宜闭门不出、拖延犹豫',
+        '生': '不宜保守退缩、错失良机',
+        '休': '不宜过度劳累、急躁冒进',
+        '伤': '不宜经商、签约、嫁娶、远行',
+        '杜': '不宜公开办事、暴露行踪',
+        '景': '不宜隐蔽行事、沉默不语',
+        '死': '不宜开业、嫁娶、投资、远行',
+        '惊': '不宜签订合同、重要谈判、信任他人'
+    };
+    
+    const additionalJi = dun === '阳遁' ? '不宜消极等待、固步自封' : '不宜强行出头、鲁莽行事';
+    
+    return `${jiMap[door] || '不宜冲动行事'}。${additionalJi}。`;
 }
 
 // 获取节气建议

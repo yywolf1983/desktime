@@ -12,21 +12,21 @@ public class FullNinePalacePanel extends View {
     private Paint gridPaint;
     private Paint textPaint;
     private Paint centerPaint;
+    private Paint bgPaint;
+    private Paint borderPaint;
     private String[][] palaceData;
     private float brightness = 1.0f;
     private float scale = 1f;
+    
+    private static final int COLOR_BG_CARD = 0xFF191C26;
+    private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
+    private static final int COLOR_BORDER = 0xFF262A36;
+    private static final int COLOR_GOLD = 0xFFBFA055;
+    private static final int COLOR_GREEN = 0xFF7A9A60;
+    private static final int COLOR_RED = 0xFFC47B5E;
 
-    // 九宫格布局位置（按照指南针顺序：上北下南，左西右东）
     private static final int[][] PALACE_POSITIONS = {
-        {0, 1}, // 坎一宫（北方）- 第一行第二列
-        {2, 0}, // 坤二宫（西南）- 第三行第一列
-        {1, 2}, // 震三宫（东方）- 第二行第三列
-        {2, 2}, // 巽四宫（东南）- 第三行第三列
-        {1, 1}, // 中五宫（中方）- 第二行第二列
-        {0, 0}, // 乾六宫（西北）- 第一行第一列
-        {1, 0}, // 兑七宫（西方）- 第二行第一列
-        {0, 2}, // 艮八宫（东北）- 第一行第三列
-        {2, 1}  // 离九宫（南方）- 第三行第二列
+        {0, 1}, {2, 0}, {1, 2}, {2, 2}, {1, 1}, {0, 0}, {1, 0}, {0, 2}, {2, 1}
     };
 
     public FullNinePalacePanel(Context context) {
@@ -52,9 +52,7 @@ public class FullNinePalacePanel extends View {
         gridPaint.setAntiAlias(true);
 
         textPaint = new Paint();
-        textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(35);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
@@ -64,10 +62,19 @@ public class FullNinePalacePanel extends View {
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
 
-        palaceData = new String[9][2];
+        bgPaint = new Paint();
+        bgPaint.setAntiAlias(true);
+
+        borderPaint = new Paint();
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setAntiAlias(true);
+        borderPaint.setStrokeWidth(2);
+
+        palaceData = new String[9][4];
         for (int i = 0; i < 9; i++) {
-            palaceData[i][0] = "";
-            palaceData[i][1] = "";
+            for (int j = 0; j < 4; j++) {
+                palaceData[i][j] = "";
+            }
         }
     }
 
@@ -85,38 +92,47 @@ public class FullNinePalacePanel extends View {
 
         int width = getWidth();
         int height = getHeight();
-        float padding = 15f;
+        float padding = 12f;
         int cellSize = (int)((Math.min(width, height) - padding * 2) / 3.0);
         float offsetX = (width - cellSize * 3) / 2;
         float offsetY = (height - cellSize * 3) / 2;
+        float innerPadding = 8f;
+        float radius = 10f;
 
-        // 根据cellSize动态设置文字大小
-        textPaint.setTextSize(cellSize * 0.20f);
-
-        for (int i = 0; i <= 3; i++) {
-            canvas.drawLine(offsetX, offsetY + i * cellSize, offsetX + cellSize * 3, offsetY + i * cellSize, gridPaint);
-            canvas.drawLine(offsetX + i * cellSize, offsetY, offsetX + i * cellSize, offsetY + cellSize * 3, gridPaint);
-        }
-
-        RectF centerRect = new RectF(offsetX + cellSize, offsetY + cellSize, offsetX + cellSize * 2, offsetY + cellSize * 2);
-        canvas.drawRect(centerRect, centerPaint);
+        textPaint.setTextSize(cellSize * 0.15f);
 
         for (int i = 0; i < 9; i++) {
             int row = PALACE_POSITIONS[i][0];
             int col = PALACE_POSITIONS[i][1];
-            float x = offsetX + (col + 0.5f) * cellSize;
-            float y = offsetY + (row + 0.28f) * cellSize;
+            
+            float left = offsetX + col * cellSize + innerPadding;
+            float top = offsetY + row * cellSize + innerPadding;
+            float right = offsetX + (col + 1) * cellSize - innerPadding;
+            float bottom = offsetY + (row + 1) * cellSize - innerPadding;
 
             String luck = "平";
-            String[] dataParts = palaceData[i][1].split("\\n");
-            if (dataParts.length > 1) {
-                String thirdLine = dataParts[1];
-                if (thirdLine.contains("吉")) {
-                    luck = "吉";
-                } else if (thirdLine.contains("凶")) {
-                    luck = "凶";
-                }
+            if (palaceData[i][3] != null && !palaceData[i][3].isEmpty()) {
+                if (palaceData[i][3].contains("吉")) luck = "吉";
+                else if (palaceData[i][3].contains("凶")) luck = "凶";
             }
+
+            bgPaint.setShader(new android.graphics.LinearGradient(left, top, right, bottom, 
+                COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint);
+
+            if (i == 4) {
+                borderPaint.setColor(COLOR_GOLD);
+            } else if (luck.equals("吉")) {
+                borderPaint.setColor(COLOR_GREEN);
+            } else if (luck.equals("凶")) {
+                borderPaint.setColor(COLOR_RED);
+            } else {
+                borderPaint.setColor(COLOR_BORDER);
+            }
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
+
+            float x = offsetX + (col + 0.5f) * cellSize;
+            float y = offsetY + (row + 0.22f) * cellSize;
 
             if (luck.equals("吉")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
@@ -126,26 +142,31 @@ public class FullNinePalacePanel extends View {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
             }
 
+            textPaint.setTextSize(cellSize * 0.15f);
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
-            if (dataParts.length > 0) {
-                y += cellSize * 0.26f;
-                canvas.drawText(dataParts[0], x, y, textPaint);
-            }
+            y += cellSize * 0.22f;
+            textPaint.setTextSize(cellSize * 0.12f);
+            canvas.drawText(palaceData[i][1], x, y, textPaint);
 
-            if (dataParts.length > 1) {
-                y += cellSize * 0.26f;
-                canvas.drawText(dataParts[1], x, y, textPaint);
-            }
+            y += cellSize * 0.22f;
+            textPaint.setTextSize(cellSize * 0.12f);
+            canvas.drawText(palaceData[i][2], x, y, textPaint);
+
+            y += cellSize * 0.18f;
+            textPaint.setTextSize(cellSize * 0.10f);
+            textPaint.setColor(Color.argb((int)(brightness * 200), 191, 160, 85));
+            canvas.drawText(palaceData[i][3], x, y, textPaint);
         }
     }
 
     public void setPalaceData(String[][] data) {
         if (data != null && data.length == 9) {
             for (int i = 0; i < 9; i++) {
-                if (data[i].length >= 2) {
-                    palaceData[i][0] = data[i][0];
-                    palaceData[i][1] = data[i][1];
+                if (data[i].length >= 4) {
+                    for (int j = 0; j < 4; j++) {
+                        palaceData[i][j] = data[i][j];
+                    }
                 }
             }
             invalidate();

@@ -1,6 +1,8 @@
 package com.example.timedisplay;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -16,10 +18,15 @@ public class FullNinePalaceActivity extends Activity {
 
     private FullNinePalacePanel fullNinePalacePanel;
     private TextView fullPageTitle;
-    private TextView fullPageFourPillars;
-    private TextView fullPagePanelInfo;
-    private TextView fullPageDunType;
-    private TextView fullPageExplanation;
+    
+    private TextView expBasic;
+    private TextView expGan;
+    private TextView expDirection;
+    private TextView expYiJi;
+    private TextView expLife;
+    private TextView expPalaces;
+    private TextView expTime;
+    private TextView expOverall;
 
     private static final long UPDATE_INTERVAL = 1000;
     private Handler updateHandler;
@@ -80,14 +87,27 @@ public class FullNinePalaceActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
+        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            setRequestedOrientation(lockedOrientation);
+        }
+        
         setContentView(R.layout.activity_full_nine_palace);
 
         fullNinePalacePanel = (FullNinePalacePanel) findViewById(R.id.fullNinePalacePanel);
         fullPageTitle = (TextView) findViewById(R.id.fullPageTitle);
-        fullPageFourPillars = (TextView) findViewById(R.id.fullPageFourPillars);
-        fullPagePanelInfo = (TextView) findViewById(R.id.fullPagePanelInfo);
-        fullPageDunType = (TextView) findViewById(R.id.fullPageDunType);
-        fullPageExplanation = (TextView) findViewById(R.id.fullPageExplanation);
+        
+        expBasic = (TextView) findViewById(R.id.expBasic);
+        expGan = (TextView) findViewById(R.id.expGan);
+        expDirection = (TextView) findViewById(R.id.expDirection);
+        expYiJi = (TextView) findViewById(R.id.expYiJi);
+        expLife = (TextView) findViewById(R.id.expLife);
+        expPalaces = (TextView) findViewById(R.id.expPalaces);
+        expTime = (TextView) findViewById(R.id.expTime);
+        expOverall = (TextView) findViewById(R.id.expOverall);
 
         updateHandler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
@@ -153,20 +173,53 @@ public class FullNinePalaceActivity extends Activity {
         String dayPillar = calculateDayPillar(year, month, day);
         String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
 
-        String fourPillarsText = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
-        fullPageFourPillars.setText(fourPillarsText);
-
         // 根据节气确定阴阳遁和用局数
         String jieqi = getJieqi(year, month, day);
-        boolean isYangDun = isYangDunByJieqi(jieqi);
-        int ju = getJuShuByJieqi(jieqi);
         
-        fullPageDunType.setText(isYangDun ? "阳遁" : "阴遁");
-        fullPagePanelInfo.setText(ju + "局");
-
+        // 计算落宫信息
         calculateAndSetPalaceData(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
 
-        fullPageExplanation.setText(generateExplanation(yearPillar, monthPillar, dayPillar, timePillar, jieqi));
+        // 更新各解读区域
+        updateExplanation(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
+    }
+
+    // 获取空亡
+    private String getKongWang(String dayPillar) {
+        String[] xunshouList = {"甲子", "甲戌", "甲申", "甲午", "甲辰", "甲寅"};
+        java.util.Map<String, String> kongwangMap = new java.util.HashMap<>();
+        kongwangMap.put("甲子", "戌亥");
+        kongwangMap.put("甲戌", "申酉");
+        kongwangMap.put("甲申", "午未");
+        kongwangMap.put("甲午", "辰巳");
+        kongwangMap.put("甲辰", "寅卯");
+        kongwangMap.put("甲寅", "子丑");
+        
+        String dayGan = dayPillar.substring(0, 1);
+        String dayZhi = dayPillar.substring(1, 2);
+        String shiGanzhi = dayGan + dayZhi;
+        int shiIndex = -1;
+        for (int i = 0; i < LIUJIAZI.length; i++) {
+            if (LIUJIAZI[i].equals(shiGanzhi)) {
+                shiIndex = i;
+                break;
+            }
+        }
+        if (shiIndex == -1) shiIndex = 0;
+        int xunIndex = shiIndex / 10;
+        String xunshou = xunshouList[xunIndex];
+        
+        return kongwangMap.get(xunshou) != null ? kongwangMap.get(xunshou) : "--";
+    }
+
+    // 获取马星
+    private String getMaXing(String dayPillar) {
+        java.util.Map<String, String> maXingMap = new java.util.HashMap<>();
+        maXingMap.put("申", "寅"); maXingMap.put("子", "午"); maXingMap.put("辰", "申");
+        maXingMap.put("寅", "午"); maXingMap.put("午", "申"); maXingMap.put("戌", "子");
+        maXingMap.put("巳", "亥"); maXingMap.put("酉", "巳"); maXingMap.put("丑", "酉");
+        maXingMap.put("亥", "巳"); maXingMap.put("卯", "酉"); maXingMap.put("未", "亥");
+        String dayZhi = dayPillar.substring(1, 2);
+        return maXingMap.get(dayZhi) != null ? maXingMap.get(dayZhi) : "--";
     }
 
     private String calculateYearPillar(int year, int month, int day) {
@@ -303,7 +356,7 @@ public class FullNinePalaceActivity extends Activity {
         return MONTH_JU[zhiIndex];
     }
 
-    private void calculateAndSetPalaceData(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
+    private String[] calculateAndSetPalaceData(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
         // 根据节气确定阴阳遁和用局数
         boolean isYangDun = isYangDunByJieqi(jieqi);
         int ju = getJuShuByJieqi(jieqi);
@@ -343,27 +396,49 @@ public class FullNinePalaceActivity extends Activity {
         // 9. 判断旺衰
         String[] wangCui = calculateWangCui(dayGan);
 
-        String[] PALACE_NAMES = {"坎", "坤", "震", "巽", "中", "乾", "兑", "艮", "离"};
+        String[] PALACE_NAMES = {"坎一", "坤二", "震三", "巽四", "中五", "乾六", "兑七", "艮八", "离九"};
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
         String[] GUA_SYMBOLS = {"☵", "☷", "☳", "☴", "", "☰", "☱", "☶", "☲"};
         String[] DIRECTION_SYMBOLS = {"↑", "↙", "→", "↘", "●", "↖", "←", "↗", "↓"};
 
-        String[][] palaceData = new String[9][2];
+        // 查找日干和时干的落宫
+        int riGanPalace = -1;
+        int shiGanPalace = -1;
+        for (int i = 0; i < 9; i++) {
+            if (tianPanTianGan[i].equals(dayGan)) {
+                riGanPalace = i;
+            }
+            if (tianPanTianGan[i].equals(timeGan)) {
+                shiGanPalace = i;
+            }
+        }
+
+        String[][] palaceData = new String[9][4];
         for (int i = 0; i < 9; i++) {
             String star = nineStars[i];
             String door = eightDoors[i];
             String god = eightGods[i];
-
+            String tianGan = tianPanTianGan[i];
+            String diGan = diPanTianGan[i];
             String luck = getLuckSymbol(star, door);
-            String directionSymbol = DIRECTION_SYMBOLS[i];
-            String palaceName = PALACE_NAMES[i] + " " + directionSymbol + " " + DIRECTIONS[i];
 
-            palaceData[i][0] = palaceName;
-            palaceData[i][1] = god + " " + star + "\n" + (door != null && !door.isEmpty() ? door : " ") + " " + luck + " " + wangCui[i];
+            palaceData[i][0] = PALACE_NAMES[i] + " " + DIRECTION_SYMBOLS[i] + " " + DIRECTIONS[i];
+            palaceData[i][1] = god + " " + star;
+            palaceData[i][2] = (door != null && !door.isEmpty() ? door : " ") + " " + tianGan + "/" + diGan;
+            palaceData[i][3] = luck + " " + wangCui[i];
         }
 
         fullNinePalacePanel.setPalaceData(palaceData);
         fullNinePalacePanel.setBrightness(0.9f);
+
+        // 返回落宫信息：[值符落宫, 值使落宫, 日干落宫, 时干落宫]
+        String[] palaceInfo = new String[4];
+        palaceInfo[0] = PALACE_NAMES[zhiFuPalace];
+        palaceInfo[1] = PALACE_NAMES[zhiShiPalace];
+        palaceInfo[2] = riGanPalace >= 0 ? PALACE_NAMES[riGanPalace] : "--";
+        palaceInfo[3] = shiGanPalace >= 0 ? PALACE_NAMES[shiGanPalace] : "--";
+        
+        return palaceInfo;
     }
 
     // ==================== 标准算法方法 ====================
@@ -714,9 +789,7 @@ public class FullNinePalaceActivity extends Activity {
         }
     }
 
-    private String generateExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
-        StringBuilder sb = new StringBuilder();
-        
+    private void updateExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
         boolean isYangDun = isYangDunByJieqi(jieqi);
         int ju = getJuShuByJieqi(jieqi);
         
@@ -737,27 +810,42 @@ public class FullNinePalaceActivity extends Activity {
         int zhiShiPalace = getZhiShiPalace(xunShouPalace, timeZhi, isYangDun);
         String[] eightDoors = arrangeEightDoorsStandard(zhiShiDoor, zhiShiPalace, isYangDun);
         String[] eightGods = arrangeEightGodsStandard(zhiFuPalace, isYangDun);
+        String zhiFuGod = eightGods[zhiFuPalace];
         String[] wangCui = calculateWangCui(dayGan);
         
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
         
-        sb.append("🔮 当前运势解读 🔮\n\n");
+        String kongWang = getKongWang(dayPillar);
+        String maXing = getMaXing(dayPillar);
+        String riGanWuXing = getWuXing(dayGan);
+        String shiGanWuXing = getWuXing(timeGan);
+        String dayZhi = dayPillar.substring(1, 2);
         
-        sb.append("【📅 今日信息】\n");
-        sb.append("年柱 ").append(yearPillar).append(" 月柱 ").append(monthPillar).append("\n");
-        sb.append("日柱 ").append(dayPillar).append(" 时柱 ").append(timePillar).append("\n");
-        sb.append("节气 ").append(jieqi).append("  遁局 ").append(isYangDun ? "阳" : "阴").append(ju).append("局\n");
-        sb.append("旬首 ").append(xunShou).append("\n\n");
+        StringBuilder sbBasic = new StringBuilder();
+        sbBasic.append("四柱：").append(yearPillar).append(" ").append(monthPillar).append(" ").append(dayPillar).append(" ").append(timePillar).append("\n");
+        sbBasic.append("节气：").append(jieqi).append("  |  遁局：").append(isYangDun ? "阳" : "阴").append(ju).append("局\n");
+        sbBasic.append("值符：").append(zhiFuStar).append("  |  值使：").append(zhiShiDoor).append("门\n");
+        sbBasic.append("旬首：").append(xunShou).append("  |  空亡：").append(kongWang).append("  |  马星：").append(maXing);
+        expBasic.setText(sbBasic.toString());
         
-        sb.append("【🌟 值符值使】\n");
-        sb.append("值符 ").append(zhiFuStar).append("\n");
-        sb.append(getStarMeaningShort(zhiFuStar)).append("\n");
-        sb.append("值使 ").append(zhiShiDoor).append("\n");
-        sb.append(getDoorMeaningShort(zhiShiDoor)).append("\n\n");
+        StringBuilder sbGan = new StringBuilder();
+        sbGan.append("【日干").append(dayGan).append(dayZhi).append("】").append(riGanWuXing).append("属性\n");
+        sbGan.append(getRiGanAdvice(dayGan)).append("\n\n");
+        sbGan.append("【时干").append(timeGan).append(timeZhi).append("】").append(shiGanWuXing).append("属性\n");
+        sbGan.append(getShiGanAdvice(timeGan)).append("\n\n");
+        sbGan.append("【日时关系】").append(getRiShiRelationship(dayGan, timeGan));
+        expGan.setText(sbGan.toString());
         
+        StringBuilder sbDirection = new StringBuilder();
         StringBuilder luckyDirections = new StringBuilder();
         StringBuilder unluckyDirections = new StringBuilder();
         StringBuilder neutralDirections = new StringBuilder();
+        StringBuilder wangPositions = new StringBuilder();
+        StringBuilder xiuPositions = new StringBuilder();
+        StringBuilder qiuPositions = new StringBuilder();
+        StringBuilder siPositions = new StringBuilder();
+        StringBuilder xiangPositions = new StringBuilder();
+        
         for (int i = 0; i < 9; i++) {
             String door = eightDoors[i];
             if (door == null || door.isEmpty()) continue;
@@ -771,88 +859,240 @@ public class FullNinePalaceActivity extends Activity {
                 if (neutralDirections.length() > 0) neutralDirections.append("、");
                 neutralDirections.append(DIRECTIONS[i]);
             }
-        }
-        
-        sb.append("【🧭 方位吉凶】\n");
-        if (luckyDirections.length() > 0) {
-            sb.append("✅ 吉：").append(luckyDirections.toString()).append("\n");
-            sb.append("宜求财交易  宜商务谈判\n");
-            sb.append("宜出行远行  宜开业创业\n\n");
-        }
-        if (neutralDirections.length() > 0) {
-            sb.append("⚪ 平：").append(neutralDirections.toString()).append("\n");
-            sb.append("宜日常活动  宜文书处理\n");
-            sb.append("宜人际沟通  宜普通往来\n\n");
-        }
-        if (unluckyDirections.length() > 0) {
-            sb.append("❌ 凶：").append(unluckyDirections.toString()).append("\n");
-            sb.append("忌重要决策  忌签约投资\n");
-            sb.append("忌远行迁徙  忌重大行动\n\n");
-        }
-        
-        // 旺衰分析
-        sb.append("【📈 旺衰分析】\n");
-        String dayGanWuXing = getWuXing(dayGan);
-        sb.append("日干 ").append(dayGan).append("(").append(dayGanWuXing).append(")\n");
-        StringBuilder wangPositions = new StringBuilder();
-        StringBuilder xiuPositions = new StringBuilder();
-        StringBuilder qiuPositions = new StringBuilder();
-        StringBuilder siPositions = new StringBuilder();
-        StringBuilder xiangPositions = new StringBuilder();
-        for (int i = 0; i < 9; i++) {
-            if (i == 4) continue; // 跳过中宫
-            String wc = wangCui[i];
-            if (wc.equals("旺")) {
-                if (wangPositions.length() > 0) wangPositions.append("、");
-                wangPositions.append(DIRECTIONS[i]);
-            } else if (wc.equals("相")) {
-                if (xiangPositions.length() > 0) xiangPositions.append("、");
-                xiangPositions.append(DIRECTIONS[i]);
-            } else if (wc.equals("休")) {
-                if (xiuPositions.length() > 0) xiuPositions.append("、");
-                xiuPositions.append(DIRECTIONS[i]);
-            } else if (wc.equals("囚")) {
-                if (qiuPositions.length() > 0) qiuPositions.append("、");
-                qiuPositions.append(DIRECTIONS[i]);
-            } else if (wc.equals("死")) {
-                if (siPositions.length() > 0) siPositions.append("、");
-                siPositions.append(DIRECTIONS[i]);
+            if (i != 4) {
+                String wc = wangCui[i];
+                if (wc.equals("旺")) {
+                    if (wangPositions.length() > 0) wangPositions.append("、");
+                    wangPositions.append(DIRECTIONS[i]);
+                } else if (wc.equals("相")) {
+                    if (xiangPositions.length() > 0) xiangPositions.append("、");
+                    xiangPositions.append(DIRECTIONS[i]);
+                } else if (wc.equals("休")) {
+                    if (xiuPositions.length() > 0) xiuPositions.append("、");
+                    xiuPositions.append(DIRECTIONS[i]);
+                } else if (wc.equals("囚")) {
+                    if (qiuPositions.length() > 0) qiuPositions.append("、");
+                    qiuPositions.append(DIRECTIONS[i]);
+                } else if (wc.equals("死")) {
+                    if (siPositions.length() > 0) siPositions.append("、");
+                    siPositions.append(DIRECTIONS[i]);
+                }
             }
         }
-        if (wangPositions.length() > 0) sb.append("旺位：").append(wangPositions).append(" 利于行动\n");
-        if (xiangPositions.length() > 0) sb.append("相位：").append(xiangPositions).append(" 得助力\n");
-        if (xiuPositions.length() > 0) sb.append("休位：").append(xiuPositions).append(" 宜休息\n");
-        if (qiuPositions.length() > 0) sb.append("囚位：").append(qiuPositions).append(" 受制约\n");
-        if (siPositions.length() > 0) sb.append("死位：").append(siPositions).append(" 宜避开\n");
-        sb.append("\n");
         
-        sb.append("【📋 今日宜忌】\n");
-        sb.append("宜:\n");
-        String[] yiItems = getYiActivitiesShort(zhiFuStar, zhiShiDoor);
-        for (String item : yiItems) {
-            sb.append("• ").append(item).append("\n");
+        if (luckyDirections.length() > 0) {
+            sbDirection.append("✅ 吉方：").append(luckyDirections.toString()).append("\n");
+            sbDirection.append("   适合：求财交易、商务谈判、开业创业\n\n");
         }
-        sb.append("\n忌:\n");
-        String[] jiItems = getJiActivitiesShort(zhiFuStar, zhiShiDoor);
-        for (String item : jiItems) {
-            sb.append("• ").append(item).append("\n");
+        if (neutralDirections.length() > 0) {
+            sbDirection.append("⚪ 平方：").append(neutralDirections.toString()).append("\n");
+            sbDirection.append("   适合：日常活动、文书处理、人际沟通\n\n");
         }
-        sb.append("\n");
+        if (unluckyDirections.length() > 0) {
+            sbDirection.append("❌ 凶方：").append(unluckyDirections.toString()).append("\n");
+            sbDirection.append("   避免：重要决策、签约投资、重大行动\n\n");
+        }
+        if (wangPositions.length() > 0) sbDirection.append("🔥 旺位：").append(wangPositions).append(" → 力量最强，利于主动出击\n");
+        if (xiangPositions.length() > 0) sbDirection.append("🌿 相位：").append(xiangPositions).append(" → 得生助力，顺势而为\n");
+        if (xiuPositions.length() > 0) sbDirection.append("😌 休位：").append(xiuPositions).append(" → 休养生息，不宜强求\n");
+        if (qiuPositions.length() > 0) sbDirection.append("⛓ 囚位：").append(qiuPositions).append(" → 受克受制，困难重重\n");
+        if (siPositions.length() > 0) sbDirection.append("💀 死位：").append(siPositions).append(" → 死气沉沉，宜避开");
+        expDirection.setText(sbDirection.toString());
         
-        // 八神分析
-        sb.append("【🔮 八神分布】\n");
-        String zhiFuGod = eightGods[zhiFuPalace];
-        sb.append("值符宫八神：").append(zhiFuGod != null ? zhiFuGod : "无").append("\n");
-        sb.append(getGodMeaningShort(zhiFuGod)).append("\n\n");
+        StringBuilder sbYiJi = new StringBuilder();
+        sbYiJi.append("✅ 宜做事项：\n");
+        String[] yiItems = getYiActivitiesDetailed(zhiFuStar, zhiShiDoor);
+        for (int i = 0; i < Math.min(yiItems.length, 6); i++) {
+            sbYiJi.append("  ○ ").append(yiItems[i]).append("\n");
+        }
+        sbYiJi.append("\n❌ 忌做事项：\n");
+        String[] jiItems = getJiActivitiesDetailed(zhiFuStar, zhiShiDoor);
+        for (int i = 0; i < Math.min(jiItems.length, 5); i++) {
+            sbYiJi.append("  ✗ ").append(jiItems[i]).append("\n");
+        }
+        expYiJi.setText(sbYiJi.toString());
         
-        sb.append("【⏰ 时辰运势】\n");
-        sb.append(getShichenName(timeZhi)).append("\n");
-        sb.append(getTimeFortuneShort(timeZhi)).append("\n\n");
+        StringBuilder sbLife = new StringBuilder();
+        sbLife.append("💼 事业：").append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("💰 财运：").append(getWealthAdvice(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("💕 感情：").append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("💪 健康：").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("📚 学习：").append(getStudyAdvice(zhiShiDoor, zhiFuStar));
+        expLife.setText(sbLife.toString());
         
-        sb.append("【🌈 综合建议】\n");
-        sb.append(getOverallAdviceShort(isYangDun, ju, zhiFuStar, zhiShiDoor, zhiFuGod, dayGan));
+        StringBuilder sbPalaces = new StringBuilder();
+        String[] PALACE_NAMES = {"坎一", "坤二", "震三", "巽四", "中五", "乾六", "兑七", "艮八", "离九"};
+        for (int i = 0; i < 9; i++) {
+            if (i == 4) continue;
+            String doorText = eightDoors[i] != null && !eightDoors[i].isEmpty() ? eightDoors[i] + "门" : "";
+            String godText = eightGods[i] != null && !eightGods[i].isEmpty() ? eightGods[i] : "";
+            sbPalaces.append(PALACE_NAMES[i]).append("(").append(DIRECTIONS[i]).append("): ")
+              .append(nineStars[i]).append(" ")
+              .append(doorText).append(" ")
+              .append(godText).append(" ")
+              .append(wangCui[i]).append("\n");
+        }
+        expPalaces.setText(sbPalaces.toString());
         
-        return sb.toString();
+        StringBuilder sbTime = new StringBuilder();
+        sbTime.append(getShichenName(timeZhi)).append("\n");
+        sbTime.append(getTimeFortuneShort(timeZhi));
+        expTime.setText(sbTime.toString());
+        
+        expOverall.setText(getOverallAdviceShort(isYangDun, ju, zhiFuStar, zhiShiDoor, zhiFuGod, dayGan));
+    }
+    
+    private String getZhifuAdvice(String star) {
+        if (star == null) return "吉星高照，运势亨通";
+        switch (star) {
+            case "天蓬": return "智谋深远，宜策划谋略，把握先机";
+            case "天芮": return "注意健康保养，防疾病侵扰";
+            case "天冲": return "行动需谨慎，防冲动误事";
+            case "天辅": return "贵人相助，宜把握机遇，借力成事";
+            case "天禽": return "中正平和，宜稳中求进";
+            case "天心": return "仁慈博爱，宜行善积德";
+            case "天柱": return "刚直果断，宜当机立断";
+            case "天任": return "勤劳踏实，宜脚踏实地";
+            case "天英": return "文明昌盛，宜学习进取";
+            default: return "吉星高照，运势亨通";
+        }
+    }
+    
+    private String getZhishiAdvice(String door) {
+        if (door == null) return "平稳发展";
+        switch (door) {
+            case "休": return "宜休息养生，调整状态，蓄势待发";
+            case "生": return "宜开拓进取，求财创业，大展宏图";
+            case "伤": return "宜谨慎行事，防破财损耗";
+            case "杜": return "宜静不宜动，保守为上";
+            case "景": return "宜考试面试，展示才华";
+            case "死": return "宜保守谨慎，不宜进取";
+            case "惊": return "宜防口舌是非，避免争执";
+            case "开": return "宜开门纳福，百事皆宜";
+            default: return "平稳发展";
+        }
+    }
+    
+    private String getRiGanAdvice(String riGan) {
+        if (riGan == null) return "审视自身，做出合适调整";
+        switch (riGan) {
+            case "甲": return "甲木为参天大树，主贵人、领袖。宜积极进取，发挥领导力。";
+            case "乙": return "乙木为花草之木，主柔顺、仁慈。宜以柔克刚，耐心处事。";
+            case "丙": return "丙火为太阳之火，主光明、热情。宜展现才华，积极向上。";
+            case "丁": return "丁火为灯烛之火，主文明、细致。宜注重细节，精益求精。";
+            case "戊": return "戊土为大地之土，主稳重、诚信。宜脚踏实地，诚实守信。";
+            case "己": return "己土为田园之土，主包容、厚德。宜宽厚待人，积累福报。";
+            case "庚": return "庚金为刀剑之金，主果断、刚毅。宜当机立断，勇往直前。";
+            case "辛": return "辛金为首饰之金，主精致、细腻。宜注重品质，精益求精。";
+            case "壬": return "壬水为江海之水，主智慧、流动。宜灵活变通，顺势而为。";
+            case "癸": return "癸水为雨露之水，主聪明、神秘。宜低调行事，暗中谋划。";
+            default: return "审视自身，做出合适调整";
+        }
+    }
+    
+    private String getShiGanAdvice(String shiGan) {
+        if (shiGan == null) return "关注事情发展动向";
+        switch (shiGan) {
+            case "甲": return "甲木主事，主贵人相助，事情有望得到有力支持。";
+            case "乙": return "乙木主事，主事情柔顺发展，需要耐心等待。";
+            case "丙": return "丙火主事，主事情明朗，进展迅速，机遇显现。";
+            case "丁": return "丁火主事，主事情需要细致处理，注重细节方能成功。";
+            case "戊": return "戊土主事，主事情稳重推进，根基稳固，不易动摇。";
+            case "己": return "己土主事，主事情需要包容忍耐，以柔克刚。";
+            case "庚": return "庚金主事，主事情需要果断决策，勇往直前。";
+            case "辛": return "辛金主事，主事情需要精益求精，注重品质。";
+            case "壬": return "壬水主事，主事情变化多端，需要灵活应对。";
+            case "癸": return "癸水主事，主事情暗藏玄机，需要谨慎分析。";
+            default: return "关注事情发展动向";
+        }
+    }
+    
+    private String getRiShiRelationship(String riGan, String shiGan) {
+        if (riGan.equals(shiGan)) {
+            return "比和相助，事情容易达成，自身与事情协调一致";
+        }
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土"); 
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        
+        java.util.Map<String, String> ganWuxing = new java.util.HashMap<>();
+        ganWuxing.put("甲", "木"); ganWuxing.put("乙", "木");
+        ganWuxing.put("丙", "火"); ganWuxing.put("丁", "火");
+        ganWuxing.put("戊", "土"); ganWuxing.put("己", "土");
+        ganWuxing.put("庚", "金"); ganWuxing.put("辛", "金");
+        ganWuxing.put("壬", "水"); ganWuxing.put("癸", "水");
+        
+        String riWuxing = ganWuxing.get(riGan);
+        String shiWuxing = ganWuxing.get(shiGan);
+        
+        if (riWuxing != null && shiWuxing != null) {
+            if (shengMap.get(riWuxing).equals(shiWuxing)) {
+                return "日生时，自身生助事情，需付出努力方能成事";
+            }
+            if (shengMap.get(shiWuxing).equals(riWuxing)) {
+                return "时生日，事情生助自身，事半功倍，易得帮助";
+            }
+        }
+        return "日时关系一般，需努力争取，顺其自然";
+    }
+    
+    private String getCareerAdvice(String door, String star) {
+        if (door == null) return "谨慎行事";
+        switch (door) {
+            case "开": case "生": return "事业运势佳，宜主动出击，把握机遇";
+            case "休": return "宜休息调整，规划未来方向";
+            case "景": return "宜展示才华，争取晋升机会";
+            case "伤": case "死": case "惊": return "事业压力大，宜稳守待时";
+            case "杜": return "事业发展受阻，宜静守待变";
+            default: return "事业平稳发展";
+        }
+    }
+    
+    private String getWealthAdvice(String door, String star) {
+        if (door == null) return "谨慎理财";
+        switch (door) {
+            case "生": return "财运旺盛，宜投资理财，把握机会";
+            case "开": return "财运良好，宜开拓财源";
+            case "休": return "宜稳健理财，不宜冒险";
+            case "伤": return "防破财损耗，谨慎投资";
+            case "死": case "惊": return "不宜投资，守财为主";
+            case "杜": case "景": return "财运一般，稳健为上";
+            default: return "财运平稳";
+        }
+    }
+    
+    private String getRelationshipAdvice(String door, String star) {
+        if (door == null) return "谨慎交往";
+        switch (door) {
+            case "休": case "生": return "人际关系和谐，宜拓展人脉";
+            case "开": return "社交运势佳，宜多参与社交活动";
+            case "惊": return "防口舌是非，慎言慎行";
+            case "伤": case "死": return "人际关系紧张，宜低调处事";
+            case "杜": case "景": return "人际关系一般，随缘为宜";
+            default: return "人际关系平稳";
+        }
+    }
+    
+    private String getHealthAdvice(String door, String star) {
+        if (door == null) return "注意保养";
+        switch (door) {
+            case "休": return "宜休息养生，注重健康";
+            case "生": return "身体状态良好，宜适度运动";
+            case "死": return "注意身体健康，定期检查";
+            case "伤": return "防意外损伤，注意安全";
+            default: return "保持良好生活习惯";
+        }
+    }
+    
+    private String getStudyAdvice(String door, String star) {
+        if (door == null) return "勤奋学习";
+        switch (door) {
+            case "景": return "学习运势佳，宜刻苦钻研";
+            case "开": case "生": return "学习效率高，宜把握时机";
+            case "休": return "宜静心学习，巩固知识";
+            case "杜": case "伤": return "学习状态一般，需努力克服";
+            default: return "稳步学习，积累知识";
+        }
     }
     
     private String getStarMeaning(String star) {
@@ -1390,6 +1630,129 @@ public class FullNinePalaceActivity extends Activity {
         
         sb.append("💡 综合建议:\n");
         sb.append(getDayAdviceByAll(star, door, god, dayGan));
+        
+        return sb.toString();
+    }
+    
+    private String getRiGanAdviceSimple(String riGan) {
+        if (riGan == null) return "审视自身，做出合适调整";
+        switch (riGan) {
+            case "甲": return "甲木参天，主贵人领袖，宜积极进取";
+            case "乙": return "乙木花草，主柔顺仁慈，宜以柔克刚";
+            case "丙": return "丙火太阳，主光明热情，宜展现才华";
+            case "丁": return "丁火灯烛，主文明细致，宜注重细节";
+            case "戊": return "戊土大地，主稳重诚信，宜脚踏实地";
+            case "己": return "己土田园，主包容厚德，宜宽厚待人";
+            case "庚": return "庚金刀剑，主果断刚毅，宜当机立断";
+            case "辛": return "辛金首饰，主精致细腻，宜注重品质";
+            case "壬": return "壬水江海，主智慧流动，宜灵活变通";
+            case "癸": return "癸水雨露，主聪明神秘，宜低调谋划";
+            default: return "审视自身，做出合适调整";
+        }
+    }
+    
+    private String getShiGanAdviceSimple(String shiGan) {
+        if (shiGan == null) return "关注事情发展动向";
+        switch (shiGan) {
+            case "甲": return "贵人相助，事情有望得到有力支持";
+            case "乙": return "事情柔顺发展，需要耐心等待";
+            case "丙": return "事情明朗，进展迅速，机遇显现";
+            case "丁": return "事情需细致处理，注重细节方能成功";
+            case "戊": return "事情稳重推进，根基稳固，不易动摇";
+            case "己": return "事情需包容忍耐，以柔克刚";
+            case "庚": return "事情需果断决策，勇往直前";
+            case "辛": return "事情需精益求精，注重品质";
+            case "壬": return "事情变化多端，需要灵活应对";
+            case "癸": return "事情暗藏玄机，需要谨慎分析";
+            default: return "关注事情发展动向";
+        }
+    }
+    
+    private String getYiActivitiesConcise(String star, String door) {
+        StringBuilder sb = new StringBuilder();
+        if (door != null) {
+            if (door.equals("开") || door.equals("生")) sb.append("开业创业、求财投资、");
+            if (door.equals("休")) sb.append("休息养生、学习进修、");
+            if (door.equals("景")) sb.append("考试面试、展示才华、");
+        }
+        if (star != null) {
+            if (star.equals("天辅") || star.equals("天心")) sb.append("求医问诊、");
+            if (star.equals("天任")) sb.append("工作置业、");
+        }
+        if (sb.length() > 0) sb.setLength(sb.length() - 1);
+        else sb.append("祈福祭祀、拜访亲友");
+        return sb.toString();
+    }
+    
+    private String getJiActivitiesConcise(String star, String door) {
+        StringBuilder sb = new StringBuilder();
+        if (door != null) {
+            if (door.equals("死") || door.equals("惊") || door.equals("伤")) sb.append("重大决策、冒险投资、");
+        }
+        if (star != null) {
+            if (star.equals("天芮")) sb.append("动土手术、");
+            if (star.equals("天冲")) sb.append("冲动决策、争执纠纷、");
+        }
+        if (sb.length() > 0) sb.setLength(sb.length() - 1);
+        else sb.append("赌博投机、诉讼纠纷");
+        return sb.toString();
+    }
+    
+    private String getPalaceKeyInfo(String star, String door, String wangCui) {
+        if (!wangCui.equals("旺") && !wangCui.equals("死")) return null;
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(star);
+        if (!door.isEmpty()) sb.append(" ").append(door).append("门");
+        sb.append(" ").append(wangCui);
+        
+        return sb.toString();
+    }
+    
+    private String getTimeFortuneConcise(String timeZhi) {
+        if (timeZhi == null) return "时辰吉利，运势平稳";
+        switch (timeZhi) {
+            case "子": return "一阳初生，宜静养安神";
+            case "丑": return "肝经当令，宜深度睡眠";
+            case "寅": return "肺经当令，宜早起活动";
+            case "卯": return "大肠经当令，宜排便清肠";
+            case "辰": return "胃经当令，宜进食营养";
+            case "巳": return "脾经当令，宜勤奋工作";
+            case "午": return "心经当令，宜适当休息";
+            case "未": return "小肠经当令，宜清淡饮食";
+            case "申": return "膀胱经当令，宜适量运动";
+            case "酉": return "肾经当令，宜休息放松";
+            case "戌": return "心包经当令，宜放松娱乐";
+            case "亥": return "三焦经当令，宜准备休息";
+            default: return "时辰吉利，运势平稳";
+        }
+    }
+    
+    private String getOverallAdviceConcise(boolean isYangDun, int ju, String star, String door, String god, String dayGan) {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局\n");
+        
+        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
+        String[] luckyDoors = {"开", "休", "生"};
+        String[] neutralDoors = {"杜", "景"};
+        
+        boolean isLuckyStar = false, isLuckyDoor = false;
+        if (star != null) for (String s : luckyStars) if (s.equals(star)) isLuckyStar = true;
+        if (door != null) {
+            for (String d : luckyDoors) if (d.equals(door)) isLuckyDoor = true;
+        }
+        
+        if (isLuckyStar && isLuckyDoor) {
+            sb.append("★★★ 大吉 ★★★\n");
+            sb.append("星门皆吉，今日运势极佳\n把握机遇，积极行动");
+        } else if (isLuckyStar || isLuckyDoor) {
+            sb.append("★★ 小吉 ★★\n");
+            sb.append("星门一吉，运势平稳\n顺势而为，稳中求进");
+        } else {
+            sb.append("⚠ 注意 ⚠\n");
+            sb.append("星门欠佳，宜守不宜动\n趋吉避凶，谨慎行事");
+        }
         
         return sb.toString();
     }

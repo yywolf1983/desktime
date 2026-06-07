@@ -1,14 +1,17 @@
 package com.example.timedisplay;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
+import android.view.Surface;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -37,11 +40,16 @@ public class MainActivity extends Activity {
     private android.os.Handler handler;
     private Runnable timeRunnable;
     private TextView copyButton;
+    private TextView rotationLockButton;
 
     // 自定义时间状态（用于排盘）
     private boolean isCustomTime = false;
     private Calendar customCalendar = null;
     private TextView resetTimeButton;
+
+    // 横竖屏锁定状态
+    private boolean isRotationLocked = false;
+    private int lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 
     // 上一次的时间值，用于比较哪些部分发生了变化
     private int lastHour = -1;
@@ -54,6 +62,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        loadRotationLockState();
+
         setContentView(R.layout.activity_main);
 
         requestPermissionsIfNeeded();
@@ -72,6 +83,11 @@ public class MainActivity extends Activity {
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
         mainLayout = findViewById(R.id.mainLayout);
         timeContainer = findViewById(R.id.timeContainer);
+        rotationLockButton = findViewById(R.id.rotationLockButton);
+
+        updateRotationLockButton();
+
+        rotationLockButton.setOnClickListener(v -> toggleRotationLock());
 
         // 点击四柱跳转到罗盘页面
         fourPillarsTextView.setOnClickListener(v -> {
@@ -1212,6 +1228,66 @@ public class MainActivity extends Activity {
             case "戌": return "戌时(19-21点): 心包经当令，宜放松";
             case "亥": return "亥时(21-23点): 三焦经当令，宜入睡";
             default: return "时辰吉利";
+        }
+    }
+
+    private void loadRotationLockState() {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        isRotationLocked = prefs.getBoolean("rotationLocked", false);
+        lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        
+        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            setRequestedOrientation(lockedOrientation);
+        }
+    }
+
+    private void saveRotationLockState() {
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putBoolean("rotationLocked", isRotationLocked);
+        editor.putInt("lockedOrientation", lockedOrientation);
+        editor.apply();
+    }
+
+    private void toggleRotationLock() {
+        if (isRotationLocked) {
+            isRotationLocked = false;
+            lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            android.widget.Toast.makeText(this, "已解锁横竖屏", android.widget.Toast.LENGTH_SHORT).show();
+        } else {
+            isRotationLocked = true;
+            int currentRotation = getWindowManager().getDefaultDisplay().getRotation();
+            switch (currentRotation) {
+                case Surface.ROTATION_0:
+                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    break;
+                case Surface.ROTATION_90:
+                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                    break;
+                case Surface.ROTATION_180:
+                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    break;
+                case Surface.ROTATION_270:
+                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    break;
+                default:
+                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            }
+            setRequestedOrientation(lockedOrientation);
+            android.widget.Toast.makeText(this, "已锁定当前方向", android.widget.Toast.LENGTH_SHORT).show();
+        }
+        saveRotationLockState();
+        updateRotationLockButton();
+    }
+
+    private void updateRotationLockButton() {
+        if (rotationLockButton != null) {
+            if (isRotationLocked) {
+                rotationLockButton.setText("🔓");
+            } else {
+                rotationLockButton.setText("🔒");
+            }
+            rotationLockButton.setTextColor(0x33FFFFFF);
         }
     }
 }

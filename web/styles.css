@@ -21,6 +21,10 @@
     --red: #c47b5e;
     --green: #7a9a60;
     --blue: #6b8db8;
+    --text-red: #c47b5e;
+    --text-blue: #6b8db8;
+    --text-green: #7a9a60;
+    --text-gold: #bfa055;
 }
 
 html {
@@ -511,12 +515,12 @@ body::before {
     aspect-ratio: 1;
     background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-primary) 100%);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 8px;
+    padding: 12px 8px;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
@@ -547,8 +551,8 @@ body::before {
 .palace.center {
     border-color: var(--gold);
     box-shadow: 
-        0 0 20px rgba(191, 160, 85, 0.2),
-        inset 0 0 15px rgba(191, 160, 85, 0.06);
+        0 0 25px rgba(191, 160, 85, 0.25),
+        inset 0 0 20px rgba(191, 160, 85, 0.08);
 }
 
 .palace.lucky {
@@ -565,51 +569,123 @@ body::before {
         inset 0 0 15px rgba(196, 123, 94, 0.06);
 }
 
+.palace-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
 .palace-name {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.palace-number {
+    font-size: 0.75rem;
     color: var(--text-muted);
-    margin-bottom: 6px;
+    background: rgba(191, 160, 85, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.palace-direction {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
     letter-spacing: 1px;
 }
 
-.palace-star {
-    font-size: 1rem;
+.palace-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+.palace-god-row {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    height: 1.2em;
+}
+
+.palace-star-row {
+    font-size: 1.1rem;
+    color: var(--gold);
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(191, 160, 85, 0.2);
+}
+
+.palace-door-row {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.palace-gan-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.tian-gan {
+    font-size: 1.2rem;
     color: var(--gold);
     font-weight: 700;
 }
 
-.palace-door {
-    font-size: 0.9rem;
+.gan-divider {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.di-gan {
+    font-size: 1rem;
     color: var(--text-secondary);
 }
 
-.palace-god {
-    font-size: 0.8rem;
-    color: var(--text-muted);
+.palace-footer {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 4px;
 }
 
-.palace-heaven,
-.palace-earth {
-    font-size: 0.75rem;
-    color: var(--text-muted);
+.palace-wangcui {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    background: rgba(191, 160, 85, 0.08);
+    border-radius: 8px;
 }
 
 .palace-luck {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    margin-top: 6px;
-    padding: 3px 10px;
-    border-radius: 12px;
+    padding: 2px 10px;
+    border-radius: 10px;
 }
 
-.palace-luck.luck {
-    background: rgba(122, 154, 96, 0.12);
+.palace-luck.吉 {
+    background: rgba(122, 154, 96, 0.15);
     color: var(--green);
 }
 
-.palace-luck.unluck {
-    background: rgba(196, 123, 94, 0.12);
+.palace-luck.凶 {
+    background: rgba(196, 123, 94, 0.15);
     color: var(--red);
+}
+
+.palace-luck.平 {
+    background: rgba(191, 160, 85, 0.1);
+    color: var(--gold);
 }
 
 /* 复制按钮 */
@@ -838,6 +914,78 @@ body::before {
     line-height: 1.8;
     text-align: center;
     font-weight: 500;
+}
+
+/* 各宫详细分析 */
+.palace-analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+.palace-analysis-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.palace-analysis-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(191, 160, 85, 0.1);
+}
+
+.palace-analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--border-color);
+}
+
+.palace-analysis-name {
+    color: var(--gold);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.palace-analysis-luck {
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 8px;
+}
+
+.palace-analysis-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.palace-analysis-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.palace-analysis-row span {
+    color: var(--text-secondary);
+}
+
+.palace-analysis-row strong {
+    color: var(--text-primary);
+}
+
+.palace-analysis-footer p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* 基础概念 */
@@ -1257,17 +1405,47 @@ body::before {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .info-row span {
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .info-row strong {
     color: var(--gold);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+}
+
+.info-row .sub-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-left: 8px;
+}
+
+.text-red {
+    color: var(--text-red) !important;
+}
+
+.text-blue {
+    color: var(--text-blue) !important;
+}
+
+.text-green {
+    color: var(--text-green) !important;
+}
+
+.text-gold {
+    color: var(--text-gold) !important;
+}
+
+.time-shichen {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    margin-top: 4px;
+    font-style: italic;
 }
 
 .qimen-header,
@@ -1496,6 +1674,15 @@ body::before {
         min-width: 45px;
         padding: 6px 10px;
     }
+    
+    .palace-analysis-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+    }
+    
+    .palace-analysis-card {
+        padding: 14px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1585,6 +1772,19 @@ body::before {
     
     .footer {
         padding: 30px 0;
+        font-size: 0.85rem;
+    }
+    
+    .palace-analysis-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .palace-analysis-card {
+        padding: 12px;
+    }
+    
+    .palace-analysis-row {
         font-size: 0.85rem;
     }
 }

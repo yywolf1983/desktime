@@ -1,26 +1,218 @@
-<?xml version="1.0" ?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mainLayout" android:layout_width="match_parent" android:layout_height="match_parent" tools:context=".MainActivity">
-    <com.example.timedisplay.FrostedGlassBackground android:layout_width="match_parent" android:layout_height="match_parent"/>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_horizontal" android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingTop="12dp" android:paddingBottom="12dp" android:layout_gravity="center">
-        <LinearLayout android:id="@+id/timeContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginBottom="8dp" android:clickable="true" android:focusable="true" android:background="@android:color/transparent">
-            <com.example.timedisplay.SevenSegmentDisplay android:id="@+id/hour1TextView" android:layout_width="60dp" android:layout_height="75dp"/>
-            <com.example.timedisplay.SevenSegmentDisplay android:id="@+id/hour2TextView" android:layout_width="60dp" android:layout_height="75dp"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":" android:textSize="48sp" android:textColor="#FF87CEEB" android:fontFamily="sans-serif-black" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:shadowColor="#FF87CEEB" android:shadowDx="0" android:shadowDy="0" android:shadowRadius="4"/>
-            <com.example.timedisplay.SevenSegmentDisplay android:id="@+id/minute1TextView" android:layout_width="60dp" android:layout_height="75dp"/>
-            <com.example.timedisplay.SevenSegmentDisplay android:id="@+id/minute2TextView" android:layout_width="60dp" android:layout_height="75dp"/>
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.example.timedisplay.FrostedGlassBackground
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/rotationLockButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="🔒"
+        android:textSize="24sp"
+        android:textColor="#33FFFFFF"
+        android:gravity="center"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="锁定/解锁横竖屏" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:id="@+id/timeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@android:color/transparent">
+
+            <com.example.timedisplay.SevenSegmentDisplay
+                android:id="@+id/hour1TextView"
+                android:layout_width="60dp"
+                android:layout_height="75dp" />
+
+            <com.example.timedisplay.SevenSegmentDisplay
+                android:id="@+id/hour2TextView"
+                android:layout_width="60dp"
+                android:layout_height="75dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textSize="48sp"
+                android:textColor="#FF87CEEB"
+                android:fontFamily="sans-serif-black"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:shadowColor="#FF87CEEB"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="4" />
+
+            <com.example.timedisplay.SevenSegmentDisplay
+                android:id="@+id/minute1TextView"
+                android:layout_width="60dp"
+                android:layout_height="75dp" />
+
+            <com.example.timedisplay.SevenSegmentDisplay
+                android:id="@+id/minute2TextView"
+                android:layout_width="60dp"
+                android:layout_height="75dp" />
+
         </LinearLayout>
-        <LinearLayout android:id="@+id/dateContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginVertical="4dp">
-            <TextView android:id="@+id/dateTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="18sp" android:textColor="@color/tech_blue" android:fontFamily="sans-serif-light" android:gravity="center" android:letterSpacing="0.08" android:shadowColor="@color/tech_blue" android:shadowDx="0" android:shadowDy="0" android:shadowRadius="3" tools:text="2024年12月31日 星期二"/>
-            <TextView android:id="@+id/jieqiTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="16sp" android:textColor="#FFD700" android:fontFamily="sans-serif-light" android:gravity="center" android:paddingStart="8dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground" tools:text="立春"/>
-            <TextView android:id="@+id/resetTimeButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⟳" android:textSize="22sp" android:textColor="#FF87CEEB" android:paddingStart="8dp" android:paddingEnd="8dp" android:visibility="gone" android:clickable="true" android:focusable="true"/>
+
+        <LinearLayout
+            android:id="@+id/dateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginVertical="4dp">
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/tech_blue"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:letterSpacing="0.08"
+                android:shadowColor="@color/tech_blue"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="3"
+                tools:text="2024年12月31日 星期二" />
+
+            <TextView
+                android:id="@+id/jieqiTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#FFD700"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                tools:text="立春" />
+
+            <TextView
+                android:id="@+id/resetTimeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⟳"
+                android:textSize="22sp"
+                android:textColor="#FF87CEEB"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true" />
+
         </LinearLayout>
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginVertical="4dp">
-            <TextView android:id="@+id/fourPillarsTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="22sp" android:textColor="@color/tech_cyan" android:fontFamily="sans-serif-light" android:gravity="center" android:letterSpacing="0.08" android:shadowColor="@color/tech_cyan" android:shadowDx="0" android:shadowDy="0" android:shadowRadius="3" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground" tools:text="甲辰年 丙子月 乙未日 甲申时"/>
-            <TextView android:id="@+id/copyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📋" android:textSize="20sp" android:paddingStart="8dp" android:paddingEnd="4dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground" android:contentDescription="复制派盘信息"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginVertical="4dp">
+
+            <TextView
+                android:id="@+id/fourPillarsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/tech_cyan"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:letterSpacing="0.08"
+                android:shadowColor="@color/tech_cyan"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="3"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                tools:text="甲辰年 丙子月 乙未日 甲申时" />
+
+            <TextView
+                android:id="@+id/copyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📋"
+                android:textSize="20sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="复制派盘信息" />
+
         </LinearLayout>
-        <TextView android:id="@+id/timeFortuneTextView" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="18sp" android:textColor="#FF87CEEB" android:fontFamily="sans-serif-light" android:gravity="center" android:layout_marginVertical="4dp" android:letterSpacing="0.02" tools:text="子时(23-1点): 阴气最重，宜静养安神"/>
-        <TextView android:id="@+id/ninePalaceExplanation" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@color/tech_silver" android:fontFamily="sans-serif-light" android:gravity="center" android:layout_marginVertical="4dp" android:letterSpacing="0.08" tools:text="九宫格基于当前四柱信息计算"/>
-        <com.example.timedisplay.NinePalacePanel android:id="@+id/ninePalacePanel" android:layout_width="300dp" android:layout_height="300dp" android:layout_marginTop="4dp" android:layout_gravity="center_horizontal"/>
-        <TextView android:id="@+id/detailedInterpretation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/timeFortuneTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="#FF87CEEB"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginVertical="4dp"
+            android:letterSpacing="0.02"
+            tools:text="子时(23-1点): 阴气最重，宜静养安神" />
+
+        <TextView
+            android:id="@+id/ninePalaceExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/tech_silver"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:layout_marginVertical="4dp"
+            android:letterSpacing="0.08"
+            tools:text="九宫格基于当前四柱信息计算" />
+
+        <com.example.timedisplay.NinePalacePanel
+            android:id="@+id/ninePalacePanel"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/detailedInterpretation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
     </LinearLayout>
+
 </FrameLayout>

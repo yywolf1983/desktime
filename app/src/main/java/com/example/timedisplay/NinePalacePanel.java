@@ -13,9 +13,19 @@ public class NinePalacePanel extends View {
     private Paint gridPaint;
     private Paint textPaint;
     private Paint centerPaint;
+    private Paint bgPaint;
+    private Paint borderPaint;
     private String[][] palaceData;
     private float brightness = 1.0f;
     private float scale = 1f;
+    
+    // 颜色常量（参照 web 页面样式）
+    private static final int COLOR_BG_CARD = 0xFF191C26;
+    private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
+    private static final int COLOR_BORDER = 0xFF262A36;
+    private static final int COLOR_GOLD = 0xFFBFA055;
+    private static final int COLOR_GREEN = 0xFF7A9A60;
+    private static final int COLOR_RED = 0xFFC47B5E;
 
 
     // 九宫格布局位置（按照指南针顺序：上北下南，左西右东）
@@ -66,14 +76,12 @@ public class NinePalacePanel extends View {
     }
 
     private void init() {
-        // 初始化网格画笔
         gridPaint = new Paint();
         gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setStrokeWidth(2);
         gridPaint.setAntiAlias(true);
 
-        // 初始化文字画笔
         textPaint = new Paint();
         textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         textPaint.setStyle(Paint.Style.FILL);
@@ -82,20 +90,25 @@ public class NinePalacePanel extends View {
         textPaint.setAntiAlias(true);
         textPaint.setFakeBoldText(true);
 
-        // 初始化中宫画笔
         centerPaint = new Paint();
         centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
 
-        // 初始化九宫格数据
+        bgPaint = new Paint();
+        bgPaint.setAntiAlias(true);
+
+        borderPaint = new Paint();
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setAntiAlias(true);
+        borderPaint.setStrokeWidth(2);
+
         palaceData = new String[9][2];
         for (int i = 0; i < 9; i++) {
             palaceData[i][0] = PALACE_NAMES[i];
             palaceData[i][1] = "--";
         }
 
-        // 设置九宫格为可点击
         setClickable(true);
     }
 
@@ -115,24 +128,19 @@ public class NinePalacePanel extends View {
         int width = getWidth();
         int height = getHeight();
         int cellSize = Math.min(width, height) / 3;
+        float padding = 8f;
+        float radius = 10f;
 
-        // 根据cellSize动态设置文字大小
-        textPaint.setTextSize(cellSize * 0.19f);
-
-        // 绘制九宫格网格
-        for (int i = 0; i <= 3; i++) {
-            canvas.drawLine(0, i * cellSize, width, i * cellSize, gridPaint);
-            canvas.drawLine(i * cellSize, 0, i * cellSize, height, gridPaint);
-        }
-
-        RectF centerRect = new RectF(cellSize, cellSize, cellSize * 2, cellSize * 2);
-        canvas.drawRect(centerRect, centerPaint);
+        textPaint.setTextSize(cellSize * 0.15f);
 
         for (int i = 0; i < 9; i++) {
             int row = PALACE_POSITIONS[i][0];
             int col = PALACE_POSITIONS[i][1];
-            float x = (col + 0.5f) * cellSize;
-            float y = (row + 0.35f) * cellSize;
+            
+            float left = col * cellSize + padding;
+            float top = row * cellSize + padding;
+            float right = (col + 1) * cellSize - padding;
+            float bottom = (row + 1) * cellSize - padding;
 
             String luck = "平";
             String[] dataParts = palaceData[i][1].split("\\n");
@@ -145,6 +153,26 @@ public class NinePalacePanel extends View {
                 }
             }
 
+            // 绘制宫位背景（渐变）
+            bgPaint.setShader(new android.graphics.LinearGradient(left, top, right, bottom, 
+                COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint);
+
+            // 设置边框颜色（参照 web 样式）
+            if (i == 4) {
+                borderPaint.setColor(COLOR_GOLD);
+            } else if (luck.equals("吉")) {
+                borderPaint.setColor(COLOR_GREEN);
+            } else if (luck.equals("凶")) {
+                borderPaint.setColor(COLOR_RED);
+            } else {
+                borderPaint.setColor(COLOR_BORDER);
+            }
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
+
+            float x = (col + 0.5f) * cellSize;
+            float y = (row + 0.22f) * cellSize;
+
             if (luck.equals("吉")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
             } else if (luck.equals("凶")) {
@@ -156,12 +184,12 @@ public class NinePalacePanel extends View {
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += cellSize * 0.28f;
+                y += cellSize * 0.22f;
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += cellSize * 0.28f;
+                y += cellSize * 0.22f;
                 canvas.drawText(dataParts[1], x, y, textPaint);
             }
         }
