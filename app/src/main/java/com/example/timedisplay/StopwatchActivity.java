@@ -1,6 +1,8 @@
 package com.example.timedisplay;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -44,6 +46,14 @@ public class StopwatchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
+        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            setRequestedOrientation(lockedOrientation);
+        }
+        
         setContentView(R.layout.activity_stopwatch);
 
         initViews();
