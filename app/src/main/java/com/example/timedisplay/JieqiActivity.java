@@ -2,6 +2,8 @@ package com.example.timedisplay;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +39,14 @@ public class JieqiActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
+        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            setRequestedOrientation(lockedOrientation);
+        }
+        
         setContentView(R.layout.activity_jieqi);
 
         jieqiName = findViewById(R.id.jieqiName);
