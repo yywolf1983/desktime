@@ -987,7 +987,7 @@ public class FullNinePalaceActivity extends Activity {
         
         StringBuilder sbTime = new StringBuilder();
         sbTime.append(getShichenName(timeZhi)).append(" ").append(timeGan).append(timeZhi).append("(").append(shiGanWuXing).append(")\n");
-        sbTime.append(getTimeFortune(timeZhi));
+        sbTime.append(getTimeFortune(timeZhi, zhiShiDoor, zhiFuStar));
         expTime.setText(sbTime.toString());
         
         expOverall.setText(getOverallAdviceSimple(isYangDun, ju, zhiFuStar, zhiShiDoor));
@@ -1531,23 +1531,48 @@ public class FullNinePalaceActivity extends Activity {
         return sb.toString();
     }
     
-    private String getTimeFortune(String timeZhi) {
+    private String getTimeFortune(String timeZhi, String zhiShiDoor, String zhiFuStar) {
         if (timeZhi == null) return "时辰吉利";
+        
+        String timeInfo = "";
         switch (timeZhi) {
-            case "子": return "子时(23-1点): 阴气最重，宜静养安神";
-            case "丑": return "丑时(1-3点): 肝经当令，深度睡眠";
-            case "寅": return "寅时(3-5点): 肺经当令，宜早起";
-            case "卯": return "卯时(5-7点): 大肠经当令，宜排便";
-            case "辰": return "辰时(7-9点): 胃经当令，宜进食";
-            case "巳": return "巳时(9-11点): 脾经当令，精力充沛";
-            case "午": return "午时(11-13点): 心经当令，宜午休";
-            case "未": return "未时(13-15点): 小肠经当令，宜消化";
-            case "申": return "申时(15-17点): 膀胱经当令，宜运动";
-            case "酉": return "酉时(17-19点): 肾经当令，宜休息";
-            case "戌": return "戌时(19-21点): 心包经当令，宜放松";
-            case "亥": return "亥时(21-23点): 三焦经当令，宜入睡";
-            default: return "时辰吉利";
+            case "子": timeInfo = "子时(23-1点): 阴气最重"; break;
+            case "丑": timeInfo = "丑时(1-3点): 肝经当令"; break;
+            case "寅": timeInfo = "寅时(3-5点): 肺经当令"; break;
+            case "卯": timeInfo = "卯时(5-7点): 大肠经当令"; break;
+            case "辰": timeInfo = "辰时(7-9点): 胃经当令"; break;
+            case "巳": timeInfo = "巳时(9-11点): 脾经当令"; break;
+            case "午": timeInfo = "午时(11-13点): 心经当令"; break;
+            case "未": timeInfo = "未时(13-15点): 小肠经当令"; break;
+            case "申": timeInfo = "申时(15-17点): 膀胱经当令"; break;
+            case "酉": timeInfo = "酉时(17-19点): 肾经当令"; break;
+            case "戌": timeInfo = "戌时(19-21点): 心包经当令"; break;
+            case "亥": timeInfo = "亥时(21-23点): 三焦经当令"; break;
+            default: timeInfo = "时辰";
         }
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(timeInfo);
+        sb.append("\n值使").append(zhiShiDoor).append("门");
+        if (zhiFuStar != null) sb.append(" 值符").append(zhiFuStar).append("星");
+        sb.append("\n");
+        
+        String[] luckyDoors = {"开", "休", "生"};
+        boolean isLuckyDoor = false;
+        for (String d : luckyDoors) {
+            if (d.equals(zhiShiDoor)) {
+                isLuckyDoor = true;
+                break;
+            }
+        }
+        
+        if (isLuckyDoor) {
+            sb.append("吉门当值，运势佳，宜积极行动");
+        } else {
+            sb.append("平门/凶门当值，宜稳守待时");
+        }
+        
+        return sb.toString();
     }
     
     private String getOverallAdvice(boolean isYangDun, int ju, String star, String door) {
