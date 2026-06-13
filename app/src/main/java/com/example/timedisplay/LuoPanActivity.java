@@ -115,9 +115,15 @@ public class LuoPanActivity extends Activity {
         shuishaAnalysis.setText(getShuiShaAnalysis(mountain));
         
         String[] currentDirections = getCurrentDirections();
-        setupBazhaiNinePalace(bagua, currentDirections);
-        setupJiuxingNinePalace(bagua, currentDirections);
-        setupBamenNinePalace(bagua, currentDirections);
+        if (bazhaiNinePalace != null) {
+            setupBazhaiNinePalace(bagua, currentDirections);
+        }
+        if (jiuxingNinePalace != null) {
+            setupJiuxingNinePalace(bagua, currentDirections);
+        }
+        if (bamenNinePalace != null) {
+            setupBamenNinePalace(bagua, currentDirections);
+        }
         
         buildingAdvice.setText(getBuildingAdvice(mountain));
         mingliInfo.setText(getMingLiInfo(mountain));

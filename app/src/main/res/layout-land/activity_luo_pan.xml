@@ -228,59 +228,89 @@
                 android:textColor="#B0C4DE"
                 android:lineSpacingExtra="3sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\n【八宅吉凶】"
-                android:textSize="14sp"
-                android:textColor="#FFD700"
-                android:layout_marginBottom="6dp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:background="#1A000000"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="【八宅吉凶】"
+                    android:textSize="14sp"
+                    android:textColor="#FFD700"
+                    android:layout_marginBottom="4dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="八宅法将房屋分为八宫，根据坐山确定伏位，再布生气、天医、延年三吉位，及祸害、六煞、五鬼、绝命四凶位。"
+                    android:textSize="12sp"
+                    android:textColor="#87CEEB"
+                    android:layout_marginBottom="6dp" />
+                <com.example.timedisplay.DirectionNinePalaceView
+                    android:id="@+id/bazhaiNinePalace"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/bazhaiAnalysis"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="生气在巽，天医在震，延年在艮，伏位在坎，祸害在乾，六煞在兑，五鬼在离，绝命在坤"
-                android:textSize="12sp"
-                android:textColor="#B0C4DE"
-                android:lineSpacingExtra="3sp" />
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:background="#1A000000"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="【九星飞宫】"
+                    android:textSize="14sp"
+                    android:textColor="#FFD700"
+                    android:layout_marginBottom="4dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="九星源自北斗七星加左右辅弼，一白至九紫按特定顺序飞入九宫，主不同运势，一白贪狼主财、五黄廉贞主灾。"
+                    android:textSize="12sp"
+                    android:textColor="#87CEEB"
+                    android:layout_marginBottom="6dp" />
+                <com.example.timedisplay.DirectionNinePalaceView
+                    android:id="@+id/jiuxingNinePalace"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp" />
+            </LinearLayout>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\n【九星飞宫】"
-                android:textSize="14sp"
-                android:textColor="#FFD700"
-                android:layout_marginBottom="6dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/jiuxingAnalysis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫"
-                android:textSize="12sp"
-                android:textColor="#B0C4DE"
-                android:lineSpacingExtra="3sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\n【八门遁法】"
-                android:textSize="14sp"
-                android:textColor="#FFD700"
-                android:layout_marginBottom="6dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/bamenAnalysis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="休门在坎，生门在艮，伤门在震，杜门在巽，景门在离，死门在坤，惊门在兑，开门在乾"
-                android:textSize="12sp"
-                android:textColor="#B0C4DE"
-                android:lineSpacingExtra="3sp" />
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:background="#1A000000"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="【八门遁法】"
+                    android:textSize="14sp"
+                    android:textColor="#FFD700"
+                    android:layout_marginBottom="4dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="奇门遁甲八门：休、生、开为三吉门，伤、杜、景为平门，死、惊为凶门。八门各主不同事务，生门主财、开门主事业。"
+                    android:textSize="12sp"
+                    android:textColor="#87CEEB"
+                    android:layout_marginBottom="6dp" />
+                <com.example.timedisplay.DirectionNinePalaceView
+                    android:id="@+id/bamenNinePalace"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -317,6 +347,32 @@
                 android:textSize="12sp"
                 android:textColor="#FFB6C1"
                 android:lineSpacingExtra="3sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#20000000"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="【综合总结】"
+                    android:textSize="16sp"
+                    android:textColor="#FFD700"
+                    android:layout_marginBottom="10dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/summaryInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="坐山：子，五行属水，坐北朝南，吉利方位：东南、东方、东北，需注意南方五鬼位"
+                    android:textSize="13sp"
+                    android:textColor="#E0E0E0"
+                    android:lineSpacingExtra="5sp" />
+            </LinearLayout>
 
         </LinearLayout>
 
