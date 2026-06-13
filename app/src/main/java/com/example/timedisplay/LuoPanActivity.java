@@ -3,7 +3,11 @@ package com.example.timedisplay;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -25,11 +29,12 @@ public class LuoPanActivity extends Activity {
     private TextView luopanTips;
     private TextView zhaoxiangAnalysis;
     private TextView shuishaAnalysis;
-    private TextView bazhaiAnalysis;
-    private TextView jiuxingAnalysis;
-    private TextView bamenAnalysis;
+    private DirectionNinePalaceView bazhaiNinePalace;
+    private DirectionNinePalaceView jiuxingNinePalace;
+    private DirectionNinePalaceView bamenNinePalace;
     private TextView buildingAdvice;
     private TextView mingliInfo;
+    private TextView summaryInfo;
     
     private float currentRotation = 0;
     private float lastAngle = 0;
@@ -66,11 +71,12 @@ public class LuoPanActivity extends Activity {
         luopanTips = findViewById(R.id.luopanTips);
         zhaoxiangAnalysis = findViewById(R.id.zhaoxiangAnalysis);
         shuishaAnalysis = findViewById(R.id.shuishaAnalysis);
-        bazhaiAnalysis = findViewById(R.id.bazhaiAnalysis);
-        jiuxingAnalysis = findViewById(R.id.jiuxingAnalysis);
-        bamenAnalysis = findViewById(R.id.bamenAnalysis);
+        bazhaiNinePalace = findViewById(R.id.bazhaiNinePalace);
+        jiuxingNinePalace = findViewById(R.id.jiuxingNinePalace);
+        bamenNinePalace = findViewById(R.id.bamenNinePalace);
         buildingAdvice = findViewById(R.id.buildingAdvice);
         mingliInfo = findViewById(R.id.mingliInfo);
+        summaryInfo = findViewById(R.id.summaryInfo);
         
         if (savedInstanceState != null) {
             currentRotation = savedInstanceState.getFloat(KEY_ROTATION, 0);
@@ -107,11 +113,35 @@ public class LuoPanActivity extends Activity {
         luopanTips.setText(getMountainTip(mountain));
         zhaoxiangAnalysis.setText(getZhaoxiangAnalysis(mountain, chaoXiang));
         shuishaAnalysis.setText(getShuiShaAnalysis(mountain));
-        bazhaiAnalysis.setText(getBaZhaiAnalysis(bagua));
-        jiuxingAnalysis.setText(getJiuXingAnalysis(bagua));
-        bamenAnalysis.setText(getBaMenAnalysis(bagua));
+        
+        String[] currentDirections = getCurrentDirections();
+        setupBazhaiNinePalace(bagua, currentDirections);
+        setupJiuxingNinePalace(bagua, currentDirections);
+        setupBamenNinePalace(bagua, currentDirections);
+        
         buildingAdvice.setText(getBuildingAdvice(mountain));
         mingliInfo.setText(getMingLiInfo(mountain));
+        summaryInfo.setText(getSummary(mountain, bagua, chaoXiang));
+    }
+    
+    private String[] getCurrentDirections() {
+        float rotation = luoPanView.getRotationValue();
+        int offset = Math.round((-rotation % 360 + 360) % 360 / 45f) % 8;
+        
+        String[] baseDirs = {"北", "东北", "东", "东南", "南", "西南", "西", "西北"};
+        String[] result = new String[9];
+        
+        result[0] = baseDirs[(0 + offset) % 8];
+        result[1] = baseDirs[(5 + offset) % 8];
+        result[2] = baseDirs[(2 + offset) % 8];
+        result[3] = baseDirs[(3 + offset) % 8];
+        result[4] = "";
+        result[5] = baseDirs[(7 + offset) % 8];
+        result[6] = baseDirs[(6 + offset) % 8];
+        result[7] = baseDirs[(1 + offset) % 8];
+        result[8] = baseDirs[(4 + offset) % 8];
+        
+        return result;
     }
     
     private String getWuxing(String mountain) {
@@ -222,10 +252,10 @@ public class LuoPanActivity extends Activity {
     
     private String getNayin(String mountain) {
         String[] nayinMap = {
-            "桑柘木", "桑柘木", "桑柘木", "桑柘木", "大溪水", "大溪水",
-            "大溪水", "大溪水", "覆灯火", "覆灯火", "覆灯火", "覆灯火",
-            "天河水", "天河水", "天河水", "天河水", "山下火", "山下火",
-            "山下火", "山下火", "钗钏金", "钗钏金", "钗钏金", "钗钏金"
+            "桑柘木", "海中金", "桑柘木", "海中金", "炉中火", "炉中火",
+            "大溪水", "大溪水", "大溪水", "沙中土", "沙中土", "沙中土",
+            "天河水", "天河水", "天河水", "路旁土", "路旁土", "剑锋金",
+            "石榴木", "剑锋金", "石榴木", "山头火", "山头火", "山头火"
         };
         String[] mountains = {
             "壬", "子", "癸", "丑", "艮", "寅",
@@ -244,10 +274,10 @@ public class LuoPanActivity extends Activity {
     
     private String getShensha(String mountain) {
         String[] shenshaMap = {
-            "天德、月德", "天德、月德", "天德、月德", "天德合", "天德合", "天德合",
-            "月德", "月德", "月德", "天德", "天德", "天德",
-            "天德、月德", "天德、月德", "天德、月德", "天德合", "天德合", "天德合",
-            "月德", "月德", "月德", "天德", "天德", "天德"
+            "天德、月德", "阳刃", "天德合", "天德合", "月德", "月德合",
+            "月德", "桃花", "天德", "天德合", "天德", "天德",
+            "月德", "桃花", "天德、月德", "天德合", "天德", "天德合",
+            "月德", "桃花", "月德合", "天德合", "天德", "天德"
         };
         String[] mountains = {
             "壬", "子", "癸", "丑", "艮", "寅",
@@ -267,9 +297,9 @@ public class LuoPanActivity extends Activity {
     private String getJixiong(String mountain) {
         String[] jixiongMap = {
             "吉", "吉", "吉", "吉", "吉", "吉",
-            "吉", "吉", "吉", "吉", "吉", "吉",
-            "吉", "吉", "吉", "吉", "吉", "吉",
-            "吉", "吉", "吉", "吉", "吉", "吉"
+            "吉", "吉", "吉", "平", "吉", "凶",
+            "吉", "吉", "吉", "平", "吉", "吉",
+            "吉", "吉", "吉", "平", "吉", "凶"
         };
         String[] mountains = {
             "壬", "子", "癸", "丑", "艮", "寅",
@@ -345,31 +375,34 @@ public class LuoPanActivity extends Activity {
     }
     
     private String getZhaoxiangAnalysis(String zuoShan, String chaoXiang) {
+        String zuoDir = getDirectionFromShan(zuoShan);
+        String chaoDir = getDirectionFromShan(chaoXiang);
+        
         String[][] zuoChaoTable = {
-            {"子", "午", "坐子向午，北方壬癸水来，南方丙丁火照，水火既济，主富贵双全，人丁兴旺，事业昌盛"},
-            {"午", "子", "坐午向子，南方丙丁火来，北方壬癸水照，火水未济，宜用五行调和，子孙昌盛，家道兴隆"},
-            {"卯", "酉", "坐卯向酉，东方甲乙木来，西方庚辛金照，金木相克，需用土通关，财源广进，百事亨通"},
-            {"酉", "卯", "坐酉向卯，西方庚辛金来，东方甲乙木照，金克木，需用火化解，家道兴隆，富贵绵长"},
-            {"辰", "戌", "坐辰向戌，东南水库来，西北火库照，水土相混，需木疏通，百事亨通，丁财两旺"},
-            {"戌", "辰", "坐戌向辰，西北火库来，东南水库照，火土相生，主丁财两旺，富贵绵长，福寿安康"},
-            {"丑", "未", "坐丑向未，东北金库来，西南木库照，土土相助，主根基稳固，子孙满堂，福禄寿全"},
-            {"未", "丑", "坐未向丑，西南木库来，东北金库照，土金相生，主贵气临门，福禄寿全，吉祥如意"},
-            {"艮", "坤", "坐艮向坤，东北少男位，西南老母位，阴阳相配，人丁兴旺，福寿安康，家宅康宁"},
-            {"坤", "艮", "坐坤向艮，西南老母位，东北少男位，阴阳得位，福寿绵长，家宅康宁，子孙满堂"},
-            {"巽", "乾", "坐巽向乾，东南长女位，西北老父位，风天小畜，贵人相助，事业发达，富贵荣华"},
-            {"乾", "巽", "坐乾向巽，西北老父位，东南长女位，天风姤，家道兴隆，富贵荣华，声名远播"},
-            {"寅", "申", "坐寅向申，东北阳木，西南阳金，金木相战，需水调和，财源广进，事业有成"},
-            {"申", "寅", "坐申向寅，西南阳金，东北阳木，金伐木，需火制金，官运亨通，步步高升"},
-            {"巳", "亥", "坐巳向亥，东南阴火，西北阴水，水火相激，需土通关，家宅安宁，百事顺遂"},
-            {"亥", "巳", "坐亥向巳，西北阴水，东南阴火，水克火，需木通关，丁财两旺，家道荣昌"},
-            {"甲", "庚", "坐甲向庚，东方阳木，西方阳金，金克木，宜用火泄金，文运昌盛，学业有成"},
-            {"庚", "甲", "坐庚向甲，西方阳金，东方阳木，金强木弱，宜用水化金，武运亨通，权势显赫"},
-            {"乙", "辛", "坐乙向辛，东方阴木，西方阴金，金克木，宜用土生金，财源茂盛，富贵双全"},
-            {"辛", "乙", "坐辛向乙，西方阴金，东方阴木，金多木少，宜用木助，人丁兴旺，福寿安康"},
-            {"丙", "壬", "坐丙向壬，南方阳火，北方阳水，水克火，宜用木生火，官贵临门，步步高升"},
-            {"壬", "丙", "坐壬向丙，北方阳水，南方阳火，水火既济，富贵双全，声名远播，福禄寿全"},
-            {"丁", "癸", "坐丁向癸，南方阴火，北方阴水，水克火，宜用土止水，福寿绵长，家道荣昌"},
-            {"癸", "丁", "坐癸向丁，北方阴水，南方阴火，水火相济，丁财两旺，家道荣昌，富贵双全"}
+            {"子", "午", "【坐北向南】坐子向午，北方壬癸水来，南方丙丁火照，水火既济，主富贵双全，人丁兴旺，事业昌盛"},
+            {"午", "子", "【坐南向北】坐午向子，南方丙丁火来，北方壬癸水照，火水未济，宜用五行调和，子孙昌盛，家道兴隆"},
+            {"卯", "酉", "【坐东向西】坐卯向酉，东方甲乙木来，西方庚辛金照，金木相克，需用土通关，财源广进，百事亨通"},
+            {"酉", "卯", "【坐西向东】坐酉向卯，西方庚辛金来，东方甲乙木照，金克木，需用火化解，家道兴隆，富贵绵长"},
+            {"辰", "戌", "【坐东南向西北】坐辰向戌，东南水库来，西北火库照，水土相混，需木疏通，百事亨通，丁财两旺"},
+            {"戌", "辰", "【坐西北向东南】坐戌向辰，西北火库来，东南水库照，火土相生，主丁财两旺，富贵绵长，福寿安康"},
+            {"丑", "未", "【坐东北向西南】坐丑向未，东北金库来，西南木库照，土土相助，主根基稳固，子孙满堂，福禄寿全"},
+            {"未", "丑", "【坐西南向东北】坐未向丑，西南木库来，东北金库照，土金相生，主贵气临门，福禄寿全，吉祥如意"},
+            {"艮", "坤", "【坐东北向西南】坐艮向坤，东北少男位，西南老母位，阴阳相配，人丁兴旺，福寿安康，家宅康宁"},
+            {"坤", "艮", "【坐西南向东北】坐坤向艮，西南老母位，东北少男位，阴阳得位，福寿绵长，家宅康宁，子孙满堂"},
+            {"巽", "乾", "【坐东南向西北】坐巽向乾，东南长女位，西北老父位，风天小畜，贵人相助，事业发达，富贵荣华"},
+            {"乾", "巽", "【坐西北向东南】坐乾向巽，西北老父位，东南长女位，天风姤，家道兴隆，富贵荣华，声名远播"},
+            {"寅", "申", "【坐东北向西南】坐寅向申，东北阳木，西南阳金，金木相战，需水调和，财源广进，事业有成"},
+            {"申", "寅", "【坐西南向东北】坐申向寅，西南阳金，东北阳木，金伐木，需火制金，官运亨通，步步高升"},
+            {"巳", "亥", "【坐东南向西北】坐巳向亥，东南阴火，西北阴水，水火相激，需土通关，家宅安宁，百事顺遂"},
+            {"亥", "巳", "【坐西北向东南】坐亥向巳，西北阴水，东南阴火，水克火，需木通关，丁财两旺，家道荣昌"},
+            {"甲", "庚", "【坐东向西】坐甲向庚，东方阳木，西方阳金，金克木，宜用火泄金，文运昌盛，学业有成"},
+            {"庚", "甲", "【坐西向东】坐庚向甲，西方阳金，东方阳木，金强木弱，宜用水化金，武运亨通，权势显赫"},
+            {"乙", "辛", "【坐东向西】坐乙向辛，东方阴木，西方阴金，金克木，宜用土生金，财源茂盛，富贵双全"},
+            {"辛", "乙", "【坐西向东】坐辛向乙，西方阴金，东方阴木，金多木少，宜用木助，人丁兴旺，福寿安康"},
+            {"丙", "壬", "【坐南向北】坐丙向壬，南方阳火，北方阳水，水克火，宜用木生火，官贵临门，步步高升"},
+            {"壬", "丙", "【坐北向南】坐壬向丙，北方阳水，南方阳火，水火既济，富贵双全，声名远播，福禄寿全"},
+            {"丁", "癸", "【坐南向北】坐丁向癸，南方阴火，北方阴水，水克火，宜用土止水，福寿绵长，家道荣昌"},
+            {"癸", "丁", "【坐北向南】坐癸向丁，北方阴水，南方阴火，水火相济，丁财两旺，家道荣昌，富贵双全"}
         };
         
         for (String[] entry : zuoChaoTable) {
@@ -378,35 +411,57 @@ public class LuoPanActivity extends Activity {
             }
         }
         
-        return "坐" + zuoShan + "向" + chaoXiang + "，需结合具体地形分析";
+        return "【坐" + zuoDir + "向" + chaoDir + "】坐" + zuoShan + "向" + chaoXiang + "，需结合具体地形分析";
+    }
+    
+    private String getDirectionFromShan(String shan) {
+        String[][] shanDirMap = {
+            {"子", "北"}, {"癸", "北"}, {"壬", "北"},
+            {"丑", "东北"}, {"艮", "东北"}, {"寅", "东北"},
+            {"甲", "东"}, {"卯", "东"}, {"乙", "东"},
+            {"辰", "东南"}, {"巽", "东南"}, {"巳", "东南"},
+            {"丙", "南"}, {"午", "南"}, {"丁", "南"},
+            {"未", "西南"}, {"坤", "西南"}, {"申", "西南"},
+            {"庚", "西"}, {"酉", "西"}, {"辛", "西"},
+            {"戌", "西北"}, {"乾", "西北"}, {"亥", "西北"}
+        };
+        
+        for (String[] entry : shanDirMap) {
+            if (entry[0].equals(shan)) {
+                return entry[1];
+            }
+        }
+        return "";
     }
     
     private String getShuiShaAnalysis(String zuoShan) {
+        String zuoDir = getDirectionFromShan(zuoShan);
+        
         String[][] shuiShaTable = {
-            {"子", "北方宜有水，南方宜有山，东方青龙宜高耸，西方白虎宜柔顺，明堂开阔主富贵，后山高耸主丁旺"},
-            {"丑", "东北宜有山，西南宜有水，艮方砂秀主贵，坤方水旺财，龙虎相配丁财旺，水口紧锁富贵长"},
-            {"寅", "东北宜有水，西南宜有山，水来青龙方，砂见白虎位，山水相映福寿全，明堂端正子孙贤"},
-            {"卯", "东方宜有水，西方宜有山，青龙得水主贵，白虎有砂旺财，山环水绕出英豪，玉带缠腰富贵来"},
-            {"辰", "东南宜有山，西北宜有水，水库得砂主富，天门见水主贵，水砂相配主康宁，文昌得位出贤能"},
-            {"巳", "东南宜有水，西北宜有山，巽方水来主秀，乾方砂起主贵，秀气临门出贤才，贵人相助步步高"},
-            {"午", "南方宜有水，北方宜有山，朱雀得水主文，玄武有山主寿，文武双全福禄长，贵人相助万事昌"},
-            {"未", "西南宜有山，东北宜有水，坤方砂厚主富，艮方水秀主贵，厚砂秀水出贵人，家宅康宁福满堂"},
-            {"申", "西南宜有水，东北宜有山，坤方水来主财，艮方砂起主丁，财丁两旺家道兴，子孙昌盛代代荣"},
-            {"酉", "西方宜有水，东方宜有山，白虎得水主富，青龙有砂主贵，金水相生富贵来，家道兴隆传万代"},
-            {"戌", "西北宜有山，东南宜有水，火库得砂主贵，巽方水来主秀，贵秀两全福寿臻，金榜题名耀门庭"},
-            {"亥", "西北宜有水，东南宜有山，天门得水主智，地户有砂主贵，智慧显贵代代传，书香门第出状元"},
-            {"壬", "北方宜有山，南方宜有水，阳水得砂主贵，丙丁见水主富，贵富双全大吉昌，子孙满堂福寿长"},
-            {"癸", "北方宜有水，南方宜有山，阴水得水主智，午位有砂主贵，智慧显贵出英才，金榜题名乐开怀"},
-            {"甲", "东方宜有山，西方宜有水，阳木得砂主贵，庚辛见水主富，贵富兼全福禄寿，家宅康宁万事休"},
-            {"乙", "东方宜有水，西方宜有山，阴木得水主秀，酉位有砂主贵，秀丽显贵子孙贤，福禄寿喜满人间"},
-            {"丙", "南方宜有山，北方宜有水，阳火得砂主贵，壬癸见水主富，贵富双全福满堂，子孙昌盛万年长"},
-            {"丁", "南方宜有水，北方宜有山，阴火得水主文，子位有砂主贵，文贵双全书香第，世代书香传不息"},
-            {"庚", "西方宜有山，东方宜有水，阳金得砂主贵，甲乙见水主富，贵富并臻吉祥地，家宅兴旺永无比"},
-            {"辛", "西方宜有水，东方宜有山，阴金得水主秀，卯位有砂主贵，秀美显贵富贵家，福禄寿喜人人夸"},
-            {"艮", "东北宜有山，西南宜有水，少男得位主丁，老母见水主财，丁财两旺吉祥宅，子孙昌盛传万代"},
-            {"坤", "西南宜有山，东北宜有水，老母得位主富，少男见水主贵，富贵双全安乐窝，子孙满堂福气多"},
-            {"巽", "东南宜有山，西北宜有水，长女得位主秀，老父见水主智，秀智双全吉祥地，家宅康宁万事吉"},
-            {"乾", "西北宜有山，东南宜有水，老父得位主贵，长女见水主文，贵文双全书香门，世代书香传子孙"}
+            {"子", "【坐北】北方(坎)宜有水，南方(离)宜有山，东方(震)青龙宜高耸，西方(兑)白虎宜柔顺，明堂开阔主富贵，后山高耸主丁旺"},
+            {"丑", "【坐东北】东北(艮)宜有山，西南(坤)宜有水，艮方砂秀主贵，坤方水旺财，龙虎相配丁财旺，水口紧锁富贵长"},
+            {"寅", "【坐东北】东北(艮)宜有水，西南(坤)宜有山，水来青龙方，砂见白虎位，山水相映福寿全，明堂端正子孙贤"},
+            {"卯", "【坐东】东方(震)宜有水，西方(兑)宜有山，青龙得水主贵，白虎有砂旺财，山环水绕出英豪，玉带缠腰富贵来"},
+            {"辰", "【坐东南】东南(巽)宜有山，西北(乾)宜有水，水库得砂主富，天门见水主贵，水砂相配主康宁，文昌得位出贤能"},
+            {"巳", "【坐东南】东南(巽)宜有水，西北(乾)宜有山，巽方水来主秀，乾方砂起主贵，秀气临门出贤才，贵人相助步步高"},
+            {"午", "【坐南】南方(离)宜有水，北方(坎)宜有山，朱雀得水主文，玄武有山主寿，文武双全福禄长，贵人相助万事昌"},
+            {"未", "【坐西南】西南(坤)宜有山，东北(艮)宜有水，坤方砂厚主富，艮方水秀主贵，厚砂秀水出贵人，家宅康宁福满堂"},
+            {"申", "【坐西南】西南(坤)宜有水，东北(艮)宜有山，坤方水来主财，艮方砂起主丁，财丁两旺家道兴，子孙昌盛代代荣"},
+            {"酉", "【坐西】西方(兑)宜有水，东方(震)宜有山，白虎得水主富，青龙有砂主贵，金水相生富贵来，家道兴隆传万代"},
+            {"戌", "【坐西北】西北(乾)宜有山，东南(巽)宜有水，火库得砂主贵，巽方水来主秀，贵秀两全福寿臻，金榜题名耀门庭"},
+            {"亥", "【坐西北】西北(乾)宜有水，东南(巽)宜有山，天门得水主智，地户有砂主贵，智慧显贵代代传，书香门第出状元"},
+            {"壬", "【坐北】北方(坎)宜有山，南方(离)宜有水，阳水得砂主贵，丙丁见水主富，贵富双全大吉昌，子孙满堂福寿长"},
+            {"癸", "【坐北】北方(坎)宜有水，南方(离)宜有山，阴水得水主智，午位有砂主贵，智慧显贵出英才，金榜题名乐开怀"},
+            {"甲", "【坐东】东方(震)宜有山，西方(兑)宜有水，阳木得砂主贵，庚辛见水主富，贵富兼全福禄寿，家宅康宁万事休"},
+            {"乙", "【坐东】东方(震)宜有水，西方(兑)宜有山，阴木得水主秀，酉位有砂主贵，秀丽显贵子孙贤，福禄寿喜满人间"},
+            {"丙", "【坐南】南方(离)宜有山，北方(坎)宜有水，阳火得砂主贵，壬癸见水主富，贵富双全福满堂，子孙昌盛万年长"},
+            {"丁", "【坐南】南方(离)宜有水，北方(坎)宜有山，阴火得水主文，子位有砂主贵，文贵双全书香第，世代书香传不息"},
+            {"庚", "【坐西】西方(兑)宜有山，东方(震)宜有水，阳金得砂主贵，甲乙见水主富，贵富并臻吉祥地，家宅兴旺永无比"},
+            {"辛", "【坐西】西方(兑)宜有水，东方(震)宜有山，阴金得水主秀，卯位有砂主贵，秀美显贵富贵家，福禄寿喜人人夸"},
+            {"艮", "【坐东北】东北(艮)宜有山，西南(坤)宜有水，少男得位主丁，老母见水主财，丁财两旺吉祥宅，子孙昌盛传万代"},
+            {"坤", "【坐西南】西南(坤)宜有山，东北(艮)宜有水，老母得位主富，少男见水主贵，富贵双全安乐窝，子孙满堂福气多"},
+            {"巽", "【坐东南】东南(巽)宜有山，西北(乾)宜有水，长女得位主秀，老父见水主智，秀智双全吉祥地，家宅康宁万事吉"},
+            {"乾", "【坐西北】西北(乾)宜有山，东南(巽)宜有水，老父得位主贵，长女见水主文，贵文双全书香门，世代书香传子孙"}
         };
         
         for (String[] entry : shuiShaTable) {
@@ -415,19 +470,19 @@ public class LuoPanActivity extends Activity {
             }
         }
         
-        return "";
+        return "【坐" + zuoDir + "】砂水判断需结合具体地形";
     }
     
     private String getBaZhaiAnalysis(String bagua) {
         String[][] baZhaiTable = {
-            {"坎", "生气在巽，天医在震，延年在艮，伏位在坎，祸害在乾，六煞在兑，五鬼在离，绝命在坤"},
-            {"离", "生气在乾，天医在兑，延年在巽，伏位在离，祸害在艮，六煞在震，五鬼在坎，绝命在坤"},
-            {"震", "生气在离，天医在坤，延年在兑，伏位在震，祸害在巽，六煞在坎，五鬼在乾，绝命在艮"},
-            {"兑", "生气在艮，天医在坎，延年在坤，伏位在兑，祸害在震，六煞在离，五鬼在巽，绝命在乾"},
-            {"巽", "生气在坎，天医在艮，延年在离，伏位在巽，祸害在坤，六煞在乾，五鬼在兑，绝命在震"},
-            {"艮", "生气在兑，天医在巽，延年在坎，伏位在艮，祸害在离，六煞在坤，五鬼在震，绝命在乾"},
-            {"坤", "生气在震，天医在离，延年在兑，伏位在坤，祸害在坎，六煞在艮，五鬼在乾，绝命在巽"},
-            {"乾", "生气在离，天医在震，延年在巽，伏位在乾，祸害在兑，六煞在坎，五鬼在坤，绝命在艮"}
+            {"坎", "【坐北】吉方：生气在东南(巽)，天医在东方(震)，延年在东北(艮)，伏位在北方(坎)。凶方：祸害在西北(乾)，六煞在西方(兑)，五鬼在南方(离)，绝命在西南(坤)"},
+            {"离", "【坐南】吉方：生气在西北(乾)，天医在西方(兑)，延年在东南(巽)，伏位在南方(离)。凶方：祸害在东北(艮)，六煞在东方(震)，五鬼在北方(坎)，绝命在西南(坤)"},
+            {"震", "【坐东】吉方：生气在南方(离)，天医在西南(坤)，延年在西方(兑)，伏位在东方(震)。凶方：祸害在东南(巽)，六煞在北方(坎)，五鬼在西北(乾)，绝命在东北(艮)"},
+            {"兑", "【坐西】吉方：生气在东北(艮)，天医在北方(坎)，延年在西南(坤)，伏位在西方(兑)。凶方：祸害在东方(震)，六煞在南方(离)，五鬼在东南(巽)，绝命在西北(乾)"},
+            {"巽", "【坐东南】吉方：生气在北方(坎)，天医在东北(艮)，延年在南方(离)，伏位在东南(巽)。凶方：祸害在西南(坤)，六煞在西北(乾)，五鬼在西方(兑)，绝命在东方(震)"},
+            {"艮", "【坐东北】吉方：生气在西方(兑)，天医在东南(巽)，延年在北方(坎)，伏位在东北(艮)。凶方：祸害在南方(离)，六煞在西南(坤)，五鬼在东方(震)，绝命在西北(乾)"},
+            {"坤", "【坐西南】吉方：生气在东方(震)，天医在南方(离)，延年在西方(兑)，伏位在西南(坤)。凶方：祸害在北方(坎)，六煞在东北(艮)，五鬼在西北(乾)，绝命在东南(巽)"},
+            {"乾", "【坐西北】吉方：生气在南方(离)，天医在东方(震)，延年在东南(巽)，伏位在西北(乾)。凶方：祸害在西方(兑)，六煞在北方(坎)，五鬼在西南(坤)，绝命在东北(艮)"}
         };
         
         for (String[] entry : baZhaiTable) {
@@ -441,14 +496,14 @@ public class LuoPanActivity extends Activity {
     
     private String getJiuXingAnalysis(String bagua) {
         String[][] jiuXingTable = {
-            {"坎", "一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫"},
-            {"离", "九紫右弼星在离宫，一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫"},
-            {"震", "三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫，一白贪狼星在坎宫，二黑巨门星在坤宫"},
-            {"兑", "七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫，一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫"},
-            {"巽", "四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫，一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫"},
-            {"艮", "八白左辅星在艮宫，九紫右弼星在离宫，一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫"},
-            {"坤", "二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫，六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫，一白贪狼星在坎宫"},
-            {"乾", "六白武曲星在乾宫，七赤破军星在兑宫，八白左辅星在艮宫，九紫右弼星在离宫，一白贪狼星在坎宫，二黑巨门星在坤宫，三碧禄存星在震宫，四绿文曲星在巽宫，五黄廉贞星在中宫"}
+            {"坎", "【坐北】一白贪狼星在北方(坎)，二黑巨门星在西南(坤)，三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)，七赤破军星在西方(兑)，八白左辅星在东北(艮)，九紫右弼星在南方(离)"},
+            {"离", "【坐南】九紫右弼星在南方(离)，一白贪狼星在北方(坎)，二黑巨门星在西南(坤)，三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)，七赤破军星在西方(兑)，八白左辅星在东北(艮)"},
+            {"震", "【坐东】三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)，七赤破军星在西方(兑)，八白左辅星在东北(艮)，九紫右弼星在南方(离)，一白贪狼星在北方(坎)，二黑巨门星在西南(坤)"},
+            {"兑", "【坐西】七赤破军星在西方(兑)，八白左辅星在东北(艮)，九紫右弼星在南方(离)，一白贪狼星在北方(坎)，二黑巨门星在西南(坤)，三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)"},
+            {"巽", "【坐东南】四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)，七赤破军星在西方(兑)，八白左辅星在东北(艮)，九紫右弼星在南方(离)，一白贪狼星在北方(坎)，二黑巨门星在西南(坤)，三碧禄存星在东方(震)"},
+            {"艮", "【坐东北】八白左辅星在东北(艮)，九紫右弼星在南方(离)，一白贪狼星在北方(坎)，二黑巨门星在西南(坤)，三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)，七赤破军星在西方(兑)"},
+            {"坤", "【坐西南】二黑巨门星在西南(坤)，三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫，六白武曲星在西北(乾)，七赤破军星在西方(兑)，八白左辅星在东北(艮)，九紫右弼星在南方(离)，一白贪狼星在北方(坎)"},
+            {"乾", "【坐西北】六白武曲星在西北(乾)，七赤破军星在西方(兑)，八白左辅星在东北(艮)，九紫右弼星在南方(离)，一白贪狼星在北方(坎)，二黑巨门星在西南(坤)，三碧禄存星在东方(震)，四绿文曲星在东南(巽)，五黄廉贞星在中宫"}
         };
         
         for (String[] entry : jiuXingTable) {
@@ -462,14 +517,14 @@ public class LuoPanActivity extends Activity {
     
     private String getBaMenAnalysis(String bagua) {
         String[][] baMenTable = {
-            {"坎", "休门在坎，生门在艮，伤门在震，杜门在巽，景门在离，死门在坤，惊门在兑，开门在乾"},
-            {"离", "景门在离，死门在坤，惊门在兑，开门在乾，休门在坎，生门在艮，伤门在震，杜门在巽"},
-            {"震", "伤门在震，杜门在巽，景门在离，死门在坤，惊门在兑，开门在乾，休门在坎，生门在艮"},
-            {"兑", "惊门在兑，开门在乾，休门在坎，生门在艮，伤门在震，杜门在巽，景门在离，死门在坤"},
-            {"巽", "杜门在巽，景门在离，死门在坤，惊门在兑，开门在乾，休门在坎，生门在艮，伤门在震"},
-            {"艮", "生门在艮，伤门在震，杜门在巽，景门在离，死门在坤，惊门在兑，开门在乾，休门在坎"},
-            {"坤", "死门在坤，惊门在兑，开门在乾，休门在坎，生门在艮，伤门在震，杜门在巽，景门在离"},
-            {"乾", "开门在乾，休门在坎，生门在艮，伤门在震，杜门在巽，景门在离，死门在坤，惊门在兑"}
+            {"坎", "【坐北】吉门：休门在北方(坎)，生门在东北(艮)，开门在西北(乾)。平门：景门在南方(离)，杜门在东南(巽)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"离", "【坐南】吉门：开门在西北(乾)，休门在北方(坎)，生门在东北(艮)。平门：杜门在东南(巽)，景门在南方(离)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"震", "【坐东】吉门：生门在东北(艮)，开门在西北(乾)，休门在北方(坎)。平门：杜门在东南(巽)，景门在南方(离)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"兑", "【坐西】吉门：休门在北方(坎)，生门在东北(艮)，开门在西北(乾)。平门：景门在南方(离)，杜门在东南(巽)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"巽", "【坐东南】吉门：开门在西北(乾)，休门在北方(坎)，生门在东北(艮)。平门：景门在南方(离)，杜门在东南(巽)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"艮", "【坐东北】吉门：休门在北方(坎)，生门在东北(艮)，开门在西北(乾)。平门：景门在南方(离)，杜门在东南(巽)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"坤", "【坐西南】吉门：开门在西北(乾)，休门在北方(坎)，生门在东北(艮)。平门：杜门在东南(巽)，景门在南方(离)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"},
+            {"乾", "【坐西北】吉门：开门在西北(乾)，休门在北方(坎)，生门在东北(艮)。平门：景门在南方(离)，杜门在东南(巽)。凶门：伤门在东方(震)，惊门在西方(兑)，死门在西南(坤)"}
         };
         
         for (String[] entry : baMenTable) {
@@ -553,6 +608,392 @@ public class LuoPanActivity extends Activity {
         }
         
         return "命理分析需结合具体年份";
+    }
+    
+    private SpannableString getSummary(String mountain, String bagua, String chaoXiang) {
+        String zuoDir = getDirectionFromShan(mountain);
+        String chaoDir = getDirectionFromShan(chaoXiang);
+        String wuxing = getWuxing(mountain);
+        String nayin = getNayin(mountain);
+        
+        StringBuilder sb = new StringBuilder();
+        SpannableString result;
+        
+        sb.append("【基本信息】\n");
+        sb.append("坐山：").append(mountain).append(" 五行：").append(wuxing).append(" 纳音：").append(nayin).append("\n");
+        sb.append("朝向：").append(chaoXiang).append(" 坐").append(zuoDir).append("向").append(chaoDir).append("\n");
+        sb.append("卦象：").append(bagua).append("卦\n");
+        sb.append("\n");
+        
+        String[][] luckyPos = {
+            {"坎", "东南(巽)生气、东方(震)天医、东北(艮)延年"},
+            {"离", "西北(乾)生气、西方(兑)天医、东南(巽)延年"},
+            {"震", "南方(离)生气、西南(坤)天医、西方(兑)延年"},
+            {"兑", "东北(艮)生气、北方(坎)天医、西南(坤)延年"},
+            {"巽", "北方(坎)生气、东北(艮)天医、南方(离)延年"},
+            {"艮", "西方(兑)生气、东南(巽)天医、北方(坎)延年"},
+            {"坤", "东方(震)生气、南方(离)天医、西方(兑)延年"},
+            {"乾", "南方(离)生气、东方(震)天医、东南(巽)延年"}
+        };
+        
+        String[][] badPos = {
+            {"坎", "南方(离)五鬼、西南(坤)绝命、西北(乾)祸害、西方(兑)六煞"},
+            {"离", "北方(坎)五鬼、西南(坤)绝命、东北(艮)祸害、东方(震)六煞"},
+            {"震", "西北(乾)五鬼、东北(艮)绝命、东南(巽)祸害、北方(坎)六煞"},
+            {"兑", "东南(巽)五鬼、西北(乾)绝命、东方(震)祸害、南方(离)六煞"},
+            {"巽", "西方(兑)五鬼、东方(震)绝命、西南(坤)祸害、西北(乾)六煞"},
+            {"艮", "东方(震)五鬼、西北(乾)绝命、南方(离)祸害、西南(坤)六煞"},
+            {"坤", "西北(乾)五鬼、东南(巽)绝命、北方(坎)祸害、东北(艮)六煞"},
+            {"乾", "西南(坤)五鬼、东北(艮)绝命、西方(兑)祸害、北方(坎)六煞"}
+        };
+        
+        String lucky = "";
+        String bad = "";
+        for (String[] entry : luckyPos) {
+            if (entry[0].equals(bagua)) {
+                lucky = entry[1];
+                break;
+            }
+        }
+        for (String[] entry : badPos) {
+            if (entry[0].equals(bagua)) {
+                bad = entry[1];
+                break;
+            }
+        }
+        
+        sb.append("【吉位】").append(lucky).append("\n");
+        sb.append("\n");
+        
+        sb.append("【凶位】").append(bad).append("\n");
+        sb.append("\n");
+        
+        String[][] advice = {
+            {"坎", "大门宜开东南或东方，主卧宜设东方或北方，书房宜设东南方"},
+            {"离", "大门宜开西北或西方，神位宜设北方，文昌位在西方，财位在东方"},
+            {"震", "大门宜开南方或西方，厨房宜设东南，桃花位在南方，财位在北方"},
+            {"兑", "大门宜开东北或北方，财位宜设南方，贵人位在东方，文昌位在东南"},
+            {"巽", "大门宜开北方或东北，财位宜设北方，文昌位在北方，贵人位在南方"},
+            {"艮", "大门宜开西方或东南，子孙位在东方，财位在西方，老人房宜设东北"},
+            {"坤", "大门宜开东方或南方，财位宜设北方，子孙位在东方，花园宜设南方"},
+            {"乾", "大门宜开南方或东南，长辈房宜设西北，财位在北方，书房宜设东南"}
+        };
+        
+        String adviceText = "";
+        for (String[] entry : advice) {
+            if (entry[0].equals(bagua)) {
+                adviceText = entry[1];
+                break;
+            }
+        }
+        
+        sb.append("【布局建议】\n");
+        sb.append(adviceText).append("\n");
+        sb.append("\n");
+        
+        String[][] wuxingTips = {
+            {"坎", "北方宜有水景，南方宜有山峦"},
+            {"离", "南方宜开阔，北方宜靠山"},
+            {"震", "东方宜流水，西方宜靠山"},
+            {"兑", "西方宜水景，东方宜靠山"},
+            {"巽", "东南宜树林，西北宜水景"},
+            {"艮", "东北宜山峦，西南宜水景"},
+            {"坤", "西南宜厚土，东北宜水景"},
+            {"乾", "西北宜高楼，东南宜水景"}
+        };
+        
+        String wuxingTip = "";
+        for (String[] entry : wuxingTips) {
+            if (entry[0].equals(bagua)) {
+                wuxingTip = entry[1];
+                break;
+            }
+        }
+        
+        sb.append("【砂水提示】\n");
+        sb.append(wuxingTip).append("\n");
+        sb.append("\n");
+        
+        String[][] fortune = {
+            {"坎", "水旺主智，财运亨通，宜经商"},
+            {"离", "火旺主礼，事业兴旺，宜仕途"},
+            {"震", "木旺主仁，人丁兴旺，宜求学"},
+            {"兑", "金旺主义，财运旺盛，宜理财"},
+            {"巽", "木旺主风，贵人相助，宜发展"},
+            {"艮", "土旺主信，根基稳固，宜置业"},
+            {"坤", "土旺主顺，家宅康宁，宜安居"},
+            {"乾", "金旺主健，贵人提携，宜创业"}
+        };
+        
+        String fortuneText = "";
+        for (String[] entry : fortune) {
+            if (entry[0].equals(bagua)) {
+                fortuneText = entry[1];
+                break;
+            }
+        }
+        
+        sb.append("【运势总评】\n");
+        sb.append("坐").append(mountain).append("(").append(zuoDir).append(")向").append(chaoXiang).append("(").append(chaoDir).append(")，");
+        sb.append(wuxing).append("行得位，").append(bagua).append("卦得气。");
+        sb.append("\n");
+        sb.append(fortuneText);
+        sb.append("\n");
+        sb.append("吉位宜开门、设卧室、做书房；凶位宜作厨房、储物间或卫生间。");
+        
+        result = new SpannableString(sb.toString());
+        
+        int idx = 0;
+        
+        idx = sb.indexOf("【基本信息】");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), idx, idx + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("坐山：");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#87CEEB")), idx + 3, idx + 3 + mountain.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("五行：");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#00CED1")), idx + 3, idx + 3 + wuxing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("纳音：");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#00CED1")), idx + 3, idx + 3 + nayin.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("朝向：");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#87CEEB")), idx + 3, idx + 3 + chaoXiang.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("卦象：");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#DDA0DD")), idx + 3, idx + 3 + bagua.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("【吉位】");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#90EE90")), idx, idx + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf(lucky);
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#90EE90")), idx, idx + lucky.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("【凶位】");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6B6B")), idx, idx + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf(bad);
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6B6B")), idx, idx + bad.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("【布局建议】");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), idx, idx + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("【砂水提示】");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), idx, idx + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("【运势总评】");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), idx, idx + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf(fortuneText);
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), idx, idx + fortuneText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("吉位宜开门");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#90EE90")), idx, idx + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        idx = sb.indexOf("凶位宜作厨房");
+        if (idx >= 0) result.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6B6B")), idx, idx + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        
+        return result;
+    }
+    
+    private void setupBazhaiNinePalace(String bagua, String[] directions) {
+        String[][] bazhaiData = new String[9][3];
+        String[] bazhaiLuck = new String[9];
+        
+        String[] basePalaceNames = {"坎一宫", "坤二宫", "震三宫", "巽四宫", "中五宫", "乾六宫", "兑七宫", "艮八宫", "离九宫"};
+        String[] dirToPalace = {"坎一宫", "艮八宫", "震三宫", "巽四宫", "离九宫", "坤二宫", "兑七宫", "乾六宫"};
+        
+        String[][] baZhaiTable = {
+            {"坎", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"离", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"震", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"兑", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"巽", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"艮", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"坤", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"},
+            {"乾", "生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"}
+        };
+        
+        String[][] baZhaiPositions = {
+            {"坎", "巽", "震", "艮", "坎", "乾", "兑", "离", "坤"},
+            {"离", "乾", "兑", "巽", "离", "艮", "震", "坎", "坤"},
+            {"震", "离", "坤", "兑", "震", "巽", "坎", "乾", "艮"},
+            {"兑", "艮", "坎", "坤", "兑", "震", "离", "巽", "乾"},
+            {"巽", "坎", "艮", "离", "巽", "坤", "乾", "兑", "震"},
+            {"艮", "兑", "巽", "坎", "艮", "离", "坤", "震", "乾"},
+            {"坤", "震", "离", "兑", "坤", "坎", "艮", "乾", "巽"},
+            {"乾", "离", "震", "巽", "乾", "兑", "坎", "坤", "艮"}
+        };
+        
+        int[] baguaIndex = new int[9];
+        for (int i = 0; i < 8; i++) {
+            if (baZhaiTable[i][0].equals(bagua)) {
+                for (int j = 0; j < 9; j++) {
+                    String pos = baZhaiPositions[i][j];
+                    switch (pos) {
+                        case "坎": baguaIndex[j] = 0; break;
+                        case "坤": baguaIndex[j] = 1; break;
+                        case "震": baguaIndex[j] = 2; break;
+                        case "巽": baguaIndex[j] = 3; break;
+                        case "中": baguaIndex[j] = 4; break;
+                        case "乾": baguaIndex[j] = 5; break;
+                        case "兑": baguaIndex[j] = 6; break;
+                        case "艮": baguaIndex[j] = 7; break;
+                        case "离": baguaIndex[j] = 8; break;
+                    }
+                }
+                break;
+            }
+        }
+        
+        String[] names = {"生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命", ""};
+        String[] meanings = {"主财", "主寿", "主贵", "主稳", "主病", "主灾", "主祸", "主绝", ""};
+        
+        for (int i = 0; i < 9; i++) {
+            if (i == 4) {
+                bazhaiData[i][0] = "中五宫";
+            } else {
+                String dir = directions[i];
+                int dirIdx = getDirectionIndex(dir);
+                if (dirIdx >= 0 && dirIdx < 8) {
+                    bazhaiData[i][0] = dirToPalace[dirIdx];
+                } else {
+                    bazhaiData[i][0] = basePalaceNames[i];
+                }
+            }
+            bazhaiData[i][1] = "";
+            bazhaiData[i][2] = "";
+            bazhaiLuck[i] = "平";
+        }
+        
+        for (int i = 0; i < 8; i++) {
+            int idx = baguaIndex[i];
+            bazhaiData[idx][1] = names[i];
+            bazhaiData[idx][2] = meanings[i];
+            if (i < 4) {
+                bazhaiLuck[idx] = "吉";
+            } else {
+                bazhaiLuck[idx] = "凶";
+            }
+        }
+        
+        bazhaiNinePalace.setPalaceData(bazhaiData);
+        bazhaiNinePalace.setLuckData(bazhaiLuck);
+        bazhaiNinePalace.setDirections(directions);
+    }
+    
+    private int getDirectionIndex(String dir) {
+        String[] dirs = {"北", "东北", "东", "东南", "南", "西南", "西", "西北"};
+        for (int i = 0; i < dirs.length; i++) {
+            if (dirs[i].equals(dir)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    private void setupJiuxingNinePalace(String bagua, String[] directions) {
+        String[][] jiuxingData = new String[9][3];
+        String[] jiuxingLuck = new String[9];
+        
+        String[] dirToPalace = {"坎一宫", "艮八宫", "震三宫", "巽四宫", "离九宫", "坤二宫", "兑七宫", "乾六宫"};
+        String[] stars = {"一白贪狼", "二黑巨门", "三碧禄存", "四绿文曲", "五黄廉贞", "六白武曲", "七赤破军", "八白左辅", "九紫右弼"};
+        String[] lucks = {"吉", "凶", "凶", "吉", "凶", "吉", "凶", "吉", "吉"};
+        String[] meanings = {"主财", "主病", "主争", "主文", "主灾", "主官", "主盗", "主富", "主贵"};
+        
+        int[][] jiuxingPositions = {
+            {0, 1, 2, 3, 4, 5, 6, 7, 8},
+            {8, 0, 1, 2, 3, 4, 5, 6, 7},
+            {2, 3, 4, 5, 6, 7, 8, 0, 1},
+            {6, 7, 8, 0, 1, 2, 3, 4, 5},
+            {3, 4, 5, 6, 7, 8, 0, 1, 2},
+            {7, 8, 0, 1, 2, 3, 4, 5, 6},
+            {1, 2, 3, 4, 5, 6, 7, 8, 0},
+            {5, 6, 7, 8, 0, 1, 2, 3, 4}
+        };
+        
+        int baguaIdx = 0;
+        String[] baguaNames = {"坎", "离", "震", "兑", "巽", "艮", "坤", "乾"};
+        for (int i = 0; i < 8; i++) {
+            if (baguaNames[i].equals(bagua)) {
+                baguaIdx = i;
+                break;
+            }
+        }
+        
+        for (int i = 0; i < 9; i++) {
+            int idx = jiuxingPositions[baguaIdx][i];
+            if (i == 4) {
+                jiuxingData[i][0] = "中五宫";
+            } else {
+                String dir = directions[i];
+                int dirIdx = getDirectionIndex(dir);
+                if (dirIdx >= 0 && dirIdx < 8) {
+                    jiuxingData[i][0] = dirToPalace[dirIdx];
+                } else {
+                    jiuxingData[i][0] = "";
+                }
+            }
+            jiuxingData[i][1] = stars[idx];
+            jiuxingData[i][2] = meanings[idx];
+            jiuxingLuck[i] = lucks[idx];
+        }
+        
+        jiuxingNinePalace.setPalaceData(jiuxingData);
+        jiuxingNinePalace.setLuckData(jiuxingLuck);
+        jiuxingNinePalace.setDirections(directions);
+    }
+    
+    private void setupBamenNinePalace(String bagua, String[] directions) {
+        String[][] bamenData = new String[9][3];
+        String[] bamenLuck = new String[9];
+        
+        String[] dirToPalace = {"坎一宫", "艮八宫", "震三宫", "巽四宫", "离九宫", "坤二宫", "兑七宫", "乾六宫"};
+        String[] doors = {"休门", "生门", "伤门", "杜门", "景门", "死门", "惊门", "开门", ""};
+        String[] lucks = {"吉", "吉", "凶", "平", "平", "凶", "凶", "吉", "平"};
+        String[] meanings = {"主休", "主财", "主伤", "主闭", "主景", "主死", "主惊", "主开", ""};
+        
+        int[][] bamenPositions = {
+            {0, 1, 2, 3, 4, 5, 6, 7, 8},
+            {4, 5, 6, 7, 0, 1, 2, 3, 8},
+            {2, 3, 4, 5, 6, 7, 0, 1, 8},
+            {6, 7, 0, 1, 2, 3, 4, 5, 8},
+            {3, 4, 5, 6, 7, 0, 1, 2, 8},
+            {1, 2, 3, 4, 5, 6, 7, 0, 8},
+            {5, 6, 7, 0, 1, 2, 3, 4, 8},
+            {7, 0, 1, 2, 3, 4, 5, 6, 8}
+        };
+        
+        int baguaIdx = 0;
+        String[] baguaNames = {"坎", "离", "震", "兑", "巽", "艮", "坤", "乾"};
+        for (int i = 0; i < 8; i++) {
+            if (baguaNames[i].equals(bagua)) {
+                baguaIdx = i;
+                break;
+            }
+        }
+        
+        for (int i = 0; i < 9; i++) {
+            int idx = bamenPositions[baguaIdx][i];
+            if (i == 4) {
+                bamenData[i][0] = "中五宫";
+            } else {
+                String dir = directions[i];
+                int dirIdx = getDirectionIndex(dir);
+                if (dirIdx >= 0 && dirIdx < 8) {
+                    bamenData[i][0] = dirToPalace[dirIdx];
+                } else {
+                    bamenData[i][0] = "";
+                }
+            }
+            bamenData[i][1] = doors[idx];
+            bamenData[i][2] = meanings[idx];
+            bamenLuck[i] = lucks[idx];
+        }
+        
+        bamenNinePalace.setPalaceData(bamenData);
+        bamenNinePalace.setLuckData(bamenLuck);
+        bamenNinePalace.setDirections(directions);
     }
     
     private void setupTouchListener() {
