@@ -66,11 +66,7 @@
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-black"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:shadowColor="@color/text_primary"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="4" />
+                android:layout_marginEnd="4dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute1TextView"
@@ -101,10 +97,6 @@
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.08"
-                android:shadowColor="@color/text_primary"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="3"
                 tools:text="2024年12月31日 星期二" />
 
             <TextView
@@ -118,7 +110,7 @@
                 android:paddingStart="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="@android:color/transparent"
                 tools:text="立春" />
 
             <TextView
@@ -152,13 +144,9 @@
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.08"
-                android:shadowColor="@color/gold"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="3"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="@android:color/transparent"
                 tools:text="甲辰年 丙子月 乙未日 甲申时" />
 
             <TextView
@@ -171,7 +159,7 @@
                 android:paddingEnd="4dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="@android:color/transparent"
                 android:contentDescription="复制派盘信息" />
 
         </LinearLayout>
@@ -180,7 +168,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_border"
             android:padding="10dp"
             android:layout_marginVertical="8dp">
 
@@ -209,17 +196,16 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/card_border"
             android:padding="8dp"
             android:layout_marginTop="8dp">
 
             <com.example.timedisplay.NinePalacePanel
                 android:id="@+id/ninePalacePanel"
-                android:layout_width="280dp"
-                android:layout_height="280dp"
-                android:layout_gravity="center_horizontal" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="280dp" />
         </LinearLayout>
 
         <TextView

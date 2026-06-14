@@ -31,8 +31,6 @@ public class JieqiActivity extends Activity {
     private TextView jieqiDate;
     private TextView daysToNext;
     private LinearLayout jieqiListLayout;
-    private LinearLayout prevJieqiLayout;
-    private LinearLayout nextJieqiLayout;
 
     private static final String[] DAY_MARKS = {"一", "丁", "上", "止", "正"};
 
@@ -64,8 +62,6 @@ public class JieqiActivity extends Activity {
         jieqiDate = findViewById(R.id.jieqiDate);
         daysToNext = findViewById(R.id.daysToNext);
         jieqiListLayout = findViewById(R.id.jieqiListLayout);
-        prevJieqiLayout = findViewById(R.id.prevJieqiLayout);
-        nextJieqiLayout = findViewById(R.id.nextJieqiLayout);
 
         currentJieqi = getIntent().getStringExtra("jieqi");
         if (currentJieqi == null || currentJieqi.isEmpty()) {
@@ -75,13 +71,13 @@ public class JieqiActivity extends Activity {
         displayJieqiInfo(currentJieqi);
         displayJieqiList();
 
-        prevJieqiLayout.setOnClickListener(v -> {
+        prevJieqi.setOnClickListener(v -> {
             currentJieqi = JieqiData.getPrevJieqi(currentJieqi);
             displayJieqiInfo(currentJieqi);
             displayJieqiList();
         });
 
-        nextJieqiLayout.setOnClickListener(v -> {
+        nextJieqi.setOnClickListener(v -> {
             currentJieqi = JieqiData.getNextJieqi(currentJieqi);
             displayJieqiInfo(currentJieqi);
             displayJieqiList();

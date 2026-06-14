@@ -19,25 +19,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="6dp">
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/fullPageTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="奇门遁甲排盘"
-                android:textColor="#D4AF37"
-                android:textSize="20sp"
+                android:textColor="@color/gold"
+                android:textSize="22sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 android:letterSpacing="0.05"/>
 
-            <com.example.timedisplay.FullNinePalacePanel
-                android:id="@+id/fullNinePalacePanel"
-                android:layout_width="240dp"
-                android:layout_height="240dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:layout_marginBottom="12dp">
+
+                <com.example.timedisplay.FullNinePalacePanel
+                    android:id="@+id/fullNinePalacePanel"
+                    android:layout_width="260dp"
+                    android:layout_height="260dp"
+                    android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,244 +54,226 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📊 基本信息"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expBasic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="💡 综合建议"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expOverall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="⏰ 时辰运势"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🧭 方位吉凶"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expDirection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="✅ 今日宜忌"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expYiJi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="⭐ 值符值使"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expZhifuZhishi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🌙 日时关系"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expGan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏠 生活提示"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <TextView
                         android:id="@+id/expLife"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
-                        android:lineSpacingExtra="2dp"/>
+                        android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏛 天盘地盘"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expTianDiPan"
@@ -298,20 +286,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="✨ 九星排布"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expNineStars"
@@ -324,20 +310,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🚪 八门排布"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expEightDoors"
@@ -350,20 +334,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="👑 八神排布"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expGods"
@@ -376,20 +358,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="12dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏯 各宫详解"
-                        android:textColor="#D4AF37"
-                        android:textSize="13sp"
+                        android:textColor="@color/gold"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
+                        android:paddingBottom="4dp"
                         android:letterSpacing="0.02"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expPalaces"

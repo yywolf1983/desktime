@@ -13,15 +13,13 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <!-- 上半部分：时辰时钟 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.2"
             android:orientation="vertical"
-            android:background="@drawable/card_border"
-            android:padding="4dp"
-            android:layout_marginBottom="6dp">
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
 
             <com.example.timedisplay.WuyunLiuqiView
                 android:id="@+id/wuyunLiuqiView"
@@ -30,124 +28,119 @@
 
         </LinearLayout>
 
-        <!-- 下半部分：详细信息卡片网格 -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="2dp">
+            android:padding="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- 第一行：当令+养生 + 五运 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- 当令+养生卡片 -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:background="@drawable/card_border"
-                        android:padding="8dp"
-                        android:layout_marginEnd="6dp">
+                        android:padding="10dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:layout_marginEnd="4dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="✦ 当令"
-                            android:textColor="#FFD700"
+                            android:text="⏰ 当令"
+                            android:textColor="@color/gold"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:layout_marginBottom="4dp" />
+                            android:layout_marginBottom="6dp" />
 
                         <TextView
                             android:id="@+id/currentShichenInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="12sp"
-                            android:lineSpacingExtra="2dp" />
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="3dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="✦ 养生宜忌"
-                            android:textColor="#FFD700"
+                            android:text="🌿 养生宜忌"
+                            android:textColor="@color/gold"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:layout_marginTop="6dp"
-                            android:layout_marginBottom="4dp" />
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="6dp" />
 
                         <TextView
                             android:id="@+id/shichenDetail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="12sp"
-                            android:lineSpacingExtra="2dp" />
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="3dp" />
                     </LinearLayout>
 
-                    <!-- 五运卡片 -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:background="@drawable/card_border"
-                        android:padding="8dp"
-                        android:layout_marginStart="6dp">
+                        android:padding="10dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginHorizontal="4dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="✦ 五运"
-                            android:textColor="#FFD700"
+                            android:text="🌟 五运"
+                            android:textColor="@color/gold"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:layout_marginBottom="4dp" />
+                            android:layout_marginBottom="6dp" />
 
                         <TextView
                             android:id="@+id/wuyunInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="12sp"
-                            android:lineSpacingExtra="2dp" />
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="3dp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- 第二行：六气 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
-                    android:padding="8dp"
-                    android:layout_marginTop="6dp">
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:layout_marginTop="8dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✦ 六气"
-                        android:textColor="#FFD700"
+                        android:text="💨 六气"
+                        android:textColor="@color/gold"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="4dp" />
+                        android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:id="@+id/liuqiInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#87CEEB"
-                        android:textSize="12sp"
-                        android:lineSpacingExtra="2dp" />
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="3dp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
