@@ -16,7 +16,7 @@
         android:layout_height="36dp"
         android:text="🔒"
         android:textSize="18sp"
-        android:textColor="#33FFFFFF"
+        android:textColor="#FFFFFFFF"
         android:gravity="center"
         android:layout_gravity="top|end"
         android:layout_marginTop="4dp"

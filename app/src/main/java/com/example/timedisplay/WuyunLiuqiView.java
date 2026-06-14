@@ -13,6 +13,7 @@ public class WuyunLiuqiView extends View {
     private Paint paint;
     private Paint textPaint;
     private Paint highlightPaint;
+    private Paint glowPaint;
     
     private int currentShichenIndex = 0;
     private String[] shichenNames = {
@@ -36,6 +37,11 @@ public class WuyunLiuqiView extends View {
         "水·鼠", "土·牛", "木·虎", "木·兔", "土·龙", "火·蛇",
         "火·马", "土·羊", "金·猴", "金·鸡", "土·狗", "水·猪"
     };
+    
+    private String[] meridianLabels = {
+        "胆经", "肝经", "肺经", "大肠经", "胃经", "脾经",
+        "心经", "小肠经", "膀胱经", "肾经", "心包经", "三焦经"
+    };
 
     public WuyunLiuqiView(Context context) {
         super(context);
@@ -56,13 +62,17 @@ public class WuyunLiuqiView extends View {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         highlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        glowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         
-        textPaint.setColor(Color.parseColor("#87CEEB"));
         textPaint.setTextAlign(Paint.Align.CENTER);
         
         highlightPaint.setColor(Color.parseColor("#FFD700"));
         highlightPaint.setStyle(Paint.Style.STROKE);
-        highlightPaint.setStrokeWidth(4);
+        highlightPaint.setStrokeWidth(3);
+        
+        glowPaint.setColor(Color.parseColor("#FFD700"));
+        glowPaint.setStyle(Paint.Style.FILL);
+        glowPaint.setAlpha(30);
     }
 
     public void setCurrentShichen(int index) {
@@ -76,7 +86,7 @@ public class WuyunLiuqiView extends View {
         
         int width = getWidth();
         int height = getHeight();
-        int padding = 12;
+        int padding = 16;
         
         paint.setColor(Color.parseColor("#0A0A14"));
         paint.setStyle(Paint.Style.FILL);
@@ -89,7 +99,7 @@ public class WuyunLiuqiView extends View {
         String timeStr = String.format("%02d:%02d:%02d", hour, minute, second);
         String currentShichen = shichenNames[currentShichenIndex] + "时 · " + shichenQuotes[currentShichenIndex];
         
-        int gridTop = 130;
+        int gridTop = 90;
         int gridHeight = height - gridTop - padding;
         int gridWidth = width - padding * 2;
         
@@ -97,17 +107,18 @@ public class WuyunLiuqiView extends View {
         float cellHeight = gridHeight / 3.0f;
         float minCell = Math.min(cellWidth, cellHeight);
         
-        // 基于cell大小设置文字
-        textPaint.setTextSize(minCell * 0.45f);
+        textPaint.setTextSize(minCell * 0.4f);
         textPaint.setColor(Color.parseColor("#FFD700"));
-        canvas.drawText(timeStr, width / 2f, 70, textPaint);
+        textPaint.setFakeBoldText(true);
+        canvas.drawText(timeStr, width / 2f, 55, textPaint);
         
-        textPaint.setTextSize(minCell * 0.27f);
+        textPaint.setTextSize(minCell * 0.22f);
         textPaint.setColor(Color.parseColor("#87CEEB"));
-        canvas.drawText(currentShichen, width / 2f, 115, textPaint);
+        textPaint.setFakeBoldText(false);
+        canvas.drawText(currentShichen, width / 2f, 85, textPaint);
         
-        float cornerRadius = 12;
-        float cellPadding = 4;
+        float cornerRadius = 16;
+        float cellPadding = 6;
         
         for (int i = 0; i < 12; i++) {
             int row = i / 4;
@@ -119,18 +130,29 @@ public class WuyunLiuqiView extends View {
             float bottom = top + cellHeight;
             
             boolean isCurrent = i == currentShichenIndex;
+            
             if (isCurrent) {
+                glowPaint.setAlpha(40);
+                canvas.drawRoundRect(left, top, right, bottom, cornerRadius + 4, cornerRadius + 4, glowPaint);
+                
                 paint.setColor(Color.parseColor("#FFD700"));
-                paint.setAlpha(180);
+                paint.setAlpha(120);
             } else {
                 paint.setColor(Color.parseColor("#1a1a2e"));
-                paint.setAlpha(220);
+                paint.setAlpha(200);
             }
             paint.setStyle(Paint.Style.FILL);
             canvas.drawRoundRect(left + cellPadding, top + cellPadding, right - cellPadding, bottom - cellPadding, cornerRadius, cornerRadius, paint);
             
             if (isCurrent) {
+                highlightPaint.setStrokeWidth(3);
+                highlightPaint.setColor(Color.parseColor("#FFD700"));
                 canvas.drawRoundRect(left + cellPadding, top + cellPadding, right - cellPadding, bottom - cellPadding, cornerRadius, cornerRadius, highlightPaint);
+                
+                highlightPaint.setStrokeWidth(1);
+                highlightPaint.setColor(Color.parseColor("#FFFFFF"));
+                highlightPaint.setAlpha(50);
+                canvas.drawRoundRect(left + cellPadding + 2, top + cellPadding + 2, right - cellPadding - 2, bottom - cellPadding - 2, cornerRadius - 2, cornerRadius - 2, highlightPaint);
             }
             
             float centerX = (left + right) / 2;
@@ -138,15 +160,21 @@ public class WuyunLiuqiView extends View {
             
             textPaint.setTextSize(minCell * 0.35f);
             textPaint.setColor(isCurrent ? Color.parseColor("#0A0A14") : Color.parseColor("#FFD700"));
-            canvas.drawText(shichenNames[i], centerX, centerY - minCell * 0.15f, textPaint);
+            textPaint.setFakeBoldText(true);
+            canvas.drawText(shichenNames[i], centerX, centerY - minCell * 0.22f, textPaint);
             
-            textPaint.setTextSize(minCell * 0.17f);
+            textPaint.setTextSize(minCell * 0.14f);
             textPaint.setColor(isCurrent ? Color.parseColor("#1a1a2e") : Color.parseColor("#87CEEB"));
-            canvas.drawText(shichenTimes[i], centerX, centerY + minCell * 0.06f, textPaint);
+            textPaint.setFakeBoldText(false);
+            canvas.drawText(shichenTimes[i], centerX, centerY - minCell * 0.06f, textPaint);
             
-            textPaint.setTextSize(minCell * 0.15f);
+            textPaint.setTextSize(minCell * 0.12f);
             textPaint.setColor(isCurrent ? Color.parseColor("#2a2a3e") : Color.parseColor("#ADD8E6"));
-            canvas.drawText(wuxingLabels[i], centerX, centerY + minCell * 0.27f, textPaint);
+            canvas.drawText(wuxingLabels[i], centerX, centerY + minCell * 0.1f, textPaint);
+            
+            textPaint.setTextSize(minCell * 0.12f);
+            textPaint.setColor(isCurrent ? Color.parseColor("#2a2a3e") : Color.parseColor("#90EE90"));
+            canvas.drawText(meridianLabels[i], centerX, centerY + minCell * 0.24f, textPaint);
         }
     }
 }

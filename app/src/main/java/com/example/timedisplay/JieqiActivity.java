@@ -172,7 +172,7 @@ public class JieqiActivity extends Activity {
     private void displayHouDaysLayout(TextView textView, int daysIntoJieqi, int houOffset) {
         if (daysIntoJieqi < 0) {
             textView.setText("○");
-            textView.setTextColor(Color.parseColor("#666666"));
+            textView.setTextColor(Color.parseColor("#999999"));
         } else if (daysIntoJieqi >= houOffset + 5) {
             textView.setText("正");
             textView.setTextColor(Color.parseColor("#FFD700"));
@@ -183,11 +183,11 @@ public class JieqiActivity extends Activity {
                 textView.setTextColor(Color.parseColor("#FFD700"));
             } else {
                 textView.setText("○");
-                textView.setTextColor(Color.parseColor("#666666"));
+                textView.setTextColor(Color.parseColor("#999999"));
             }
         } else {
             textView.setText("○");
-            textView.setTextColor(Color.parseColor("#666666"));
+            textView.setTextColor(Color.parseColor("#999999"));
         }
     }
 
@@ -220,10 +220,11 @@ public class JieqiActivity extends Activity {
                 
                 String jieqi = JieqiData.SOLAR_TERMS[index];
                 int[] date = JieqiData.getJieqiDate(currentYear, index);
+                int jieqiYear = date[0];
                 int jieqiMonth = date[1];
                 int jieqiDay = date[2];
 
-                boolean isPast = index < currentJieqiIndex;
+                boolean isPast = isJieqiPast(jieqiYear, jieqiMonth, jieqiDay, currentYear, currentMonth, currentDay);
                 boolean isCurrent = jieqi.equals(currentJieqi);
                 boolean isCurrentSeason = index == currentJieqiIndex;
 
@@ -267,8 +268,8 @@ public class JieqiActivity extends Activity {
                     jieqiDate.setTextColor(Color.parseColor("#FF87CEEB"));
                     jieqiName.setTypeface(null, android.graphics.Typeface.BOLD);
                 } else if (isPast) {
-                    jieqiName.setTextColor(Color.parseColor("#666666"));
-                    jieqiDate.setTextColor(Color.parseColor("#666666"));
+                    jieqiName.setTextColor(Color.parseColor("#999999"));
+                    jieqiDate.setTextColor(Color.parseColor("#999999"));
                 } else {
                     jieqiName.setTextColor(Color.parseColor("#FFADD8E6"));
                     jieqiDate.setTextColor(Color.parseColor("#FFADD8E6"));
@@ -291,15 +292,17 @@ public class JieqiActivity extends Activity {
         }
     }
 
-    private boolean isDatePast(int jieqiMonth, int jieqiDay, int currentMonth, int currentDay) {
-        if (jieqiMonth >= 3 && jieqiMonth < currentMonth) {
+    private boolean isJieqiPast(int jieqiYear, int jieqiMonth, int jieqiDay, int currentYear, int currentMonth, int currentDay) {
+        if (jieqiYear < currentYear) {
             return true;
-        } else if (jieqiMonth == currentMonth) {
-            return jieqiDay < currentDay;
-        } else if (jieqiMonth <= 2 && currentMonth > 2) {
-            return false;
+        } else if (jieqiYear == currentYear) {
+            if (jieqiMonth < currentMonth) {
+                return true;
+            } else if (jieqiMonth == currentMonth) {
+                return jieqiDay < currentDay;
+            }
         }
-        return jieqiMonth < currentMonth;
+        return false;
     }
 
     public void goBack(View view) {

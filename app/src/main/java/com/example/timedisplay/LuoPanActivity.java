@@ -301,25 +301,39 @@ public class LuoPanActivity extends Activity {
     }
     
     private String getJixiong(String mountain) {
-        String[] jixiongMap = {
-            "吉", "吉", "吉", "吉", "吉", "吉",
-            "吉", "吉", "吉", "平", "吉", "凶",
-            "吉", "吉", "吉", "平", "吉", "吉",
-            "吉", "吉", "吉", "平", "吉", "凶"
-        };
-        String[] mountains = {
-            "壬", "子", "癸", "丑", "艮", "寅",
-            "甲", "卯", "乙", "辰", "巽", "巳",
-            "丙", "午", "丁", "未", "坤", "申",
-            "庚", "酉", "辛", "戌", "乾", "亥"
-        };
+        String wuxing = getWuxing(mountain);
+        String nayin = getNayin(mountain);
+        String shensha = getShensha(mountain);
         
-        for (int i = 0; i < mountains.length; i++) {
-            if (mountains[i].equals(mountain)) {
-                return jixiongMap[i];
-            }
+        int score = 0;
+        
+        if (shensha.contains("天德") || shensha.contains("月德")) {
+            score += 2;
         }
-        return "";
+        if (shensha.contains("桃花")) {
+            score += 1;
+        }
+        if (shensha.contains("阳刃")) {
+            score -= 1;
+        }
+        
+        if (wuxing.equals("土")) {
+            score += 1;
+        }
+        
+        if (nayin.contains("金")) {
+            score += 1;
+        }
+        
+        if (score >= 3) {
+            return "大吉";
+        } else if (score >= 2) {
+            return "吉";
+        } else if (score >= 0) {
+            return "平";
+        } else {
+            return "凶";
+        }
     }
     
     private String getGuiZang(String mountain) {
@@ -854,6 +868,7 @@ public class LuoPanActivity extends Activity {
         
         String[] names = {"生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命", ""};
         String[] meanings = {"主财", "主寿", "主贵", "主稳", "主病", "主灾", "主祸", "主绝", ""};
+        String[] positions = {"开门/卧室", "卧室/书房", "卧室/老人房", "储物/休息", "厕所/厨房", "储物/杂物", "厨房/厕所", "厕所/储物", ""};
         
         for (int i = 0; i < 9; i++) {
             if (i == 4) {
@@ -874,12 +889,12 @@ public class LuoPanActivity extends Activity {
         
         for (int i = 0; i < 8; i++) {
             int idx = baguaIndex[i];
-            bazhaiData[idx][1] = names[i];
-            bazhaiData[idx][2] = meanings[i];
+            bazhaiData[idx][1] = names[i] + " " + meanings[i];
+            bazhaiData[idx][2] = positions[i];
             if (i < 4) {
-                bazhaiLuck[idx] = "吉";
+                bazhaiLuck[idx] = i == 0 ? "大吉" : "吉";
             } else {
-                bazhaiLuck[idx] = "凶";
+                bazhaiLuck[idx] = i == 6 ? "大凶" : "凶";
             }
         }
         
@@ -904,8 +919,9 @@ public class LuoPanActivity extends Activity {
         
         String[] dirToPalace = {"坎一宫", "艮八宫", "震三宫", "巽四宫", "离九宫", "坤二宫", "兑七宫", "乾六宫"};
         String[] stars = {"一白贪狼", "二黑巨门", "三碧禄存", "四绿文曲", "五黄廉贞", "六白武曲", "七赤破军", "八白左辅", "九紫右弼"};
-        String[] lucks = {"吉", "凶", "凶", "吉", "凶", "吉", "凶", "吉", "吉"};
+        String[] lucks = {"大吉", "大凶", "凶", "吉", "大凶", "吉", "凶", "吉", "吉"};
         String[] meanings = {"主财", "主病", "主争", "主文", "主灾", "主官", "主盗", "主富", "主贵"};
+        String[] wuxing = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
         
         int[][] jiuxingPositions = {
             {0, 1, 2, 3, 4, 5, 6, 7, 8},
@@ -940,7 +956,7 @@ public class LuoPanActivity extends Activity {
                     jiuxingData[i][0] = "";
                 }
             }
-            jiuxingData[i][1] = stars[idx];
+            jiuxingData[i][1] = stars[idx] + "(" + wuxing[idx] + ")";
             jiuxingData[i][2] = meanings[idx];
             jiuxingLuck[i] = lucks[idx];
         }

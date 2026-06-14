@@ -128,14 +128,14 @@ public class WuyunLiuqiActivity extends Activity {
             @Override
             public void run() {
                 updateWuyunLiuqiInfo();
-                long nextSecond = ((SystemClock.uptimeMillis() / 1000) + 1) * 1000;
-                updateHandler.postAtTime(this, nextSecond);
+                long nextMinute = ((SystemClock.uptimeMillis() / 60000) + 1) * 60000;
+                updateHandler.postAtTime(this, nextMinute);
             }
         };
         
         updateWuyunLiuqiInfo();
-        long nextSecond = ((SystemClock.uptimeMillis() / 1000) + 1) * 1000;
-        updateHandler.postAtTime(updateRunnable, nextSecond);
+        long nextMinute = ((SystemClock.uptimeMillis() / 60000) + 1) * 60000;
+        updateHandler.postAtTime(updateRunnable, nextMinute);
     }
     
     private void updateWuyunLiuqiInfo() {
@@ -170,7 +170,19 @@ public class WuyunLiuqiActivity extends Activity {
         String zhongYun = getZhongYunShort(yearGan);
         String[] sijiYun = getSijiYun(yearGan);
         
-        String info = "📅 干支：" + yearGanZhi + "\n🌟 中运：" + zhongYun + "\n▫️ 初运" + sijiYun[0] + "·二运" + sijiYun[1] + "\n▫️ 三运" + sijiYun[2] + "·四运" + sijiYun[3] + "\n▫️ 终运" + sijiYun[4];
+        String[][] yunDetails = {
+            {"木", "主生发、生长"},
+            {"火", "主炎热、繁荣"},
+            {"土", "主孕育、稳定"},
+            {"金", "主收敛、收获"},
+            {"水", "主潜藏、储备"}
+        };
+        
+        String info = "📅 干支：" + yearGanZhi + "\n🌟 中运：" + zhongYun + "\n\n";
+        for (int i = 0; i < 5; i++) {
+            String[] labels = {"初运", "二运", "三运", "四运", "终运"};
+            info += "▫️ " + labels[i] + sijiYun[i] + "运(" + yunDetails[i][0] + ")：" + yunDetails[i][1] + "\n";
+        }
         wuyunInfo.setText(info);
     }
     
@@ -178,34 +190,50 @@ public class WuyunLiuqiActivity extends Activity {
         String[] liuqi = getLiuqiForDate(year, month, day);
         int currentQiIndex = getCurrentQiIndex(month, day);
         
-        String[] liuqiSimple = new String[6];
-        for (int i = 0; i < 6; i++) {
-            liuqiSimple[i] = liuqi[i].replace("厥阴风木", "厥阴").replace("少阴君火", "少阴").replace("少阳相火", "少阳").replace("太阴湿土", "太阴").replace("阳明燥金", "阳明").replace("太阳寒水", "太阳");
-        }
+        String[] qiNames = {"初气", "二气", "三气", "四气", "五气", "终气"};
+        String[] qiDetails = {
+            "厥阴风木：风气为主，主生发、疾病多风证",
+            "少阴君火：热气为主，主温热、疾病多热证",
+            "少阳相火：火气为主，主炎热、疾病多火证",
+            "太阴湿土：湿气为主，主湿润、疾病多湿证",
+            "阳明燥金：燥气为主，主干燥、疾病多燥证",
+            "太阳寒水：寒气为主，主寒冷、疾病多寒证"
+        };
         
-        String[] qiNames = {"▫️ 初气", "二气", "▫️ 三气", "四气", "▫️ 五气", "终气"};
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 6; i += 2) {
-            sb.append(qiNames[i]).append(liuqiSimple[i]);
-            if (i + 1 < 6) {
-                sb.append("  ").append(qiNames[i+1]).append(liuqiSimple[i+1]);
+        for (int i = 0; i < 6; i++) {
+            if (i == currentQiIndex) {
+                sb.append("▶ ").append(qiNames[i]).append(" ").append(liuqi[i]).append(" ◀\n");
+            } else {
+                sb.append("▫️ ").append(qiNames[i]).append(" ").append(liuqi[i]).append("\n");
             }
-            sb.append("\n");
         }
         
-        sb.append("\n▸ 当前：").append(liuqiSimple[currentQiIndex]);
+        sb.append("\n【六气详解】\n");
+        for (int i = 0; i < 6; i++) {
+            sb.append(qiDetails[i]).append("\n");
+        }
+        
         String fullText = sb.toString();
         
-        int startPos = fullText.indexOf("▸ 当前");
+        int startPos = fullText.indexOf("【六气详解】");
         if (startPos != -1) {
             SpannableString spannable = new SpannableString(fullText);
-            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), startPos, fullText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan(new RelativeSizeSpan(1.4f), startPos, fullText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), startPos, startPos + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            
+            int currentStart = fullText.indexOf("▶ ");
+            int currentEnd = fullText.indexOf(" ◀");
+            if (currentStart != -1 && currentEnd != -1) {
+                spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#90EE90")), currentStart, currentEnd + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            
             liuqiInfo.setText(spannable);
         } else {
             liuqiInfo.setText(fullText);
         }
     }
+    
+    
     
     private String calculateYearGanZhi(int year) {
         int baseYear = 1900;
@@ -312,8 +340,8 @@ public class WuyunLiuqiActivity extends Activity {
         super.onResume();
         updateHandler.removeCallbacks(updateRunnable);
         updateWuyunLiuqiInfo();
-        long nextSecond = ((SystemClock.uptimeMillis() / 1000) + 1) * 1000;
-        updateHandler.postAtTime(updateRunnable, nextSecond);
+        long nextMinute = ((SystemClock.uptimeMillis() / 60000) + 1) * 60000;
+        updateHandler.postAtTime(updateRunnable, nextMinute);
     }
     
     @Override
