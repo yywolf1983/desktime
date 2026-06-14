@@ -16,7 +16,7 @@
         android:layout_height="36dp"
         android:text="🔒"
         android:textSize="18sp"
-        android:textColor="#FFFFFFFF"
+        android:textColor="@color/gold"
         android:gravity="center"
         android:layout_gravity="top|end"
         android:layout_marginTop="4dp"
@@ -31,10 +31,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:clickable="true"
             android:focusable="true"
             android:background="@android:color/transparent">
@@ -63,11 +63,11 @@
                 android:layout_height="wrap_content"
                 android:text=":"
                 android:textSize="48sp"
-                android:textColor="#FF87CEEB"
+                android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-black"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:shadowColor="#FF87CEEB"
+                android:shadowColor="@color/text_primary"
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="4" />
@@ -90,18 +90,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginVertical="4dp">
+            android:layout_marginVertical="8dp">
 
             <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="@color/tech_blue"
+                android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.08"
-                android:shadowColor="@color/tech_blue"
+                android:shadowColor="@color/text_primary"
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="3"
@@ -112,10 +112,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="#FFD700"
+                android:textColor="@color/gold"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:paddingStart="8dp"
+                android:paddingStart="12dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?android:attr/selectableItemBackground"
@@ -127,8 +127,8 @@
                 android:layout_height="wrap_content"
                 android:text="⟳"
                 android:textSize="22sp"
-                android:textColor="#FF87CEEB"
-                android:paddingStart="8dp"
+                android:textColor="@color/text_primary"
+                android:paddingStart="12dp"
                 android:paddingEnd="8dp"
                 android:visibility="gone"
                 android:clickable="true"
@@ -141,18 +141,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginVertical="4dp">
+            android:layout_marginVertical="8dp">
 
             <TextView
                 android:id="@+id/fourPillarsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textColor="@color/tech_cyan"
+                android:textSize="20sp"
+                android:textColor="@color/gold"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.08"
-                android:shadowColor="@color/tech_cyan"
+                android:shadowColor="@color/gold"
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="3"
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:text="📋"
                 android:textSize="20sp"
-                android:paddingStart="8dp"
+                android:paddingStart="12dp"
                 android:paddingEnd="4dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -176,36 +176,51 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/timeFortuneTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="#FF87CEEB"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center"
-            android:layout_marginVertical="4dp"
-            android:letterSpacing="0.02"
-            tools:text="子时(23-1点): 阴气最重，宜静养安神" />
+            android:orientation="vertical"
+            android:background="@drawable/card_border"
+            android:padding="10dp"
+            android:layout_marginVertical="8dp">
 
-        <TextView
-            android:id="@+id/ninePalaceExplanation"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/timeFortuneTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:letterSpacing="0.02"
+                tools:text="子时(23-1点): 阴气最重，宜静养安神" />
+
+            <TextView
+                android:id="@+id/ninePalaceExplanation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:letterSpacing="0.08"
+                tools:text="九宫格基于当前四柱信息计算" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/tech_silver"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center"
-            android:layout_marginVertical="4dp"
-            android:letterSpacing="0.08"
-            tools:text="九宫格基于当前四柱信息计算" />
+            android:background="@drawable/card_border"
+            android:padding="8dp"
+            android:layout_marginTop="8dp">
 
-        <com.example.timedisplay.NinePalacePanel
-            android:id="@+id/ninePalacePanel"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="4dp"
-            android:layout_gravity="center_horizontal" />
+            <com.example.timedisplay.NinePalacePanel
+                android:id="@+id/ninePalacePanel"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/detailedInterpretation"
