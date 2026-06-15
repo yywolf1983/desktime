@@ -1,12 +1,14 @@
 package com.example.timedisplay;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,12 +30,8 @@ public class StopwatchActivity extends Activity {
     private TextView lapButton;
     private TextView backButton;
 
-    private Handler handler;
-    private long startTime = 0L;
     private long elapsedTime = 0L;
-    private long lastLapTime = 0L;
     private boolean isRunning = false;
-    private int lapCount = 0;
     private List<Long> lapTimes = new ArrayList<>();
 
     private int lastHour1 = -1;
@@ -43,6 +41,28 @@ public class StopwatchActivity extends Activity {
     private int lastSecond1 = -1;
     private int lastSecond2 = -1;
     private int lastMillis = -1;
+
+    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (StopwatchService.ACTION_UPDATE.equals(intent.getAction())) {
+                elapsedTime = intent.getLongExtra(StopwatchService.EXTRA_ELAPSED_TIME, 0);
+                isRunning = intent.getBooleanExtra(StopwatchService.EXTRA_IS_RUNNING, false);
+                
+                long[] lapArray = intent.getLongExtra(StopwatchService.EXTRA_LAP_TIMES, null);
+                if (lapArray != null) {
+                    lapTimes.clear();
+                    for (long time : lapArray) {
+                        lapTimes.add(time);
+                    }
+                }
+                
+                updateDisplay(elapsedTime);
+                updateButtonStates();
+                refreshLapList();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,38 +76,42 @@ public class StopwatchActivity extends Activity {
         }
         
         setContentView(R.layout.activity_stopwatch);
-
         initViews();
         initButtonListeners();
+        updateDisplay(0);
+        updateButtonStates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(StopwatchService.ACTION_UPDATE);
+        registerReceiver(updateReceiver, filter);
         
-        if (savedInstanceState != null) {
-            elapsedTime = savedInstanceState.getLong("elapsedTime", 0);
-            isRunning = savedInstanceState.getBoolean("isRunning", false);
-            lastLapTime = savedInstanceState.getLong("lastLapTime", 0);
-            lapCount = savedInstanceState.getInt("lapCount", 0);
-            long[] lapTimesArray = savedInstanceState.getLongArray("lapTimes");
-            if (lapTimesArray != null) {
-                lapTimes.clear();
-                for (long time : lapTimesArray) {
-                    lapTimes.add(time);
-                }
-            }
-            updateDisplay(elapsedTime);
-            updateButtonStates();
-            refreshLapList();
-            if (isRunning) {
-                startTime = SystemClock.elapsedRealtime() - elapsedTime;
-                handler.postDelayed(updateRunnable, 10);
-            }
-        } else {
-            updateDisplay(0);
-            updateButtonStates();
+        Intent intent = new Intent(this, StopwatchService.class);
+        startService(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(updateReceiver);
+        
+        if (isRunning) {
+            Intent intent = new Intent(StopwatchService.ACTION_START);
+            sendBroadcast(intent);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!isRunning) {
+            stopService(new Intent(this, StopwatchService.class));
         }
     }
 
     private void initViews() {
-        handler = new Handler();
-
         stopwatchHour1 = findViewById(R.id.stopwatchHour1);
         stopwatchHour2 = findViewById(R.id.stopwatchHour2);
         stopwatchMinute1 = findViewById(R.id.stopwatchMinute1);
@@ -123,56 +147,22 @@ public class StopwatchActivity extends Activity {
 
         startStopButton.setOnClickListener(v -> {
             if (isRunning) {
-                stop();
+                sendCommand(StopwatchService.ACTION_STOP);
             } else {
-                start();
+                sendCommand(StopwatchService.ACTION_START);
             }
         });
 
-        resetButton.setOnClickListener(v -> reset());
+        resetButton.setOnClickListener(v -> sendCommand(StopwatchService.ACTION_RESET));
 
         if (lapButton != null) {
-            lapButton.setOnClickListener(v -> lap());
+            lapButton.setOnClickListener(v -> sendCommand(StopwatchService.ACTION_LAP));
         }
     }
 
-    private void start() {
-        startTime = SystemClock.elapsedRealtime() - elapsedTime;
-        isRunning = true;
-        handler.postDelayed(updateRunnable, 10);
-        updateButtonStates();
-    }
-
-    private void stop() {
-        elapsedTime = SystemClock.elapsedRealtime() - startTime;
-        isRunning = false;
-        handler.removeCallbacks(updateRunnable);
-        updateButtonStates();
-    }
-
-    private void reset() {
-        isRunning = false;
-        elapsedTime = 0L;
-        lapCount = 0;
-        lapTimes.clear();
-        lapListContainer.removeAllViews();
-        handler.removeCallbacks(updateRunnable);
-        updateDisplay(0);
-        updateButtonStates();
-    }
-
-    private void lap() {
-        if (!isRunning) return;
-        
-        long currentElapsed = SystemClock.elapsedRealtime() - startTime;
-        lapCount++;
-        lapTimes.add(currentElapsed);
-        
-        addLapItem(lapCount, currentElapsed);
-    }
-
-    private void addLapItem(int lapNum, long lapTime) {
-        refreshLapList();
+    private void sendCommand(String action) {
+        Intent intent = new Intent(action);
+        sendBroadcast(intent);
     }
 
     private void refreshLapList() {
@@ -234,17 +224,6 @@ public class StopwatchActivity extends Activity {
             lapListContainer.addView(row);
         }
     }
-
-    private Runnable updateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isRunning) {
-                elapsedTime = SystemClock.elapsedRealtime() - startTime;
-                updateDisplay(elapsedTime);
-                handler.postDelayed(this, 10);
-            }
-        }
-    };
 
     private void updateDisplay(long millis) {
         int hours = (int) (millis / 3600000);
@@ -319,16 +298,6 @@ public class StopwatchActivity extends Activity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong("elapsedTime", elapsedTime);
-        outState.putBoolean("isRunning", isRunning);
-        outState.putLong("lastLapTime", lastLapTime);
-        outState.putInt("lapCount", lapCount);
-        outState.putLongArray("lapTimes", lapTimes.stream().mapToLong(Long::longValue).toArray());
-    }
-
-    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         
@@ -341,16 +310,5 @@ public class StopwatchActivity extends Activity {
         updateDisplay(elapsedTime);
         updateButtonStates();
         refreshLapList();
-        
-        if (isRunning) {
-            startTime = SystemClock.elapsedRealtime() - elapsedTime;
-            handler.postDelayed(updateRunnable, 10);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        handler.removeCallbacks(updateRunnable);
     }
 }
