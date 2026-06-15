@@ -1080,11 +1080,11 @@ public class FullNinePalaceActivity extends Activity {
         
         expOverall.setText(getOverallAdviceSimple(isYangDun, ju, zhiFuStar, zhiShiDoor));
         
-        expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, tianPan, diPanTianGan), android.text.Html.FROM_HTML_MODE_LEGACY));
-        expNineStarsDesc.setText(android.text.Html.fromHtml(getNineStarsDesc(nineStars), android.text.Html.FROM_HTML_MODE_LEGACY));
-        expEightDoorsDesc.setText(android.text.Html.fromHtml(getEightDoorsDesc(eightDoors), android.text.Html.FROM_HTML_MODE_LEGACY));
-        expGodsDesc.setText(android.text.Html.fromHtml(getEightGodsDesc(eightGods), android.text.Html.FROM_HTML_MODE_LEGACY));
-        expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expTianDiPanDesc != null) expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, tianPan, diPanTianGan), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expNineStarsDesc != null) expNineStarsDesc.setText(android.text.Html.fromHtml(getNineStarsDesc(nineStars), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expEightDoorsDesc != null) expEightDoorsDesc.setText(android.text.Html.fromHtml(getEightDoorsDesc(eightDoors), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expGodsDesc != null) expGodsDesc.setText(android.text.Html.fromHtml(getEightGodsDesc(eightGods), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expPalacesDesc != null) expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
     }
     
     private String getTianDiPanDesc(String[] palaces, String[] tianPan, String[] diPan) {

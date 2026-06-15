@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="奇门遁甲排盘"
-                android:textColor="#BFA055"
+                android:textColor="@color/gold"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
@@ -56,15 +56,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📊 基本信息"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -74,7 +72,7 @@
                         android:id="@+id/expBasic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -83,15 +81,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="💡 综合建议"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -101,7 +97,7 @@
                         android:id="@+id/expOverall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -110,15 +106,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="⏰ 时辰运势"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -128,7 +122,7 @@
                         android:id="@+id/expTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="11sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -137,15 +131,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🧭 方位吉凶"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -155,7 +147,7 @@
                         android:id="@+id/expDirection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="11sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -164,15 +156,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="✅ 今日宜忌"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -182,7 +172,7 @@
                         android:id="@+id/expYiJi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="11sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -191,15 +181,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="⭐ 值符值使"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -209,7 +197,7 @@
                         android:id="@+id/expZhifuZhishi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="11sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -218,15 +206,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🌙 日时关系"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -236,7 +222,7 @@
                         android:id="@+id/expGan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="11sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -245,15 +231,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="6dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏠 生活提示"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
@@ -263,7 +247,7 @@
                         android:id="@+id/expLife"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#D8D4C8"
+                        android:textColor="@color/text_primary"
                         android:textSize="11sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
@@ -272,20 +256,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="3dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏛 天盘地盘"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="3dp"
                         android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expTianDiPanDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expTianDiPan"
                         android:layout_width="200dp"
@@ -297,20 +287,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="3dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="✨ 九星排布"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="3dp"
                         android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expNineStarsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expNineStars"
                         android:layout_width="200dp"
@@ -322,20 +318,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="3dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🚪 八门排布"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="3dp"
                         android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expEightDoorsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expEightDoors"
                         android:layout_width="200dp"
@@ -347,20 +349,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="3dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="👑 八神排布"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="3dp"
                         android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expGodsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expGods"
                         android:layout_width="200dp"
@@ -372,20 +380,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/card_border"
                     android:padding="5dp"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
+                    android:layout_marginBottom="8dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏯 各宫详解"
-                        android:textColor="#BFA055"
+                        android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="3dp"
                         android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expPalacesDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expPalaces"
                         android:layout_width="200dp"

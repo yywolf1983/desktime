@@ -49,7 +49,7 @@ public class StopwatchActivity extends Activity {
                 elapsedTime = intent.getLongExtra(StopwatchService.EXTRA_ELAPSED_TIME, 0);
                 isRunning = intent.getBooleanExtra(StopwatchService.EXTRA_IS_RUNNING, false);
                 
-                long[] lapArray = intent.getLongExtra(StopwatchService.EXTRA_LAP_TIMES, null);
+                long[] lapArray = intent.getLongArrayExtra(StopwatchService.EXTRA_LAP_TIMES);
                 if (lapArray != null) {
                     lapTimes.clear();
                     for (long time : lapArray) {

@@ -103,9 +103,9 @@ public class JieqiActivity extends Activity {
             hou1.setText("初候 · ");
             hou2.setText("二候 · ");
             hou3.setText("三候 · ");
-            hou1Desc.setText("");
-            hou2Desc.setText("");
-            hou3Desc.setText("");
+            if (hou1Desc != null) hou1Desc.setText("");
+            if (hou2Desc != null) hou2Desc.setText("");
+            if (hou3Desc != null) hou3Desc.setText("");
             tradition.setText("");
             return;
         }
@@ -116,9 +116,9 @@ public class JieqiActivity extends Activity {
         hou1.setText("初候 · " + info.hou1);
         hou2.setText("二候 · " + info.hou2);
         hou3.setText("三候 · " + info.hou3);
-        hou1Desc.setText(info.hou1Desc);
-        hou2Desc.setText(info.hou2Desc);
-        hou3Desc.setText(info.hou3Desc);
+        if (hou1Desc != null) hou1Desc.setText(info.hou1Desc);
+        if (hou2Desc != null) hou2Desc.setText(info.hou2Desc);
+        if (hou3Desc != null) hou3Desc.setText(info.hou3Desc);
         tradition.setText(info.tradition);
 
         displayHouDays();
