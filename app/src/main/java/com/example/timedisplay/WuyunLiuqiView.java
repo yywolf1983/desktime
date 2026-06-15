@@ -138,16 +138,8 @@ public class WuyunLiuqiView extends View {
             
             boolean isCurrent = i == currentShichenIndex;
             
-            if (isCurrent) {
-                glowPaint.setAlpha(40);
-                canvas.drawRoundRect(left - 3, top - 3, right + 3, bottom + 3, cornerRadius + 6, cornerRadius + 6, glowPaint);
-                
-                paint.setColor(Color.parseColor("#FFD700"));
-                paint.setAlpha(120);
-            } else {
-                paint.setColor(Color.parseColor("#1a1a2e"));
-                paint.setAlpha(190);
-            }
+            paint.setColor(Color.parseColor("#1a1a2e"));
+            paint.setAlpha(190);
             paint.setStyle(Paint.Style.FILL);
             canvas.drawRoundRect(left + cellPadding, top + cellPadding, right - cellPadding, bottom - cellPadding, cornerRadius, cornerRadius, paint);
             
@@ -155,38 +147,32 @@ public class WuyunLiuqiView extends View {
                 highlightPaint.setStrokeWidth(3);
                 highlightPaint.setColor(Color.parseColor("#FFD700"));
                 canvas.drawRoundRect(left + cellPadding, top + cellPadding, right - cellPadding, bottom - cellPadding, cornerRadius, cornerRadius, highlightPaint);
-                
-                highlightPaint.setStrokeWidth(1.5f);
-                highlightPaint.setColor(Color.parseColor("#FFFFFF"));
-                highlightPaint.setAlpha(50);
-                canvas.drawRoundRect(left + cellPadding + 2, top + cellPadding + 2, right - cellPadding - 2, bottom - cellPadding - 2, cornerRadius - 2, cornerRadius - 2, highlightPaint);
             }
             
             float centerX = (left + right) / 2;
             float centerY = (top + bottom) / 2;
             float availableHeight = bottom - top - cellPadding * 2;
-            float textSpacing = availableHeight * 0.15f;
             
-            float nameSize = Math.max(minCell * 0.35f, 14f);
+            float nameSize = Math.max(minCell * 0.32f, 14f);
             textPaint.setTextSize(nameSize);
-            textPaint.setColor(isCurrent ? Color.parseColor("#0A0A14") : Color.parseColor("#FFD700"));
+            textPaint.setColor(isCurrent ? Color.parseColor("#FFD700") : Color.parseColor("#FFD700"));
             textPaint.setFakeBoldText(true);
-            canvas.drawText(shichenNames[i], centerX, centerY - availableHeight * 0.22f, textPaint);
+            canvas.drawText(shichenNames[i], centerX, centerY - availableHeight * 0.15f, textPaint);
             
             float timeSize = Math.max(minCell * 0.14f, 8f);
             textPaint.setTextSize(timeSize);
-            textPaint.setColor(isCurrent ? Color.parseColor("#1a1a2e") : Color.parseColor("#87CEEB"));
+            textPaint.setColor(isCurrent ? Color.parseColor("#87CEEB") : Color.parseColor("#87CEEB"));
             textPaint.setFakeBoldText(false);
-            canvas.drawText(shichenTimes[i], centerX, centerY - availableHeight * 0.05f, textPaint);
+            canvas.drawText(shichenTimes[i], centerX, centerY + availableHeight * 0.03f, textPaint);
             
             float labelSize = Math.max(minCell * 0.12f, 7f);
             textPaint.setTextSize(labelSize);
-            textPaint.setColor(isCurrent ? Color.parseColor("#2a2a3e") : Color.parseColor("#ADD8E6"));
-            canvas.drawText(wuxingLabels[i], centerX, centerY + availableHeight * 0.12f, textPaint);
+            textPaint.setColor(isCurrent ? Color.parseColor("#ADD8E6") : Color.parseColor("#ADD8E6"));
+            canvas.drawText(wuxingLabels[i], centerX, centerY + availableHeight * 0.20f, textPaint);
             
             textPaint.setTextSize(labelSize);
-            textPaint.setColor(isCurrent ? Color.parseColor("#2a2a3e") : Color.parseColor("#90EE90"));
-            canvas.drawText(meridianLabels[i], centerX, centerY + availableHeight * 0.28f, textPaint);
+            textPaint.setColor(isCurrent ? Color.parseColor("#90EE90") : Color.parseColor("#90EE90"));
+            canvas.drawText(meridianLabels[i], centerX, centerY + availableHeight * 0.35f, textPaint);
         }
     }
 }

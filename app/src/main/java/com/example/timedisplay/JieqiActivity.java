@@ -22,6 +22,9 @@ public class JieqiActivity extends Activity {
     private TextView hou1;
     private TextView hou2;
     private TextView hou3;
+    private TextView hou1Desc;
+    private TextView hou2Desc;
+    private TextView hou3Desc;
     private TextView hou1Days;
     private TextView hou2Days;
     private TextView hou3Days;
@@ -53,6 +56,9 @@ public class JieqiActivity extends Activity {
         hou1 = findViewById(R.id.hou1);
         hou2 = findViewById(R.id.hou2);
         hou3 = findViewById(R.id.hou3);
+        hou1Desc = findViewById(R.id.hou1Desc);
+        hou2Desc = findViewById(R.id.hou2Desc);
+        hou3Desc = findViewById(R.id.hou3Desc);
         hou1Days = findViewById(R.id.hou1Days);
         hou2Days = findViewById(R.id.hou2Days);
         hou3Days = findViewById(R.id.hou3Days);
@@ -97,6 +103,9 @@ public class JieqiActivity extends Activity {
             hou1.setText("初候 · ");
             hou2.setText("二候 · ");
             hou3.setText("三候 · ");
+            hou1Desc.setText("");
+            hou2Desc.setText("");
+            hou3Desc.setText("");
             tradition.setText("");
             return;
         }
@@ -107,6 +116,9 @@ public class JieqiActivity extends Activity {
         hou1.setText("初候 · " + info.hou1);
         hou2.setText("二候 · " + info.hou2);
         hou3.setText("三候 · " + info.hou3);
+        hou1Desc.setText(info.hou1Desc);
+        hou2Desc.setText(info.hou2Desc);
+        hou3Desc.setText(info.hou3Desc);
         tradition.setText(info.tradition);
 
         displayHouDays();

@@ -175,72 +175,111 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="8dp"
                     android:layout_marginBottom="4dp">
-                    <TextView
-                        android:id="@+id/hou1"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:id="@+id/hou1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:textColor="@color/gold"/>
+                        <TextView
+                            android:id="@+id/hou1Days"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"
+                            android:paddingStart="8dp"/>
+                    </LinearLayout>
                     <TextView
-                        android:id="@+id/hou1Days"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/hou1Desc"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:textColor="@color/gold"
-                        android:textStyle="bold"
-                        android:paddingStart="8dp"/>
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:paddingTop="4dp"
+                        android:paddingStart="4dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="8dp"
                     android:layout_marginBottom="4dp">
-                    <TextView
-                        android:id="@+id/hou2"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:id="@+id/hou2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:textColor="@color/gold"/>
+                        <TextView
+                            android:id="@+id/hou2Days"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"
+                            android:paddingStart="8dp"/>
+                    </LinearLayout>
                     <TextView
-                        android:id="@+id/hou2Days"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/hou2Desc"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:textColor="@color/gold"
-                        android:textStyle="bold"
-                        android:paddingStart="8dp"/>
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:paddingTop="4dp"
+                        android:paddingStart="4dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="8dp">
-                    <TextView
-                        android:id="@+id/hou3"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:id="@+id/hou3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:textColor="@color/gold"/>
+                        <TextView
+                            android:id="@+id/hou3Days"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"
+                            android:paddingStart="8dp"/>
+                    </LinearLayout>
                     <TextView
-                        android:id="@+id/hou3Days"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/hou3Desc"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:textColor="@color/gold"
-                        android:textStyle="bold"
-                        android:paddingStart="8dp"/>
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:paddingTop="4dp"
+                        android:paddingStart="4dp"/>
                 </LinearLayout>
 
                 <TextView
