@@ -294,7 +294,7 @@ public class StopwatchActivity extends Activity {
     private void updateButtonStates() {
         if (isRunning) {
             startStopButton.setText("停止");
-            startStopButton.setTextColor(0xFF0A0A14);
+            startStopButton.setTextColor(getResources().getColor(R.color.danger));
             resetButton.setEnabled(false);
             resetButton.setAlpha(0.5f);
             if (lapButton != null) {
@@ -303,7 +303,7 @@ public class StopwatchActivity extends Activity {
             }
         } else {
             startStopButton.setText("开始");
-            startStopButton.setTextColor(0xFF0A0A14);
+            startStopButton.setTextColor(getResources().getColor(R.color.gold));
             if (elapsedTime > 0) {
                 resetButton.setEnabled(true);
                 resetButton.setAlpha(1.0f);
