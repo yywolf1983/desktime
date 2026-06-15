@@ -328,8 +328,9 @@ public class NinePalacePanel extends View {
         setCopyInfo(jieqi, ju, isYangDun);
         
         // 3. 排地盘天干（戊、己、庚、辛、壬、癸、丁、丙、乙）
-        // 规则：几局 = 戊落第几宫
-        String[] diPanTianGan = arrangeDiPanTianGanStandard(ju);
+        // 规则：几局 = 戊落第几宫，阳遁为正，阴遁为负
+        int diPanJu = isYangDun ? ju : -ju;
+        String[] diPanTianGan = arrangeDiPanTianGanStandard(diPanJu);
         
         // 4. 确定旬首、值符、值使
         Object[] xunShouInfo = getXunShouInfo(timeGan, timeZhi);
@@ -678,11 +679,35 @@ public class NinePalacePanel extends View {
     }
     
     // 排地盘天干（标准算法）
-    // 传统规则：戊一宫、己二宫、庚三宫、辛四宫、壬五宫、癸六宫、丁七宫、丙八宫、乙九宫
-    // 无论阳遁阴遁，地盘天干顺序固定不变
+    // 传统规则：阳遁n局，戊落第n宫，顺时针排布；阴遁n局，戊落第(10-n)宫，逆时针排布
     private String[] arrangeDiPanTianGanStandard(int ju) {
-        // 地盘天干固定顺序（宫位0-8对应坎一到离九宫）
-        return new String[]{"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        String[] result = new String[9];
+        String[] tianGanOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        
+        // 确定戊的起始位置
+        // 阳遁：1局→坎一宫(0), 2局→坤二宫(1), ..., 9局→离九宫(8)
+        // 阴遁：1局→离九宫(8), 2局→艮八宫(7), ..., 9局→坎一宫(0)
+        int startPos = ju - 1;
+        
+        // 阳遁顺时针排布，阴遁逆时针排布（通过调用者传入的ju已经考虑了阴阳遁差异）
+        // ju为正时是阳遁，ju为负时是阴遁
+        if (ju > 0) {
+            // 阳遁：顺时针
+            for (int i = 0; i < 9; i++) {
+                int pos = (startPos + i) % 9;
+                result[pos] = tianGanOrder[i];
+            }
+        } else {
+            // 阴遁：逆时针
+            int yinJu = -ju;
+            startPos = 9 - yinJu;
+            for (int i = 0; i < 9; i++) {
+                int pos = (startPos - i + 9) % 9;
+                result[pos] = tianGanOrder[i];
+            }
+        }
+        
+        return result;
     }
     
     // 获取时干在地盘的位置

@@ -385,8 +385,9 @@ public class FullNinePalaceActivity extends Activity {
         String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
         String dayGan = dayPillar != null && dayPillar.length() >= 1 ? dayPillar.substring(0, 1) : "甲";
 
-        // 1. 排地盘（固定顺序）
-        String[] diPanTianGan = arrangeDiPanTianGanStandard();
+        // 1. 排地盘（根据局数和阴阳遁）
+        int diPanJu = isYangDun ? ju : -ju;
+        String[] diPanTianGan = arrangeDiPanTianGanStandard(diPanJu);
 
         // 2. 确定旬首、值符、值使
         Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi);
@@ -540,8 +541,26 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     // 排地盘天干（标准算法）
-    private String[] arrangeDiPanTianGanStandard() {
-        return new String[]{"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+    private String[] arrangeDiPanTianGanStandard(int ju) {
+        String[] result = new String[9];
+        String[] tianGanOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        
+        if (ju > 0) {
+            int startPos = ju - 1;
+            for (int i = 0; i < 9; i++) {
+                int pos = (startPos + i) % 9;
+                result[pos] = tianGanOrder[i];
+            }
+        } else {
+            int yinJu = -ju;
+            int startPos = 9 - yinJu;
+            for (int i = 0; i < 9; i++) {
+                int pos = (startPos - i + 9) % 9;
+                result[pos] = tianGanOrder[i];
+            }
+        }
+        
+        return result;
     }
     
     // 获取时干位置
@@ -853,7 +872,8 @@ public class FullNinePalaceActivity extends Activity {
         String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
         String dayGan = dayPillar != null && dayPillar.length() >= 1 ? dayPillar.substring(0, 1) : "甲";
 
-        String[] diPanTianGan = arrangeDiPanTianGanStandard();
+        int diPanJu = isYangDun ? ju : -ju;
+        String[] diPanTianGan = arrangeDiPanTianGanStandard(diPanJu);
         Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi);
         String zhiFuStar = (String) xunShouInfo[1];
         String zhiShiDoor = (String) xunShouInfo[2];

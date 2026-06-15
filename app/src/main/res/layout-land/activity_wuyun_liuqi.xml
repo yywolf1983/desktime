@@ -66,13 +66,20 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:id="@+id/currentShichenInfo"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#87CEEB"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="2dp" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical">
+
+                        <TextView
+                            android:id="@+id/currentShichenInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#87CEEB"
+                            android:textSize="14sp"
+                            android:lineSpacingExtra="2dp" />
+                    </ScrollView>
                 </LinearLayout>
 
                 <!-- 五运卡片 -->
@@ -94,13 +101,20 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:id="@+id/wuyunInfo"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#87CEEB"
-                        android:textSize="13sp"
-                        android:lineSpacingExtra="2dp" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical">
+
+                        <TextView
+                            android:id="@+id/wuyunInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#87CEEB"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="2dp" />
+                    </ScrollView>
                 </LinearLayout>
             </LinearLayout>
 
@@ -132,13 +146,20 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:id="@+id/liuqiInfo"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#87CEEB"
-                        android:textSize="13sp"
-                        android:lineSpacingExtra="2dp" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical">
+
+                        <TextView
+                            android:id="@+id/liuqiInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#87CEEB"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="2dp" />
+                    </ScrollView>
                 </LinearLayout>
 
                 <!-- 养生卡片 -->
@@ -160,13 +181,20 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:id="@+id/shichenDetail"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#87CEEB"
-                        android:textSize="13sp"
-                        android:lineSpacingExtra="2dp" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical">
+
+                        <TextView
+                            android:id="@+id/shichenDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#87CEEB"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="2dp" />
+                    </ScrollView>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

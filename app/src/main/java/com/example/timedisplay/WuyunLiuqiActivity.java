@@ -189,7 +189,9 @@ public class WuyunLiuqiActivity extends Activity {
         info.append("<font color='#DDA0DD'>").append(WUXING_SHEJI[index]).append("</font><br/>");
         info.append("<font color='#FF8C00'>").append(SHICHEN_WUYIN[index]).append("</font> ");
         info.append("<font color='#87CEEB'>").append(SHICHEN_FANGWEI[index]).append("</font>");
-        currentShichenInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (currentShichenInfo != null) {
+            currentShichenInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
         
         StringBuilder yiJi = new StringBuilder();
         String[] parts = SHICHEN_YIJI[index].split("\\n");
@@ -206,7 +208,9 @@ public class WuyunLiuqiActivity extends Activity {
             }
             if (i < parts.length - 1) yiJi.append("<br/>");
         }
-        shichenDetail.setText(android.text.Html.fromHtml(yiJi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (shichenDetail != null) {
+            shichenDetail.setText(android.text.Html.fromHtml(yiJi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
     }
     
     private void updateWuyunDisplay(String yearGanZhi) {
@@ -233,7 +237,9 @@ public class WuyunLiuqiActivity extends Activity {
             info.append("<font color='#6B7B8A'>(").append(yunDetails[i][0]).append("·").append(yunDetails[i][1]).append(")</font>");
             if (i < 4) info.append("<br/>");
         }
-        wuyunInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (wuyunInfo != null) {
+            wuyunInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
     }
     
     private void updateLiuqiDisplay(int year, int month, int day) {
@@ -254,7 +260,9 @@ public class WuyunLiuqiActivity extends Activity {
             }
             if (i < 5) qiInfo.append("<br/>");
         }
-        liuqiInfo.setText(android.text.Html.fromHtml(qiInfo.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (liuqiInfo != null) {
+            liuqiInfo.setText(android.text.Html.fromHtml(qiInfo.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
         
         StringBuilder qiDetail = new StringBuilder();
         String[][] qiDetails = {
@@ -271,7 +279,9 @@ public class WuyunLiuqiActivity extends Activity {
             qiDetail.append("<font color='#6B7B8A'>：").append(qiDetails[i][1]).append("</font>");
             if (i < 5) qiDetail.append("<br/>");
         }
-        liuqiDetail.setText(android.text.Html.fromHtml(qiDetail.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (liuqiDetail != null) {
+            liuqiDetail.setText(android.text.Html.fromHtml(qiDetail.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
     }
     
     
