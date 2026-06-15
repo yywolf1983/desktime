@@ -208,8 +208,12 @@ public class CircularNinePalacePanel extends View {
         String luck = "平";
         if (dataParts.length > 1) {
             String thirdLine = dataParts[1];
-            if (thirdLine.contains("吉")) {
+            if (thirdLine.contains("平吉")) {
+                luck = "平吉";
+            } else if (thirdLine.contains("吉")) {
                 luck = "吉";
+            } else if (thirdLine.contains("平凶")) {
+                luck = "平凶";
             } else if (thirdLine.contains("凶")) {
                 luck = "凶";
             }
@@ -217,8 +221,12 @@ public class CircularNinePalacePanel extends View {
         
         if (luck.equals("吉")) {
             textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
+        } else if (luck.equals("平吉")) {
+            textPaint.setColor(Color.argb((int)(brightness * 200), 122, 154, 96));
         } else if (luck.equals("凶")) {
             textPaint.setColor(Color.argb((int)(brightness * 255), 255, 140, 140));
+        } else if (luck.equals("平凶")) {
+            textPaint.setColor(Color.argb((int)(brightness * 200), 196, 123, 94));
         } else {
             textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
         }
@@ -267,8 +275,12 @@ public class CircularNinePalacePanel extends View {
         String luck = "平";
         if (dataParts.length > 1) {
             String thirdLine = dataParts[1];
-            if (thirdLine.contains("吉")) {
+            if (thirdLine.contains("平吉")) {
+                luck = "平吉";
+            } else if (thirdLine.contains("吉")) {
                 luck = "吉";
+            } else if (thirdLine.contains("平凶")) {
+                luck = "平凶";
             } else if (thirdLine.contains("凶")) {
                 luck = "凶";
             }
@@ -276,8 +288,12 @@ public class CircularNinePalacePanel extends View {
         
         if (luck.equals("吉")) {
             textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
+        } else if (luck.equals("平吉")) {
+            textPaint.setColor(Color.argb((int)(brightness * 200), 122, 154, 96));
         } else if (luck.equals("凶")) {
             textPaint.setColor(Color.argb((int)(brightness * 255), 255, 140, 140));
+        } else if (luck.equals("平凶")) {
+            textPaint.setColor(Color.argb((int)(brightness * 200), 196, 123, 94));
         } else {
             textPaint.setColor(Color.argb((int)(brightness * 255), 255, 255, 255));
         }

@@ -115,10 +115,14 @@ public class DetailedNinePalacePanel extends View {
             String luck = luckData[i] != null ? luckData[i] : "平";
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
-            } else if (luck.contains("吉")) {
+            } else if (luck.equals("吉")) {
                 borderPaint.setColor(COLOR_GREEN);
-            } else if (luck.contains("凶")) {
+            } else if (luck.equals("平吉")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 150), 122, 154, 96));
+            } else if (luck.equals("凶")) {
                 borderPaint.setColor(COLOR_RED);
+            } else if (luck.equals("平凶")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 150), 196, 123, 94));
             } else {
                 borderPaint.setColor(COLOR_BORDER);
             }
@@ -127,10 +131,14 @@ public class DetailedNinePalacePanel extends View {
             float x = offsetX + (col + 0.5f) * cellSize;
             float y = offsetY + (row + 0.22f) * cellSize;
 
-            if (luck.contains("吉")) {
+            if (luck.equals("吉")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
-            } else if (luck.contains("凶")) {
+            } else if (luck.equals("平吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 200), 122, 154, 96));
+            } else if (luck.equals("凶")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 255, 140, 140));
+            } else if (luck.equals("平凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 200), 196, 123, 94));
             } else {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
             }

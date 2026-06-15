@@ -147,9 +147,17 @@ public class NinePalacePanel extends View {
             if (dataParts.length > 1) {
                 String thirdLine = dataParts[1];
                 if (thirdLine.contains("吉")) {
-                    luck = "吉";
+                    if (thirdLine.contains("平吉")) {
+                        luck = "平吉";
+                    } else {
+                        luck = "吉";
+                    }
                 } else if (thirdLine.contains("凶")) {
-                    luck = "凶";
+                    if (thirdLine.contains("平凶")) {
+                        luck = "平凶";
+                    } else {
+                        luck = "凶";
+                    }
                 }
             }
 
@@ -163,8 +171,12 @@ public class NinePalacePanel extends View {
                 borderPaint.setColor(COLOR_GOLD);
             } else if (luck.equals("吉")) {
                 borderPaint.setColor(COLOR_GREEN);
+            } else if (luck.equals("平吉")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 150), 122, 154, 96));
             } else if (luck.equals("凶")) {
                 borderPaint.setColor(COLOR_RED);
+            } else if (luck.equals("平凶")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 150), 196, 123, 94));
             } else {
                 borderPaint.setColor(COLOR_BORDER);
             }
@@ -175,8 +187,12 @@ public class NinePalacePanel extends View {
 
             if (luck.equals("吉")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
+            } else if (luck.equals("平吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 200), 122, 154, 96));
             } else if (luck.equals("凶")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 255, 140, 140));
+            } else if (luck.equals("平凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 200), 196, 123, 94));
             } else {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
             }
@@ -364,7 +380,7 @@ public class NinePalacePanel extends View {
             String wangCuiValue = wangCui[i];
             
             // 计算吉凶标识（基于星门组合）
-            String luck = getLuckSymbol(star, door);
+            String luck = getLuckSymbol(star, door, god, wangCuiValue);
             
             // 第一行：宫名 + 方位符号 + 方位文字
             String directionText = getDirectionText(i);
@@ -548,18 +564,67 @@ public class NinePalacePanel extends View {
         return guaSymbols[palaceIndex];
     }
     
-    // 获取吉凶符号
     private String getLuckSymbol(String star, String door) {
-        // 简单的吉凶判断算法
-        // 吉星：天辅、天心、天禽、天任
-        // 吉门：开、休、生
-        boolean isLuckyStar = (star.equals("天辅") || star.equals("天心") || star.equals("天禽") || star.equals("天任"));
-        boolean isLuckyDoor = (door.equals("开") || door.equals("休") || door.equals("生"));
+        return getLuckSymbol(star, door, null, null);
+    }
+    
+    private String getLuckSymbol(String star, String door, String god, String wangCui) {
+        int score = 0;
         
-        if (isLuckyStar && isLuckyDoor) {
+        if (star != null) {
+            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽") || star.equals("天任")) {
+                score += 2;
+            } else if (star.equals("天蓬") || star.equals("天芮") || star.equals("天柱")) {
+                score -= 2;
+            } else if (star.equals("天英")) {
+                score -= 1;
+            } else if (star.equals("天冲")) {
+                score += 0;
+            }
+        }
+        
+        if (door != null && !door.isEmpty()) {
+            if (door.equals("开") || door.equals("休") || door.equals("生")) {
+                score += 2;
+            } else if (door.equals("死") || door.equals("伤") || door.equals("惊")) {
+                score -= 2;
+            } else if (door.equals("杜") || door.equals("景")) {
+                score += 0;
+            }
+        }
+        
+        if (god != null && !god.isEmpty()) {
+            if (god.equals("值符") || god.equals("九天") || god.equals("太阴") || god.equals("六合")) {
+                score += 1;
+            } else if (god.equals("螣蛇") || god.equals("白虎") || god.equals("玄武")) {
+                score -= 1;
+            } else if (god.equals("九地")) {
+                score += 0;
+            }
+        }
+        
+        if (wangCui != null) {
+            if (wangCui.equals("旺")) {
+                score += 2;
+            } else if (wangCui.equals("相")) {
+                score += 1;
+            } else if (wangCui.equals("休")) {
+                score += 0;
+            } else if (wangCui.equals("囚")) {
+                score -= 1;
+            } else if (wangCui.equals("死")) {
+                score -= 2;
+            }
+        }
+        
+        if (score >= 3) {
             return "吉";
-        } else if (isLuckyStar || isLuckyDoor) {
+        } else if (score >= 1) {
+            return "平吉";
+        } else if (score >= -1) {
             return "平";
+        } else if (score >= -3) {
+            return "平凶";
         } else {
             return "凶";
         }
@@ -771,10 +836,12 @@ public class NinePalacePanel extends View {
     // 排八神（标准算法）
     private String[] arrangeEightGodsStandard(int zhiFuPalace, boolean isYangDun) {
         String[] eightGods = new String[9];
-        String[] bashenOrder = {"值符", "螣蛇", "太阴", "六合", "白虎", "玄武", "九地", "九天"};
+        String[] yangShenOrder = {"值符", "螣蛇", "太阴", "六合", "白虎", "玄武", "九地", "九天"};
+        String[] yinShenOrder = {"值符", "九天", "九地", "玄武", "白虎", "六合", "太阴", "螣蛇"};
+        
+        String[] bashenOrder = isYangDun ? yangShenOrder : yinShenOrder;
         
         if (isYangDun) {
-            // 阳遁：从值符落宫开始顺时针排布八神，跳过中五宫
             int currentGodIndex = 0;
             int pos = zhiFuPalace;
             while (currentGodIndex < 8) {
@@ -785,7 +852,6 @@ public class NinePalacePanel extends View {
                 pos = (pos + 1) % 9;
             }
         } else {
-            // 阴遁：从值符落宫开始逆时针排布八神，跳过中五宫
             int currentGodIndex = 0;
             int pos = zhiFuPalace;
             while (currentGodIndex < 8) {
@@ -796,7 +862,6 @@ public class NinePalacePanel extends View {
                 pos = (pos - 1 + 9) % 9;
             }
         }
-        // 中五宫无神
         eightGods[4] = "";
         return eightGods;
     }

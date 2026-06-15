@@ -31,13 +31,13 @@ public class DirectionNinePalaceView extends View {
         "北", "西南", "东", "东南", "", "西北", "西", "东北", "南"
     };
     
-    private static final int COLOR_BG_CARD = Color.argb(255, 25, 28, 38);
-    private static final int COLOR_BG_PRIMARY = Color.argb(255, 15, 18, 25);
-    private static final int COLOR_GOLD = Color.argb(255, 191, 160, 85);
-    private static final int COLOR_GREEN = Color.argb(255, 144, 238, 144);
-    private static final int COLOR_RED = Color.argb(255, 255, 140, 140);
-    private static final int COLOR_BLUE = Color.argb(255, 135, 206, 235);
-    private static final int COLOR_BORDER = Color.argb(100, 216, 212, 200);
+    private static final int COLOR_BG_CARD = 0xFF191C26;
+    private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
+    private static final int COLOR_GOLD = 0xFFBFA055;
+    private static final int COLOR_GREEN = 0xFF7A9A60;
+    private static final int COLOR_RED = 0xFFC47B5E;
+    private static final int COLOR_BLUE = 0xFF87CEEB;
+    private static final int COLOR_BORDER = 0xFF262A36;
     
     public DirectionNinePalaceView(Context context) {
         super(context);
@@ -131,24 +131,32 @@ public class DirectionNinePalaceView extends View {
             String luck = luckData[i] != null ? luckData[i] : "平";
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
-            } else if (luck.contains("吉")) {
+            } else if (luck.equals("吉")) {
                 borderPaint.setColor(COLOR_GREEN);
-            } else if (luck.contains("凶")) {
+            } else if (luck.equals("平吉")) {
+                borderPaint.setColor(Color.argb(150, 122, 154, 96));
+            } else if (luck.equals("凶")) {
                 borderPaint.setColor(COLOR_RED);
+            } else if (luck.equals("平凶")) {
+                borderPaint.setColor(Color.argb(150, 196, 123, 94));
             } else {
                 borderPaint.setColor(COLOR_BORDER);
             }
-            borderPaint.setStrokeWidth(1f);
+            borderPaint.setStrokeWidth(2f);
             borderPaint.setStyle(Paint.Style.STROKE);
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
             
             float x = offsetX + (col + 0.5f) * cellSize;
             float y = offsetY + (row + 0.16f) * cellSize;
             
-            if (luck.contains("吉")) {
-                textPaint.setColor(COLOR_GREEN);
-            } else if (luck.contains("凶")) {
-                textPaint.setColor(COLOR_RED);
+            if (luck.equals("吉")) {
+                textPaint.setColor(Color.argb(255, 144, 238, 144));
+            } else if (luck.equals("平吉")) {
+                textPaint.setColor(Color.argb(200, 122, 154, 96));
+            } else if (luck.equals("凶")) {
+                textPaint.setColor(Color.argb(255, 255, 140, 140));
+            } else if (luck.equals("平凶")) {
+                textPaint.setColor(Color.argb(200, 196, 123, 94));
             } else {
                 textPaint.setColor(COLOR_BLUE);
             }
@@ -184,10 +192,14 @@ public class DirectionNinePalaceView extends View {
             
             y += cellSize * 0.18f;
             textPaint.setTextSize(cellSize * 0.12f);
-            if (luck.contains("吉")) {
-                textPaint.setColor(COLOR_GREEN);
-            } else if (luck.contains("凶")) {
-                textPaint.setColor(COLOR_RED);
+            if (luck.equals("吉")) {
+                textPaint.setColor(Color.argb(255, 144, 238, 144));
+            } else if (luck.equals("平吉")) {
+                textPaint.setColor(Color.argb(200, 122, 154, 96));
+            } else if (luck.equals("凶")) {
+                textPaint.setColor(Color.argb(255, 255, 140, 140));
+            } else if (luck.equals("平凶")) {
+                textPaint.setColor(Color.argb(200, 196, 123, 94));
             } else {
                 textPaint.setColor(Color.argb(180, 216, 212, 200));
             }
