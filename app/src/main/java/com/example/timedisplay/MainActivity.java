@@ -142,6 +142,13 @@ public class MainActivity extends Activity {
         timeFortuneTextView.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(MainActivity.this, WuyunLiuqiActivity.class);
+                if (isCustomTime && customCalendar != null) {
+                    intent.putExtra("custom_year", customCalendar.get(Calendar.YEAR));
+                    intent.putExtra("custom_month", customCalendar.get(Calendar.MONTH) + 1);
+                    intent.putExtra("custom_day", customCalendar.get(Calendar.DAY_OF_MONTH));
+                    intent.putExtra("custom_hour", customCalendar.get(Calendar.HOUR_OF_DAY));
+                    intent.putExtra("custom_minute", customCalendar.get(Calendar.MINUTE));
+                }
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();

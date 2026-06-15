@@ -26,6 +26,7 @@ public class WuyunLiuqiActivity extends Activity {
     private TextView liuqiDetail;
     private TextView shichenDetail;
     
+    private Calendar customCalendar = null;
     private Handler updateHandler;
     private Runnable updateRunnable;
     
@@ -111,8 +112,22 @@ public class WuyunLiuqiActivity extends Activity {
         
         setContentView(R.layout.activity_wuyun_liuqi);
         
+        loadCustomTime();
         initViews();
         setupUpdateHandler();
+    }
+    
+    private void loadCustomTime() {
+        if (getIntent().hasExtra("custom_year")) {
+            customCalendar = Calendar.getInstance();
+            customCalendar.set(Calendar.YEAR, getIntent().getIntExtra("custom_year", 0));
+            customCalendar.set(Calendar.MONTH, getIntent().getIntExtra("custom_month", 1) - 1);
+            customCalendar.set(Calendar.DAY_OF_MONTH, getIntent().getIntExtra("custom_day", 1));
+            customCalendar.set(Calendar.HOUR_OF_DAY, getIntent().getIntExtra("custom_hour", 0));
+            customCalendar.set(Calendar.MINUTE, getIntent().getIntExtra("custom_minute", 0));
+            customCalendar.set(Calendar.SECOND, 0);
+            customCalendar.set(Calendar.MILLISECOND, 0);
+        }
     }
     
     private void initViews() {
@@ -141,9 +156,13 @@ public class WuyunLiuqiActivity extends Activity {
     }
     
     private void updateWuyunLiuqiInfo() {
-        Date now = new Date();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
+        
+        if (customCalendar != null) {
+            calendar = (Calendar) customCalendar.clone();
+        } else {
+            calendar.setTime(new Date());
+        }
         
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
