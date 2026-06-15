@@ -73,7 +73,7 @@ public class SevenSegmentDisplay extends View {
         if (heightMode == MeasureSpec.EXACTLY) {
             setMeasuredDimension(widthSize, heightSize);
         } else {
-            int calculatedHeight = (int) (widthSize * 1.8f);
+            int calculatedHeight = (int) (widthSize * 1.4f);
             setMeasuredDimension(widthSize, calculatedHeight);
         }
     }
