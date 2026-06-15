@@ -290,8 +290,16 @@
                         android:text="🏠 八宅吉凶"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
-                        android:layout_marginBottom="6dp"
+                        android:layout_marginBottom="4dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/bazhaiDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
 
                     <com.example.timedisplay.DirectionNinePalaceView
                         android:id="@+id/bazhaiNinePalace"
@@ -313,8 +321,16 @@
                         android:text="✨ 九星飞宫"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
-                        android:layout_marginBottom="6dp"
+                        android:layout_marginBottom="4dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/jiuxingDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
 
                     <com.example.timedisplay.DirectionNinePalaceView
                         android:id="@+id/jiuxingNinePalace"
@@ -336,8 +352,16 @@
                         android:text="🚪 八门遁法"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
-                        android:layout_marginBottom="6dp"
+                        android:layout_marginBottom="4dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/bamenDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
 
                     <com.example.timedisplay.DirectionNinePalaceView
                         android:id="@+id/bamenNinePalace"

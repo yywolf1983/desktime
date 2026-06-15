@@ -32,6 +32,11 @@ public class FullNinePalaceActivity extends Activity {
     private DetailedNinePalacePanel expPalaces;
     private TextView expTime;
     private TextView expOverall;
+    private TextView expTianDiPanDesc;
+    private TextView expNineStarsDesc;
+    private TextView expEightDoorsDesc;
+    private TextView expGodsDesc;
+    private TextView expPalacesDesc;
 
     private static final long UPDATE_INTERVAL = 60000;
     private Handler updateHandler;
@@ -118,6 +123,11 @@ public class FullNinePalaceActivity extends Activity {
         expPalaces = (DetailedNinePalacePanel) findViewById(R.id.expPalaces);
         expTime = (TextView) findViewById(R.id.expTime);
         expOverall = (TextView) findViewById(R.id.expOverall);
+        expTianDiPanDesc = (TextView) findViewById(R.id.expTianDiPanDesc);
+        expNineStarsDesc = (TextView) findViewById(R.id.expNineStarsDesc);
+        expEightDoorsDesc = (TextView) findViewById(R.id.expEightDoorsDesc);
+        expGodsDesc = (TextView) findViewById(R.id.expGodsDesc);
+        expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
 
         updateHandler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
@@ -1018,15 +1028,12 @@ public class FullNinePalaceActivity extends Activity {
         sbLife.append("👤 日干").append(dayGan).append("落").append(riGanPalace >= 0 ? PALACE_NAMES[riGanPalace] : "--").append("(").append(riGanLuck).append(")\n");
         sbLife.append("⏰ 时干").append(timeGan).append("落").append(shiGanPalace >= 0 ? PALACE_NAMES[shiGanPalace] : "--").append("(").append(shiGanLuck).append(")\n");
         sbLife.append("\n");
-        sbLife.append("💼 事业：").append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("💰 财运：").append(getWealthAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("💕 感情：").append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("💪 健康：").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("📚 学习：").append(getStudyAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("🚗 出行：").append(getTravelAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("🍽 饮食：").append(getDietAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("🤝 人际：").append(getSocialAdvice(zhiShiDoor, zhiFuStar)).append("\n");
-        sbLife.append("🌿 心态：").append(getMindAdvice(zhiShiDoor, zhiFuStar));
+        
+        sbLife.append("💼 ").append(getCareerAdviceShort(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("💰 ").append(getWealthAdviceShort(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("💪 ").append(getHealthAdviceShort(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("💕 ").append(getRelationshipAdviceShort(zhiShiDoor, zhiFuStar)).append("\n");
+        sbLife.append("🚗 ").append(getTravelAdviceShort(zhiShiDoor, zhiFuStar));
         expLife.setText(sbLife.toString());
         
         String[][] palacesData = new String[9][3];
@@ -1040,12 +1047,126 @@ public class FullNinePalaceActivity extends Activity {
         expPalaces.setPalaceData(palacesData);
         expPalaces.setLuckData(luckData);
         
+        String[] palaceTips = new String[9];
+        for (int i = 0; i < 9; i++) {
+            palaceTips[i] = getPalaceTip(i, PALACE_NAMES[i], nineStars[i], eightDoors[i], eightGods[i]);
+        }
+        expPalaces.setPalaceTips(palaceTips);
+        
         StringBuilder sbTime = new StringBuilder();
         sbTime.append(getShichenName(timeZhi)).append(" ").append(timeGan).append(timeZhi).append("(").append(shiGanWuXing).append(")\n");
         sbTime.append(getTimeFortune(timeZhi, zhiShiDoor, zhiFuStar));
         expTime.setText(sbTime.toString());
         
         expOverall.setText(getOverallAdviceSimple(isYangDun, ju, zhiFuStar, zhiShiDoor));
+        
+        expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, tianPan, diPanTianGan), android.text.Html.FROM_HTML_MODE_LEGACY));
+        expNineStarsDesc.setText(android.text.Html.fromHtml(getNineStarsDesc(nineStars), android.text.Html.FROM_HTML_MODE_LEGACY));
+        expEightDoorsDesc.setText(android.text.Html.fromHtml(getEightDoorsDesc(eightDoors), android.text.Html.FROM_HTML_MODE_LEGACY));
+        expGodsDesc.setText(android.text.Html.fromHtml(getEightGodsDesc(eightGods), android.text.Html.FROM_HTML_MODE_LEGACY));
+        expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
+    }
+    
+    private String getTianDiPanDesc(String[] palaces, String[] tianPan, String[] diPan) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>天盘代表天时，地盘代表地利。</font><br/>");
+        for (int i = 0; i < 9; i++) {
+            if (!tianPan[i].isEmpty() && !tianPan[i].equals("--")) {
+                String palace = palaces[i];
+                desc.append("<font color='#98D8F0'>").append(palace).append("宫</font>：");
+                desc.append("<font color='#FFD700'>天").append(tianPan[i]).append("</font>/");
+                desc.append("<font color='#FFA500'>地").append(diPan[i]).append("</font><br/>");
+            }
+        }
+        return desc.toString();
+    }
+    
+    private String getNineStarsDesc(String[] stars) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>九星主天时吉凶，决定事情发展趋势。</font><br/>");
+        for (int i = 0; i < 9; i++) {
+            if (!stars[i].isEmpty()) {
+                String star = stars[i];
+                String meaning = getStarMeaningShort(star);
+                String starColor = "#FFD700";
+                String meaningColor = (star.equals("天辅") || star.equals("天心") || star.equals("天禽")) ? "#90EE90" :
+                                      (star.equals("天芮") || star.equals("天冲")) ? "#FF6B6B" : "#90EE90";
+                desc.append("<font color='").append(starColor).append("'>").append(star).append("星</font>：");
+                desc.append("<font color='").append(meaningColor).append("'>").append(meaning).append("</font><br/>");
+            }
+        }
+        return desc.toString();
+    }
+    
+    private String getEightDoorsDesc(String[] doors) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>八门主人事吉凶，决定行动成败。</font><br/>");
+        for (int i = 0; i < 9; i++) {
+            if (doors[i] != null && !doors[i].isEmpty()) {
+                String door = doors[i];
+                String meaning = getDoorMeaningShort(door);
+                String doorColor = "#FFD700";
+                String meaningColor;
+                if (door.equals("开") || door.equals("生") || door.equals("休")) {
+                    meaningColor = "#90EE90";
+                } else if (door.equals("死") || door.equals("伤") || door.equals("惊")) {
+                    meaningColor = "#FF6B6B";
+                } else {
+                    meaningColor = "#FFD700";
+                }
+                desc.append("<font color='").append(doorColor).append("'>").append(door).append("门</font>：");
+                desc.append("<font color='").append(meaningColor).append("'>").append(meaning).append("</font><br/>");
+            }
+        }
+        return desc.toString();
+    }
+    
+    private String getEightGodsDesc(String[] gods) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>八神主外部环境与神秘力量影响。</font><br/>");
+        for (int i = 0; i < 9; i++) {
+            if (gods[i] != null && !gods[i].isEmpty()) {
+                String god = gods[i];
+                String meaning = getGodMeaningShort(god);
+                String godColor = "#FFD700";
+                String meaningColor;
+                if (god.equals("值符") || god.equals("九天") || god.equals("太阴")) {
+                    meaningColor = "#90EE90";
+                } else if (god.equals("白虎") || god.equals("玄武") || god.equals("螣蛇")) {
+                    meaningColor = "#FF6B6B";
+                } else {
+                    meaningColor = "#DDA0DD";
+                }
+                desc.append("<font color='").append(godColor).append("'>").append(god).append("</font>：");
+                desc.append("<font color='").append(meaningColor).append("'>").append(meaning).append("</font><br/>");
+            }
+        }
+        return desc.toString();
+    }
+    
+    private String getPalacesDesc(String[] palaces, String[] stars, String[] doors, String[] gods, String[] lucks) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>各宫综合分析：</font><br/>");
+        for (int i = 0; i < 9; i++) {
+            String palace = palaces[i];
+            String star = stars[i];
+            String door = doors[i];
+            String god = gods[i];
+            String luck = lucks[i];
+            desc.append("<font color='#98D8F0'>").append(palace).append("宫</font>");
+            if (!star.isEmpty()) {
+                desc.append("·<font color='#FFD700'>").append(star).append("星</font>");
+            }
+            if (door != null && !door.isEmpty()) {
+                desc.append("·<font color='#90EE90'>").append(door).append("门</font>");
+            }
+            if (god != null && !god.isEmpty()) {
+                desc.append("·<font color='#DDA0DD'>").append(god).append("</font>");
+            }
+            String luckColor = luck.contains("吉") ? "#90EE90" : (luck.contains("凶") ? "#FF6B6B" : "#8899AA");
+            desc.append("(<font color='").append(luckColor).append("'>").append(luck).append("</font>)<br/>");
+        }
+        return desc.toString();
     }
     
     private String getZhifuAdvice(String star) {
@@ -1481,6 +1602,127 @@ public class FullNinePalaceActivity extends Activity {
             default: base = "保持平常心，顺其自然";
         }
         return base;
+    }
+    
+    private String getCareerAdviceShort(String door, String star) {
+        if (door == null) return "谨慎行事";
+        switch (door) {
+            case "开": return "事业运强，适合开拓";
+            case "生": return "财运事业两旺";
+            case "休": return "宜休整学习";
+            case "景": return "宜展示才华";
+            case "伤": return "防事业受损";
+            case "杜": return "事业受阻";
+            case "死": return "事业低迷";
+            case "惊": return "防口舌是非";
+            default: return "事业平稳";
+        }
+    }
+    
+    private String getWealthAdviceShort(String door, String star) {
+        if (door == null) return "谨慎理财";
+        switch (door) {
+            case "生": return "财运旺盛";
+            case "开": return "财源广进";
+            case "休": return "宜稳健储蓄";
+            case "景": return "财运一般";
+            case "伤": return "防破财";
+            case "杜": return "求财困难";
+            case "死": return "不宜投资";
+            case "惊": return "防财务纠纷";
+            default: return "财运平稳";
+        }
+    }
+    
+    private String getHealthAdviceShort(String door, String star) {
+        if (door == null) return "注意保养";
+        switch (door) {
+            case "休": return "宜养生休息";
+            case "生": return "身体状态佳";
+            case "开": return "精力充沛";
+            case "景": return "宜户外活动";
+            case "伤": return "防意外损伤";
+            case "杜": return "宜静心调养";
+            case "死": return "注意健康";
+            case "惊": return "防精神紧张";
+            default: return "健康平稳";
+        }
+    }
+    
+    private String getRelationshipAdviceShort(String door, String star) {
+        if (door == null) return "谨慎交往";
+        switch (door) {
+            case "休": return "人际关系和谐";
+            case "生": return "感情运势佳";
+            case "开": return "社交运势好";
+            case "景": return "宜展示魅力";
+            case "惊": return "防感情风波";
+            case "伤": return "感情易受伤";
+            case "死": return "感情冷淡";
+            case "杜": return "沟通不畅";
+            default: return "感情平稳";
+        }
+    }
+    
+    private String getTravelAdviceShort(String door, String star) {
+        if (door == null) return "谨慎出行";
+        switch (door) {
+            case "开": return "出行顺利";
+            case "生": return "利于远行";
+            case "休": return "宜短途出行";
+            case "景": return "宜观光游览";
+            case "伤": return "防交通意外";
+            case "杜": return "出行受阻";
+            case "死": return "不宜远行";
+            case "惊": return "防旅途不安";
+            default: return "出行平稳";
+        }
+    }
+    
+    private String getPalaceTip(int index, String palace, String star, String door, String god) {
+        StringBuilder tip = new StringBuilder();
+        
+        switch (palace) {
+            case "坎": tip.append("北方水"); break;
+            case "坤": tip.append("西南土"); break;
+            case "震": tip.append("东方木"); break;
+            case "巽": tip.append("东南木"); break;
+            case "中": tip.append("中央土"); break;
+            case "乾": tip.append("西北金"); break;
+            case "兑": tip.append("西方金"); break;
+            case "艮": tip.append("东北土"); break;
+            case "离": tip.append("南方火"); break;
+        }
+        
+        tip.append("·");
+        
+        if (door != null && !door.isEmpty()) {
+            switch (door) {
+                case "开": tip.append("宜开拓"); break;
+                case "生": tip.append("宜求财"); break;
+                case "休": tip.append("宜休息"); break;
+                case "景": tip.append("宜展示"); break;
+                case "伤": tip.append("防损伤"); break;
+                case "杜": tip.append("防阻塞"); break;
+                case "死": tip.append("防衰败"); break;
+                case "惊": tip.append("防口舌"); break;
+            }
+        } else {
+            tip.append("平稳");
+        }
+        
+        if (star != null && !star.isEmpty()) {
+            tip.append("·");
+            if (star.equals("天辅") || star.equals("天心")) {
+                tip.append("吉");
+            } else if (star.equals("天蓬") || star.equals("天任")) {
+                tip.append("中");
+            } else {
+                tip.append("平");
+            }
+        }
+        
+        return tip.toString();
     }
     
     private String getStarMeaning(String star) {

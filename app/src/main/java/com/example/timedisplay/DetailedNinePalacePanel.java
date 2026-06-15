@@ -16,6 +16,7 @@ public class DetailedNinePalacePanel extends View {
     private Paint borderPaint;
     private String[][] palaceData;
     private String[] luckData;
+    private String[] palaceTips;
     private float brightness = 1.0f;
     
     private static final int COLOR_BG_CARD = 0xFF191C26;
@@ -67,11 +68,13 @@ public class DetailedNinePalacePanel extends View {
 
         palaceData = new String[9][3];
         luckData = new String[9];
+        palaceTips = new String[9];
         for (int i = 0; i < 9; i++) {
             palaceData[i][0] = "";
             palaceData[i][1] = "";
             palaceData[i][2] = "";
             luckData[i] = "平";
+            palaceTips[i] = "";
         }
     }
 
@@ -122,7 +125,7 @@ public class DetailedNinePalacePanel extends View {
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
 
             float x = offsetX + (col + 0.5f) * cellSize;
-            float y = offsetY + (row + 0.28f) * cellSize;
+            float y = offsetY + (row + 0.22f) * cellSize;
 
             if (luck.contains("吉")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
@@ -132,19 +135,26 @@ public class DetailedNinePalacePanel extends View {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
             }
 
-            textPaint.setTextSize(cellSize * 0.15f);
+            textPaint.setTextSize(cellSize * 0.14f);
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
-            y += cellSize * 0.24f;
-            textPaint.setTextSize(cellSize * 0.14f);
+            y += cellSize * 0.22f;
+            textPaint.setTextSize(cellSize * 0.12f);
             textPaint.setColor(Color.argb((int)(brightness * 200), 191, 160, 85));
             canvas.drawText(palaceData[i][1], x, y, textPaint);
 
             if (!palaceData[i][2].isEmpty()) {
-                y += cellSize * 0.24f;
-                textPaint.setTextSize(cellSize * 0.13f);
+                y += cellSize * 0.22f;
+                textPaint.setTextSize(cellSize * 0.11f);
                 textPaint.setColor(Color.argb((int)(brightness * 180), 216, 212, 200));
                 canvas.drawText(palaceData[i][2], x, y, textPaint);
+            }
+
+            if (palaceTips[i] != null && !palaceTips[i].isEmpty()) {
+                y += cellSize * 0.20f;
+                textPaint.setTextSize(cellSize * 0.09f);
+                textPaint.setColor(Color.argb((int)(brightness * 160), 255, 215, 0));
+                canvas.drawText(palaceTips[i], x, y, textPaint);
             }
         }
     }
@@ -163,6 +173,13 @@ public class DetailedNinePalacePanel extends View {
     public void setLuckData(String[] luck) {
         if (luck != null && luck.length == 9) {
             System.arraycopy(luck, 0, luckData, 0, 9);
+            invalidate();
+        }
+    }
+
+    public void setPalaceTips(String[] tips) {
+        if (tips != null && tips.length == 9) {
+            System.arraycopy(tips, 0, palaceTips, 0, 9);
             invalidate();
         }
     }

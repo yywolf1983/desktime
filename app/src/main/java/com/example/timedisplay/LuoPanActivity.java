@@ -32,6 +32,9 @@ public class LuoPanActivity extends Activity {
     private DirectionNinePalaceView bazhaiNinePalace;
     private DirectionNinePalaceView jiuxingNinePalace;
     private DirectionNinePalaceView bamenNinePalace;
+    private TextView bazhaiDesc;
+    private TextView jiuxingDesc;
+    private TextView bamenDesc;
     private TextView buildingAdvice;
     private TextView mingliInfo;
     private TextView summaryInfo;
@@ -74,6 +77,9 @@ public class LuoPanActivity extends Activity {
         bazhaiNinePalace = findViewById(R.id.bazhaiNinePalace);
         jiuxingNinePalace = findViewById(R.id.jiuxingNinePalace);
         bamenNinePalace = findViewById(R.id.bamenNinePalace);
+        bazhaiDesc = findViewById(R.id.bazhaiDesc);
+        jiuxingDesc = findViewById(R.id.jiuxingDesc);
+        bamenDesc = findViewById(R.id.bamenDesc);
         buildingAdvice = findViewById(R.id.buildingAdvice);
         mingliInfo = findViewById(R.id.mingliInfo);
         summaryInfo = findViewById(R.id.summaryInfo);
@@ -115,6 +121,17 @@ public class LuoPanActivity extends Activity {
         shuishaAnalysis.setText(getShuiShaAnalysis(mountain));
         
         String[] currentDirections = getCurrentDirections();
+        
+        if (bazhaiDesc != null) {
+            bazhaiDesc.setText(android.text.Html.fromHtml(getBazhaiDesc(bagua), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
+        if (jiuxingDesc != null) {
+            jiuxingDesc.setText(android.text.Html.fromHtml(getJiuxingDesc(bagua), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
+        if (bamenDesc != null) {
+            bamenDesc.setText(android.text.Html.fromHtml(getBamenDesc(bagua), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
+        
         if (bazhaiNinePalace != null) {
             setupBazhaiNinePalace(bagua, currentDirections);
         }
@@ -512,6 +529,147 @@ public class LuoPanActivity extends Activity {
         }
         
         return "八宅吉凶方位需结合具体布局";
+    }
+    
+    private String getBazhaiDesc(String bagua) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>八宅将住宅分为八方位，以坐山为伏位，根据五行生克判断吉凶。</font><br/>");
+        
+        String[][] bazhaiData = {
+            {"坎", "巽", "震", "艮", "乾", "兑", "离", "坤"},
+            {"离", "乾", "兑", "巽", "艮", "震", "坎", "坤"},
+            {"震", "离", "坤", "兑", "巽", "坎", "乾", "艮"},
+            {"兑", "艮", "坎", "坤", "震", "离", "巽", "乾"},
+            {"巽", "坎", "艮", "离", "坤", "乾", "兑", "震"},
+            {"艮", "兑", "巽", "坎", "离", "坤", "震", "乾"},
+            {"坤", "震", "离", "兑", "坎", "艮", "乾", "巽"},
+            {"乾", "离", "震", "巽", "兑", "坎", "坤", "艮"}
+        };
+        
+        String[] baguaNames = {"坎", "离", "震", "兑", "巽", "艮", "坤", "乾"};
+        String[] names = {"生气", "天医", "延年", "伏位", "祸害", "六煞", "五鬼", "绝命"};
+        String[] luckColors = {"#90EE90", "#98FB98", "#ADFF2F", "#FFD700", "#FFA07A", "#FF8C00", "#FF6347", "#DC143C"};
+        
+        int idx = 0;
+        for (int i = 0; i < 8; i++) {
+            if (baguaNames[i].equals(bagua)) {
+                idx = i;
+                break;
+            }
+        }
+        
+        for (int i = 0; i < 8; i++) {
+            String pos = bazhaiData[idx][i];
+            String name = names[i];
+            desc.append("<font color='#98D8F0'>").append(pos).append("宫</font>：");
+            desc.append("<font color='").append(luckColors[i]).append("'>").append(name).append("</font>");
+            if (i < 3) {
+                desc.append(" <font color='#8899AA'>(");
+                if (i == 0) desc.append("主财");
+                else if (i == 1) desc.append("主寿");
+                else desc.append("主贵");
+                desc.append(")</font>");
+            } else if (i > 3) {
+                desc.append(" <font color='#8899AA'>(");
+                if (i == 4) desc.append("主病");
+                else if (i == 5) desc.append("主灾");
+                else if (i == 6) desc.append("主祸");
+                else desc.append("主绝");
+                desc.append(")</font>");
+            }
+            if (i < 7) desc.append("<br/>");
+        }
+        
+        return desc.toString();
+    }
+    
+    private String getJiuxingDesc(String bagua) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>九星按洛书顺序飞布九宫，一白贪狼起中宫，依序排列。</font><br/>");
+        
+        String[] stars = {"一白贪狼", "二黑巨门", "三碧禄存", "四绿文曲", "五黄廉贞", "六白武曲", "七赤破军", "八白左辅", "九紫右弼"};
+        String[] luckColors = {"#90EE90", "#DC143C", "#FF6347", "#98FB98", "#DC143C", "#ADFF2F", "#FF6347", "#98FB98", "#ADFF2F"};
+        String[] wuxing = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
+        String[] meanings = {"主财", "主病", "主争", "主文", "主灾", "主官", "主盗", "主富", "主贵"};
+        
+        int[][] jiuxingPositions = {
+            {0, 1, 2, 3, 4, 5, 6, 7, 8},
+            {8, 0, 1, 2, 3, 4, 5, 6, 7},
+            {2, 3, 4, 5, 6, 7, 8, 0, 1},
+            {6, 7, 8, 0, 1, 2, 3, 4, 5},
+            {3, 4, 5, 6, 7, 8, 0, 1, 2},
+            {7, 8, 0, 1, 2, 3, 4, 5, 6},
+            {1, 2, 3, 4, 5, 6, 7, 8, 0},
+            {5, 6, 7, 8, 0, 1, 2, 3, 4}
+        };
+        
+        String[] baguaNames = {"坎", "离", "震", "兑", "巽", "艮", "坤", "乾"};
+        String[] palaceNames = {"坎一宫", "坤二宫", "震三宫", "巽四宫", "中五宫", "乾六宫", "兑七宫", "艮八宫", "离九宫"};
+        
+        int idx = 0;
+        for (int i = 0; i < 8; i++) {
+            if (baguaNames[i].equals(bagua)) {
+                idx = i;
+                break;
+            }
+        }
+        
+        for (int i = 0; i < 9; i++) {
+            int starIdx = jiuxingPositions[idx][i];
+            String star = stars[starIdx];
+            if (i == 4) {
+                desc.append("<font color='#98D8F0'>中五宫</font>：");
+            } else {
+                desc.append("<font color='#98D8F0'>").append(palaceNames[i]).append("</font>：");
+            }
+            desc.append("<font color='").append(luckColors[starIdx]).append("'>").append(star).append("</font>");
+            desc.append(" <font color='#8899AA'>(").append(wuxing[starIdx]).append("·").append(meanings[starIdx]).append(")</font>");
+            if (i < 8) desc.append("<br/>");
+        }
+        
+        return desc.toString();
+    }
+    
+    private String getBamenDesc(String bagua) {
+        StringBuilder desc = new StringBuilder();
+        desc.append("<font color='#8899AA'>八门随九星飞布，休生开为吉门，死伤惊为凶门，杜景为平门。</font><br/>");
+        
+        String[] doors = {"休门", "生门", "伤门", "杜门", "景门", "死门", "惊门", "开门"};
+        String[] luckColors = {"#98FB98", "#90EE90", "#FF6347", "#FFD700", "#FFD700", "#DC143C", "#FF6347", "#ADFF2F"};
+        String[] meanings = {"主休", "主财", "主伤", "主闭", "主景", "主死", "主惊", "主开"};
+        
+        int[][] bamenPositions = {
+            {0, 1, 2, 3, 4, 5, 6, 7},
+            {4, 5, 6, 7, 0, 1, 2, 3},
+            {2, 3, 4, 5, 6, 7, 0, 1},
+            {6, 7, 0, 1, 2, 3, 4, 5},
+            {3, 4, 5, 6, 7, 0, 1, 2},
+            {1, 2, 3, 4, 5, 6, 7, 0},
+            {5, 6, 7, 0, 1, 2, 3, 4},
+            {7, 0, 1, 2, 3, 4, 5, 6}
+        };
+        
+        String[] baguaNames = {"坎", "离", "震", "兑", "巽", "艮", "坤", "乾"};
+        String[] palaceNames = {"坎一宫", "坤二宫", "震三宫", "巽四宫", "乾六宫", "兑七宫", "艮八宫", "离九宫"};
+        
+        int idx = 0;
+        for (int i = 0; i < 8; i++) {
+            if (baguaNames[i].equals(bagua)) {
+                idx = i;
+                break;
+            }
+        }
+        
+        for (int i = 0; i < 8; i++) {
+            int doorIdx = bamenPositions[idx][i];
+            String door = doors[doorIdx];
+            desc.append("<font color='#98D8F0'>").append(palaceNames[i]).append("</font>：");
+            desc.append("<font color='").append(luckColors[doorIdx]).append("'>").append(door).append("</font>");
+            desc.append(" <font color='#8899AA'>(").append(meanings[doorIdx]).append(")</font>");
+            if (i < 7) desc.append("<br/>");
+        }
+        
+        return desc.toString();
     }
     
     private String getJiuXingAnalysis(String bagua) {

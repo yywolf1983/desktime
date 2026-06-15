@@ -23,6 +23,7 @@ public class WuyunLiuqiActivity extends Activity {
     private TextView currentShichenInfo;
     private TextView wuyunInfo;
     private TextView liuqiInfo;
+    private TextView liuqiDetail;
     private TextView shichenDetail;
     
     private Handler updateHandler;
@@ -119,6 +120,7 @@ public class WuyunLiuqiActivity extends Activity {
         currentShichenInfo = findViewById(R.id.currentShichenInfo);
         wuyunInfo = findViewById(R.id.wuyunInfo);
         liuqiInfo = findViewById(R.id.liuqiInfo);
+        liuqiDetail = findViewById(R.id.liuqiDetail);
         shichenDetail = findViewById(R.id.shichenDetail);
     }
     
@@ -159,10 +161,33 @@ public class WuyunLiuqiActivity extends Activity {
     }
     
     private void updateShichenInfo(int index) {
-        String info = "⏰ " + SHICHEN_TIMES[index] + "\n📍 " + SHICHEN_QUOTES[index] + " " + WUXING_ZODIAC[index] + "\n💫 " + SHICHEN_ZANGFU[index] + "经 " + WUXING_SHEJI[index] + "\n🎵 " + SHICHEN_WUYIN[index] + " " + SHICHEN_FANGWEI[index];
-        currentShichenInfo.setText(info);
+        StringBuilder info = new StringBuilder();
+        info.append("<font color='#FFD700'>").append(SHICHEN_NAMES[index]).append("时</font> ");
+        info.append("<font color='#98D8F0'>").append(SHICHEN_TIMES[index]).append("</font><br/>");
+        info.append("<font color='#87CEEB'>").append(SHICHEN_QUOTES[index]).append("</font> ");
+        info.append("<font color='#FFA500'>").append(WUXING_ZODIAC[index]).append("</font><br/>");
+        info.append("<font color='#90EE90'>").append(SHICHEN_ZANGFU[index]).append("经</font> ");
+        info.append("<font color='#DDA0DD'>").append(WUXING_SHEJI[index]).append("</font><br/>");
+        info.append("<font color='#FF8C00'>").append(SHICHEN_WUYIN[index]).append("</font> ");
+        info.append("<font color='#87CEEB'>").append(SHICHEN_FANGWEI[index]).append("</font>");
+        currentShichenInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
-        shichenDetail.setText(SHICHEN_YIJI[index]);
+        StringBuilder yiJi = new StringBuilder();
+        String[] parts = SHICHEN_YIJI[index].split("\\n");
+        for (int i = 0; i < parts.length; i++) {
+            String part = parts[i];
+            if (part.startsWith("宜：")) {
+                yiJi.append("<font color='#90EE90'>宜：").append(part.substring(2)).append("</font>");
+            } else if (part.startsWith("忌：")) {
+                yiJi.append("<font color='#FF6B6B'>忌：").append(part.substring(2)).append("</font>");
+            } else if (part.startsWith("💡")) {
+                yiJi.append("<font color='#FFD700'>").append(part).append("</font>");
+            } else {
+                yiJi.append(part);
+            }
+            if (i < parts.length - 1) yiJi.append("<br/>");
+        }
+        shichenDetail.setText(android.text.Html.fromHtml(yiJi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
     }
     
     private void updateWuyunDisplay(String yearGanZhi) {
@@ -171,19 +196,25 @@ public class WuyunLiuqiActivity extends Activity {
         String[] sijiYun = getSijiYun(yearGan);
         
         String[][] yunDetails = {
-            {"木", "主生发、生长"},
-            {"火", "主炎热、繁荣"},
-            {"土", "主孕育、稳定"},
-            {"金", "主收敛、收获"},
-            {"水", "主潜藏、储备"}
+            {"木", "主生发、生长", "#90EE90"},
+            {"火", "主炎热、繁荣", "#FF6B6B"},
+            {"土", "主孕育、稳定", "#DEB887"},
+            {"金", "主收敛、收获", "#C0C0C0"},
+            {"水", "主潜藏、储备", "#87CEEB"}
         };
         
-        String info = "📅 干支：" + yearGanZhi + "\n🌟 中运：" + zhongYun + "\n\n";
+        StringBuilder info = new StringBuilder();
+        info.append("<font color='#FFD700'>").append(yearGanZhi).append("年</font><br/>");
+        info.append("<font color='#87CEEB'>中运：").append(zhongYun).append("</font><br/><br/>");
+        
+        String[] labels = {"初运", "二运", "三运", "四运", "终运"};
         for (int i = 0; i < 5; i++) {
-            String[] labels = {"初运", "二运", "三运", "四运", "终运"};
-            info += "▫️ " + labels[i] + sijiYun[i] + "运(" + yunDetails[i][0] + ")：" + yunDetails[i][1] + "\n";
+            info.append("<font color='#98D8F0'>").append(labels[i]).append("</font> ");
+            info.append("<font color='").append(yunDetails[i][2]).append("'>").append(sijiYun[i]).append("运</font> ");
+            info.append("<font color='#6B7B8A'>(").append(yunDetails[i][0]).append("·").append(yunDetails[i][1]).append(")</font>");
+            if (i < 4) info.append("<br/>");
         }
-        wuyunInfo.setText(info);
+        wuyunInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
     }
     
     private void updateLiuqiDisplay(int year, int month, int day) {
@@ -191,46 +222,37 @@ public class WuyunLiuqiActivity extends Activity {
         int currentQiIndex = getCurrentQiIndex(month, day);
         
         String[] qiNames = {"初气", "二气", "三气", "四气", "五气", "终气"};
-        String[] qiDetails = {
-            "厥阴风木：风气为主，主生发、疾病多风证",
-            "少阴君火：热气为主，主温热、疾病多热证",
-            "少阳相火：火气为主，主炎热、疾病多火证",
-            "太阴湿土：湿气为主，主湿润、疾病多湿证",
-            "阳明燥金：燥气为主，主干燥、疾病多燥证",
-            "太阳寒水：寒气为主，主寒冷、疾病多寒证"
-        };
+        String[] qiColors = {"#90EE90", "#FF6B6B", "#FF8C00", "#DEB887", "#C0C0C0", "#87CEEB"};
         
-        StringBuilder sb = new StringBuilder();
+        StringBuilder qiInfo = new StringBuilder();
         for (int i = 0; i < 6; i++) {
             if (i == currentQiIndex) {
-                sb.append("▶ ").append(qiNames[i]).append(" ").append(liuqi[i]).append(" ◀\n");
+                qiInfo.append("<font color='#FFD700'>▶ ").append(qiNames[i]).append("</font> ");
+                qiInfo.append("<font color='#90EE90'><b>").append(liuqi[i]).append("</b></font>");
             } else {
-                sb.append("▫️ ").append(qiNames[i]).append(" ").append(liuqi[i]).append("\n");
+                qiInfo.append("<font color='#6B7B8A'>▫️ ").append(qiNames[i]).append("</font> ");
+                qiInfo.append("<font color='").append(qiColors[i]).append("'>").append(liuqi[i]).append("</font>");
             }
+            if (i < 5) qiInfo.append("<br/>");
         }
+        liuqiInfo.setText(android.text.Html.fromHtml(qiInfo.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
-        sb.append("\n【六气详解】\n");
+        StringBuilder qiDetail = new StringBuilder();
+        String[][] qiDetails = {
+            {"厥阴风木", "风气为主，主生发、疾病多风证", "#90EE90"},
+            {"少阴君火", "热气为主，主温热、疾病多热证", "#FF6B6B"},
+            {"少阳相火", "火气为主，主炎热、疾病多火证", "#FF8C00"},
+            {"太阴湿土", "湿气为主，主湿润、疾病多湿证", "#DEB887"},
+            {"阳明燥金", "燥气为主，主干燥、疾病多燥证", "#C0C0C0"},
+            {"太阳寒水", "寒气为主，主寒冷、疾病多寒证", "#87CEEB"}
+        };
+        
         for (int i = 0; i < 6; i++) {
-            sb.append(qiDetails[i]).append("\n");
+            qiDetail.append("<font color='").append(qiDetails[i][2]).append("'>").append(qiDetails[i][0]).append("</font>");
+            qiDetail.append("<font color='#6B7B8A'>：").append(qiDetails[i][1]).append("</font>");
+            if (i < 5) qiDetail.append("<br/>");
         }
-        
-        String fullText = sb.toString();
-        
-        int startPos = fullText.indexOf("【六气详解】");
-        if (startPos != -1) {
-            SpannableString spannable = new SpannableString(fullText);
-            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD700")), startPos, startPos + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            
-            int currentStart = fullText.indexOf("▶ ");
-            int currentEnd = fullText.indexOf(" ◀");
-            if (currentStart != -1 && currentEnd != -1) {
-                spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#90EE90")), currentStart, currentEnd + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            
-            liuqiInfo.setText(spannable);
-        } else {
-            liuqiInfo.setText(fullText);
-        }
+        liuqiDetail.setText(android.text.Html.fromHtml(qiDetail.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
     }
     
     

@@ -11,28 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="6dp">
 
         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="6dp"
+        android:layout_marginBottom="6dp">
+
+        <com.example.timedisplay.WuyunLiuqiView
+            android:id="@+id/wuyunLiuqiView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.2"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_height="match_parent" />
 
-            <com.example.timedisplay.WuyunLiuqiView
-                android:id="@+id/wuyunLiuqiView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+    </LinearLayout>
 
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="4dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:padding="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,80 +40,106 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_marginHorizontal="3dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⏰ 当令"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/currentShichenInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌿 养生宜忌"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/shichenDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="10dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_marginEnd="4dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="⏰ 当令"
-                            android:textColor="@color/gold"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:layout_marginBottom="6dp" />
-
-                        <TextView
-                            android:id="@+id/currentShichenInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:lineSpacingExtra="3dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🌿 养生宜忌"
-                            android:textColor="@color/gold"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="6dp" />
-
-                        <TextView
-                            android:id="@+id/shichenDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:lineSpacingExtra="3dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="10dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginHorizontal="4dp">
+                        android:padding="8dp"
+                        android:layout_marginHorizontal="3dp"
+                        android:layout_marginEnd="3dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🌟 五运"
                             android:textColor="@color/gold"
-                            android:textSize="14sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
-                            android:layout_marginBottom="6dp" />
+                            android:layout_marginBottom="4dp" />
 
                         <TextView
                             android:id="@+id/wuyunInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="2dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginHorizontal="3dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="💨 六气"
+                            android:textColor="@color/gold"
                             android:textSize="13sp"
-                            android:lineSpacingExtra="3dp" />
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/liuqiInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="2dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -121,26 +147,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:layout_marginTop="8dp">
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginTop="6dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💨 六气"
-                        android:textColor="@color/gold"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="6dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📖 六气详解"
+                            android:textColor="@color/gold"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:id="@+id/liuqiInfo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="13sp"
-                        android:lineSpacingExtra="3dp" />
+                        <TextView
+                            android:id="@+id/liuqiDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="2dp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

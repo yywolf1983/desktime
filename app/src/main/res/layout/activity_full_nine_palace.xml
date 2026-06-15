@@ -272,9 +272,16 @@
                         android:textColor="@color/gold"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expTianDiPanDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expTianDiPan"
                         android:layout_width="240dp"
@@ -296,9 +303,16 @@
                         android:textColor="@color/gold"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expNineStarsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expNineStars"
                         android:layout_width="240dp"
@@ -320,9 +334,16 @@
                         android:textColor="@color/gold"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expEightDoorsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expEightDoors"
                         android:layout_width="240dp"
@@ -344,9 +365,16 @@
                         android:textColor="@color/gold"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expGodsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expGods"
                         android:layout_width="240dp"
@@ -368,9 +396,16 @@
                         android:textColor="@color/gold"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="2dp"
                         android:letterSpacing="0.02"/>
+                    <TextView
+                        android:id="@+id/expPalacesDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
                         android:id="@+id/expPalaces"
                         android:layout_width="240dp"
