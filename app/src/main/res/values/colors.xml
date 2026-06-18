@@ -16,6 +16,7 @@
     
     <color name="gold">#FFD700</color>
     <color name="gold_light">#FFE87C</color>
+    <color name="gold_faint">#CCB866</color>
     <color name="gold_dark">#FFB800</color>
     <color name="gold_transparent">#40FFD700</color>
     

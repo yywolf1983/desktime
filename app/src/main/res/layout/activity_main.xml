@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="@color/text_primary"
+                android:textColor="#6B8DD6"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.08"
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/gold"
+                android:textColor="#FFB84D"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:paddingStart="12dp"
@@ -140,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:textColor="@color/gold"
+                android:textColor="#FFD700"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.08"
@@ -175,24 +175,27 @@
                 android:id="@+id/timeFortuneTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textColor="#8FBC8F"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:letterSpacing="0.02"
+                android:letterSpacing="0.04"
                 tools:text="子时(23-1点): 阴气最重，宜静养安神" />
 
             <TextView
-                android:id="@+id/ninePalaceExplanation"
+                android:id="@+id/panExplanation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textColor="#B19CD9"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:letterSpacing="0.08"
-                tools:text="九宫格基于当前四柱信息计算" />
+                android:maxLines="2"
+                android:lineSpacingExtra="3dp"
+                android:paddingHorizontal="8dp"
+                tools:text="阳遁格局 文星主事 利于文书 开门见喜\n事易成就 气场旺盛 万事通达 宜积极进取" />
         </LinearLayout>
 
         <LinearLayout

@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
     public TextView ninePalaceExplanation;
     public TextView detailedInterpretation;
     public TextView timeFortuneTextView;
+    public TextView panExplanation;
     public NinePalacePanel ninePalacePanel;
     private android.view.ViewGroup mainLayout;
     private LinearLayout timeContainer;
@@ -78,8 +79,9 @@ public class MainActivity extends Activity {
         resetTimeButton = findViewById(R.id.resetTimeButton);
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
         copyButton = findViewById(R.id.copyButton);
-        ninePalaceExplanation = findViewById(R.id.ninePalaceExplanation);
+        ninePalaceExplanation = findViewById(R.id.panExplanation);
         timeFortuneTextView = findViewById(R.id.timeFortuneTextView);
+        panExplanation = findViewById(R.id.panExplanation);
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
         mainLayout = findViewById(R.id.mainLayout);
         timeContainer = findViewById(R.id.timeContainer);
@@ -436,7 +438,6 @@ public class MainActivity extends Activity {
         // 设置日期和四柱文字颜色，使用新添加的颜色资源
         dateTextView.setTextColor(0xFF87CEEB); // sky_blue
         fourPillarsTextView.setTextColor(0xFFADD8E6); // light_blue
-        ninePalaceExplanation.setTextColor(0xFF00BFFF); // deep_sky_blue
     }
 
     // 更新四柱显示
@@ -685,10 +686,81 @@ public class MainActivity extends Activity {
         return hourGan + hourZhi;
     }
 
+    private String[] getZhiFuPhrases(String star) {
+        if (star == null) return new String[]{"星位不明", "需再观察"};
+        switch (star) {
+            case "天辅": return new String[]{"文星主事", "利于文书"};
+            case "天心": return new String[]{"医星临身", "善于决断"};
+            case "天禽": return new String[]{"居中得位", "调和四方"};
+            case "天任": return new String[]{"土德厚实", "利守不利攻"};
+            case "天蓬": return new String[]{"水势汹涌", "宜动不宜静"};
+            case "天冲": return new String[]{"雷厉风行", "主变动冲击"};
+            case "天芮": return new String[]{"病星主事", "需防疾患"};
+            case "天柱": return new String[]{"金气肃杀", "主刑克阻隔"};
+            case "天英": return new String[]{"火性炎上", "主名声显达"};
+            default: return new String[]{"星辰不明", "待察"};
+        }
+    }
+    
+    private String[] getZhiShiPhrases(String door) {
+        if (door == null) return new String[]{"门位不清", "局势不明"};
+        switch (door) {
+            case "开": return new String[]{"开门见喜", "事易成就"};
+            case "休": return new String[]{"休门静养", "宜守不宜进"};
+            case "生": return new String[]{"生门得位", "生机旺盛"};
+            case "伤": return new String[]{"伤门临位", "防损失利"};
+            case "杜": return new String[]{"杜门闭塞", "事多阻隔"};
+            case "景": return new String[]{"景门显现", "利于展示"};
+            case "死": return new String[]{"死门当值", "事多阻滞"};
+            case "惊": return new String[]{"惊门出现", "防口舌是非"};
+            default: return new String[]{"门气不稳", "需谨慎"};
+        }
+    }
+    
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
-        // 不显示任何运势文字
-        ninePalaceExplanation.setText("");
+        if (panExplanation != null && ninePalacePanel != null) {
+            boolean isYangDun = ninePalacePanel.getCopyIsYangDun();
+            String zhiFu = ninePalacePanel.getCopyZhiFu();
+            String zhiShi = ninePalacePanel.getCopyZhiShi();
+            
+            String yangYin = isYangDun ? "阳遁格局" : "阴遁格局";
+            String[] fuPhrases = getZhiFuPhrases(zhiFu);
+            String[] shiPhrases = getZhiShiPhrases(zhiShi);
+            
+            String[] generalPhrases = getGeneralPhrases(zhiFu, zhiShi);
+            String line1 = yangYin + "  " + fuPhrases[0] + "  " + fuPhrases[1] + "  " + shiPhrases[0];
+            String line2 = shiPhrases[1] + "  " + generalPhrases[0] + "  " + generalPhrases[1] + "  " + generalPhrases[2];
+            
+            String panInfo = line1 + "\n" + line2;
+            panExplanation.setText(panInfo);
+        }
+    }
+    
+    private String[] getGeneralPhrases(String star, String door) {
+        boolean isGoodStar = isGoodStar(star);
+        boolean isGoodDoor = isGoodDoor(door);
+        
+        if (isGoodStar && isGoodDoor) {
+            return new String[]{"气场旺盛", "万事通达", "宜积极进取"};
+        } else if (isGoodStar && !isGoodDoor) {
+            return new String[]{"星吉门平", "宜守待时", "择机而动"};
+        } else if (!isGoodStar && isGoodDoor) {
+            return new String[]{"门吉星平", "借力而为", "稳步推进"};
+        } else {
+            return new String[]{"气场偏弱", "宜静不宜动", "谨慎行事"};
+        }
+    }
+    
+    private boolean isGoodStar(String star) {
+        if (star == null) return true;
+        return star.equals("天辅") || star.equals("天心") || star.equals("天禽") || 
+               star.equals("天任") || star.equals("天英");
+    }
+    
+    private boolean isGoodDoor(String door) {
+        if (door == null) return true;
+        return door.equals("开") || door.equals("休") || door.equals("生") || door.equals("景");
     }
     
     // 获取门名称
