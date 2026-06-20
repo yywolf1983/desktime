@@ -25,6 +25,11 @@ public class WuyunLiuqiActivity extends Activity {
     private TextView liuqiInfo;
     private TextView liuqiDetail;
     private TextView shichenDetail;
+    private TextView wuyunYearGanZhi;
+    private TextView wuyunJieqi;
+    private TextView wuyunMonthDay;
+    private TextView wuyunShichen;
+    private TextView wuyunLiuqiDetail;
     
     private Calendar customCalendar = null;
     private Handler updateHandler;
@@ -137,6 +142,11 @@ public class WuyunLiuqiActivity extends Activity {
         liuqiInfo = findViewById(R.id.liuqiInfo);
         liuqiDetail = findViewById(R.id.liuqiDetail);
         shichenDetail = findViewById(R.id.shichenDetail);
+        wuyunYearGanZhi = findViewById(R.id.wuyunYearGanZhi);
+        wuyunJieqi = findViewById(R.id.wuyunJieqi);
+        wuyunMonthDay = findViewById(R.id.wuyunMonthDay);
+        wuyunShichen = findViewById(R.id.wuyunShichen);
+        wuyunLiuqiDetail = findViewById(R.id.wuyunLiuqiDetail);
     }
     
     private void setupUpdateHandler() {
@@ -171,24 +181,114 @@ public class WuyunLiuqiActivity extends Activity {
         int minute = calendar.get(Calendar.MINUTE);
         
         String yearGanZhi = calculateYearGanZhi(year);
+        String monthGanZhi = calculateMonthGanZhi(year, month);
+        String dayGanZhi = calculateDayGanZhi(year, month, day);
+        String timeGanZhi = calculateTimeGanZhi(dayGanZhi, hour, minute);
+        
+        updateHeaderDisplay(yearGanZhi, monthGanZhi, dayGanZhi, timeGanZhi, year, month, day);
+        
         int currentShichenIndex = getCurrentShichenIndex(hour, minute);
         
         wuyunLiuqiView.setCurrentShichen(currentShichenIndex);
         updateShichenInfo(currentShichenIndex);
         updateWuyunDisplay(yearGanZhi);
         updateLiuqiDisplay(year, month, day);
+        updateWuyunLiuqiDetail(yearGanZhi);
+    }
+    
+    private void updateHeaderDisplay(String yearGanZhi, String monthGanZhi, String dayGanZhi, String timeGanZhi, int year, int month, int day) {
+        if (wuyunYearGanZhi != null) {
+            wuyunYearGanZhi.setText(yearGanZhi + "年");
+        }
+        
+        if (wuyunJieqi != null) {
+            wuyunJieqi.setText(getJieqi(year, month, day));
+        }
+        
+        if (wuyunMonthDay != null) {
+            wuyunMonthDay.setText(monthGanZhi + "月·" + dayGanZhi + "日");
+        }
+        
+        if (wuyunShichen != null) {
+            wuyunShichen.setText(timeGanZhi + "时");
+        }
+    }
+    
+    private String getJieqi(int year, int month, int day) {
+        int[] jieqiDays = {0, 20, 44, 62, 81, 101, 121, 141, 162, 182, 203, 223, 244, 264, 285, 305, 325, 345};
+        String[] jieqiNames = {"小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", 
+                               "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至"};
+        
+        int dayOfYear = getDayOfYear(year, month, day);
+        
+        for (int i = 0; i < jieqiDays.length; i++) {
+            if (dayOfYear < jieqiDays[i]) {
+                if (i == 0) return jieqiNames[jieqiNames.length - 1];
+                return jieqiNames[i - 1];
+            }
+        }
+        return jieqiNames[jieqiNames.length - 1];
+    }
+    
+    private int getDayOfYear(int year, int month, int day) {
+        int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+            daysInMonth[1] = 29;
+        }
+        
+        int dayOfYear = day;
+        for (int i = 0; i < month - 1; i++) {
+            dayOfYear += daysInMonth[i];
+        }
+        return dayOfYear;
+    }
+    
+    private String calculateMonthGanZhi(int year, int month) {
+        int ganIndex = (year - 1900 + 6 + (month - 1) * 2) % 10;
+        if (ganIndex < 0) ganIndex += 10;
+        int zhiIndex = (month - 1) % 12;
+        if (zhiIndex < 0) zhiIndex += 12;
+        return TIANGAN[ganIndex] + DIZHI[zhiIndex];
+    }
+    
+    private String calculateDayGanZhi(int year, int month, int day) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month - 1, day);
+            
+            Calendar baseCalendar = Calendar.getInstance();
+            baseCalendar.set(1900, 0, 1);
+            
+            long diff = calendar.getTimeInMillis() - baseCalendar.getTimeInMillis();
+            diff = diff / (1000 * 60 * 60 * 24);
+            
+            int ganIndex = (6 + (int) diff) % 10;
+            int zhiIndex = (0 + (int) diff) % 12;
+            return TIANGAN[ganIndex] + DIZHI[zhiIndex];
+        } catch (Exception e) {
+            return "甲子";
+        }
+    }
+    
+    private String calculateTimeGanZhi(String dayGanZhi, int hour, int minute) {
+        String dayGan = dayGanZhi.substring(0, 1);
+        int baseIndex = java.util.Arrays.asList(TIANGAN).indexOf(dayGan);
+        int shichenIndex = getCurrentShichenIndex(hour, minute);
+        int ganIndex = (baseIndex * 2 + shichenIndex) % 10;
+        int zhiIndex = shichenIndex % 12;
+        return TIANGAN[ganIndex] + DIZHI[zhiIndex];
     }
     
     private void updateShichenInfo(int index) {
         StringBuilder info = new StringBuilder();
-        info.append("<font color='#FFD700'>").append(SHICHEN_NAMES[index]).append("时</font> ");
-        info.append("<font color='#98D8F0'>").append(SHICHEN_TIMES[index]).append("</font><br/>");
-        info.append("<font color='#87CEEB'>").append(SHICHEN_QUOTES[index]).append("</font> ");
-        info.append("<font color='#FFA500'>").append(WUXING_ZODIAC[index]).append("</font><br/>");
-        info.append("<font color='#90EE90'>").append(SHICHEN_ZANGFU[index]).append("经</font> ");
-        info.append("<font color='#DDA0DD'>").append(WUXING_SHEJI[index]).append("</font><br/>");
-        info.append("<font color='#FF8C00'>").append(SHICHEN_WUYIN[index]).append("</font> ");
-        info.append("<font color='#87CEEB'>").append(SHICHEN_FANGWEI[index]).append("</font>");
+        info.append("<font color='#FFD700' size='+1'><b>").append(SHICHEN_NAMES[index]).append("时</b></font> ");
+        info.append("<font color='#98D8F0'>(").append(SHICHEN_TIMES[index]).append(")</font><br/>");
+        info.append("<font color='#87CEEB'>古名：").append(SHICHEN_QUOTES[index]).append("</font> · ");
+        info.append("<font color='#FFA500'>五行：").append(WUXING_ZODIAC[index]).append("</font><br/>");
+        info.append("<font color='#90EE90'>经络：").append(SHICHEN_ZANGFU[index]).append("经").append("</font> · ");
+        info.append("<font color='#DDA0DD'>方位：").append(SHICHEN_FANGWEI[index]).append("</font><br/>");
+        info.append("<font color='#FF8C00'>纳音：").append(WUXING_SHEJI[index]).append("</font> · ");
+        info.append("<font color='#FFB84D'>物候：").append(SHICHEN_WUYIN[index]).append("</font>");
         if (currentShichenInfo != null) {
             currentShichenInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         }
@@ -198,15 +298,14 @@ public class WuyunLiuqiActivity extends Activity {
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i];
             if (part.startsWith("宜：")) {
-                yiJi.append("<font color='#90EE90'>宜：").append(part.substring(2)).append("</font>");
+                yiJi.append("<br/><font color='#90EE90'>✅ ").append(part).append("</font>");
             } else if (part.startsWith("忌：")) {
-                yiJi.append("<font color='#FF6B6B'>忌：").append(part.substring(2)).append("</font>");
+                yiJi.append("<br/><font color='#FF6B6B'>❌ ").append(part).append("</font>");
             } else if (part.startsWith("💡")) {
-                yiJi.append("<font color='#FFD700'>").append(part).append("</font>");
+                yiJi.append("<br/><font color='#FFD700'>").append(part).append("</font>");
             } else {
-                yiJi.append(part);
+                yiJi.append("<br/>").append(part);
             }
-            if (i < parts.length - 1) yiJi.append("<br/>");
         }
         if (shichenDetail != null) {
             shichenDetail.setText(android.text.Html.fromHtml(yiJi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
@@ -215,28 +314,44 @@ public class WuyunLiuqiActivity extends Activity {
     
     private void updateWuyunDisplay(String yearGanZhi) {
         String yearGan = yearGanZhi.substring(0, 1);
+        String yearZhi = yearGanZhi.substring(1, 2);
         String zhongYun = getZhongYunShort(yearGan);
         String[] sijiYun = getSijiYun(yearGan);
         
         String[][] yunDetails = {
-            {"木", "主生发、生长", "#90EE90"},
-            {"火", "主炎热、繁荣", "#FF6B6B"},
-            {"土", "主孕育、稳定", "#DEB887"},
-            {"金", "主收敛、收获", "#C0C0C0"},
-            {"水", "主潜藏、储备", "#87CEEB"}
+            {"木", "生发生长、条达舒畅、主肝胆", "#90EE90", "春季"},
+            {"火", "炎热繁荣、向上明亮、主心小肠", "#FF6B6B", "夏季"},
+            {"土", "孕育稳定、敦厚承载、主脾胃", "#DEB887", "长夏"},
+            {"金", "收敛收获、肃杀刚强、主肺大肠", "#C0C0C0", "秋季"},
+            {"水", "潜藏储备、流动滋润、主肾膀胱", "#87CEEB", "冬季"}
+        };
+        
+        String[][] wuyunYangsheng = {
+            {"木运", "宜：疏肝理气、多食绿色蔬菜\n忌：大怒、熬夜\n💡 建议：春季宜散步、赏花"},
+            {"火运", "宜：清心降火、多食红色食物\n忌：烦躁、贪凉\n💡 建议：夏季宜午休、静心"},
+            {"土运", "宜：健脾养胃、多食黄色食物\n忌：思虑过度、生冷\n💡 建议：长夏宜喝粥、慢走"},
+            {"金运", "宜：润肺生津、多食白色食物\n忌：悲伤、过度劳累\n💡 建议：秋季宜登高、润肺"},
+            {"水运", "宜：温补肾阳、多食黑色食物\n忌：恐惧、寒凉\n💡 建议：冬季宜早睡、保暖"}
         };
         
         StringBuilder info = new StringBuilder();
-        info.append("<font color='#FFD700'>").append(yearGanZhi).append("年</font><br/>");
-        info.append("<font color='#87CEEB'>中运：").append(zhongYun).append("</font><br/><br/>");
+        info.append("<font color='#FFD700' size='+1'><b>").append(yearGanZhi).append("年</b></font><br/>");
+        info.append("<font color='#87CEEB'>年干：").append(yearGan).append(" · ").append(getWuXing(yearGan)).append("</font> | ");
+        info.append("<font color='#FFA500'>年支：").append(yearZhi).append(" · ").append(getWuXing(yearZhi)).append("</font><br/>");
+        info.append("<font color='#90EE90'>中运：").append(zhongYun).append("</font><br/><br/>");
         
+        info.append("<font color='#98D8F0'><b>五运分布：</b></font><br/>");
         String[] labels = {"初运", "二运", "三运", "四运", "终运"};
+        String[] periods = {"1-2月", "3-4月", "5-6月", "7-8月", "9-12月"};
         for (int i = 0; i < 5; i++) {
-            info.append("<font color='#98D8F0'>").append(labels[i]).append("</font> ");
-            info.append("<font color='").append(yunDetails[i][2]).append("'>").append(sijiYun[i]).append("运</font> ");
-            info.append("<font color='#6B7B8A'>(").append(yunDetails[i][0]).append("·").append(yunDetails[i][1]).append(")</font>");
+            info.append("  <font color='#FFB84D'>").append(labels[i]).append("</font> ");
+            info.append("<font color='").append(yunDetails[i][2]).append("'><b>").append(sijiYun[i]).append("运</b></font> ");
+            info.append("<font color='#6B7B8A'>(").append(periods[i]).append(" · ").append(yunDetails[i][3]).append(")");
+            info.append(" - ").append(yunDetails[i][1]).append("</font>");
             if (i < 4) info.append("<br/>");
         }
+        info.append("<br/><br/><font color='#FFD700'><b>💡 养生要点：</b></font><br/>");
+        info.append("<font color='").append(yunDetails[0][2]).append("'>").append(wuyunYangsheng[0][1]).append("</font>");
         if (wuyunInfo != null) {
             wuyunInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         }
@@ -248,12 +363,17 @@ public class WuyunLiuqiActivity extends Activity {
         
         String[] qiNames = {"初气", "二气", "三气", "四气", "五气", "终气"};
         String[] qiColors = {"#90EE90", "#FF6B6B", "#FF8C00", "#DEB887", "#C0C0C0", "#87CEEB"};
+        String[] qiPeriods = {"大寒-春分", "春分-小满", "小满-大暑", "大暑-秋分", "秋分-小雪", "小雪-大寒"};
+        String[] qiEarthlyBranches = {"寅卯", "巳午", "巳午", "申酉", "申酉", "亥子"};
+        String[] qiHeavenlyStems = {"丁壬", "戊癸", "戊癸", "甲己", "甲己", "丙辛"};
         
         StringBuilder qiInfo = new StringBuilder();
+        qiInfo.append("<font color='#98D8F0'><b>六气分布：</b></font><br/>");
         for (int i = 0; i < 6; i++) {
             if (i == currentQiIndex) {
                 qiInfo.append("<font color='#FFD700'>▶ ").append(qiNames[i]).append("</font> ");
                 qiInfo.append("<font color='#90EE90'><b>").append(liuqi[i]).append("</b></font>");
+                qiInfo.append("<font color='#6B7B8A'>(").append(qiPeriods[i]).append(")</font>");
             } else {
                 qiInfo.append("<font color='#6B7B8A'>▫️ ").append(qiNames[i]).append("</font> ");
                 qiInfo.append("<font color='").append(qiColors[i]).append("'>").append(liuqi[i]).append("</font>");
@@ -266,24 +386,79 @@ public class WuyunLiuqiActivity extends Activity {
         
         StringBuilder qiDetail = new StringBuilder();
         String[][] qiDetails = {
-            {"厥阴风木", "风气为主，主生发、疾病多风证", "#90EE90"},
-            {"少阴君火", "热气为主，主温热、疾病多热证", "#FF6B6B"},
-            {"少阳相火", "火气为主，主炎热、疾病多火证", "#FF8C00"},
-            {"太阴湿土", "湿气为主，主湿润、疾病多湿证", "#DEB887"},
-            {"阳明燥金", "燥气为主，主干燥、疾病多燥证", "#C0C0C0"},
-            {"太阳寒水", "寒气为主，主寒冷、疾病多寒证", "#87CEEB"}
+            {"厥阴风木", "风气为主，主生发疏泄。对应地支：寅卯 · 天干：丁壬\n\n⚠️ 易患：头痛、眩晕、关节痛、肝胆疾病\n✅ 养生：宜防风邪，疏肝理气，保持情绪舒畅\n🍃 饮食：多食芹菜、菠菜、茼蒿等青色食物", "#90EE90"},
+            {"少阴君火", "热气为主，主温热明亮。对应地支：巳午 · 天干：戊癸\n\n⚠️ 易患：发热、心烦、口舌生疮、心脏疾病\n✅ 养生：宜清热降火，静心安神，少食辛辣\n🍅 饮食：多食番茄、西瓜、绿豆等红色食物", "#FF6B6B"},
+            {"少阳相火", "火气为主，主炎热躁动。对应地支：巳午 · 天干：戊癸\n\n⚠️ 易患：目赤肿痛、咽喉肿痛、疮疡、神志异常\n✅ 养生：宜清泻相火，饮食清淡，避免熬夜\n🌶️ 饮食：多食苦瓜、苦菜、莲子等苦味食物", "#FF8C00"},
+            {"太阴湿土", "湿气为主，主湿润黏滞。对应地支：申酉 · 天干：甲己\n\n⚠️ 易患：腹胀、腹泻、水肿、脾胃疾病、皮肤病\n✅ 养生：宜健脾祛湿，多食薏米、山药，适度运动\n🌾 饮食：多食小米、南瓜、土豆等黄色食物", "#DEB887"},
+            {"阳明燥金", "燥气为主，主干燥收敛。对应地支：申酉 · 天干：甲己\n\n⚠️ 易患：咳嗽、气喘、皮肤干燥、便秘、呼吸系统疾病\n✅ 养生：宜润肺生津，多食梨、百合，保持室内湿润\n🍐 饮食：多食梨、白萝卜、银耳等白色食物", "#C0C0C0"},
+            {"太阳寒水", "寒气为主，主寒冷凝滞。对应地支：亥子 · 天干：丙辛\n\n⚠️ 易患：感冒、关节冷痛、畏寒、肾脏疾病\n✅ 养生：宜温阳散寒，多食温热食物，注意保暖\n🫘 饮食：多食黑豆、核桃、羊肉等黑色食物", "#87CEEB"}
         };
         
         for (int i = 0; i < 6; i++) {
-            qiDetail.append("<font color='").append(qiDetails[i][2]).append("'>").append(qiDetails[i][0]).append("</font>");
-            qiDetail.append("<font color='#6B7B8A'>：").append(qiDetails[i][1]).append("</font>");
-            if (i < 5) qiDetail.append("<br/>");
+            qiDetail.append("<font color='").append(qiDetails[i][2]).append("' size='+1'><b>").append(qiDetails[i][0]).append("</b></font>");
+            qiDetail.append("<font color='#6B7B8A'>").append(qiDetails[i][1]).append("</font>");
+            if (i < 5) qiDetail.append("<br/><br/>");
         }
         if (liuqiDetail != null) {
             liuqiDetail.setText(android.text.Html.fromHtml(qiDetail.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         }
     }
     
+    private void updateWuyunLiuqiDetail(String yearGanZhi) {
+        String yearGan = yearGanZhi.substring(0, 1);
+        String yearZhi = yearGanZhi.substring(1, 2);
+        
+        StringBuilder detail = new StringBuilder();
+        
+        detail.append("<font color='#FFD700'><b>五运六气概述</b></font><br/>");
+        detail.append("<font color='#8899AA'>五运六气是中医运气学说的核心，以天干地支为基础，推演年度气候变化和人体健康影响。</font><br/><br/>");
+        
+        detail.append("<font color='#FFD700'><b>什么是五运？</b></font><br/>");
+        detail.append("<font color='#90EE90'>木运</font> <font color='#8899AA'>— 主生发，对应春季，影响肝胆系统</font><br/>");
+        detail.append("<font color='#FF6B6B'>火运</font> <font color='#8899AA'>— 主炎热，对应夏季，影响心小肠系统</font><br/>");
+        detail.append("<font color='#DEB887'>土运</font> <font color='#8899AA'>— 主孕育，对应长夏，影响脾胃系统</font><br/>");
+        detail.append("<font color='#C0C0C0'>金运</font> <font color='#8899AA'>— 主收敛，对应秋季，影响肺大肠系统</font><br/>");
+        detail.append("<font color='#87CEEB'>水运</font> <font color='#8899AA'>— 主潜藏，对应冬季，影响肾膀胱系统</font><br/><br/>");
+        
+        detail.append("<font color='#FFD700'><b>五运推算方法</b></font><br/>");
+        detail.append("<font color='#8899AA'>年干决定五运：甲己化土，乙庚化金，丙辛化水，丁壬化木，戊癸化火。</font><br/>");
+        detail.append("<font color='#8899AA'>阳干为太过（运气旺盛），阴干为不及（运气衰弱）。</font><br/><br/>");
+        
+        detail.append("<font color='#FFD700'><b>什么是六气？</b></font><br/>");
+        detail.append("<font color='#90EE90'>厥阴风木</font> <font color='#8899AA'>— 风气主令，大寒-春分</font><br/>");
+        detail.append("<font color='#FF6B6B'>少阴君火</font> <font color='#8899AA'>— 热气主令，春分-小满</font><br/>");
+        detail.append("<font color='#FF8C00'>少阳相火</font> <font color='#8899AA'>— 火气主令，小满-大暑</font><br/>");
+        detail.append("<font color='#DEB887'>太阴湿土</font> <font color='#8899AA'>— 湿气主令，大暑-秋分</font><br/>");
+        detail.append("<font color='#C0C0C0'>阳明燥金</font> <font color='#8899AA'>— 燥气主令，秋分-小雪</font><br/>");
+        detail.append("<font color='#87CEEB'>太阳寒水</font> <font color='#8899AA'>— 寒气主令，小雪-大寒</font><br/><br/>");
+        
+        detail.append("<font color='#FFD700'><b>六气推算方法</b></font><br/>");
+        detail.append("<font color='#8899AA'>年支决定六气：子午少阴君火，丑未太阴湿土，寅申少阳相火，卯酉阳明燥金，辰戌太阳寒水，巳亥厥阴风木。</font><br/><br/>");
+        
+        detail.append("<font color='#FFD700'><b>").append(yearGanZhi).append("年运气特点</b></font><br/>");
+        String zhongYun = getZhongYunShort(yearGan);
+        detail.append("<font color='#98D8F0'>年干").append(yearGan).append("：").append(zhongYun).append("</font><br/>");
+        
+        String[] liuyiNames = {"少阴君火", "太阴湿土", "少阳相火", "阳明燥金", "太阳寒水", "厥阴风木"};
+        String[] liuyiYears = {"子", "丑", "寅", "申", "辰", "戌", "巳", "亥", "卯", "酉", "午", "未"};
+        int liuyiIndex = -1;
+        for (int i = 0; i < liuyiYears.length; i++) {
+            if (liuyiYears[i].equals(yearZhi)) {
+                liuyiIndex = i / 2;
+                break;
+            }
+        }
+        if (liuyiIndex >= 0) {
+            detail.append("<font color='#98D8F0'>年支").append(yearZhi).append("：").append(liuyiNames[liuyiIndex]).append("司天</font><br/>");
+        }
+        
+        detail.append("<br/><font color='#FFD700'><b>💡 养生原则</b></font><br/>");
+        detail.append("<font color='#8899AA'>根据五运六气变化，调整饮食起居，顺应自然规律，达到防病养生的目的。</font>");
+        
+        if (wuyunLiuqiDetail != null) {
+            wuyunLiuqiDetail.setText(android.text.Html.fromHtml(detail.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
+    }
     
     
     private String calculateYearGanZhi(int year) {
@@ -307,6 +482,22 @@ public class WuyunLiuqiActivity extends Activity {
             case "丙": case "辛": return "水太过";
             case "丁": case "壬": return "木不及";
             case "戊": case "癸": return "火太过";
+            default: return "土";
+        }
+    }
+    
+    private String getWuXing(String gan) {
+        switch (gan) {
+            case "甲": case "乙": return "木";
+            case "丙": case "丁": return "火";
+            case "戊": case "己": return "土";
+            case "庚": case "辛": return "金";
+            case "壬": case "癸": return "水";
+            case "寅": case "卯": return "木";
+            case "午": case "巳": return "火";
+            case "辰": case "戌": case "丑": case "未": return "土";
+            case "申": case "酉": return "金";
+            case "子": case "亥": return "水";
             default: return "土";
         }
     }

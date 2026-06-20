@@ -1086,85 +1086,204 @@ public class FullNinePalaceActivity extends Activity {
         
         expOverall.setText(getOverallAdviceSimple(isYangDun, ju, zhiFuStar, zhiShiDoor));
         
-        if (expTianDiPanDesc != null) expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, tianPan, diPanTianGan), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expTianDiPanDesc != null) expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, nineStars, PALACE_NAMES), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expNineStarsDesc != null) expNineStarsDesc.setText(android.text.Html.fromHtml(getNineStarsDesc(nineStars), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expEightDoorsDesc != null) expEightDoorsDesc.setText(android.text.Html.fromHtml(getEightDoorsDesc(eightDoors), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expGodsDesc != null) expGodsDesc.setText(android.text.Html.fromHtml(getEightGodsDesc(eightGods), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expPalacesDesc != null) expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
     }
     
-    private String getTianDiPanDesc(String[] palaces, String[] tianPan, String[] diPan) {
+    private String getTianDiPanDesc(String[] palaces, String[] nineStars, String[] palaceNames) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>天盘代表天时，地盘代表地利。</font><br/>");
+        desc.append("<font color='#8899AA'>天盘代表天时，地盘代表地利，人盘为主事，神盘为助力。</font><br/><br/>");
+        
+        String[] directions = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
+        
+        String[][] starDesc = {
+            {"天蓬", "水·智，主求财、冒险，吉则财源广进，凶则破财"},
+            {"天任", "土·信，主稳定、承载，吉则事业稳固，凶则阻滞"},
+            {"天冲", "木·勇，主行动、争斗，吉则果断进取，凶则是非"},
+            {"天辅", "木·仁，主贵人、文书，吉则金榜题名，凶则文书失误"},
+            {"天英", "火·礼，主名声、光明，吉则声名远播，凶则火灾"},
+            {"天芮", "土·信，主疾病、学习，吉则学业有成，凶则疾病缠身"},
+            {"天柱", "金·义，主变革、决断，吉则贵人相助，凶则刑伤"},
+            {"天心", "金·义，主谋略、医道，吉则计谋成功，凶则药石无功"},
+            {"天禽", "土·信，主贵人、中和，吉则万事顺遂，凶则灾祸"}
+        };
+        
+        String[][] palaceDesc = {
+            {"坎", "水·北，主智、主险，对应肾脏、泌尿系统"},
+            {"坤", "土·西南，主顺、主静，对应脾胃、消化系统"},
+            {"震", "木·东，主动、主长，对应肝胆、神经系统"},
+            {"巽", "木·东南，主风、主变，对应肝胆、呼吸系统"},
+            {"中", "土·中，主和、主守，对应脾胃"},
+            {"乾", "金·西北，主健、主尊，对应肺、大肠"},
+            {"兑", "金·西，主悦、主泽，对应肺、呼吸系统"},
+            {"艮", "土·东北，主止、主蓄，对应脾胃、消化系统"},
+            {"离", "火·南，主明、主礼，对应心脏、眼睛"}
+        };
+        
+        desc.append("<font color='#FFD700'><b>天盘（九星）</b></font><br/>");
         for (int i = 0; i < 9; i++) {
-            if (!tianPan[i].isEmpty() && !tianPan[i].equals("--")) {
-                String palace = palaces[i];
-                desc.append("<font color='#98D8F0'>").append(palace).append("宫</font>：");
-                desc.append("<font color='#FFD700'>天").append(tianPan[i]).append("</font>/");
-                desc.append("<font color='#FFA500'>地").append(diPan[i]).append("</font><br/>");
+            if (!nineStars[i].isEmpty() && !nineStars[i].equals("--")) {
+                String star = nineStars[i];
+                String starInfo = "";
+                for (String[] info : starDesc) {
+                    if (info[0].equals(star)) {
+                        starInfo = info[1];
+                        break;
+                    }
+                }
+                desc.append("<font color='#FFD700'>").append(star).append("星</font> ");
+                desc.append("<font color='#98D8F0'>(").append(directions[i]).append(")</font> ");
+                desc.append("<font color='#8899AA'>").append(starInfo).append("</font>");
+                if (i < 8) desc.append("<br/>");
             }
         }
+        desc.append("<br/><br/>");
+        
+        desc.append("<font color='#FFA500'><b>地盘（九宫）</b></font><br/>");
+        for (int i = 0; i < 9; i++) {
+            if (!palaceNames[i].isEmpty() && !palaceNames[i].equals("--")) {
+                String palace = palaceNames[i].substring(0, 1);
+                String palaceInfo = "";
+                for (String[] info : palaceDesc) {
+                    if (info[0].equals(palace)) {
+                        palaceInfo = info[1];
+                        break;
+                    }
+                }
+                desc.append("<font color='#FFA500'>").append(palace).append("宫</font> ");
+                desc.append("<font color='#98D8F0'>(").append(directions[i]).append(")</font> ");
+                desc.append("<font color='#8899AA'>").append(palaceInfo).append("</font>");
+                if (i < 8) desc.append("<br/>");
+            }
+        }
+        
         return desc.toString();
     }
     
     private String getNineStarsDesc(String[] stars) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>九星主天时吉凶，决定事情发展趋势。</font><br/>");
-        for (int i = 0; i < 9; i++) {
-            if (!stars[i].isEmpty()) {
-                String star = stars[i];
-                String meaning = getStarMeaningShort(star);
-                String starColor = "#FFD700";
-                String meaningColor = (star.equals("天辅") || star.equals("天心") || star.equals("天禽")) ? "#90EE90" :
-                                      (star.equals("天芮") || star.equals("天冲")) ? "#FF6B6B" : "#90EE90";
-                desc.append("<font color='").append(starColor).append("'>").append(star).append("星</font>：");
-                desc.append("<font color='").append(meaningColor).append("'>").append(meaning).append("</font><br/>");
+        desc.append("<font color='#8899AA'>九星主天时吉凶，决定事情发展趋势。</font><br/><br/>");
+        
+        String[][] starInfo = {
+            {"天蓬", "吉星", "#90EE90", "主智、主财、主开创"},
+            {"天任", "吉星", "#98FB98", "主信、主稳定、主承载"},
+            {"天冲", "凶星", "#FF6B6B", "主勇、主冲动、主争斗"},
+            {"天辅", "吉星", "#ADFF2F", "主文、主贵人、主教育"},
+            {"天英", "平星", "#FFD700", "主礼、主名声、主光明"},
+            {"天芮", "凶星", "#DC143C", "主病、主障碍、主学习"},
+            {"天柱", "平星", "#FFA500", "主义、主变革、主决断"},
+            {"天心", "吉星", "#90EE90", "主智、主医、主谋略"},
+            {"天禽", "吉星", "#98FB98", "主仁、主贵人、主中和"}
+        };
+        
+        desc.append("<font color='#FFD700'><b>吉星</b></font><br/>");
+        for (String[] info : starInfo) {
+            if (info[1].equals("吉星")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
             }
         }
+        
+        desc.append("<br/><font color='#FFD700'><b>平星</b></font><br/>");
+        for (String[] info : starInfo) {
+            if (info[1].equals("平星")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
+            }
+        }
+        
+        desc.append("<br/><font color='#FF6B6B'><b>凶星</b></font><br/>");
+        for (String[] info : starInfo) {
+            if (info[1].equals("凶星")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
+            }
+        }
+        
         return desc.toString();
     }
     
     private String getEightDoorsDesc(String[] doors) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>八门主人事吉凶，决定行动成败。</font><br/>");
-        for (int i = 0; i < 9; i++) {
-            if (doors[i] != null && !doors[i].isEmpty()) {
-                String door = doors[i];
-                String meaning = getDoorMeaningShort(door);
-                String doorColor = "#FFD700";
-                String meaningColor;
-                if (door.equals("开") || door.equals("生") || door.equals("休")) {
-                    meaningColor = "#90EE90";
-                } else if (door.equals("死") || door.equals("伤") || door.equals("惊")) {
-                    meaningColor = "#FF6B6B";
-                } else {
-                    meaningColor = "#FFD700";
-                }
-                desc.append("<font color='").append(doorColor).append("'>").append(door).append("门</font>：");
-                desc.append("<font color='").append(meaningColor).append("'>").append(meaning).append("</font><br/>");
+        desc.append("<font color='#8899AA'>八门主人事吉凶，决定行动成败。</font><br/><br/>");
+        
+        String[][] doorInfo = {
+            {"休", "吉门", "#90EE90", "主休息、主养生、主安宁"},
+            {"生", "吉门", "#98FB98", "主生存、主财运、主发展"},
+            {"伤", "凶门", "#FF6B6B", "主伤害、主争斗、主破坏"},
+            {"杜", "平门", "#FFD700", "主堵塞、主隐藏、主防守"},
+            {"景", "平门", "#FFA500", "主景色、主名声、主文书"},
+            {"死", "凶门", "#DC143C", "主死亡、主终结、主衰亡"},
+            {"惊", "凶门", "#FF6B6B", "主惊恐、主口舌、主变动"},
+            {"开", "吉门", "#ADFF2F", "主开启、主事业、主贵人"}
+        };
+        
+        desc.append("<font color='#FFD700'><b>吉门（宜行动、办事、求财）</b></font><br/>");
+        for (String[] info : doorInfo) {
+            if (info[1].equals("吉门")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
             }
         }
+        
+        desc.append("<br/><font color='#FFD700'><b>平门（宜谨慎、待机）</b></font><br/>");
+        for (String[] info : doorInfo) {
+            if (info[1].equals("平门")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
+            }
+        }
+        
+        desc.append("<br/><font color='#FF6B6B'><b>凶门（宜回避、守静）</b></font><br/>");
+        for (String[] info : doorInfo) {
+            if (info[1].equals("凶门")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
+            }
+        }
+        
         return desc.toString();
     }
     
     private String getEightGodsDesc(String[] gods) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>八神主外部环境与神秘力量影响。</font><br/>");
-        for (int i = 0; i < 9; i++) {
-            if (gods[i] != null && !gods[i].isEmpty()) {
-                String god = gods[i];
-                String meaning = getGodMeaningShort(god);
-                String godColor = "#FFD700";
-                String meaningColor;
-                if (god.equals("值符") || god.equals("九天") || god.equals("太阴")) {
-                    meaningColor = "#90EE90";
-                } else if (god.equals("白虎") || god.equals("玄武") || god.equals("螣蛇")) {
-                    meaningColor = "#FF6B6B";
-                } else {
-                    meaningColor = "#DDA0DD";
-                }
-                desc.append("<font color='").append(godColor).append("'>").append(god).append("</font>：");
-                desc.append("<font color='").append(meaningColor).append("'>").append(meaning).append("</font><br/>");
+        desc.append("<font color='#8899AA'>八神主外部环境与神秘力量影响。</font><br/><br/>");
+        
+        String[][] godInfo = {
+            {"值符", "吉神", "#90EE90", "主尊贵、主权力、主贵人"},
+            {"螣蛇", "凶神", "#FF6B6B", "主虚惊、主怪异、主缠绕"},
+            {"太阴", "吉神", "#98FB98", "主阴私、主隐秘、主庇护"},
+            {"六合", "吉神", "#ADFF2F", "主和合、主婚姻、主合作"},
+            {"白虎", "凶神", "#DC143C", "主杀伐、主血光、主灾祸"},
+            {"玄武", "凶神", "#FF6B6B", "主盗贼、主暧昧、主蒙蔽"},
+            {"九地", "平神", "#FFD700", "主稳固、主静止、主隐藏"},
+            {"九天", "吉神", "#90EE90", "主高升、主动荡、主远行"}
+        };
+        
+        desc.append("<font color='#FFD700'><b>吉神（宜依靠、借助）</b></font><br/>");
+        for (String[] info : godInfo) {
+            if (info[1].equals("吉神")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
+            }
+        }
+        
+        desc.append("<br/><font color='#FFD700'><b>平神（宜谨慎、待机）</b></font><br/>");
+        for (String[] info : godInfo) {
+            if (info[1].equals("平神")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
+            }
+        }
+        
+        desc.append("<br/><font color='#FF6B6B'><b>凶神（宜回避、化解）</b></font><br/>");
+        for (String[] info : godInfo) {
+            if (info[1].equals("凶神")) {
+                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
+                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
             }
         }
         return desc.toString();

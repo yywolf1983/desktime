@@ -93,27 +93,15 @@ public class WuyunLiuqiView extends View {
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(0, 0, width, height, paint);
         
-        Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
-        int second = cal.get(Calendar.SECOND);
-        String timeStr = String.format("%02d:%02d:%02d", hour, minute, second);
         String currentShichen = shichenNames[currentShichenIndex] + "时 · " + shichenQuotes[currentShichenIndex];
         
         int gridWidth = width - gridPadding * 2;
         
-        float timeTextSize = Math.max(gridWidth * 0.08f, 30f);
-        textPaint.setTextSize(timeTextSize);
+        float shichenTextSize = Math.max(gridWidth * 0.06f, 18f);
+        textPaint.setTextSize(shichenTextSize);
         textPaint.setColor(Color.parseColor("#FFD700"));
         textPaint.setFakeBoldText(true);
-        float timeY = timeTextSize * 0.9f;
-        canvas.drawText(timeStr, width / 2f, timeY, textPaint);
-        
-        float shichenTextSize = Math.max(gridWidth * 0.04f, 14f);
-        textPaint.setTextSize(shichenTextSize);
-        textPaint.setColor(Color.parseColor("#87CEEB"));
-        textPaint.setFakeBoldText(false);
-        float shichenY = timeY + shichenTextSize * 1.3f;
+        float shichenY = shichenTextSize * 0.9f;
         canvas.drawText(currentShichen, width / 2f, shichenY, textPaint);
         
         int gridTop = (int) (shichenY + shichenTextSize * 0.5f + 8);

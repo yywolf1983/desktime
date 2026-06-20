@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,190 +14,242 @@
         android:orientation="horizontal"
         android:padding="4dp">
 
-        <!-- 左侧：时辰时钟 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.9"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="@drawable/card_background"
+                android:layout_marginBottom="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/wuyunYearGanZhi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@color/gold"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"
+                        android:letterSpacing="0.08"
+                        tools:text="甲辰年" />
+
+                    <TextView
+                        android:id="@+id/wuyunJieqi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="#FFB84D"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingStart="12dp"
+                        tools:text="立春" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/wuyunMonthDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:fontFamily="sans-serif-light"
+                        tools:text="丙子月·乙未日" />
+
+                    <TextView
+                        android:id="@+id/wuyunShichen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="#8FBC8F"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingStart="12dp"
+                        tools:text="甲申时" />
+                </LinearLayout>
+            </LinearLayout>
 
             <com.example.timedisplay.WuyunLiuqiView
                 android:id="@+id/wuyunLiuqiView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="2dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
         </LinearLayout>
 
-        <!-- 右侧：详细信息卡片网格 -->
-        <LinearLayout
+        <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginStart="2dp"
-            android:padding="2dp">
+            android:padding="4dp">
 
-            <!-- 第一行：当令 + 五运 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="2dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <!-- 当令卡片 -->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#1a1a2e"
-                    android:padding="6dp"
-                    android:layout_marginEnd="1dp">
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="3dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✦ 当令 ✦"
-                        android:textColor="#FFD700"
-                        android:textSize="17sp"
+                        android:text="⏰ 当令"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
-                    <ScrollView
+                    <TextView
+                        android:id="@+id/currentShichenInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:scrollbars="vertical">
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
 
-                        <TextView
-                            android:id="@+id/currentShichenInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="14sp"
-                            android:lineSpacingExtra="2dp" />
-                    </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌿 养生宜忌"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/shichenDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
 
-                <!-- 五运卡片 -->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#1a1a2e"
-                    android:padding="6dp"
-                    android:layout_marginStart="1dp">
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginTop="6dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✦ 五运 ✦"
-                        android:textColor="#FFD700"
-                        android:textSize="17sp"
+                        android:text="🌟 五运"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:scrollbars="vertical">
-
-                        <TextView
-                            android:id="@+id/wuyunInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="13sp"
-                            android:lineSpacingExtra="2dp" />
-                    </ScrollView>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- 第二行：六气 + 养生 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="2dp">
-
-                <!-- 六气卡片 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="#1a1a2e"
-                    android:padding="6dp"
-                    android:layout_marginEnd="1dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="✦ 六气 ✦"
-                        android:textColor="#FFD700"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp" />
-
-                    <ScrollView
+                        android:id="@+id/wuyunInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:scrollbars="vertical">
-
-                        <TextView
-                            android:id="@+id/liuqiInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="13sp"
-                            android:lineSpacingExtra="2dp" />
-                    </ScrollView>
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
 
-                <!-- 养生卡片 -->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#1a1a2e"
-                    android:padding="6dp"
-                    android:layout_marginStart="1dp">
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginTop="6dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✦ 养生宜忌 ✦"
-                        android:textColor="#FFD700"
-                        android:textSize="17sp"
+                        android:text="💨 六气"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp" />
 
-                    <ScrollView
+                    <TextView
+                        android:id="@+id/liuqiInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:scrollbars="vertical">
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/shichenDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#87CEEB"
-                            android:textSize="13sp"
-                            android:lineSpacingExtra="2dp" />
-                    </ScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📖 六气详解"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/liuqiDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📚 五运六气详解"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/wuyunLiuqiDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="12sp"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </FrameLayout>
