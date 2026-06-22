@@ -144,16 +144,16 @@ public class NinePalacePanel extends View {
 
             String luck = "平";
             String[] dataParts = palaceData[i][1].split("\\n");
-            if (dataParts.length > 1) {
-                String thirdLine = dataParts[1];
-                if (thirdLine.contains("吉")) {
-                    if (thirdLine.contains("平吉")) {
+            if (dataParts.length > 2) {
+                String fourthLine = dataParts[2];
+                if (fourthLine.contains("吉")) {
+                    if (fourthLine.contains("平吉")) {
                         luck = "平吉";
                     } else {
                         luck = "吉";
                     }
-                } else if (thirdLine.contains("凶")) {
-                    if (thirdLine.contains("平凶")) {
+                } else if (fourthLine.contains("凶")) {
+                    if (fourthLine.contains("平凶")) {
                         luck = "平凶";
                     } else {
                         luck = "凶";
@@ -183,7 +183,21 @@ public class NinePalacePanel extends View {
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
 
             float x = (col + 0.5f) * cellSize;
-            float y = (row + 0.22f) * cellSize;
+            float lineSpacing = cellSize * 0.02f;
+
+            textPaint.setTextSize(cellSize * 0.15f);
+            float h1 = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
+
+            textPaint.setTextSize(cellSize * 0.13f);
+            float h2 = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
+
+            textPaint.setTextSize(cellSize * 0.12f);
+            float h3 = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
+
+            float totalHeight = h1 + lineSpacing + h2 + lineSpacing + h2 + lineSpacing + h3;
+            float topPadding = Math.max((cellSize - totalHeight) / 2, cellSize * 0.05f);
+
+            float y = (row + topPadding / cellSize) * cellSize - textPaint.getFontMetrics().ascent;
 
             if (luck.equals("吉")) {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
@@ -197,16 +211,25 @@ public class NinePalacePanel extends View {
                 textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
             }
 
+            textPaint.setTextSize(cellSize * 0.15f);
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
-                y += cellSize * 0.22f;
+                y += h1 + lineSpacing;
+                textPaint.setTextSize(cellSize * 0.13f);
                 canvas.drawText(dataParts[0], x, y, textPaint);
             }
 
             if (dataParts.length > 1) {
-                y += cellSize * 0.22f;
+                y += h2 + lineSpacing;
+                textPaint.setTextSize(cellSize * 0.13f);
                 canvas.drawText(dataParts[1], x, y, textPaint);
+            }
+
+            if (dataParts.length > 2) {
+                y += h2 + lineSpacing;
+                textPaint.setTextSize(cellSize * 0.12f);
+                canvas.drawText(dataParts[2], x, y, textPaint);
             }
         }
     }
@@ -392,9 +415,13 @@ public class NinePalacePanel extends View {
             // 第三行：天盘天干/地盘天干 + 吉凶 + 旺衰
             String guaSymbol = getGuaSymbol(i);
             
-            // 生成宫位数据（去掉天干，八门放在第三行）
+            // 生成宫位数据（完整奇门排盘，四行显示）
+            // 第一行：宫名 + 方位符号 + 方位文字
+            // 第二行：八神 + 九星
+            // 第三行：天盘天干/地盘天干
+            // 第四行：八门 + 吉凶 + 旺衰
             data[i][0] = palaceName;
-            data[i][1] = god + " " + star + "\n" + (door != null && !door.isEmpty() ? door : " ") + " " + luck + " " + wangCuiValue;
+            data[i][1] = god + " " + star + "\n" + tianGan + "/" + diGan + "\n" + (door != null && !door.isEmpty() ? door : "") + " " + luck + " " + wangCuiValue;
             
             // 存储完整数据用于复制
             copyPalaceData[i][0] = god;
