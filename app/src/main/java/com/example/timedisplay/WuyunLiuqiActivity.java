@@ -403,12 +403,12 @@ public class WuyunLiuqiActivity extends Activity {
         
         StringBuilder qiDetail = new StringBuilder();
         String[][] qiDetails = {
-            {"厥阴风木", "风气为主，主生发疏泄。对应地支：寅卯 · 天干：丁壬\n\n⚠️ 易患：头痛、眩晕、关节痛、肝胆疾病\n✅ 养生：宜防风邪，疏肝理气，保持情绪舒畅\n🍃 饮食：多食芹菜、菠菜、茼蒿等青色食物", "#90EE90"},
-            {"少阴君火", "热气为主，主温热明亮。对应地支：巳午 · 天干：戊癸\n\n⚠️ 易患：发热、心烦、口舌生疮、心脏疾病\n✅ 养生：宜清热降火，静心安神，少食辛辣\n🍅 饮食：多食番茄、西瓜、绿豆等红色食物", "#FF6B6B"},
-            {"少阳相火", "火气为主，主炎热躁动。对应地支：巳午 · 天干：戊癸\n\n⚠️ 易患：目赤肿痛、咽喉肿痛、疮疡、神志异常\n✅ 养生：宜清泻相火，饮食清淡，避免熬夜\n🌶️ 饮食：多食苦瓜、苦菜、莲子等苦味食物", "#FF8C00"},
-            {"太阴湿土", "湿气为主，主湿润黏滞。对应地支：申酉 · 天干：甲己\n\n⚠️ 易患：腹胀、腹泻、水肿、脾胃疾病、皮肤病\n✅ 养生：宜健脾祛湿，多食薏米、山药，适度运动\n🌾 饮食：多食小米、南瓜、土豆等黄色食物", "#DEB887"},
-            {"阳明燥金", "燥气为主，主干燥收敛。对应地支：申酉 · 天干：甲己\n\n⚠️ 易患：咳嗽、气喘、皮肤干燥、便秘、呼吸系统疾病\n✅ 养生：宜润肺生津，多食梨、百合，保持室内湿润\n🍐 饮食：多食梨、白萝卜、银耳等白色食物", "#C0C0C0"},
-            {"太阳寒水", "寒气为主，主寒冷凝滞。对应地支：亥子 · 天干：丙辛\n\n⚠️ 易患：感冒、关节冷痛、畏寒、肾脏疾病\n✅ 养生：宜温阳散寒，多食温热食物，注意保暖\n🫘 饮食：多食黑豆、核桃、羊肉等黑色食物", "#87CEEB"}
+            {"厥阴风木", "风气为主，主生发疏泄。<br/>对应地支：寅卯 · 天干：丁壬<br/><br/>⚠️ 易患：头痛、眩晕、关节痛、肝胆疾病<br/>✅ 养生：宜防风邪，疏肝理气，保持情绪舒畅<br/>🍃 饮食：多食芹菜、菠菜、茼蒿等青色食物", "#90EE90"},
+            {"少阴君火", "热气为主，主温热明亮。<br/>对应地支：巳午 · 天干：戊癸<br/><br/>⚠️ 易患：发热、心烦、口舌生疮、心脏疾病<br/>✅ 养生：宜清热降火，静心安神，少食辛辣<br/>🍅 饮食：多食番茄、西瓜、绿豆等红色食物", "#FF6B6B"},
+            {"少阳相火", "火气为主，主炎热躁动。<br/>对应地支：巳午 · 天干：戊癸<br/><br/>⚠️ 易患：目赤肿痛、咽喉肿痛、疮疡、神志异常<br/>✅ 养生：宜清泻相火，饮食清淡，避免熬夜<br/>🌶️ 饮食：多食苦瓜、苦菜、莲子等苦味食物", "#FF8C00"},
+            {"太阴湿土", "湿气为主，主湿润黏滞。<br/>对应地支：申酉 · 天干：甲己<br/><br/>⚠️ 易患：腹胀、腹泻、水肿、脾胃疾病、皮肤病<br/>✅ 养生：宜健脾祛湿，多食薏米、山药，适度运动<br/>🌾 饮食：多食小米、南瓜、土豆等黄色食物", "#DEB887"},
+            {"阳明燥金", "燥气为主，主干燥收敛。<br/>对应地支：申酉 · 天干：甲己<br/><br/>⚠️ 易患：咳嗽、气喘、皮肤干燥、便秘、呼吸系统疾病<br/>✅ 养生：宜润肺生津，多食梨、百合，保持室内湿润<br/>🍐 饮食：多食梨、白萝卜、银耳等白色食物", "#C0C0C0"},
+            {"太阳寒水", "寒气为主，主寒冷凝滞。<br/>对应地支：亥子 · 天干：丙辛<br/><br/>⚠️ 易患：感冒、关节冷痛、畏寒、肾脏疾病<br/>✅ 养生：宜温阳散寒，多食温热食物，注意保暖<br/>🫘 饮食：多食黑豆、核桃、羊肉等黑色食物", "#87CEEB"}
         };
         
         for (int i = 0; i < 6; i++) {
@@ -480,14 +480,13 @@ public class WuyunLiuqiActivity extends Activity {
     
     private String calculateYearGanZhi(int year) {
         int baseYear = 1900;
-        int baseGanIndex = 6;
-        int baseZhiIndex = 0;
+        int baseIndex = 36;
         
         int yearDiff = year - baseYear;
-        int ganIndex = (baseGanIndex + yearDiff) % 10;
-        if (ganIndex < 0) ganIndex += 10;
-        int zhiIndex = (baseZhiIndex + yearDiff) % 12;
-        if (zhiIndex < 0) zhiIndex += 12;
+        int yearIndex = (baseIndex + yearDiff) % 60;
+        
+        int ganIndex = yearIndex % 10;
+        int zhiIndex = yearIndex % 12;
         
         return TIANGAN[ganIndex] + DIZHI[zhiIndex];
     }
@@ -521,20 +520,20 @@ public class WuyunLiuqiActivity extends Activity {
     
     private String[] getSijiYun(String yearGan) {
         String[] yuns = {"木", "火", "土", "金", "水"};
-        int startIndex;
+        int centerIndex;
         
         switch (yearGan) {
-            case "甲": case "己": startIndex = 2; break;
-            case "乙": case "庚": startIndex = 3; break;
-            case "丙": case "辛": startIndex = 4; break;
-            case "丁": case "壬": startIndex = 0; break;
-            case "戊": case "癸": startIndex = 1; break;
-            default: startIndex = 2;
+            case "甲": case "己": centerIndex = 2; break;
+            case "乙": case "庚": centerIndex = 3; break;
+            case "丙": case "辛": centerIndex = 4; break;
+            case "丁": case "壬": centerIndex = 0; break;
+            case "戊": case "癸": centerIndex = 1; break;
+            default: centerIndex = 2;
         }
         
         String[] result = new String[5];
         for (int i = 0; i < 5; i++) {
-            result[i] = yuns[(startIndex + i) % 5];
+            result[i] = yuns[(centerIndex - 2 + i + 5) % 5];
         }
         return result;
     }
