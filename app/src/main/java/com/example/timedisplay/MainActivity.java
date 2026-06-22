@@ -144,6 +144,14 @@ public class MainActivity extends Activity {
         timeFortuneTextView.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(MainActivity.this, WuyunLiuqiActivity.class);
+                String fourPillars = fourPillarsTextView.getText().toString();
+                String[] pillars = fourPillars.split("\\s+");
+                if (pillars.length >= 4) {
+                    intent.putExtra("year_pillar", pillars[0]);
+                    intent.putExtra("month_pillar", pillars[1]);
+                    intent.putExtra("day_pillar", pillars[2]);
+                    intent.putExtra("time_pillar", pillars[3]);
+                }
                 if (isCustomTime && customCalendar != null) {
                     intent.putExtra("custom_year", customCalendar.get(Calendar.YEAR));
                     intent.putExtra("custom_month", customCalendar.get(Calendar.MONTH) + 1);

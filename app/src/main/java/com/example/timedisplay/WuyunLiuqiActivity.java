@@ -35,6 +35,11 @@ public class WuyunLiuqiActivity extends Activity {
     private Handler updateHandler;
     private Runnable updateRunnable;
     
+    private String yearPillar = null;
+    private String monthPillar = null;
+    private String dayPillar = null;
+    private String timePillar = null;
+    
     private static final String[] TIANGAN = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
     private static final String[] DIZHI = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
     
@@ -133,6 +138,11 @@ public class WuyunLiuqiActivity extends Activity {
             customCalendar.set(Calendar.SECOND, 0);
             customCalendar.set(Calendar.MILLISECOND, 0);
         }
+        
+        yearPillar = getIntent().getStringExtra("year_pillar");
+        monthPillar = getIntent().getStringExtra("month_pillar");
+        dayPillar = getIntent().getStringExtra("day_pillar");
+        timePillar = getIntent().getStringExtra("time_pillar");
     }
     
     private void initViews() {
@@ -180,10 +190,17 @@ public class WuyunLiuqiActivity extends Activity {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         
-        String yearGanZhi = calculateYearGanZhi(year);
-        String monthGanZhi = calculateMonthGanZhi(year, month);
-        String dayGanZhi = calculateDayGanZhi(year, month, day);
-        String timeGanZhi = calculateTimeGanZhi(dayGanZhi, hour, minute);
+        String yearGanZhi = yearPillar;
+        String monthGanZhi = monthPillar;
+        String dayGanZhi = dayPillar;
+        String timeGanZhi = timePillar;
+        
+        if (yearGanZhi == null || monthGanZhi == null || dayGanZhi == null || timeGanZhi == null) {
+            yearGanZhi = calculateYearGanZhi(year);
+            monthGanZhi = calculateMonthGanZhi(year, month);
+            dayGanZhi = calculateDayGanZhi(year, month, day);
+            timeGanZhi = calculateTimeGanZhi(dayGanZhi, hour, minute);
+        }
         
         updateHeaderDisplay(yearGanZhi, monthGanZhi, dayGanZhi, timeGanZhi, year, month, day);
         
