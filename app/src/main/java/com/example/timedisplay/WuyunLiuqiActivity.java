@@ -526,31 +526,44 @@ public class WuyunLiuqiActivity extends Activity {
         String yearGanZhi = calculateYearGanZhi(year);
         String yearZhi = yearGanZhi.substring(1, 2);
         
-        String[][] sanyangQi = {
-            {"厥阴风木", "少阴君火", "少阳相火", "太阴湿土", "阳明燥金", "太阳寒水"},
-            {"少阴君火", "太阴湿土", "少阳相火", "阳明燥金", "太阳寒水", "厥阴风木"},
-            {"太阴湿土", "少阳相火", "阳明燥金", "太阳寒水", "厥阴风木", "少阴君火"},
-            {"少阳相火", "阳明燥金", "太阳寒水", "厥阴风木", "少阴君火", "太阴湿土"},
-            {"阳明燥金", "太阳寒水", "厥阴风木", "少阴君火", "太阴湿土", "少阳相火"},
-            {"太阳寒水", "厥阴风木", "少阴君火", "太阴湿土", "少阳相火", "阳明燥金"}
-        };
+        String[] qiOrder = {"厥阴风木", "少阴君火", "少阳相火", "太阴湿土", "阳明燥金", "太阳寒水"};
         
-        int zhiIndex = java.util.Arrays.asList(DIZHI).indexOf(yearZhi);
-        int qiIndex = (zhiIndex + 2) % 6;
+        int siTianIndex;
+        switch (yearZhi) {
+            case "子": case "午": siTianIndex = 1; break;
+            case "丑": case "未": siTianIndex = 3; break;
+            case "寅": case "申": siTianIndex = 2; break;
+            case "卯": case "酉": siTianIndex = 4; break;
+            case "辰": case "戌": siTianIndex = 5; break;
+            case "巳": case "亥": siTianIndex = 0; break;
+            default: siTianIndex = 0;
+        }
         
-        return sanyangQi[qiIndex];
+        String[] result = new String[6];
+        int zaiQuanIndex = (siTianIndex + 3) % 6;
+        
+        result[2] = qiOrder[siTianIndex];
+        result[5] = qiOrder[zaiQuanIndex];
+        
+        int chuQiIndex = (siTianIndex - 2 + 6) % 6;
+        result[0] = qiOrder[chuQiIndex];
+        result[1] = qiOrder[(chuQiIndex + 1) % 6];
+        result[3] = qiOrder[(siTianIndex + 1) % 6];
+        result[4] = qiOrder[(siTianIndex + 2) % 6];
+        
+        return result;
     }
     
     private int getCurrentQiIndex(int month, int day) {
-        if ((month == 1 && day >= 20) || (month == 2 && day <= 19)) {
+        if ((month == 1 && day >= 20) || (month == 2) || (month == 3 && day <= 20)) {
             return 0;
-        } else if ((month == 2 && day >= 20) || (month == 3 && day <= 20)) {
+        } else if ((month == 3 && day >= 21) || (month == 4) || (month == 5 && day <= 20)) {
             return 1;
-        } else if ((month == 3 && day >= 21) || (month == 4 && day <= 20)) {
+        } else if ((month == 5 && day >= 21) || (month == 6) || (month == 7 && day <= 22)) {
             return 2;
-        } else if ((month == 4 && day >= 21) || (month == 6 && day <= 21)) {
+        } else if ((month == 7 && day >= 23) || (month == 8) || (month == 9 && day <= 22)) {
             return 3;
-        } else if ((month == 6 && day >= 22) || (month == 8 && day <= 22)) {
+        } else if ((month == 9 && day >= 23) || (month == 10) || (month == 11 && day <= 21)) {
             return 4;
         } else {
             return 5;
