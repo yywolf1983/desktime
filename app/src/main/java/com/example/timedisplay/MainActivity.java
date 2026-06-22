@@ -572,6 +572,12 @@ public class MainActivity extends Activity {
     
     // 获取月支
     private String getMonthZhi(int month, int day) {
+        // 1月6日小寒前为子月，小寒后为丑月
+        if (month == 1 && day < 6) {
+            return "子";
+        } else if (month == 1 && day >= 6) {
+            return "丑";
+        }
         // 2月4日立春后为寅月
         if (month == 2 && day >= 4) {
             return "寅";

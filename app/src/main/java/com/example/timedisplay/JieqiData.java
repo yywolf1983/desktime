@@ -293,7 +293,7 @@ public class JieqiData {
         if (calcYear >= 2100) {
             solarTerms = year21;
         } else if (calcYear >= 2000) {
-            solarTerms = year21;
+            solarTerms = year20;
         } else {
             solarTerms = year20;
         }

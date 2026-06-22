@@ -376,7 +376,7 @@ public class WuyunLiuqiActivity extends Activity {
     
     private void updateLiuqiDisplay(int year, int month, int day) {
         String[] liuqi = getLiuqiForDate(year, month, day);
-        int currentQiIndex = getCurrentQiIndex(month, day);
+        int currentQiIndex = getCurrentQiIndex(year, month, day);
         
         String[] qiNames = {"初气", "二气", "三气", "四气", "五气", "终气"};
         String[] qiColors = {"#90EE90", "#FF6B6B", "#FF8C00", "#DEB887", "#C0C0C0", "#87CEEB"};
@@ -570,16 +570,19 @@ public class WuyunLiuqiActivity extends Activity {
         return result;
     }
     
-    private int getCurrentQiIndex(int month, int day) {
-        if ((month == 1 && day >= 20) || (month == 2) || (month == 3 && day <= 20)) {
+    private int getCurrentQiIndex(int year, int month, int day) {
+        String jieqi = JieqiData.getJieqi(year, month, day);
+        int jieqiIndex = JieqiData.getJieqiIndex(jieqi);
+        
+        if (jieqiIndex == 23 || jieqiIndex == 0 || jieqiIndex == 1 || jieqiIndex == 2 || (jieqiIndex == 3 && !jieqi.equals("春分"))) {
             return 0;
-        } else if ((month == 3 && day >= 21) || (month == 4) || (month == 5 && day <= 20)) {
+        } else if (jieqiIndex == 3 || jieqiIndex == 4 || (jieqiIndex == 5 && !jieqi.equals("小满"))) {
             return 1;
-        } else if ((month == 5 && day >= 21) || (month == 6) || (month == 7 && day <= 22)) {
+        } else if (jieqiIndex == 5 || jieqiIndex == 6 || jieqiIndex == 7 || (jieqiIndex == 8 && !jieqi.equals("大暑"))) {
             return 2;
-        } else if ((month == 7 && day >= 23) || (month == 8) || (month == 9 && day <= 22)) {
+        } else if (jieqiIndex == 8 || jieqiIndex == 9 || jieqiIndex == 10 || jieqiIndex == 11 || (jieqiIndex == 12 && !jieqi.equals("秋分"))) {
             return 3;
-        } else if ((month == 9 && day >= 23) || (month == 10) || (month == 11 && day <= 21)) {
+        } else if (jieqiIndex == 12 || jieqiIndex == 13 || jieqiIndex == 14 || jieqiIndex == 15 || (jieqiIndex == 16 && !jieqi.equals("小雪"))) {
             return 4;
         } else {
             return 5;
