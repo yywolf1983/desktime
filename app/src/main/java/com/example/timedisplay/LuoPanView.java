@@ -319,13 +319,16 @@ public class LuoPanView extends View {
     
     private void drawTenGan(Canvas canvas, int cx, int cy, float r) {
         float textRadius = r * 0.45f;
+        int[] ganAngles = {75, 105, 165, 195, 0, 0, 255, 285, 345, 15};
+        
         for (int i = 0; i < 10; i++) {
-            double angle = Math.toRadians(i * 36 - 90);
+            if (i == 4 || i == 5) continue;
+            double angle = Math.toRadians(ganAngles[i] - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
             float y = cy + (float) (textRadius * Math.sin(angle));
             
             canvas.save();
-            canvas.rotate(i * 36, x, y);
+            canvas.rotate(ganAngles[i], x, y);
             
             textPaint.setTextSize(r * 0.075f);
             textPaint.setColor(Color.rgb(173, 255, 47));
@@ -358,13 +361,25 @@ public class LuoPanView extends View {
     
     private void drawNineStars(Canvas canvas, int cx, int cy, float r) {
         float textRadius = r * 0.15f;
+        int[] starAngles = {0, 225, 90, 135, 0, 315, 270, 45, 180};
+        
         for (int i = 0; i < 9; i++) {
-            double angle = Math.toRadians(i * 40 - 90);
+            if (i == 4) {
+                textPaint.setTextSize(r * 0.07f);
+                textPaint.setColor(Color.rgb(255, 165, 0));
+                textPaint.setFakeBoldText(true);
+                Paint.FontMetrics fm = textPaint.getFontMetrics();
+                float centerY = cy - (fm.ascent + fm.descent) / 2;
+                canvas.drawText("天" + NINE_STARS[i], cx, centerY, textPaint);
+                continue;
+            }
+            
+            double angle = Math.toRadians(starAngles[i] - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
             float y = cy + (float) (textRadius * Math.sin(angle));
             
             canvas.save();
-            canvas.rotate(i * 40, x, y);
+            canvas.rotate(starAngles[i], x, y);
             
             textPaint.setTextSize(r * 0.07f);
             textPaint.setColor(Color.rgb(255, 165, 0));
