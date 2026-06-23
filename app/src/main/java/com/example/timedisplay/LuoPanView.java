@@ -319,7 +319,7 @@ public class LuoPanView extends View {
     
     private void drawTenGan(Canvas canvas, int cx, int cy, float r) {
         float textRadius = r * 0.45f;
-        int[] ganAngles = {75, 105, 165, 195, 0, 0, 255, 285, 345, 15};
+        int[] ganAngles = {97, 82, 172, 187, 0, 0, 262, 277, 352, 7};
         
         for (int i = 0; i < 10; i++) {
             if (i == 4 || i == 5) continue;
