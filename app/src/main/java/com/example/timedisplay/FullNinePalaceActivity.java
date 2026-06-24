@@ -590,7 +590,8 @@ public class FullNinePalaceActivity extends Activity {
         if (isYangDun) {
             return (xunShouPalace + shiCheng - 1) % 9;
         } else {
-            return (xunShouPalace - shiCheng + 1 + 9) % 9;
+            int result = (xunShouPalace - shiCheng + 1 + 9) % 9;
+            return result < 0 ? result + 9 : result;
         }
     }
     
