@@ -435,6 +435,7 @@ public class FullNinePalaceActivity extends Activity {
         }
 
         String[][] palaceData = new String[9][4];
+        String[] luckData = new String[9];
         for (int i = 0; i < 9; i++) {
             String star = nineStars[i];
             String door = eightDoors[i];
@@ -447,9 +448,12 @@ public class FullNinePalaceActivity extends Activity {
             palaceData[i][1] = god + " " + star;
             palaceData[i][2] = (door != null && !door.isEmpty() ? door : " ") + " " + tianGan + "/" + diGan;
             palaceData[i][3] = luck + " " + wangCui[i];
+            
+            luckData[i] = luck;
         }
 
         fullNinePalacePanel.setPalaceData(palaceData);
+        fullNinePalacePanel.setLuckData(luckData);
         fullNinePalacePanel.setBrightness(0.9f);
 
         // 返回落宫信息：[值符落宫, 值使落宫, 日干落宫, 时干落宫]
@@ -803,52 +807,66 @@ public class FullNinePalaceActivity extends Activity {
         int score = 0;
         
         if (star != null) {
-            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽") || star.equals("天任")) {
+            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽")) {
+                score += 3;
+            } else if (star.equals("天任")) {
                 score += 2;
+            } else if (star.equals("天冲")) {
+                score += 1;
+            } else if (star.equals("天英")) {
+                score += 0;
             } else if (star.equals("天蓬") || star.equals("天芮") || star.equals("天柱")) {
                 score -= 2;
-            } else if (star.equals("天英")) {
-                score -= 1;
-            } else if (star.equals("天冲")) {
-                score += 0;
             }
         }
         
         if (door != null && !door.isEmpty()) {
-            if (door.equals("开") || door.equals("休") || door.equals("生")) {
+            if (door.equals("开") || door.equals("生")) {
+                score += 3;
+            } else if (door.equals("休")) {
                 score += 2;
-            } else if (door.equals("死") || door.equals("伤") || door.equals("惊")) {
-                score -= 2;
-            } else if (door.equals("杜") || door.equals("景")) {
+            } else if (door.equals("景")) {
+                score += 1;
+            } else if (door.equals("杜")) {
                 score += 0;
+            } else if (door.equals("惊")) {
+                score -= 1;
+            } else if (door.equals("伤") || door.equals("死")) {
+                score -= 3;
             }
         }
         
         if (god != null && !god.isEmpty()) {
-            if (god.equals("值符") || god.equals("太阴") || god.equals("六合") || god.equals("九天")) {
-                score += 1;
-            } else if (god.equals("螣蛇") || god.equals("白虎") || god.equals("玄武")) {
-                score -= 1;
+            if (god.equals("值符")) {
+                score += 3;
+            } else if (god.equals("九天") || god.equals("太阴") || god.equals("六合")) {
+                score += 2;
             } else if (god.equals("九地")) {
                 score += 0;
+            } else if (god.equals("螣蛇")) {
+                score -= 1;
+            } else if (god.equals("白虎") || god.equals("玄武")) {
+                score -= 3;
             }
         }
         
         if (wangCui != null) {
             if (wangCui.equals("旺")) {
-                score += 2;
+                score += 3;
             } else if (wangCui.equals("相")) {
-                score += 1;
+                score += 2;
             } else if (wangCui.equals("休")) {
                 score += 0;
             } else if (wangCui.equals("囚")) {
-                score -= 1;
-            } else if (wangCui.equals("死")) {
                 score -= 2;
+            } else if (wangCui.equals("死")) {
+                score -= 3;
             }
         }
         
-        if (score >= 3) {
+        if (score >= 5) {
+            return "大吉";
+        } else if (score >= 3) {
             return "吉";
         } else if (score >= 1) {
             return "平吉";
@@ -856,8 +874,10 @@ public class FullNinePalaceActivity extends Activity {
             return "平";
         } else if (score >= -3) {
             return "平凶";
-        } else {
+        } else if (score >= -5) {
             return "凶";
+        } else {
+            return "大凶";
         }
     }
     

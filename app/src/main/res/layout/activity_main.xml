@@ -187,15 +187,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
-                android:textColor="#B19CD9"
+                android:textColor="#6B7280"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:layout_marginTop="6dp"
-                android:letterSpacing="0.08"
+                android:letterSpacing="0.04"
                 android:maxLines="2"
-                android:lineSpacingExtra="3dp"
+                android:lineSpacingExtra="2dp"
                 android:paddingHorizontal="8dp"
-                tools:text="阳遁格局 文星主事 利于文书 开门见喜\n事易成就 气场旺盛 万事通达 宜积极进取" />
+                tools:text="大吉\n吉星高照，诸事顺遂 · 把握良机，大胆行动" />
         </LinearLayout>
 
         <LinearLayout

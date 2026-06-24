@@ -15,6 +15,7 @@ public class FullNinePalacePanel extends View {
     private Paint bgPaint;
     private Paint borderPaint;
     private String[][] palaceData;
+    private String[] luckData;
     private float brightness = 1.0f;
     private float scale = 1f;
     
@@ -76,6 +77,11 @@ public class FullNinePalacePanel extends View {
                 palaceData[i][j] = "";
             }
         }
+        
+        luckData = new String[9];
+        for (int i = 0; i < 9; i++) {
+            luckData[i] = "平";
+        }
     }
 
     @Override
@@ -110,18 +116,7 @@ public class FullNinePalacePanel extends View {
             float right = offsetX + (col + 1) * cellSize - innerPadding;
             float bottom = offsetY + (row + 1) * cellSize - innerPadding;
 
-            String luck = "平";
-            if (palaceData[i][3] != null && !palaceData[i][3].isEmpty()) {
-                if (palaceData[i][3].contains("平吉")) {
-                    luck = "平吉";
-                } else if (palaceData[i][3].contains("吉")) {
-                    luck = "吉";
-                } else if (palaceData[i][3].contains("平凶")) {
-                    luck = "平凶";
-                } else if (palaceData[i][3].contains("凶")) {
-                    luck = "凶";
-                }
-            }
+            String luck = luckData != null && luckData[i] != null ? luckData[i] : "平";
 
             bgPaint.setShader(new android.graphics.LinearGradient(left, top, right, bottom, 
                 COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
@@ -129,14 +124,18 @@ public class FullNinePalacePanel extends View {
 
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
+            } else if (luck.equals("大吉")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 220), 52, 168, 83));
             } else if (luck.equals("吉")) {
-                borderPaint.setColor(COLOR_GREEN);
+                borderPaint.setColor(Color.argb((int)(brightness * 200), 74, 175, 94));
             } else if (luck.equals("平吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 150), 122, 154, 96));
+                borderPaint.setColor(Color.argb((int)(brightness * 180), 126, 186, 139));
+            } else if (luck.equals("大凶")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 220), 220, 38, 38));
             } else if (luck.equals("凶")) {
-                borderPaint.setColor(COLOR_RED);
+                borderPaint.setColor(Color.argb((int)(brightness * 200), 239, 68, 68));
             } else if (luck.equals("平凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 150), 196, 123, 94));
+                borderPaint.setColor(Color.argb((int)(brightness * 180), 239, 108, 108));
             } else {
                 borderPaint.setColor(COLOR_BORDER);
             }
@@ -145,16 +144,20 @@ public class FullNinePalacePanel extends View {
             float x = offsetX + (col + 0.5f) * cellSize;
             float y = offsetY + (row + 0.22f) * cellSize;
 
-            if (luck.equals("吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
+            if (luck.equals("大吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 240), 34, 197, 94));
+            } else if (luck.equals("吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 220), 52, 211, 153));
             } else if (luck.equals("平吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 122, 154, 96));
+                textPaint.setColor(Color.argb((int)(brightness * 200), 147, 197, 114));
+            } else if (luck.equals("大凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 240), 239, 68, 68));
             } else if (luck.equals("凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 255), 255, 140, 140));
+                textPaint.setColor(Color.argb((int)(brightness * 220), 248, 113, 113));
             } else if (luck.equals("平凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 196, 123, 94));
+                textPaint.setColor(Color.argb((int)(brightness * 200), 251, 146, 60));
             } else {
-                textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
+                textPaint.setColor(Color.argb((int)(brightness * 220), 107, 114, 128));
             }
 
             textPaint.setTextSize(cellSize * 0.15f);
@@ -170,7 +173,21 @@ public class FullNinePalacePanel extends View {
 
             y += cellSize * 0.18f;
             textPaint.setTextSize(cellSize * 0.10f);
-            textPaint.setColor(Color.argb((int)(brightness * 200), 191, 160, 85));
+            if (luck.equals("大吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 240), 34, 197, 94));
+            } else if (luck.equals("吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 220), 52, 211, 153));
+            } else if (luck.equals("平吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 200), 147, 197, 114));
+            } else if (luck.equals("大凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 240), 239, 68, 68));
+            } else if (luck.equals("凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 220), 248, 113, 113));
+            } else if (luck.equals("平凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 200), 251, 146, 60));
+            } else {
+                textPaint.setColor(Color.argb((int)(brightness * 220), 107, 114, 128));
+            }
             canvas.drawText(palaceData[i][3], x, y, textPaint);
         }
     }
@@ -188,6 +205,13 @@ public class FullNinePalacePanel extends View {
         }
     }
 
+    public void setLuckData(String[] luck) {
+        if (luck != null && luck.length == 9) {
+            System.arraycopy(luck, 0, luckData, 0, 9);
+            invalidate();
+        }
+    }
+    
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
         gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));

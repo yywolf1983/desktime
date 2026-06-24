@@ -734,20 +734,30 @@ public class MainActivity extends Activity {
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
         if (panExplanation != null && ninePalacePanel != null) {
-            boolean isYangDun = ninePalacePanel.getCopyIsYangDun();
             String zhiFu = ninePalacePanel.getCopyZhiFu();
             String zhiShi = ninePalacePanel.getCopyZhiShi();
             
-            String yangYin = isYangDun ? "阳遁格局" : "阴遁格局";
-            String[] fuPhrases = getZhiFuPhrases(zhiFu);
-            String[] shiPhrases = getZhiShiPhrases(zhiShi);
+            int luckScore = calculateOverallLuck(zhiFu, zhiShi);
+            String luckText = getLuckText(luckScore);
+            String simpleMeaning = getSimpleMeaning(zhiFu, zhiShi);
+            String simpleAdvice = getSimpleAdvice(luckScore);
             
-            String[] generalPhrases = getGeneralPhrases(zhiFu, zhiShi);
-            String line1 = yangYin + "  " + fuPhrases[0] + "  " + fuPhrases[1] + "  " + shiPhrases[0];
-            String line2 = shiPhrases[1] + "  " + generalPhrases[0] + "  " + generalPhrases[1] + "  " + generalPhrases[2];
+            android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
             
-            String panInfo = line1 + "\n" + line2;
-            panExplanation.setText(panInfo);
+            sb.append(luckText);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(getLuckColor(luckScore)), 0, luckText.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            
+            sb.append("\n");
+            
+            sb.append(simpleMeaning);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(0xFF6B7280), sb.length() - simpleMeaning.length(), sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            
+            sb.append(" · ");
+            
+            sb.append(simpleAdvice);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(0xFFB45309), sb.length() - simpleAdvice.length(), sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            
+            panExplanation.setText(sb);
         }
     }
     
@@ -763,6 +773,243 @@ public class MainActivity extends Activity {
             return new String[]{"门吉星平", "借力而为", "稳步推进"};
         } else {
             return new String[]{"气场偏弱", "宜静不宜动", "谨慎行事"};
+        }
+    }
+    
+    private int calculateOverallLuck(String star, String door) {
+        int score = 0;
+        
+        if (star != null) {
+            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽")) {
+                score += 3;
+            } else if (star.equals("天任")) {
+                score += 2;
+            } else if (star.equals("天冲")) {
+                score += 1;
+            } else if (star.equals("天英")) {
+                score += 0;
+            } else if (star.equals("天蓬") || star.equals("天芮") || star.equals("天柱")) {
+                score -= 2;
+            }
+        }
+        
+        if (door != null) {
+            if (door.equals("开") || door.equals("生")) {
+                score += 3;
+            } else if (door.equals("休")) {
+                score += 2;
+            } else if (door.equals("景")) {
+                score += 1;
+            } else if (door.equals("杜")) {
+                score += 0;
+            } else if (door.equals("惊")) {
+                score -= 1;
+            } else if (door.equals("伤") || door.equals("死")) {
+                score -= 3;
+            }
+        }
+        
+        return score;
+    }
+    
+    private String getLuckText(int score) {
+        if (score >= 5) {
+            return "大吉";
+        } else if (score >= 3) {
+            return "吉";
+        } else if (score >= 1) {
+            return "平吉";
+        } else if (score >= -1) {
+            return "平";
+        } else if (score >= -3) {
+            return "平凶";
+        } else if (score >= -5) {
+            return "凶";
+        } else {
+            return "大凶";
+        }
+    }
+    
+    private int getLuckColor(int score) {
+        if (score >= 5) {
+            return 0xFF22C55E;
+        } else if (score >= 3) {
+            return 0xFF34D399;
+        } else if (score >= 1) {
+            return 0xFF84CC16;
+        } else if (score >= -1) {
+            return 0xFF6B7280;
+        } else if (score >= -3) {
+            return 0xFFF97316;
+        } else if (score >= -5) {
+            return 0xFFEF4444;
+        } else {
+            return 0xFFDC2626;
+        }
+    }
+    
+    private String getStarDescription(String star) {
+        if (star == null) return "";
+        if (star.equals("天辅")) return "文星";
+        if (star.equals("天心")) return "吉星";
+        if (star.equals("天禽")) return "贵人";
+        if (star.equals("天任")) return "稳重";
+        if (star.equals("天冲")) return "行动";
+        if (star.equals("天英")) return "光明";
+        if (star.equals("天蓬")) return "暗涌";
+        if (star.equals("天芮")) return "病符";
+        if (star.equals("天柱")) return "阻滞";
+        return "";
+    }
+    
+    private String getDoorDescription(String door) {
+        if (door == null) return "";
+        if (door.equals("开")) return "通达";
+        if (door.equals("休")) return "休养";
+        if (door.equals("生")) return "财源";
+        if (door.equals("伤")) return "损耗";
+        if (door.equals("杜")) return "堵塞";
+        if (door.equals("景")) return "谋划";
+        if (door.equals("死")) return "不利";
+        if (door.equals("惊")) return "是非";
+        return "";
+    }
+    
+    private String getStarMeaning(String star) {
+        if (star == null) return "";
+        if (star.equals("天辅")) return "天辅星主事，才华横溢";
+        if (star.equals("天心")) return "天心星高照，智慧超群";
+        if (star.equals("天禽")) return "天禽星降临，贵人扶持";
+        if (star.equals("天任")) return "天任星当头，稳重踏实";
+        if (star.equals("天冲")) return "天冲星当值，活力充沛";
+        if (star.equals("天英")) return "天英星照耀，光明磊落";
+        if (star.equals("天蓬")) return "天蓬星主事，暗藏风险";
+        if (star.equals("天芮")) return "天芮星当头，健康留意";
+        if (star.equals("天柱")) return "天柱星当值，阻力较大";
+        return "";
+    }
+    
+    private String getDoorMeaning(String door) {
+        if (door == null) return "";
+        if (door.equals("开")) return "开门大吉，诸事顺畅";
+        if (door.equals("休")) return "休门安宁，宜静休养";
+        if (door.equals("生")) return "生门得位，财运亨通";
+        if (door.equals("伤")) return "伤门不利，注意损耗";
+        if (door.equals("杜")) return "杜门堵塞，行事受阻";
+        if (door.equals("景")) return "景门秀丽，适合谋划";
+        if (door.equals("死")) return "死门不吉，事多阻滞";
+        if (door.equals("惊")) return "惊门不安，谨防口舌";
+        return "";
+    }
+    
+    private String getLuckReason(String star, String door) {
+        if (star == null) star = "";
+        if (door == null) door = "";
+        
+        boolean isGoodStar = isGoodStar(star);
+        boolean isGoodDoor = isGoodDoor(door);
+        
+        String starDesc = "";
+        if (star.equals("天辅")) starDesc = "文星主事，利于发展";
+        else if (star.equals("天心")) starDesc = "吉星高照，诸事顺遂";
+        else if (star.equals("天禽")) starDesc = "贵人相助，运势亨通";
+        else if (star.equals("天任")) starDesc = "稳重可靠，稳步发展";
+        else if (star.equals("天冲")) starDesc = "行动力强，变化多端";
+        else if (star.equals("天英")) starDesc = "光明正大，名声远播";
+        else if (star.equals("天蓬")) starDesc = "暗涌不明，需防风险";
+        else if (star.equals("天芮")) starDesc = "病符临身，健康注意";
+        else if (star.equals("天柱")) starDesc = "阻滞较多，进展不易";
+        
+        String doorDesc = "";
+        if (door.equals("开")) doorDesc = "开门大吉，万事通达";
+        else if (door.equals("休")) doorDesc = "休养生息，积蓄能量";
+        else if (door.equals("生")) doorDesc = "生生不息，财源广进";
+        else if (door.equals("伤")) doorDesc = "损伤耗损，事多阻滞";
+        else if (door.equals("杜")) doorDesc = "堵塞不通，谋事难成";
+        else if (door.equals("景")) doorDesc = "景门秀丽，适宜谋划";
+        else if (door.equals("死")) doorDesc = "死气沉沉，事多不利";
+        else if (door.equals("惊")) doorDesc = "惊恐不安，是非较多";
+        
+        if (isGoodStar && isGoodDoor) {
+            return starDesc + "，" + doorDesc;
+        } else if (isGoodStar && !isGoodDoor) {
+            return starDesc + "，但" + doorDesc;
+        } else if (!isGoodStar && isGoodDoor) {
+            return doorDesc + "，虽" + starDesc;
+        } else {
+            return starDesc + "，" + doorDesc;
+        }
+    }
+    
+    private String getLuckAdvice(int score) {
+        if (score >= 5) {
+            return "天时地利人和，可大胆行动";
+        } else if (score >= 3) {
+            return "运势良好，适合开展新计划";
+        } else if (score >= 1) {
+            return "小有助力，可稳步推进";
+        } else if (score >= -1) {
+            return "运势平平，宜守不宜攻";
+        } else if (score >= -3) {
+            return "阻力较大，需谨慎行事";
+        } else if (score >= -5) {
+            return "事多不顺，宜静不宜动";
+        } else {
+            return "凶兆明显，务必小心谨慎";
+        }
+    }
+    
+    private String getSimpleMeaning(String star, String door) {
+        String starMean = "";
+        if (star != null) {
+            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽")) {
+                starMean = "吉星高照";
+            } else if (star.equals("天任")) {
+                starMean = "稳中有升";
+            } else if (star.equals("天冲")) {
+                starMean = "活力充沛";
+            } else if (star.equals("天英")) {
+                starMean = "光明正大";
+            } else {
+                starMean = "时运一般";
+            }
+        }
+        
+        String doorMean = "";
+        if (door != null) {
+            if (door.equals("开") || door.equals("生")) {
+                doorMean = "诸事顺遂";
+            } else if (door.equals("休")) {
+                doorMean = "宜静休养";
+            } else if (door.equals("景")) {
+                doorMean = "适合谋划";
+            } else if (door.equals("杜")) {
+                doorMean = "进展受阻";
+            } else if (door.equals("惊")) {
+                doorMean = "谨防是非";
+            } else {
+                doorMean = "事多不利";
+            }
+        }
+        
+        return starMean + "，" + doorMean;
+    }
+    
+    private String getSimpleAdvice(int score) {
+        if (score >= 5) {
+            return "把握良机，大胆行动";
+        } else if (score >= 3) {
+            return "适合开展新计划";
+        } else if (score >= 1) {
+            return "稳步推进，顺其自然";
+        } else if (score >= -1) {
+            return "保持平稳，静观其变";
+        } else if (score >= -3) {
+            return "谨慎行事，避免冒险";
+        } else if (score >= -5) {
+            return "收敛锋芒，以静制动";
+        } else {
+            return "诸事不宜，静待时机";
         }
     }
     

@@ -143,40 +143,30 @@ public class NinePalacePanel extends View {
             float bottom = (row + 1) * cellSize - padding;
 
             String luck = "平";
-            String[] dataParts = palaceData[i][1].split("\\n");
-            if (dataParts.length > 2) {
-                String fourthLine = dataParts[2];
-                if (fourthLine.contains("吉")) {
-                    if (fourthLine.contains("平吉")) {
-                        luck = "平吉";
-                    } else {
-                        luck = "吉";
-                    }
-                } else if (fourthLine.contains("凶")) {
-                    if (fourthLine.contains("平凶")) {
-                        luck = "平凶";
-                    } else {
-                        luck = "凶";
-                    }
-                }
+            if (copyPalaceData != null && copyPalaceData[i][5] != null) {
+                luck = copyPalaceData[i][5];
             }
 
-            // 绘制宫位背景（渐变）
+            String[] dataParts = palaceData[i][1].split("\\n");
+
             bgPaint.setShader(new android.graphics.LinearGradient(left, top, right, bottom, 
                 COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint);
 
-            // 设置边框颜色（参照 web 样式）
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
+            } else if (luck.equals("大吉")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 220), 52, 168, 83));
             } else if (luck.equals("吉")) {
-                borderPaint.setColor(COLOR_GREEN);
+                borderPaint.setColor(Color.argb((int)(brightness * 200), 74, 175, 94));
             } else if (luck.equals("平吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 150), 122, 154, 96));
+                borderPaint.setColor(Color.argb((int)(brightness * 180), 126, 186, 139));
+            } else if (luck.equals("大凶")) {
+                borderPaint.setColor(Color.argb((int)(brightness * 220), 220, 38, 38));
             } else if (luck.equals("凶")) {
-                borderPaint.setColor(COLOR_RED);
+                borderPaint.setColor(Color.argb((int)(brightness * 200), 239, 68, 68));
             } else if (luck.equals("平凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 150), 196, 123, 94));
+                borderPaint.setColor(Color.argb((int)(brightness * 180), 239, 108, 108));
             } else {
                 borderPaint.setColor(COLOR_BORDER);
             }
@@ -199,16 +189,20 @@ public class NinePalacePanel extends View {
 
             float y = (row + topPadding / cellSize) * cellSize - textPaint.getFontMetrics().ascent;
 
-            if (luck.equals("吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 255), 144, 238, 144));
+            if (luck.equals("大吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 240), 34, 197, 94));
+            } else if (luck.equals("吉")) {
+                textPaint.setColor(Color.argb((int)(brightness * 220), 52, 211, 153));
             } else if (luck.equals("平吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 122, 154, 96));
+                textPaint.setColor(Color.argb((int)(brightness * 200), 147, 197, 114));
+            } else if (luck.equals("大凶")) {
+                textPaint.setColor(Color.argb((int)(brightness * 240), 239, 68, 68));
             } else if (luck.equals("凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 255), 255, 140, 140));
+                textPaint.setColor(Color.argb((int)(brightness * 220), 248, 113, 113));
             } else if (luck.equals("平凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 196, 123, 94));
+                textPaint.setColor(Color.argb((int)(brightness * 200), 251, 146, 60));
             } else {
-                textPaint.setColor(Color.argb((int)(brightness * 255), 135, 206, 235));
+                textPaint.setColor(Color.argb((int)(brightness * 220), 107, 114, 128));
             }
 
             textPaint.setTextSize(cellSize * 0.15f);
@@ -600,52 +594,66 @@ public class NinePalacePanel extends View {
         int score = 0;
         
         if (star != null) {
-            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽") || star.equals("天任")) {
+            if (star.equals("天辅") || star.equals("天心") || star.equals("天禽")) {
+                score += 3;
+            } else if (star.equals("天任")) {
                 score += 2;
+            } else if (star.equals("天冲")) {
+                score += 1;
+            } else if (star.equals("天英")) {
+                score += 0;
             } else if (star.equals("天蓬") || star.equals("天芮") || star.equals("天柱")) {
                 score -= 2;
-            } else if (star.equals("天英")) {
-                score -= 1;
-            } else if (star.equals("天冲")) {
-                score += 0;
             }
         }
         
         if (door != null && !door.isEmpty()) {
-            if (door.equals("开") || door.equals("休") || door.equals("生")) {
+            if (door.equals("开") || door.equals("生")) {
+                score += 3;
+            } else if (door.equals("休")) {
                 score += 2;
-            } else if (door.equals("死") || door.equals("伤") || door.equals("惊")) {
-                score -= 2;
-            } else if (door.equals("杜") || door.equals("景")) {
+            } else if (door.equals("景")) {
+                score += 1;
+            } else if (door.equals("杜")) {
                 score += 0;
+            } else if (door.equals("惊")) {
+                score -= 1;
+            } else if (door.equals("伤") || door.equals("死")) {
+                score -= 3;
             }
         }
         
         if (god != null && !god.isEmpty()) {
-            if (god.equals("值符") || god.equals("九天") || god.equals("太阴") || god.equals("六合")) {
-                score += 1;
-            } else if (god.equals("螣蛇") || god.equals("白虎") || god.equals("玄武")) {
-                score -= 1;
+            if (god.equals("值符")) {
+                score += 3;
+            } else if (god.equals("九天") || god.equals("太阴") || god.equals("六合")) {
+                score += 2;
             } else if (god.equals("九地")) {
                 score += 0;
+            } else if (god.equals("螣蛇")) {
+                score -= 1;
+            } else if (god.equals("白虎") || god.equals("玄武")) {
+                score -= 3;
             }
         }
         
         if (wangCui != null) {
             if (wangCui.equals("旺")) {
-                score += 2;
+                score += 3;
             } else if (wangCui.equals("相")) {
-                score += 1;
+                score += 2;
             } else if (wangCui.equals("休")) {
                 score += 0;
             } else if (wangCui.equals("囚")) {
-                score -= 1;
-            } else if (wangCui.equals("死")) {
                 score -= 2;
+            } else if (wangCui.equals("死")) {
+                score -= 3;
             }
         }
         
-        if (score >= 3) {
+        if (score >= 5) {
+            return "大吉";
+        } else if (score >= 3) {
             return "吉";
         } else if (score >= 1) {
             return "平吉";
@@ -653,8 +661,10 @@ public class NinePalacePanel extends View {
             return "平";
         } else if (score >= -3) {
             return "平凶";
-        } else {
+        } else if (score >= -5) {
             return "凶";
+        } else {
+            return "大凶";
         }
     }
     
