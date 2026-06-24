@@ -1,8 +1,13 @@
 package com.example.timedisplay;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -12,7 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-public class LuoPanActivity extends Activity {
+public class LuoPanActivity extends Activity implements SensorEventListener {
     private LuoPanView luoPanView;
 
     private TextView directionInfo;
@@ -42,6 +47,16 @@ public class LuoPanActivity extends Activity {
     private float currentRotation = 0;
     private float lastAngle = 0;
     private boolean isRotating = false;
+    private boolean autoMode = true;
+    private boolean hasCompass = false;
+    
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private float[] accelerometerValues = new float[3];
+    private float[] magnetometerValues = new float[3];
+    private float[] rotationMatrix = new float[9];
+    private float[] orientation = new float[3];
     
     private static final String KEY_ROTATION = "current_rotation";
 
@@ -91,12 +106,68 @@ public class LuoPanActivity extends Activity {
         
         updateInfo();
         setupTouchListener();
+        setupSensor();
+    }
+    
+    private void setupSensor() {
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+            if (accelerometer != null && magnetometer != null) {
+                hasCompass = true;
+            }
+        }
     }
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putFloat(KEY_ROTATION, currentRotation);
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (hasCompass && autoMode) {
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+    }
+    
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (!autoMode) return;
+        
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, accelerometerValues, 0, 3);
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, magnetometerValues, 0, 3);
+        }
+        
+        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerValues, magnetometerValues);
+        SensorManager.getOrientation(rotationMatrix, orientation);
+        
+        float azimuth = (float) Math.toDegrees(orientation[0]);
+        if (azimuth < 0) {
+            azimuth += 360;
+        }
+        
+        currentRotation = -azimuth;
+        luoPanView.setRotation(currentRotation);
+        updateInfo();
+    }
+    
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
     
     private void updateInfo() {
@@ -1272,6 +1343,10 @@ public class LuoPanActivity extends Activity {
                 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        if (hasCompass) {
+                            autoMode = false;
+                            sensorManager.unregisterListener(LuoPanActivity.this);
+                        }
                         lastAngle = getAngle(event.getX(), event.getY(), centerX, centerY);
                         isRotating = true;
                         return true;
@@ -1292,6 +1367,11 @@ public class LuoPanActivity extends Activity {
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         isRotating = false;
+                        if (hasCompass) {
+                            autoMode = true;
+                            sensorManager.registerListener(LuoPanActivity.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+                            sensorManager.registerListener(LuoPanActivity.this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+                        }
                         return true;
                 }
                 return false;
