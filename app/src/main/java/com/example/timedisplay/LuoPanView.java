@@ -250,12 +250,12 @@ public class LuoPanView extends View {
     private void drawTwentyFourMountains(Canvas canvas, int cx, int cy, float r) {
         float textRadius = r * 0.86f;
         for (int i = 0; i < 24; i++) {
-            double angle = Math.toRadians(i * 15 - 90);
+            double angle = Math.toRadians(i * 15 + 345 - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
             float y = cy + (float) (textRadius * Math.sin(angle));
             
             canvas.save();
-            canvas.rotate(i * 15, x, y);
+            canvas.rotate(i * 15 + 345, x, y);
             
             if (i % 3 == 0) {
                 textPaint.setColor(Color.YELLOW);
@@ -275,13 +275,14 @@ public class LuoPanView extends View {
     
     private void drawTwelveZhi(Canvas canvas, int cx, int cy, float r) {
         float textRadius = r * 0.74f;
+        int[] zhiAngles = {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330};
         for (int i = 0; i < 12; i++) {
-            double angle = Math.toRadians(i * 30 - 90);
+            double angle = Math.toRadians(zhiAngles[i] - 90);
             float x = cx + (float) (textRadius * Math.cos(angle));
             float y = cy + (float) (textRadius * Math.sin(angle));
             
             canvas.save();
-            canvas.rotate(i * 30, x, y);
+            canvas.rotate(zhiAngles[i], x, y);
             
             textPaint.setTextSize(r * 0.085f);
             textPaint.setColor(Color.rgb(255, 182, 193));
@@ -319,7 +320,7 @@ public class LuoPanView extends View {
     
     private void drawTenGan(Canvas canvas, int cx, int cy, float r) {
         float textRadius = r * 0.45f;
-        int[] ganAngles = {97, 82, 172, 187, 0, 0, 262, 277, 352, 7};
+        int[] ganAngles = {75, 105, 165, 195, 0, 0, 255, 285, 345, 15};
         
         for (int i = 0; i < 10; i++) {
             if (i == 4 || i == 5) continue;
