@@ -46,9 +46,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:id="@+id/directionInfo"
@@ -74,9 +75,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -199,9 +201,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -226,9 +229,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -253,9 +257,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -280,9 +285,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -311,9 +317,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -342,9 +349,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -373,9 +381,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -400,9 +409,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -427,9 +437,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/card_background">
 
                     <TextView
                         android:layout_width="match_parent"

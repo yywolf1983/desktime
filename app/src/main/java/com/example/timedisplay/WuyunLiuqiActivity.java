@@ -68,18 +68,18 @@ public class WuyunLiuqiActivity extends Activity {
     };
     
     private static final String[] SHICHEN_YIJI = {
-        "宜：安睡、打坐\n忌：熬夜\n💡 建议：子时是阴气最盛的时候",
-        "宜：深睡、养肝\n忌：饮酒\n💡 建议：丑时是肝脏排毒时间",
-        "宜：熟睡、静卧\n忌：剧烈\n💡 建议：寅时肺经当令，宜深度呼吸",
-        "宜：排便、饮水\n忌：忍便\n💡 建议：卯时起床喝温水促进排便",
-        "宜：早餐、进食\n忌：空腹\n💡 建议：辰时是吃早餐的黄金时间",
-        "宜：思考、工作\n忌：懒惰\n💡 建议：巳时脾经旺，适合学习工作",
-        "宜：午休、休憩\n忌：劳累\n💡 建议：午时心经当令，小睡片刻养心",
-        "宜：休息、放松\n忌：剧烈\n💡 建议：未时小肠吸收营养",
-        "宜：运动、饮水\n忌：憋尿\n💡 建议：申时膀胱经旺，适合运动",
-        "宜：静养、休息\n忌：操劳\n💡 建议：酉时肾经当令，宜收藏精气",
-        "宜：愉悦、休闲\n忌：忧愁\n💡 建议：戌时心包经旺，保持心情愉悦",
-        "宜：安眠、泡脚\n忌：多虑\n💡 建议：亥时三焦通百脉，准备入睡"
+        "宜：安睡养阳、打坐冥想\n忌：熬夜、饮酒、剧烈运动\n💡 子时阴气最盛，阳气初生，熟睡可养胆气，熬夜伤胆最甚",
+        "宜：深睡养肝、放松肌肉\n忌：饮酒、熬夜、情绪激动\n💡 丑时肝经当令，肝脏排毒解毒，熟睡则肝血归藏，面色红润",
+        "宜：熟睡静卧、深呼吸\n忌：剧烈运动、大声喧哗\n💡 寅时肺经当令，气血由静转动，深度呼吸助肺宣发肃降",
+        "宜：排便、饮温水、伸展\n忌：忍便、空腹出门\n💡 卯时大肠经旺，起床饮温水促进排便，排出毒素一身轻",
+        "宜：早餐营养、从容工作\n忌：空腹、不吃早餐\n💡 辰时胃经最旺，消化吸收力最强，早餐宜丰盛但不过饱",
+        "宜：专注工作、学习思考\n忌：懒惰、分心、久坐不动\n💡 巳时脾经当令，脾主运化，此时学习工作效率最高",
+        "宜：午休小憩、养心安神\n忌：劳累过度、情绪激动\n💡 午时心经当令，阳气最盛阴气初生，小睡15-30分钟养心最佳",
+        "宜：放松休息、缓慢活动\n忌：剧烈运动、暴饮暴食\n💡 未时小肠经旺，分清泌浊吸收营养，宜慢节奏工作",
+        "宜：运动锻炼、多饮水\n忌：憋尿、久坐不动\n💡 申时膀胱经最旺，适合运动排汗，多饮水助代谢排毒",
+        "宜：静养收藏、泡脚补肾\n忌：操劳过度、剧烈运动\n💡 酉时肾经当令，肾藏精，宜静养收敛，泡脚助肾气升发",
+        "宜：心情愉悦、轻松休闲\n忌：忧愁焦虑、过度思考\n💡 戌时心包经旺，心包护心，保持愉悦心情助心血管健康",
+        "宜：泡脚安眠、放松身心\n忌：多虑、兴奋、熬夜\n💡 亥时三焦通百脉，全身气血归藏，准备入睡养精蓄锐"
     };
     
     private static final String[] SHICHEN_ZANGFU = {
@@ -196,10 +196,10 @@ public class WuyunLiuqiActivity extends Activity {
         String timeGanZhi = timePillar;
         
         if (yearGanZhi == null || monthGanZhi == null || dayGanZhi == null || timeGanZhi == null) {
-            yearGanZhi = calculateYearGanZhi(year);
-            monthGanZhi = calculateMonthGanZhi(year, month);
-            dayGanZhi = calculateDayGanZhi(year, month, day);
-            timeGanZhi = calculateTimeGanZhi(dayGanZhi, hour, minute);
+            yearGanZhi = calculateYearGanZhi(year) + "年";
+            monthGanZhi = calculateMonthGanZhi(year, month) + "月";
+            dayGanZhi = calculateDayGanZhi(year, month, day) + "日";
+            timeGanZhi = calculateTimeGanZhi(dayGanZhi.substring(0, 1), hour, minute) + "时";
         }
         
         updateHeaderDisplay(yearGanZhi, monthGanZhi, dayGanZhi, timeGanZhi, year, month, day);
@@ -215,7 +215,7 @@ public class WuyunLiuqiActivity extends Activity {
     
     private void updateHeaderDisplay(String yearGanZhi, String monthGanZhi, String dayGanZhi, String timeGanZhi, int year, int month, int day) {
         if (wuyunYearGanZhi != null) {
-            wuyunYearGanZhi.setText(yearGanZhi + "年");
+            wuyunYearGanZhi.setText(yearGanZhi);
         }
         
         if (wuyunJieqi != null) {
@@ -223,11 +223,11 @@ public class WuyunLiuqiActivity extends Activity {
         }
         
         if (wuyunMonthDay != null) {
-            wuyunMonthDay.setText(monthGanZhi + "月·" + dayGanZhi + "日");
+            wuyunMonthDay.setText(monthGanZhi + "·" + dayGanZhi);
         }
         
         if (wuyunShichen != null) {
-            wuyunShichen.setText(timeGanZhi + "时");
+            wuyunShichen.setText(timeGanZhi);
         }
     }
     
@@ -336,19 +336,19 @@ public class WuyunLiuqiActivity extends Activity {
         String[] sijiYun = getSijiYun(yearGan);
         
         String[][] yunDetails = {
-            {"木", "生发生长、条达舒畅、主肝胆", "#90EE90", "春季"},
-            {"火", "炎热繁荣、向上明亮、主心小肠", "#FF6B6B", "夏季"},
-            {"土", "孕育稳定、敦厚承载、主脾胃", "#DEB887", "长夏"},
-            {"金", "收敛收获、肃杀刚强、主肺大肠", "#C0C0C0", "秋季"},
-            {"水", "潜藏储备、流动滋润、主肾膀胱", "#87CEEB", "冬季"}
+            {"木", "生发生长、条达舒畅，主肝胆系统，宜疏肝理气", "#90EE90", "春季"},
+            {"火", "炎热繁荣、向上明亮，主心小肠系统，宜清心降火", "#FF6B6B", "夏季"},
+            {"土", "孕育稳定、敦厚承载，主脾胃系统，宜健脾养胃", "#DEB887", "长夏"},
+            {"金", "收敛收获、肃杀刚强，主肺大肠系统，宜润肺生津", "#C0C0C0", "秋季"},
+            {"水", "潜藏储备、流动滋润，主肾膀胱系统，宜温补肾阳", "#87CEEB", "冬季"}
         };
         
         String[][] wuyunYangsheng = {
-            {"木运", "宜：疏肝理气、多食绿色蔬菜\n忌：大怒、熬夜\n💡 建议：春季宜散步、赏花"},
-            {"火运", "宜：清心降火、多食红色食物\n忌：烦躁、贪凉\n💡 建议：夏季宜午休、静心"},
-            {"土运", "宜：健脾养胃、多食黄色食物\n忌：思虑过度、生冷\n💡 建议：长夏宜喝粥、慢走"},
-            {"金运", "宜：润肺生津、多食白色食物\n忌：悲伤、过度劳累\n💡 建议：秋季宜登高、润肺"},
-            {"水运", "宜：温补肾阳、多食黑色食物\n忌：恐惧、寒凉\n💡 建议：冬季宜早睡、保暖"}
+            {"木运", "宜：疏肝理气、多食绿色蔬菜、户外散步\n忌：大怒、熬夜、酸味过度\n💡 木运之年肝气偏旺，春季宜早起散步、赏花踏青，舒畅情志"},
+            {"火运", "宜：清心降火、多食红色食物、静心养神\n忌：烦躁、贪凉、辛辣过度\n💡 火运之年心气偏旺，夏季宜午休养心、清淡饮食，避免情绪过激"},
+            {"土运", "宜：健脾养胃、多食黄色食物、规律饮食\n忌：思虑过度、生冷油腻\n💡 土运之年脾气偏旺，长夏宜喝粥慢走、细嚼慢咽，养护脾胃"},
+            {"金运", "宜：润肺生津、多食白色食物、适度有氧\n忌：悲伤、过度劳累、辛辣\n💡 金运之年肺气偏旺，秋季宜登高远眺、深呼吸养肺，保持乐观"},
+            {"水运", "宜：温补肾阳、多食黑色食物、早睡晚起\n忌：恐惧、寒凉、过度劳累\n💡 水运之年肾气偏旺，冬季宜早睡保暖、泡脚养肾，避免惊恐"}
         };
         
         StringBuilder info = new StringBuilder();
@@ -403,12 +403,12 @@ public class WuyunLiuqiActivity extends Activity {
         
         StringBuilder qiDetail = new StringBuilder();
         String[][] qiDetails = {
-            {"厥阴风木", "风气为主，主生发疏泄。<br/>对应地支：寅卯 · 天干：丁壬<br/><br/>⚠️ 易患：头痛、眩晕、关节痛、肝胆疾病<br/>✅ 养生：宜防风邪，疏肝理气，保持情绪舒畅<br/>🍃 饮食：多食芹菜、菠菜、茼蒿等青色食物", "#90EE90"},
-            {"少阴君火", "热气为主，主温热明亮。<br/>对应地支：巳午 · 天干：戊癸<br/><br/>⚠️ 易患：发热、心烦、口舌生疮、心脏疾病<br/>✅ 养生：宜清热降火，静心安神，少食辛辣<br/>🍅 饮食：多食番茄、西瓜、绿豆等红色食物", "#FF6B6B"},
-            {"少阳相火", "火气为主，主炎热躁动。<br/>对应地支：巳午 · 天干：戊癸<br/><br/>⚠️ 易患：目赤肿痛、咽喉肿痛、疮疡、神志异常<br/>✅ 养生：宜清泻相火，饮食清淡，避免熬夜<br/>🌶️ 饮食：多食苦瓜、苦菜、莲子等苦味食物", "#FF8C00"},
-            {"太阴湿土", "湿气为主，主湿润黏滞。<br/>对应地支：申酉 · 天干：甲己<br/><br/>⚠️ 易患：腹胀、腹泻、水肿、脾胃疾病、皮肤病<br/>✅ 养生：宜健脾祛湿，多食薏米、山药，适度运动<br/>🌾 饮食：多食小米、南瓜、土豆等黄色食物", "#DEB887"},
-            {"阳明燥金", "燥气为主，主干燥收敛。<br/>对应地支：申酉 · 天干：甲己<br/><br/>⚠️ 易患：咳嗽、气喘、皮肤干燥、便秘、呼吸系统疾病<br/>✅ 养生：宜润肺生津，多食梨、百合，保持室内湿润<br/>🍐 饮食：多食梨、白萝卜、银耳等白色食物", "#C0C0C0"},
-            {"太阳寒水", "寒气为主，主寒冷凝滞。<br/>对应地支：亥子 · 天干：丙辛<br/><br/>⚠️ 易患：感冒、关节冷痛、畏寒、肾脏疾病<br/>✅ 养生：宜温阳散寒，多食温热食物，注意保暖<br/>🫘 饮食：多食黑豆、核桃、羊肉等黑色食物", "#87CEEB"}
+            {"厥阴风木", "风气主令，万物生发疏泄，如春风化雨。<br/>对应时段：大寒至春分 · 地支寅卯 · 天干丁壬<br/><br/>⚠️ 易患：头痛眩晕、关节游走痛、肝气郁结、皮肤瘙痒<br/>✅ 养生：宜防风邪侵袭，疏肝理气，保持情绪舒畅，多户外散步<br/>🍃 饮食：多食芹菜、菠菜、茼蒿、薄荷等青色食物，少食酸味", "#90EE90"},
+            {"少阴君火", "热气主令，气温回升温热明亮，万物繁茂。<br/>对应时段：春分至小满 · 地支巳午 · 天干戊癸<br/><br/>⚠️ 易患：发热心烦、口舌生疮、失眠多梦、心脏不适<br/>✅ 养生：宜清热降火，静心安神，少食辛辣，适当午休<br/>🍅 饮食：多食番茄、西瓜、绿豆、莲子等红色食物，忌过食热性食物", "#FF6B6B"},
+            {"少阳相火", "火气主令，炎热躁动，暑气渐盛。<br/>对应时段：小满至大暑 · 地支巳午 · 天干戊癸<br/><br/>⚠️ 易患：目赤肿痛、咽喉肿痛、疮疡疖肿、情绪烦躁<br/>✅ 养生：宜清泻相火，饮食清淡，避免熬夜，保持心境平和<br/>🌶️ 饮食：多食苦瓜、苦菜、莲子心、绿茶等苦味食物，以苦泄火", "#FF8C00"},
+            {"太阴湿土", "湿气主令，雨水充沛，湿润黏滞。<br/>对应时段：大暑至秋分 · 地支申酉 · 天干甲己<br/><br/>⚠️ 易患：腹胀腹泻、水肿困重、脾胃不适、皮肤湿疹<br/>✅ 养生：宜健脾祛湿，多食薏米山药，适度运动出汗排湿<br/>🌾 饮食：多食小米、南瓜、土豆、薏仁等黄色食物，忌生冷油腻", "#DEB887"},
+            {"阳明燥金", "燥气主令，天气干燥，收敛肃降。<br/>对应时段：秋分至小雪 · 地支申酉 · 天干甲己<br/><br/>⚠️ 易患：干咳少痰、皮肤干燥、便秘、咽干口燥、呼吸道疾病<br/>✅ 养生：宜润肺生津，多食梨百合，保持室内湿润，早睡早起<br/>🍐 饮食：多食梨、白萝卜、银耳、蜂蜜等白色食物，忌辛辣烧烤", "#C0C0C0"},
+            {"太阳寒水", "寒气主令，天寒地冻，寒冷凝滞。<br/>对应时段：小雪至大寒 · 地支亥子 · 天干丙辛<br/><br/>⚠️ 易患：感冒风寒、关节冷痛、畏寒肢冷、腰膝酸软<br/>✅ 养生：宜温阳散寒，多食温热食物，注意保暖，早睡晚起<br/>🫘 饮食：多食黑豆、核桃、羊肉、生姜等黑色温性食物，忌寒凉生冷", "#87CEEB"}
         };
         
         for (int i = 0; i < 6; i++) {
@@ -431,23 +431,23 @@ public class WuyunLiuqiActivity extends Activity {
         detail.append("<font color='#8899AA'>五运六气是中医运气学说的核心，以天干地支为基础，推演年度气候变化和人体健康影响。</font><br/><br/>");
         
         detail.append("<font color='#FFD700'><b>什么是五运？</b></font><br/>");
-        detail.append("<font color='#90EE90'>木运</font> <font color='#8899AA'>— 主生发，对应春季，影响肝胆系统</font><br/>");
-        detail.append("<font color='#FF6B6B'>火运</font> <font color='#8899AA'>— 主炎热，对应夏季，影响心小肠系统</font><br/>");
-        detail.append("<font color='#DEB887'>土运</font> <font color='#8899AA'>— 主孕育，对应长夏，影响脾胃系统</font><br/>");
-        detail.append("<font color='#C0C0C0'>金运</font> <font color='#8899AA'>— 主收敛，对应秋季，影响肺大肠系统</font><br/>");
-        detail.append("<font color='#87CEEB'>水运</font> <font color='#8899AA'>— 主潜藏，对应冬季，影响肾膀胱系统</font><br/><br/>");
+        detail.append("<font color='#90EE90'>木运</font> <font color='#8899AA'>— 主生发条达，对应春季，影响肝胆系统，宜疏肝理气</font><br/>");
+        detail.append("<font color='#FF6B6B'>火运</font> <font color='#8899AA'>— 主炎热向上，对应夏季，影响心小肠系统，宜清心降火</font><br/>");
+        detail.append("<font color='#DEB887'>土运</font> <font color='#8899AA'>— 主孕育承载，对应长夏，影响脾胃系统，宜健脾祛湿</font><br/>");
+        detail.append("<font color='#C0C0C0'>金运</font> <font color='#8899AA'>— 主收敛肃降，对应秋季，影响肺大肠系统，宜润肺生津</font><br/>");
+        detail.append("<font color='#87CEEB'>水运</font> <font color='#8899AA'>— 主潜藏滋润，对应冬季，影响肾膀胱系统，宜温补肾阳</font><br/><br/>");
         
         detail.append("<font color='#FFD700'><b>五运推算方法</b></font><br/>");
         detail.append("<font color='#8899AA'>年干决定五运：甲己化土，乙庚化金，丙辛化水，丁壬化木，戊癸化火。</font><br/>");
         detail.append("<font color='#8899AA'>阳干为太过（运气旺盛），阴干为不及（运气衰弱）。</font><br/><br/>");
         
         detail.append("<font color='#FFD700'><b>什么是六气？</b></font><br/>");
-        detail.append("<font color='#90EE90'>厥阴风木</font> <font color='#8899AA'>— 风气主令，大寒-春分</font><br/>");
-        detail.append("<font color='#FF6B6B'>少阴君火</font> <font color='#8899AA'>— 热气主令，春分-小满</font><br/>");
-        detail.append("<font color='#FF8C00'>少阳相火</font> <font color='#8899AA'>— 火气主令，小满-大暑</font><br/>");
-        detail.append("<font color='#DEB887'>太阴湿土</font> <font color='#8899AA'>— 湿气主令，大暑-秋分</font><br/>");
-        detail.append("<font color='#C0C0C0'>阳明燥金</font> <font color='#8899AA'>— 燥气主令，秋分-小雪</font><br/>");
-        detail.append("<font color='#87CEEB'>太阳寒水</font> <font color='#8899AA'>— 寒气主令，小雪-大寒</font><br/><br/>");
+        detail.append("<font color='#90EE90'>厥阴风木</font> <font color='#8899AA'>— 风气主令，大寒至春分，万物生发</font><br/>");
+        detail.append("<font color='#FF6B6B'>少阴君火</font> <font color='#8899AA'>— 热气主令，春分至小满，温热繁茂</font><br/>");
+        detail.append("<font color='#FF8C00'>少阳相火</font> <font color='#8899AA'>— 火气主令，小满至大暑，暑热炎盛</font><br/>");
+        detail.append("<font color='#DEB887'>太阴湿土</font> <font color='#8899AA'>— 湿气主令，大暑至秋分，湿润多雨</font><br/>");
+        detail.append("<font color='#C0C0C0'>阳明燥金</font> <font color='#8899AA'>— 燥气主令，秋分至小雪，干燥收敛</font><br/>");
+        detail.append("<font color='#87CEEB'>太阳寒水</font> <font color='#8899AA'>— 寒气主令，小雪至大寒，寒冷封藏</font><br/><br/>");
         
         detail.append("<font color='#FFD700'><b>六气推算方法</b></font><br/>");
         detail.append("<font color='#8899AA'>年支决定六气：子午少阴君火，丑未太阴湿土，寅申少阳相火，卯酉阳明燥金，辰戌太阳寒水，巳亥厥阴风木。</font><br/><br/>");
@@ -470,7 +470,7 @@ public class WuyunLiuqiActivity extends Activity {
         }
         
         detail.append("<br/><font color='#FFD700'><b>💡 养生原则</b></font><br/>");
-        detail.append("<font color='#8899AA'>根据五运六气变化，调整饮食起居，顺应自然规律，达到防病养生的目的。</font>");
+        detail.append("<font color='#8899AA'>五运六气揭示年度气候规律，人体应顺应自然变化：春养肝、夏养心、长夏养脾、秋养肺、冬养肾。根据当年运气特点，调整饮食起居，达到“天人合一”的养生境界。</font>");
         
         if (wuyunLiuqiDetail != null) {
             wuyunLiuqiDetail.setText(android.text.Html.fromHtml(detail.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));

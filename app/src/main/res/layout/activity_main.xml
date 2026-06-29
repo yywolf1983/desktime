@@ -31,10 +31,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -43,10 +43,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="16dp"
+            android:padding="12dp"
+            android:background="@drawable/card_background"
             android:clickable="true"
-            android:focusable="true"
-            android:background="@android:color/transparent">
+            android:focusable="true">
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour1TextView"
@@ -86,7 +87,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginVertical="8dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:id="@+id/dateTextView"
@@ -133,7 +134,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginVertical="8dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:id="@+id/fourPillarsTextView"
@@ -168,8 +169,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:padding="10dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/card_background">
 
             <TextView
                 android:id="@+id/timeFortuneTextView"
@@ -201,7 +203,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:padding="8dp"
+            android:background="@drawable/card_background">
 
             <com.example.timedisplay.NinePalacePanel
                 android:id="@+id/ninePalacePanel"
