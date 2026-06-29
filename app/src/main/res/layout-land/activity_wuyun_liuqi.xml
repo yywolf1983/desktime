@@ -51,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="#FFB84D"
+                        android:textColor="@color/jieqi_orange"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="12dp"
                         tools:text="立春" />
@@ -77,18 +77,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="#8FBC8F"
+                        android:textColor="@color/fortune_green"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="12dp"
                         tools:text="甲申时" />
                 </LinearLayout>
             </LinearLayout>
 
-            <com.example.timedisplay.WuyunLiuqiView
-                android:id="@+id/wuyunLiuqiView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="4dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="@drawable/card_background">
+
+                <com.example.timedisplay.WuyunLiuqiView
+                    android:id="@+id/wuyunLiuqiView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -119,7 +129,13 @@
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:layout_marginBottom="4dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/currentShichenInfo"
@@ -136,8 +152,14 @@
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:layout_marginTop="6dp"
                         android:layout_marginBottom="4dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/shichenDetail"
@@ -164,7 +186,13 @@
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:layout_marginBottom="4dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/wuyunInfo"
@@ -191,7 +219,13 @@
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:layout_marginBottom="4dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/liuqiInfo"
@@ -218,7 +252,13 @@
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:layout_marginBottom="4dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/liuqiDetail"
@@ -245,7 +285,13 @@
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
                         android:layout_marginBottom="4dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/wuyunLiuqiDetail"

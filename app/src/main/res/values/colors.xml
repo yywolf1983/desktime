@@ -55,4 +55,12 @@
     <color name="tech_dark">#FF1A1A2E</color>
     <color name="tech_gray">#FF4A5568</color>
     <color name="tech_light_blue">#FF6B9BDB</color>
+
+    <!-- 辅助颜色 -->
+    <color name="date_blue">#FF6B8DD6</color>
+    <color name="jieqi_orange">#FFFFB84D</color>
+    <color name="fortune_green">#FF8FBC8F</color>
+    <color name="explanation_gray">#FF9BA4B0</color>
+    <color name="explanation_purple">#FFB19CD9</color>
+    <color name="colon_color">#FF87CEEB</color>
 </resources>

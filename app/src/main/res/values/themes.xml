@@ -24,4 +24,19 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
     </style>
+
+    <style name="PickerTextStyle" parent="android:Theme.DeviceDefault.Light.NoActionBar.Fullscreen">
+        <item name="android:textColor">#CCB866</item>
+        <item name="android:textColorPrimary">#CCB866</item>
+        <item name="android:textColorSecondary">#9A9A9A</item>
+        <item name="android:textColorHint">#88CCB866</item>
+        <item name="android:colorControlNormal">#CCB866</item>
+        <item name="android:colorControlActivated">#D4C88E</item>
+        <item name="android:colorAccent">#CCB866</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:editable">false</item>
+        <item name="android:inputType">none</item>
+    </style>
 </resources>

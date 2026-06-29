@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     public SevenSegmentDisplay minute1TextView;
     public SevenSegmentDisplay minute2TextView;
     public TextView dateTextView;
+    public TextView weekdayTextView;
     public TextView jieqiTextView;
     public TextView fourPillarsTextView;
     public TextView ninePalaceExplanation;
@@ -75,6 +76,7 @@ public class MainActivity extends Activity {
         minute1TextView = (SevenSegmentDisplay) findViewById(R.id.minute1TextView);
         minute2TextView = (SevenSegmentDisplay) findViewById(R.id.minute2TextView);
         dateTextView = findViewById(R.id.dateTextView);
+        weekdayTextView = findViewById(R.id.weekdayTextView);
         jieqiTextView = findViewById(R.id.jieqiTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
@@ -277,8 +279,10 @@ public class MainActivity extends Activity {
         // 日期显示：如果自定义时间则显示自定义日期，否则显示当前日期
         Calendar displayCalendar = isCustomTime ? customCalendar : realCalendar;
         Date displayDate = displayCalendar.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
+        SimpleDateFormat weekdayFormat = new SimpleDateFormat("EEEE", Locale.CHINA);
         String dateString = dateFormat.format(displayDate);
+        String weekdayString = weekdayFormat.format(displayDate);
         if (isCustomTime) {
             dateString = "✎ " + dateString;
         }
@@ -306,6 +310,9 @@ public class MainActivity extends Activity {
         }
 
         dateTextView.setText(dateString);
+        if (weekdayTextView != null) {
+            weekdayTextView.setText(weekdayString);
+        }
 
         // 更新节气显示
         String jieqi = JieqiData.getCurrentJieqi(displayCalendar);
@@ -337,22 +344,18 @@ public class MainActivity extends Activity {
     private void showDateTimePicker() {
         Calendar current = isCustomTime ? customCalendar : Calendar.getInstance();
 
-        // 先选择日期
-        new android.app.DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {
-            // 再选择时间
-            new android.app.TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
-                customCalendar = Calendar.getInstance();
-                customCalendar.set(year, month, dayOfMonth, hourOfDay, minute, 0);
-                customCalendar.set(Calendar.MILLISECOND, 0);
-                isCustomTime = true;
-                if (resetTimeButton != null) {
-                    resetTimeButton.setVisibility(View.VISIBLE);
-                }
-                // 立即更新四柱和排盘
-                updateFourPillars(customCalendar.getTime());
-                updateDateTime();
-            }, current.get(Calendar.HOUR_OF_DAY), current.get(Calendar.MINUTE), true).show();
-        }, current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DAY_OF_MONTH)).show();
+        new CustomDateTimePickerDialog(this, current, (year, month, day, hour, minute) -> {
+            customCalendar = Calendar.getInstance();
+            customCalendar.set(year, month - 1, day, hour, minute, 0);
+            customCalendar.set(Calendar.MILLISECOND, 0);
+            isCustomTime = true;
+            if (resetTimeButton != null) {
+                resetTimeButton.setVisibility(View.VISIBLE);
+            }
+            // 立即更新四柱和排盘
+            updateFourPillars(customCalendar.getTime());
+            updateDateTime();
+        }).show();
     }
 
     // 恢复当前时间
@@ -465,8 +468,8 @@ public class MainActivity extends Activity {
         String dayPillar = calculateDayPillar(year, month, day);
         String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
         
-        // 格式化四柱显示，带标签
-        String fourPillars = yearPillar + "年 " + monthPillar + "月 " + dayPillar + "日 " + timePillar + "时";
+        // 格式化四柱显示
+        String fourPillars = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
         fourPillarsTextView.setText(fourPillars);
 
         // 更新时辰运势

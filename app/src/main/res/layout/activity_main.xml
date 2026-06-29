@@ -10,31 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/rotationLockButton"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:text="🔒"
-        android:textSize="18sp"
-        android:textColor="@color/gold"
-        android:gravity="center"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:contentDescription="锁定/解锁横竖屏" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -43,41 +34,41 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="16dp"
-            android:padding="12dp"
+            android:layout_marginBottom="10dp"
+            android:padding="8dp"
             android:background="@drawable/card_background"
             android:clickable="true"
             android:focusable="true">
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour1TextView"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="72dp"
+                android:layout_height="100dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour2TextView"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="72dp"
+                android:layout_height="100dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-                android:textSize="48sp"
+                android:textSize="56sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-black"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute1TextView"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="72dp"
+                android:layout_height="100dp" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute2TextView"
-                android:layout_width="60dp"
-                android:layout_height="75dp" />
+                android:layout_width="72dp"
+                android:layout_height="100dp" />
 
         </LinearLayout>
 
@@ -85,47 +76,82 @@
             android:id="@+id/dateContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="12dp">
+            android:orientation="vertical"
+            android:layout_marginBottom="6dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:background="@drawable/card_background">
 
-            <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="wrap_content"
+            <!-- 第1行: 日期 + 按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="#6B8DD6"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:letterSpacing="0.08"
-                tools:text="2024年12月31日 星期二" />
+                android:orientation="horizontal"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/jieqiTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="#FFB84D"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@android:color/transparent"
-                tools:text="立春" />
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/date_blue"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:letterSpacing="0.08"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingVertical="2dp"
+                    tools:text="2024年12月31日" />
 
-            <TextView
-                android:id="@+id/resetTimeButton"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/resetTimeButton"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:text="⟳"
+                    android:textSize="18sp"
+                    android:textColor="@color/colon_color"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/btn_round_transparent"
+                    android:contentDescription="恢复当前时间" />
+
+            </LinearLayout>
+
+            <!-- 第2行: 星期 + 节气 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="⟳"
-                android:textSize="22sp"
-                android:textColor="@color/text_primary"
-                android:paddingStart="12dp"
-                android:paddingEnd="8dp"
-                android:visibility="gone"
-                android:clickable="true"
-                android:focusable="true" />
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/weekdayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_accent"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    tools:text="星期二" />
+
+                <TextView
+                    android:id="@+id/jieqiTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/jieqi_orange"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingHorizontal="4dp"
+                    tools:text="立春" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -134,17 +160,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/fourPillarsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="#FFD700"
+                android:textSize="22sp"
+                android:textColor="@color/gold_faint"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:letterSpacing="0.08"
+                android:letterSpacing="0.1"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="@android:color/transparent"
@@ -152,15 +178,16 @@
 
             <TextView
                 android:id="@+id/copyButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:text="📋"
-                android:textSize="20sp"
-                android:paddingStart="12dp"
-                android:paddingEnd="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/gold_faint"
+                android:gravity="center"
+                android:layout_marginStart="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@android:color/transparent"
+                android:background="@drawable/btn_round_transparent"
                 android:contentDescription="复制派盘信息" />
 
         </LinearLayout>
@@ -170,34 +197,35 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/card_background">
 
             <TextView
                 android:id="@+id/timeFortuneTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textColor="#8FBC8F"
+                android:textSize="14sp"
+                android:textColor="@color/fortune_green"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:letterSpacing="0.04"
+                android:letterSpacing="0.06"
                 tools:text="子时(23-1点): 阴气最重，宜静养安神" />
 
             <TextView
                 android:id="@+id/panExplanation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:textColor="#6B7280"
+                android:textSize="13sp"
+                android:textColor="@color/explanation_gray"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
                 android:letterSpacing="0.04"
-                android:maxLines="2"
-                android:lineSpacingExtra="2dp"
-                android:paddingHorizontal="8dp"
-                tools:text="大吉\n吉星高照，诸事顺遂 · 把握良机，大胆行动" />
+                android:lineSpacingExtra="3dp"
+                android:maxLines="3"
+                android:paddingHorizontal="4dp"
+                tools:text="大吉\n气场旺盛 · 万事通达\n宜积极进取" />
         </LinearLayout>
 
         <LinearLayout
@@ -220,5 +248,24 @@
             android:visibility="gone" />
 
     </LinearLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/rotationLockButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="🔒"
+        android:textSize="18sp"
+        android:textColor="@color/gold_faint"
+        android:gravity="center"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="锁定/解锁横竖屏" />
 
 </FrameLayout>

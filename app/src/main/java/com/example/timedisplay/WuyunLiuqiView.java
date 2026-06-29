@@ -90,8 +90,9 @@ public class WuyunLiuqiView extends View {
         int gridPadding = 30;
         
         paint.setColor(Color.parseColor("#0A0A14"));
+        paint.setAlpha(60);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(0, 0, width, height, paint);
+        canvas.drawRoundRect(0, 0, width, height, 14, 14, paint);
         
         String currentShichen = shichenNames[currentShichenIndex] + "时 · " + shichenQuotes[currentShichenIndex];
         
@@ -127,8 +128,15 @@ public class WuyunLiuqiView extends View {
             boolean isCurrent = i == currentShichenIndex;
             
             paint.setColor(Color.parseColor("#1a1a2e"));
-            paint.setAlpha(190);
+            paint.setAlpha(100);
             paint.setStyle(Paint.Style.FILL);
+            canvas.drawRoundRect(left + cellPadding, top + cellPadding, right - cellPadding, bottom - cellPadding, cornerRadius, cornerRadius, paint);
+            
+            // subtle border
+            paint.setColor(Color.parseColor("#304a4a6a"));
+            paint.setAlpha(80);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(1);
             canvas.drawRoundRect(left + cellPadding, top + cellPadding, right - cellPadding, bottom - cellPadding, cornerRadius, cornerRadius, paint);
             
             if (isCurrent) {

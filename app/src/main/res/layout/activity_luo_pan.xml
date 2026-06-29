@@ -19,7 +19,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/card_background">
             
             <com.example.timedisplay.LuoPanView
                 android:id="@+id/luoPanView"
@@ -213,7 +214,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="6dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/luopanTips"
@@ -241,7 +248,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="6dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/zhaoxiangAnalysis"
@@ -269,7 +282,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="6dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/shuishaAnalysis"
@@ -297,7 +316,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/bazhaiDesc"
@@ -329,7 +354,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/jiuxingDesc"
@@ -361,7 +392,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/bamenDesc"
@@ -393,7 +430,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="6dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/buildingAdvice"
@@ -421,7 +464,13 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="6dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/mingliInfo"
@@ -449,7 +498,13 @@
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="6dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
 
                     <TextView
                         android:id="@+id/summaryInfo"

@@ -196,10 +196,10 @@ public class WuyunLiuqiActivity extends Activity {
         String timeGanZhi = timePillar;
         
         if (yearGanZhi == null || monthGanZhi == null || dayGanZhi == null || timeGanZhi == null) {
-            yearGanZhi = calculateYearGanZhi(year) + "年";
-            monthGanZhi = calculateMonthGanZhi(year, month) + "月";
-            dayGanZhi = calculateDayGanZhi(year, month, day) + "日";
-            timeGanZhi = calculateTimeGanZhi(dayGanZhi.substring(0, 1), hour, minute) + "时";
+            yearGanZhi = calculateYearGanZhi(year);
+            monthGanZhi = calculateMonthGanZhi(year, month);
+            dayGanZhi = calculateDayGanZhi(year, month, day);
+            timeGanZhi = calculateTimeGanZhi(dayGanZhi.substring(0, 1), hour, minute);
         }
         
         updateHeaderDisplay(yearGanZhi, monthGanZhi, dayGanZhi, timeGanZhi, year, month, day);

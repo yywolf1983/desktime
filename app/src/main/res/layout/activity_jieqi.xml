@@ -22,12 +22,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/card_background">
 
                 <LinearLayout
                     android:id="@+id/backButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="goBack"
@@ -36,7 +39,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="←"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:textColor="@color/gold"/>
                 </LinearLayout>
 
@@ -45,14 +48,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="二十四节气"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textColor="@color/gold"
                     android:gravity="center"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"/>
 
                 <View
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"/>
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -103,6 +107,12 @@
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="6dp"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -335,7 +345,13 @@
                         android:text="📅 全年节气"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                 </LinearLayout>
 
                 <LinearLayout

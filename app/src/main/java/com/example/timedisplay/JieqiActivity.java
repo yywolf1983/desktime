@@ -252,7 +252,7 @@ public class JieqiActivity extends Activity {
                 boxParams.height = (int) (60 * density); // 60dp
                 jieqiBox.setLayoutParams(boxParams);
                 jieqiBox.setClickable(true);
-                jieqiBox.setBackgroundColor(Color.parseColor("#1a1a2e"));
+                jieqiBox.setBackgroundColor(Color.parseColor("#301a1a2e"));
 
                 TextView jieqiName = new TextView(JieqiActivity.this);
                 jieqiName.setText(jieqi);
@@ -270,7 +270,7 @@ public class JieqiActivity extends Activity {
                     jieqiName.setTextColor(Color.parseColor("#FFD700"));
                     jieqiDate.setTextColor(Color.parseColor("#FFD700"));
                     jieqiName.setTypeface(null, android.graphics.Typeface.BOLD);
-                    jieqiBox.setBackgroundColor(Color.parseColor("#2a2a4e"));
+                    jieqiBox.setBackgroundColor(Color.parseColor("#502a2a4e"));
                 } else if (isCurrentSeason) {
                     jieqiName.setTextColor(Color.parseColor("#FF87CEEB"));
                     jieqiDate.setTextColor(Color.parseColor("#FF87CEEB"));

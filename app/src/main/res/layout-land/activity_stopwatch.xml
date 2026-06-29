@@ -19,7 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/card_background">
             <TextView
                 android:id="@+id/backButton"
                 android:layout_width="40dp"
@@ -38,7 +41,8 @@
                 android:textSize="18sp"
                 android:textColor="@color/gold"
                 android:gravity="center"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:letterSpacing="0.08"/>
             <View
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
@@ -50,7 +54,8 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_marginTop="16dp"
-        android:padding="8dp">
+        android:padding="12dp"
+        android:background="@drawable/card_background">
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/stopwatchHour1"
@@ -125,7 +130,10 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp">
+            android:paddingBottom="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/card_background"
+            android:layout_marginHorizontal="4dp">
 
             <TextView
                 android:id="@+id/resetButton"
@@ -180,9 +188,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="8dp">
+            android:padding="10dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/card_background">
 
             <ScrollView
                 android:layout_width="match_parent"

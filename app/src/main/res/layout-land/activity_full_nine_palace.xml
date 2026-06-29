@@ -17,7 +17,10 @@
             android:layout_width="260dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/card_background">
 
             <TextView
                 android:id="@+id/fullPageTitle"
@@ -28,7 +31,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:letterSpacing="0.05"/>
+                android:letterSpacing="0.08"/>
 
             <com.example.timedisplay.FullNinePalacePanel
                 android:id="@+id/fullNinePalacePanel"
@@ -57,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -68,8 +71,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expBasic"
                         android:layout_width="match_parent"
@@ -83,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -94,8 +102,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expOverall"
                         android:layout_width="match_parent"
@@ -120,8 +133,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expTime"
                         android:layout_width="match_parent"
@@ -146,8 +164,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expDirection"
                         android:layout_width="match_parent"
@@ -172,8 +195,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expYiJi"
                         android:layout_width="match_parent"
@@ -198,8 +226,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expZhifuZhishi"
                         android:layout_width="match_parent"
@@ -224,8 +257,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expGan"
                         android:layout_width="match_parent"
@@ -250,8 +288,13 @@
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
-                        android:paddingBottom="3dp"
-                        android:letterSpacing="0.02"/>
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expLife"
                         android:layout_width="match_parent"
@@ -265,7 +308,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -275,9 +318,14 @@
                         android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="3dp"
-                        android:paddingBottom="2dp"
-                        android:letterSpacing="0.02"/>
+                        android:layout_marginBottom="6dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expTianDiPanDesc"
                         android:layout_width="match_parent"
@@ -297,7 +345,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -307,9 +355,14 @@
                         android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="3dp"
-                        android:paddingBottom="2dp"
-                        android:letterSpacing="0.02"/>
+                        android:layout_marginBottom="6dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expNineStarsDesc"
                         android:layout_width="match_parent"
@@ -329,7 +382,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -339,9 +392,14 @@
                         android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="3dp"
-                        android:paddingBottom="2dp"
-                        android:letterSpacing="0.02"/>
+                        android:layout_marginBottom="6dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expEightDoorsDesc"
                         android:layout_width="match_parent"
@@ -361,7 +419,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -371,9 +429,14 @@
                         android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="3dp"
-                        android:paddingBottom="2dp"
-                        android:letterSpacing="0.02"/>
+                        android:layout_marginBottom="6dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expGodsDesc"
                         android:layout_width="match_parent"
@@ -393,7 +456,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/card_background">
                     <TextView
@@ -403,9 +466,14 @@
                         android:textColor="@color/gold"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="3dp"
-                        android:paddingBottom="2dp"
-                        android:letterSpacing="0.02"/>
+                        android:layout_marginBottom="6dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/expPalacesDesc"
                         android:layout_width="match_parent"
