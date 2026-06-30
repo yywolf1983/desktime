@@ -5,9 +5,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class LuoPanView extends View {
+    
+    private OnRotationChangeListener rotationChangeListener;
+    
+    public interface OnRotationChangeListener {
+        void onRotationChanged(float rotation);
+    }
+    
+    public void setOnRotationChangeListener(OnRotationChangeListener listener) {
+        this.rotationChangeListener = listener;
+    }
     
     private Paint circlePaint;
     private Paint textPaint;
@@ -556,5 +567,71 @@ public class LuoPanView extends View {
         showNineStars = false;
         showEightDoors = false;
         invalidate();
+    }
+    
+    private float startAngle = 0;
+    private float startRotation = 0;
+    private boolean isDragging = false;
+    
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (getParent() != null) {
+                getParent().requestDisallowInterceptTouchEvent(true);
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+    
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
+        
+        float x = event.getX();
+        float y = event.getY();
+        
+        float dx = x - centerX;
+        float dy = y - centerY;
+        
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        if (distance < 10) {
+            return true;
+        }
+        
+        float currentAngle = (float) Math.toDegrees(Math.atan2(dy, dx));
+        
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                isDragging = true;
+                startAngle = currentAngle;
+                startRotation = rotation;
+                break;
+                
+            case MotionEvent.ACTION_MOVE:
+                if (isDragging) {
+                    float deltaAngle = currentAngle - startAngle;
+                    
+                    rotation = startRotation + deltaAngle;
+                    rotation = ((rotation % 360) + 360) % 360;
+                    
+                    invalidate();
+                    
+                    if (rotationChangeListener != null) {
+                        rotationChangeListener.onRotationChanged(rotation);
+                    }
+                }
+                break;
+                
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                isDragging = false;
+                if (getParent() != null) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                break;
+        }
+        
+        return true;
     }
 }

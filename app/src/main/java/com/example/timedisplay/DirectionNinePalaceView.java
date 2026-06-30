@@ -39,6 +39,8 @@ public class DirectionNinePalaceView extends View {
     private static final int COLOR_BLUE = 0xFF87CEEB;
     private static final int COLOR_BORDER = 0xFF262A36;
     
+    private float rotation = 0f;
+    
     public DirectionNinePalaceView(Context context) {
         super(context);
         init();
@@ -61,6 +63,11 @@ public class DirectionNinePalaceView extends View {
             directions[i] = BASE_DIRECTIONS[i];
             wuxingData[i] = "";
         }
+    }
+    
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+        invalidate();
     }
     
     public void setPalaceData(String[][] data) {
@@ -112,6 +119,12 @@ public class DirectionNinePalaceView extends View {
         
         int width = getWidth();
         int height = getHeight();
+        int centerX = width / 2;
+        int centerY = height / 2;
+        
+        canvas.save();
+        canvas.rotate(rotation, centerX, centerY);
+        
         float padding = 8f;
         int cellSize = (int)((Math.min(width, height) - padding * 2) / 3.0);
         float offsetX = (width - cellSize * 3) / 2;
@@ -205,5 +218,7 @@ public class DirectionNinePalaceView extends View {
             }
             canvas.drawText(luck, x, y, textPaint);
         }
+        
+        canvas.restore();
     }
 }

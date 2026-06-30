@@ -21,7 +21,7 @@ public class WuyunLiuqiActivity extends Activity {
 
     private WuyunLiuqiView wuyunLiuqiView;
     private TextView currentShichenInfo;
-    private TextView wuyunInfo;
+    private TextView wuyunInfo, wuyunSummary;
     private TextView liuqiInfo;
     private TextView liuqiDetail;
     private TextView shichenDetail;
@@ -30,6 +30,8 @@ public class WuyunLiuqiActivity extends Activity {
     private TextView wuyunMonthDay;
     private TextView wuyunShichen;
     private TextView wuyunLiuqiDetail;
+    private TextView wuyunLiuqiYunshi;
+    private TextView yunqiShichenRelation;
     
     private Calendar customCalendar = null;
     private Handler updateHandler;
@@ -149,6 +151,8 @@ public class WuyunLiuqiActivity extends Activity {
         wuyunLiuqiView = findViewById(R.id.wuyunLiuqiView);
         currentShichenInfo = findViewById(R.id.currentShichenInfo);
         wuyunInfo = findViewById(R.id.wuyunInfo);
+        wuyunSummary = findViewById(R.id.wuyunSummary);
+
         liuqiInfo = findViewById(R.id.liuqiInfo);
         liuqiDetail = findViewById(R.id.liuqiDetail);
         shichenDetail = findViewById(R.id.shichenDetail);
@@ -157,6 +161,8 @@ public class WuyunLiuqiActivity extends Activity {
         wuyunMonthDay = findViewById(R.id.wuyunMonthDay);
         wuyunShichen = findViewById(R.id.wuyunShichen);
         wuyunLiuqiDetail = findViewById(R.id.wuyunLiuqiDetail);
+        wuyunLiuqiYunshi = findViewById(R.id.wuyunLiuqiYunshi);
+        yunqiShichenRelation = findViewById(R.id.yunqiShichenRelation);
     }
     
     private void setupUpdateHandler() {
@@ -211,6 +217,7 @@ public class WuyunLiuqiActivity extends Activity {
         updateWuyunDisplay(yearGanZhi);
         updateLiuqiDisplay(year, month, day);
         updateWuyunLiuqiDetail(yearGanZhi);
+        updateWuyunLiuqiYunshi(yearGanZhi);
     }
     
     private void updateHeaderDisplay(String yearGanZhi, String monthGanZhi, String dayGanZhi, String timeGanZhi, int year, int month, int day) {
@@ -372,6 +379,77 @@ public class WuyunLiuqiActivity extends Activity {
         if (wuyunInfo != null) {
             wuyunInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         }
+        
+        if (wuyunSummary != null && yearGanZhi != null) {
+            wuyunSummary.setText(getWuyunLiuqiSummary(yearGanZhi));
+        }
+        
+        updateYunqiShichenRelation(yearGanZhi);
+    }
+    
+    private void updateYunqiShichenRelation(String yearGanZhi) {
+        if (yunqiShichenRelation == null) return;
+        
+        String yearGan = yearGanZhi.substring(0, 1);
+        String yearZhi = yearGanZhi.substring(1, 2);
+        
+        String zhongYun = getZhongYunShort(yearGan);
+        String[] liuyiNames = {"厥阴风木", "少阴君火", "少阳相火", "太阴湿土", "阳明燥金", "太阳寒水"};
+        int liuyiIndex = -1;
+        String[] liuyiYears = {"子", "丑", "寅", "申", "辰", "戌", "巳", "亥", "卯", "酉", "午", "未"};
+        for (int i = 0; i < liuyiYears.length; i++) {
+            if (liuyiYears[i].equals(yearZhi)) {
+                liuyiIndex = i / 2;
+                break;
+            }
+        }
+        String siTian = liuyiIndex >= 0 ? liuyiNames[liuyiIndex] : "未知";
+        
+        StringBuilder relation = new StringBuilder();
+        relation.append("<font color='#FFD700'><b>").append(yearGanZhi).append("年 · ").append(zhongYun).append(" · ").append(siTian).append("</b></font><br/><br/>");
+        
+        relation.append("<font color='#98D8F0'><b>运气与时辰关系：</b></font><br/>");
+        
+        String[][] yunqiShichen = {
+            {"木运", "厥阴风木", "🌿 肝胆经当令（丑时、寅时）：肝气偏旺，宜早睡养肝，避免熬夜", "#90EE90"},
+            {"火运", "少阴君火", "🔥 心经当令（午时）：心气最盛，宜静心休养，适当午休", "#FF6B6B"},
+            {"火运", "少阳相火", "🔥 三焦经当令（亥时）：阳气潜藏，宜静心安神，不宜剧烈运动", "#FF8C00"},
+            {"土运", "太阴湿土", "🌾 脾胃经当令（辰时、巳时）：脾主运化，宜早餐养胃，细嚼慢咽", "#DEB887"},
+            {"金运", "阳明燥金", "🍂 肺经当令（寅时、卯时）：肺气旺盛，宜早起深呼吸，润肺生津", "#C0C0C0"},
+            {"水运", "太阳寒水", "💧 肾经当令（酉时、戌时）：肾气收藏，宜早睡养肾，避免劳累", "#87CEEB"}
+        };
+        
+        for (String[] item : yunqiShichen) {
+            if (zhongYun.contains(item[0]) || siTian.contains(item[1])) {
+                relation.append("<font color='").append(item[3]).append("'>").append(item[2]).append("</font><br/>");
+            }
+        }
+        
+        relation.append("<br/><font color='#FFD700'><b>💡 当前养生策略：</b></font><br/>");
+        relation.append("<font color='#8899AA'>根据当前五运六气特点，结合时辰养生规律，建议：</font><br/>");
+        relation.append("<font color='#90EE90'>✅ 顺应时令：").append(zhongYun).append("之年，").append(siTian).append("主令，宜").append(getYunqiAdvice(zhongYun, siTian)).append("</font><br/>");
+        relation.append("<font color='#FFD700'>⏰ 按时而养：十二时辰各有经络当令，宜循时而作，按时作息</font><br/>");
+        relation.append("<font color='#FF6B6B'>❌ 避忌邪气：").append(getYunqiAvoid(zhongYun, siTian)).append("</font>");
+        
+        yunqiShichenRelation.setText(android.text.Html.fromHtml(relation.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+    }
+    
+    private String getYunqiAdvice(String yun, String qi) {
+        if (yun.contains("木")) return "疏肝理气，多食青色食物，保持心情舒畅";
+        if (yun.contains("火")) return "清心降火，多食红色食物，静心安神";
+        if (yun.contains("土")) return "健脾养胃，多食黄色食物，规律饮食";
+        if (yun.contains("金")) return "润肺生津，多食白色食物，保持室内湿润";
+        if (yun.contains("水")) return "温补肾阳，多食黑色食物，注意保暖";
+        return "顺应自然，调和阴阳";
+    }
+    
+    private String getYunqiAvoid(String yun, String qi) {
+        if (yun.contains("木")) return "忌大怒、熬夜、酸味过度";
+        if (yun.contains("火")) return "忌烦躁、贪凉、辛辣过度";
+        if (yun.contains("土")) return "忌思虑过度、生冷油腻";
+        if (yun.contains("金")) return "忌悲伤、过度劳累、辛辣";
+        if (yun.contains("水")) return "忌恐惧、寒凉、过度劳累";
+        return "忌违背自然规律";
     }
     
     private void updateLiuqiDisplay(int year, int month, int day) {
@@ -622,5 +700,234 @@ public class WuyunLiuqiActivity extends Activity {
     protected void onPause() {
         super.onPause();
         updateHandler.removeCallbacks(updateRunnable);
+    }
+
+    private void updateWuyunLiuqiYunshi(String yearGanZhi) {
+        if (wuyunLiuqiYunshi == null) return;
+
+        String yearGan = yearGanZhi.substring(0, 1);
+        String yearZhi = yearGanZhi.substring(1, 2);
+
+        StringBuilder yunshi = new StringBuilder();
+
+        String zhongYun = getZhongYunShort(yearGan);
+        String[] liuyiNames = {"厥阴风木", "少阴君火", "少阳相火", "太阴湿土", "阳明燥金", "太阳寒水"};
+        int liuyiIndex = -1;
+        String[] liuyiYears = {"子", "丑", "寅", "申", "辰", "戌", "巳", "亥", "卯", "酉", "午", "未"};
+        for (int i = 0; i < liuyiYears.length; i++) {
+            if (liuyiYears[i].equals(yearZhi)) {
+                liuyiIndex = i / 2;
+                break;
+            }
+        }
+        String siTian = liuyiIndex >= 0 ? liuyiNames[liuyiIndex] : "未知";
+        int zaiQuanIndex = (liuyiIndex + 3) % 6;
+        String zaiQuan = zaiQuanIndex >= 0 ? liuyiNames[zaiQuanIndex] : "未知";
+
+        yunshi.append("<font color='#FFD700'><b>").append(yearGanZhi).append("年运势研判</b></font><br/><br/>");
+
+        yunshi.append("<font color='#98D8F0'><b>【运气组合】</b></font><br/>");
+        yunshi.append("<font color='#90EE90'>中运：").append(zhongYun).append("</font><br/>");
+        yunshi.append("<font color='#FF6B6B'>司天：").append(siTian).append("</font><br/>");
+        yunshi.append("<font color='#87CEEB'>在泉：").append(zaiQuan).append("</font><br/><br/>");
+
+        yunshi.append("<font color='#FFD700'><b>【五运详解】</b></font><br/>");
+        yunshi.append(getWuyunDetailedAnalysis(zhongYun)).append("<br/><br/>");
+
+        yunshi.append("<font color='#FFD700'><b>【六气详解】</b></font><br/>");
+        yunshi.append("司天 ").append(siTian).append("：").append(getLiuyiDetailedAnalysis(siTian)).append("<br/>");
+        yunshi.append("在泉 ").append(zaiQuan).append("：").append(getLiuyiDetailedAnalysis(zaiQuan)).append("<br/><br/>");
+
+        yunshi.append("<font color='#FFD700'><b>【综合运势分析】</b></font><br/>");
+        String[][] yunshiAnalysis = {
+            {"木", "木运之年，风气偏盛，肝气易旺。<br/>✅ 事业：利于创新开拓，文化教育事业兴旺。适合创业、学习、考试。<br/>💰 财运：春季财运佳，宜把握机遇。木旺则财源茂盛，可投资文化产业。<br/>💪 健康：防肝胆疾病、头痛眩晕、情绪波动。宜多食绿色食物，疏肝理气。<br/>💕 感情：人际关系活跃，桃花旺盛。利于社交活动，结识新朋友。<br/><br/>", "#90EE90"},
+            {"火", "火运之年，热气偏盛，心气易旺。<br/>✅ 事业：利于展示才华，名声远播。适合演艺、销售、公关等行业。<br/>💰 财运：夏季财运旺，投资宜谨慎。火旺则财来快去也快，需注意理财。<br/>💪 健康：防心血管疾病、口舌生疮、失眠。宜多食红色食物，清心降火。<br/>💕 感情：热情洋溢，感情升温。利于表白示爱，增进感情。<br/><br/>", "#FF6B6B"},
+            {"土", "土运之年，湿气偏盛，脾气易旺。<br/>✅ 事业：利于稳定发展，积蓄力量。适合金融、房地产、仓储等行业。<br/>💰 财运：财运平稳，宜稳健理财。土旺则财库充盈，宜储蓄投资。<br/>💪 健康：防脾胃疾病、消化不良、水肿。宜多食黄色食物，健脾祛湿。<br/>💕 感情：感情稳定，宜成家立业。适合结婚生子，组建家庭。<br/><br/>", "#DEB887"},
+            {"金", "金运之年，燥气偏盛，肺气易旺。<br/>✅ 事业：利于改革创新，决断行动。适合军事、法律、管理等行业。<br/>💰 财运：秋季财运佳，宜收获成果。金旺则财运亨通，宜投资理财。<br/>💪 健康：防呼吸系统疾病、皮肤干燥、便秘。宜多食白色食物，润肺生津。<br/>💕 感情：感情收敛，宜冷静思考。适合理性沟通，解决问题。<br/><br/>", "#C0C0C0"},
+            {"水", "水运之年，寒气偏盛，肾气易旺。<br/>✅ 事业：利于智慧谋划，暗中发展。适合贸易、航海、水利等行业。<br/>💰 财运：冬季财运稳，宜守财蓄势。水旺则财源广进，宜谨慎投资。<br/>💪 健康：防肾脏疾病、关节冷痛、畏寒。宜多食黑色食物，补肾温阳。<br/>💕 感情：感情深沉，宜坦诚沟通。适合深入交流，增进信任。<br/><br/>", "#87CEEB"}
+        };
+
+        String wuxing = getWuXing(yearGan);
+        for (String[] analysis : yunshiAnalysis) {
+            if (analysis[0].equals(wuxing)) {
+                yunshi.append("<font color='").append(analysis[2]).append("'>").append(analysis[1]).append("</font>");
+                break;
+            }
+        }
+
+        yunshi.append("<font color='#FFD700'><b>【运气合参】</b></font><br/>");
+        yunshi.append(getYunQiCombinationAnalysis(zhongYun, siTian, zaiQuan)).append("<br/><br/>");
+
+        yunshi.append("<font color='#FFD700'><b>💡 年度建议</b></font><br/>");
+        yunshi.append("<font color='#8899AA'>").append(getYearAdvice(yearGan, yearZhi)).append("</font>");
+
+        wuyunLiuqiYunshi.setText(android.text.Html.fromHtml(yunshi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+    }
+    
+    private String getWuyunDetailedAnalysis(String zhongYun) {
+        String wuxing = zhongYun.substring(0, 1);
+        
+        switch (wuxing) {
+            case "木": 
+                return "<font color='#90EE90'>木运属风，主生发、条达、舒展。木为五行之首，象征万物生长、生机勃勃。" +
+                       "<br/>木运太过：风气偏盛，草木茂盛，易生风疾、眩晕、抽搐等病症。" +
+                       "<br/>木运不及：风气不足，草木凋零，易生肝郁、抑郁、筋脉拘挛等病症。" +
+                       "<br/>时令对应：春季（寅卯辰月），肝气当令，宜疏肝理气。" +
+                       "<br/>脏腑对应：肝脏、胆腑，开窍于目，主筋脉。</font>";
+            case "火": 
+                return "<font color='#FF6B6B'>火运属热，主炎热、光明、向上。火为五行之精，象征太阳光芒、温暖照耀。" +
+                       "<br/>火运太过：热气偏盛，气候炎热，易生热病、烦躁、出血等病症。" +
+                       "<br/>火运不及：热气不足，气候偏凉，易生寒证、心悸、失眠等病症。" +
+                       "<br/>时令对应：夏季（巳午未月），心气当令，宜清心降火。" +
+                       "<br/>脏腑对应：心脏、小肠，开窍于舌，主血脉。</font>";
+            case "土": 
+                return "<font color='#DEB887'>土运属湿，主稳重、承载、化生。土为五行之母，象征大地厚德、孕育万物。" +
+                       "<br/>土运太过：湿气偏盛，阴雨连绵，易生湿病、胀满、水肿等病症。" +
+                       "<br/>土运不及：湿气不足，气候干燥，易生燥证、消瘦、乏力等病症。" +
+                       "<br/>时令对应：长夏（四季末月），脾气当令，宜健脾祛湿。" +
+                       "<br/>脏腑对应：脾脏、胃腑，开窍于口，主肌肉。</font>";
+            case "金": 
+                return "<font color='#C0C0C0'>金运属燥，主肃杀、收敛、决断。金为五行之刚，象征金属锐利、果断刚毅。" +
+                       "<br/>金运太过：燥气偏盛，气候干燥，易生燥病、咳嗽、便秘等病症。" +
+                       "<br/>金运不及：燥气不足，气候湿润，易生湿证、气喘、泄泻等病症。" +
+                       "<br/>时令对应：秋季（申酉戌月），肺气当令，宜润肺生津。" +
+                       "<br/>脏腑对应：肺脏、大肠，开窍于鼻，主皮毛。</font>";
+            case "水": 
+                return "<font color='#87CEEB'>水运属寒，主寒冷、流动、智慧。水为五行之始，象征江海浩瀚、智慧深邃。" +
+                       "<br/>水运太过：寒气偏盛，气候寒冷，易生寒病、关节痛、畏寒等病症。" +
+                       "<br/>水运不及：寒气不足，气候偏暖，易生热证、尿频、失眠等病症。" +
+                       "<br/>时令对应：冬季（亥子丑月），肾气当令，宜补肾温阳。" +
+                       "<br/>脏腑对应：肾脏、膀胱，开窍于耳，主骨髓。</font>";
+            default:
+                return "未知运气";
+        }
+    }
+    
+    private String getLiuyiDetailedAnalysis(String liuyi) {
+        if (liuyi.contains("木")) {
+            return "<font color='#90EE90'>厥阴风木：主风邪、疏泄、生发。对应春季，肝气当令。易引发肝胆疾病、神经系统疾病、关节疾病。</font>";
+        } else if (liuyi.contains("君火")) {
+            return "<font color='#FF6B6B'>少阴君火：主热气、光明、温和。对应夏季初，心气当令。易引发心血管疾病、热病、神志疾病。</font>";
+        } else if (liuyi.contains("相火")) {
+            return "<font color='#FF8C00'>少阳相火：主热气、蒸腾、活力。对应夏季盛，三焦当令。易引发肝胆火旺、热病、炎症性疾病。</font>";
+        } else if (liuyi.contains("湿土")) {
+            return "<font color='#DEB887'>太阴湿土：主湿气、运化、承载。对应长夏，脾气当令。易引发脾胃疾病、消化系统疾病、水肿。</font>";
+        } else if (liuyi.contains("燥金")) {
+            return "<font color='#C0C0C0'>阳明燥金：主燥气、收敛、肃杀。对应秋季，肺气当令。易引发呼吸系统疾病、皮肤疾病、便秘。</font>";
+        } else if (liuyi.contains("寒水")) {
+            return "<font color='#87CEEB'>太阳寒水：主寒气、收藏、闭藏。对应冬季，肾气当令。易引发肾脏疾病、关节疾病、畏寒怕冷。</font>";
+        }
+        return "未知六气";
+    }
+    
+    private String getYunQiCombinationAnalysis(String zhongYun, String siTian, String zaiQuan) {
+        StringBuilder sb = new StringBuilder();
+        
+        String yunWuXing = zhongYun.substring(0, 1);
+        String siTianWuXing = "";
+        String zaiQuanWuXing = "";
+        
+        if (siTian.contains("木")) siTianWuXing = "木";
+        else if (siTian.contains("火")) siTianWuXing = "火";
+        else if (siTian.contains("土")) siTianWuXing = "土";
+        else if (siTian.contains("金")) siTianWuXing = "金";
+        else if (siTian.contains("水")) siTianWuXing = "水";
+        
+        if (zaiQuan.contains("木")) zaiQuanWuXing = "木";
+        else if (zaiQuan.contains("火")) zaiQuanWuXing = "火";
+        else if (zaiQuan.contains("土")) zaiQuanWuXing = "土";
+        else if (zaiQuan.contains("金")) zaiQuanWuXing = "金";
+        else if (zaiQuan.contains("水")) zaiQuanWuXing = "水";
+        
+        sb.append("中运 ").append(yunWuXing).append("运与司天 ").append(siTianWuXing).append("气：");
+        if (yunWuXing.equals(siTianWuXing)) {
+            sb.append("<font color='#FFD700'>运气同气，本气过盛，需防本脏疾病。</font>");
+        } else if (isSheng(yunWuXing, siTianWuXing)) {
+            sb.append("<font color='#90EE90'>运生气，气运相生，气候平和，万物繁茂。</font>");
+        } else if (isSheng(siTianWuXing, yunWuXing)) {
+            sb.append("<font color='#87CEEB'>气生运，气运相生，气候适宜，作物丰收。</font>");
+        } else if (isKe(yunWuXing, siTianWuXing)) {
+            sb.append("<font color='#FF6B6B'>运克气，气运相克，气候异常，灾害频发。</font>");
+        } else {
+            sb.append("<font color='#DEB887'>气克运，气运相克，气候失调，疾病流行。</font>");
+        }
+        
+        sb.append("<br/>中运 ").append(yunWuXing).append("运与在泉 ").append(zaiQuanWuXing).append("气：");
+        if (yunWuXing.equals(zaiQuanWuXing)) {
+            sb.append("<font color='#FFD700'>运气同气，本气过盛，需防本脏疾病。</font>");
+        } else if (isSheng(yunWuXing, zaiQuanWuXing)) {
+            sb.append("<font color='#90EE90'>运生气，气运相生，气候平和，万物繁茂。</font>");
+        } else if (isSheng(zaiQuanWuXing, yunWuXing)) {
+            sb.append("<font color='#87CEEB'>气生运，气运相生，气候适宜，作物丰收。</font>");
+        } else if (isKe(yunWuXing, zaiQuanWuXing)) {
+            sb.append("<font color='#FF6B6B'>运克气，气运相克，气候异常，灾害频发。</font>");
+        } else {
+            sb.append("<font color='#DEB887'>气克运，气运相克，气候失调，疾病流行。</font>");
+        }
+        
+        return sb.toString();
+    }
+    
+    private boolean isSheng(String a, String b) {
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土");
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        return shengMap.get(a) != null && shengMap.get(a).equals(b);
+    }
+    
+    private boolean isKe(String a, String b) {
+        java.util.Map<String, String> keMap = new java.util.HashMap<>();
+        keMap.put("木", "土"); keMap.put("火", "金");
+        keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
+        return keMap.get(a) != null && keMap.get(a).equals(b);
+    }
+
+    private String getYearAdvice(String yearGan, String yearZhi) {
+        String wuxing = getWuXing(yearGan);
+        String[] zodiac = {"鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"};
+        String[] zodiacMap = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
+        String zodiacName = "";
+        for (int i = 0; i < zodiacMap.length; i++) {
+            if (zodiacMap[i].equals(yearZhi)) {
+                zodiacName = zodiac[i];
+                break;
+            }
+        }
+
+        String[][] adviceMap = {
+            {"木", "宜：积极进取、学习提升、拓展人脉<br/>忌：冲动急躁、过度劳累、口舌争执<br/>💡 本年运势向上，适合开创事业，把握良机"},
+            {"火", "宜：展示才华、沟通交流、静心修养<br/>忌：情绪激动、贪功冒进、熬夜过度<br/>💡 本年名声易起，注意言行举止，保持谦逊"},
+            {"土", "宜：稳扎稳打、积蓄力量、诚信待人<br/>忌：犹豫不决、贪图安逸、饮食不节<br/>💡 本年运势平稳，适合守成发展，厚积薄发"},
+            {"金", "宜：果断决策、改革创新、投资理财<br/>忌：刚愎自用、过度消费、招惹是非<br/>💡 本年机会与挑战并存，宜把握时机，果断行动"},
+            {"水", "宜：智慧谋划、暗中布局、修身养性<br/>忌：盲目跟风、轻信他人、饮酒过度<br/>💡 本年宜低调行事，积蓄实力，静待时机"}
+        };
+
+        for (String[] advice : adviceMap) {
+            if (advice[0].equals(wuxing)) {
+                return advice[1];
+            }
+        }
+        return "宜：顺势而为、把握机遇、积极进取<br/>忌：盲目冲动、固执己见、不思进取";
+    }
+    
+    private String getWuyunLiuqiSummary(String yearGanZhi) {
+        String yearGan = yearGanZhi.substring(0, 1);
+        String yearZhi = yearGanZhi.substring(1, 2);
+        
+        String wuxing = getWuXing(yearGan);
+        String zhongYun = getZhongYunShort(yearGan);
+        
+        String[] liuyiNames = {"厥阴风木", "少阴君火", "少阳相火", "太阴湿土", "阳明燥金", "太阳寒水"};
+        int liuyiIndex = -1;
+        String[] liuyiYears = {"子", "丑", "寅", "申", "辰", "戌", "巳", "亥", "卯", "酉", "午", "未"};
+        for (int i = 0; i < liuyiYears.length; i++) {
+            if (liuyiYears[i].equals(yearZhi)) {
+                liuyiIndex = i / 2;
+                break;
+            }
+        }
+        String siTian = liuyiIndex >= 0 ? liuyiNames[liuyiIndex] : "未知";
+        
+        return yearGanZhi + "年" + zhongYun + "，司天" + siTian + "，";
     }
 }
