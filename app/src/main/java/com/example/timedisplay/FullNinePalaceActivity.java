@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import android.os.Handler;
@@ -20,7 +21,7 @@ public class FullNinePalaceActivity extends Activity {
     private TextView fullPageTitle;
     
     private TextView expBasic;
-    private TextView expFourPillar;
+    private android.widget.TextView expDestiny;
     private TextView expZhifuZhishi;
     private TextView expGan;
     private TextView expSummary;
@@ -34,6 +35,8 @@ public class FullNinePalaceActivity extends Activity {
     private DetailedNinePalacePanel expPalaces;
     private TextView expTime;
     private TextView expOverall;
+    private TextView destinyArrow;
+    private boolean destinyExpanded = false;
     private TextView expTianDiPanDesc;
     private TextView expNineStarsDesc;
     private TextView expEightDoorsDesc;
@@ -113,7 +116,6 @@ public class FullNinePalaceActivity extends Activity {
         fullPageTitle = (TextView) findViewById(R.id.fullPageTitle);
         
         expBasic = (TextView) findViewById(R.id.expBasic);
-        expFourPillar = (TextView) findViewById(R.id.expFourPillar);
         expZhifuZhishi = (TextView) findViewById(R.id.expZhifuZhishi);
         expGan = (TextView) findViewById(R.id.expGan);
         expSummary = (TextView) findViewById(R.id.expSummary);
@@ -132,6 +134,21 @@ public class FullNinePalaceActivity extends Activity {
         expEightDoorsDesc = (TextView) findViewById(R.id.expEightDoorsDesc);
         expGodsDesc = (TextView) findViewById(R.id.expGodsDesc);
         expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
+        
+        expDestiny = (android.widget.TextView) findViewById(R.id.expDestiny);
+        destinyArrow = (TextView) findViewById(R.id.destinyArrow);
+        
+        View destinyHeader = findViewById(R.id.destinyHeader);
+        destinyHeader.setOnClickListener(v -> {
+            destinyExpanded = !destinyExpanded;
+            if (destinyExpanded) {
+                expDestiny.setVisibility(View.VISIBLE);
+                destinyArrow.setText("▼");
+            } else {
+                expDestiny.setVisibility(View.GONE);
+                destinyArrow.setText("▶");
+            }
+        });
 
         updateHandler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
@@ -888,6 +905,48 @@ public class FullNinePalaceActivity extends Activity {
     private String getLuckSymbol(String star, String door) {
         return getLuckSymbol(star, door, null, null);
     }
+    
+    private String getStarLuckColor(String star) {
+        if (star == null) return "#FFD700";
+        switch (star) {
+            case "天蓬": return "#90EE90";
+            case "天任": return "#90EE90";
+            case "天冲": return "#FF6B6B";
+            case "天辅": return "#90EE90";
+            case "天英": return "#FF6B6B";
+            case "天芮": return "#FFA500";
+            case "天柱": return "#FFD700";
+            case "天心": return "#90EE90";
+            case "天禽": return "#90EE90";
+            default: return "#FFD700";
+        }
+    }
+    
+    private String getDoorLuckColor(String door) {
+        if (door == null) return "#FFD700";
+        switch (door) {
+            case "开": return "#90EE90";
+            case "休": return "#90EE90";
+            case "生": return "#90EE90";
+            case "伤": return "#FF6B6B";
+            case "杜": return "#FFD700";
+            case "景": return "#FFD700";
+            case "死": return "#FF6B6B";
+            case "惊": return "#FF6B6B";
+            default: return "#FFD700";
+        }
+    }
+    
+    private String getRiShiRelationColor(String relation) {
+        if (relation == null) return "#FFD700";
+        if (relation.contains("生") || relation.contains("合") || relation.contains("比")) {
+            return "#90EE90";
+        } else if (relation.contains("克") || relation.contains("冲")) {
+            return "#FF6B6B";
+        } else {
+            return "#FFD700";
+        }
+    }
 
     private void updateExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
         boolean isYangDun = isYangDunByJieqi(jieqi);
@@ -937,28 +996,36 @@ public class FullNinePalaceActivity extends Activity {
         }
         
         StringBuilder sbBasic = new StringBuilder();
-        sbBasic.append(yearPillar).append(" ").append(monthPillar).append(" ").append(dayPillar).append(" ").append(timePillar).append("\n");
-        sbBasic.append(jieqi).append(" ").append(isYangDun ? "阳" : "阴").append(ju).append("局\n");
-        sbBasic.append("旬首:").append(xunShou).append(" 空亡:").append(kongWang).append("\n");
-        sbBasic.append("马星:").append(maXing).append("\n");
-        sbBasic.append("值符:").append(zhiFuStar).append("星").append("(").append(PALACE_NAMES[zhiFuPalace]).append(")").append("\n");
-        sbBasic.append("值使:").append(zhiShiDoor).append("门").append("(").append(PALACE_NAMES[zhiShiPalace]).append(")");
+        sbBasic.append("【节气】").append(jieqi).append(" · ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局\n\n");
+        
+        sbBasic.append("📆 旬首 ").append(xunShou).append(" · 空亡 ").append(kongWang).append("\n");
+        sbBasic.append("   ").append(getKongWangExplanation(kongWang)).append("\n\n");
+        
+        sbBasic.append("🐴 马星 ").append(maXing).append("\n");
+        sbBasic.append("   ").append(getMaXingExplanation(maXing)).append("\n\n");
+        
+        sbBasic.append("⚡ 旺衰判断\n");
+        sbBasic.append("   日干").append(dayGan).append("属").append(riGanWuXing).append("，").append(getWangCuiDescription(wangCui, riGanPalace)).append("\n");
         expBasic.setText(sbBasic.toString());
         
         expSummary.setText(getQiMenSummary(yearPillar, monthPillar, dayPillar, timePillar, zhiFuStar, zhiShiDoor));
         
-        expFourPillar.setText(android.text.Html.fromHtml(getFourPillarAnalysis(yearPillar, monthPillar, dayPillar, timePillar), android.text.Html.FROM_HTML_MODE_LEGACY));
+        expDestiny.setText(android.text.Html.fromHtml(getDestinyOverview(yearPillar, monthPillar, dayPillar, timePillar), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbZhifuZhishi = new StringBuilder();
-        sbZhifuZhishi.append("值符：").append(zhiFuStar).append("星").append("落").append(PALACE_NAMES[zhiFuPalace]).append("\n");
-        sbZhifuZhishi.append("值使：").append(zhiShiDoor).append("门").append("落").append(PALACE_NAMES[zhiShiPalace]);
-        expZhifuZhishi.setText(sbZhifuZhishi.toString());
+        String zhiFuColor = getStarLuckColor(zhiFuStar);
+        String zhiShiColor = getDoorLuckColor(zhiShiDoor);
+        sbZhifuZhishi.append("值符：<font color='").append(zhiFuColor).append("'>").append(zhiFuStar).append("星</font>").append("落").append(PALACE_NAMES[zhiFuPalace]).append("<br/>");
+        sbZhifuZhishi.append("值使：<font color='").append(zhiShiColor).append("'>").append(zhiShiDoor).append("门</font>").append("落").append(PALACE_NAMES[zhiShiPalace]);
+        expZhifuZhishi.setText(android.text.Html.fromHtml(sbZhifuZhishi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbGan = new StringBuilder();
-        sbGan.append("日干").append(dayGan).append(dayZhi).append("(").append(riGanWuXing).append(")").append("落").append(riGanPalace >= 0 ? PALACE_NAMES[riGanPalace] : "--").append("\n");
-        sbGan.append("时干").append(timeGan).append(timeZhi).append("(").append(shiGanWuXing).append(")").append("落").append(shiGanPalace >= 0 ? PALACE_NAMES[shiGanPalace] : "--").append("\n");
-        sbGan.append("日时关系：").append(getRiShiRelationship(dayGan, timeGan));
-        expGan.setText(sbGan.toString());
+        sbGan.append("日干 ").append(dayGan).append(dayZhi).append("(").append(riGanWuXing).append(")").append("落").append(riGanPalace >= 0 ? PALACE_NAMES[riGanPalace] : "--").append("<br/>");
+        sbGan.append("时干 ").append(timeGan).append(timeZhi).append("(").append(shiGanWuXing).append(")").append("落").append(shiGanPalace >= 0 ? PALACE_NAMES[shiGanPalace] : "--").append("<br/>");
+        String riShiRelation = getRiShiRelationship(dayGan, timeGan);
+        String riShiColor = getRiShiRelationColor(riShiRelation);
+        sbGan.append("日时关系：<font color='").append(riShiColor).append("'>").append(riShiRelation).append("</font>");
+        expGan.setText(android.text.Html.fromHtml(sbGan.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         String[][] tianDiPanData = new String[9][2];
         String[][] nineStarsData = new String[9][2];
@@ -1037,44 +1104,44 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
         
-        if (luckyDirections.length() > 0) sbDirection.append("✅ 吉方：").append(luckyDirections).append("\n");
-        if (neutralDirections.length() > 0) sbDirection.append("⚪ 平方：").append(neutralDirections).append("\n");
-        if (unluckyDirections.length() > 0) sbDirection.append("❌ 凶方：").append(unluckyDirections).append("\n");
+        if (luckyDirections.length() > 0) sbDirection.append("✅ <font color='#90EE90'>吉方</font>：").append(luckyDirections).append("<br/>");
+        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#FFD700'>平方</font>：").append(neutralDirections).append("<br/>");
+        if (unluckyDirections.length() > 0) sbDirection.append("❌ <font color='#FF6B6B'>凶方</font>：").append(unluckyDirections).append("<br/>");
         
-        sbDirection.append("\n");
-        sbDirection.append("📖 吉凶缘由：\n");
+        sbDirection.append("<br/>");
+        sbDirection.append("<b>📖 吉凶缘由：</b><br/>");
         for (int i = 0; i < 9; i++) {
             String door = eightDoors[i];
             if (door == null || door.isEmpty()) continue;
             
-            String doorDesc = "";
+            String doorColor = "#FFD700";
             switch(door) {
-                case "开": doorDesc = "开门：吉门，主事业顺利、贵人相助、财源广进，利于求职开业"; break;
-                case "休": doorDesc = "休门：吉门，主身心安宁、贵人扶持、百事顺遂，利于休息养生"; break;
-                case "生": doorDesc = "生门：吉门，主财运亨通、生意兴隆、身体健康，利于投资求财"; break;
-                case "伤": doorDesc = "伤门：凶门，主损伤争斗、疾病破财、出行不利，忌出行办事"; break;
-                case "杜": doorDesc = "杜门：平门，主闭塞阻滞、隐藏保守，适合静守不适合行动"; break;
-                case "景": doorDesc = "景门：平门，主名声远播、文书光明、才艺展现，利于考试宣传"; break;
-                case "死": doorDesc = "死门：凶门，主死亡丧事、疾病缠身、诸事不利，忌婚嫁出行"; break;
-                case "惊": doorDesc = "惊门：凶门，主惊恐不安、口舌是非、官非诉讼，忌谈判签约"; break;
+                case "开": doorColor = "#90EE90"; break;
+                case "休": doorColor = "#90EE90"; break;
+                case "生": doorColor = "#90EE90"; break;
+                case "伤": doorColor = "#FF6B6B"; break;
+                case "杜": doorColor = "#FFD700"; break;
+                case "景": doorColor = "#FFD700"; break;
+                case "死": doorColor = "#FF6B6B"; break;
+                case "惊": doorColor = "#FF6B6B"; break;
             }
-            sbDirection.append("  ").append(DIRECTIONS[i]).append("方").append(door).append("门：").append(doorDesc).append("\n");
+            sbDirection.append("  ").append(DIRECTIONS[i]).append("方").append("<font color='").append(doorColor).append("'>").append(door).append("门</font>").append("：").append(getDoorDescription(door)).append("<br/>");
         }
         
-        sbDirection.append("\n");
-        sbDirection.append("⚡ 旺相休囚死：\n");
-        sbDirection.append("  旺：得时令之气，气势旺盛，百事顺遂\n");
-        sbDirection.append("  相：得生扶之气，次吉，事多有成\n");
-        sbDirection.append("  休：得休息之气，平和安宁，不宜进取\n");
-        sbDirection.append("  囚：被克制之气，困顿受阻，事多不利\n");
-        sbDirection.append("  死：得处死之气，衰败不利，诸事不宜\n");
-        sbDirection.append("\n");
-        if (wangPositions.length() > 0) sbDirection.append("🔥 旺方：").append(wangPositions).append("（气势最盛）\n");
-        if (xiangPositions.length() > 0) sbDirection.append("🌿 相方：").append(xiangPositions).append("（次吉）\n");
-        if (xiuPositions.length() > 0) sbDirection.append("😌 休方：").append(xiuPositions).append("（平和）\n");
-        if (qiuPositions.length() > 0) sbDirection.append("🔒 囚方：").append(qiuPositions).append("（不利）\n");
-        if (siPositions.length() > 0) sbDirection.append("💀 死方：").append(siPositions).append("（大凶）");
-        expDirection.setText(sbDirection.toString());
+        sbDirection.append("<br/>");
+        sbDirection.append("<b>⚡ 旺相休囚死：</b><br/>");
+        sbDirection.append("  <font color='#90EE90'>旺</font>：得时令之气，气势旺盛，百事顺遂<br/>");
+        sbDirection.append("  <font color='#90EE90'>相</font>：得生扶之气，次吉，事多有成<br/>");
+        sbDirection.append("  <font color='#FFD700'>休</font>：得休息之气，平和安宁，不宜进取<br/>");
+        sbDirection.append("  <font color='#FFA500'>囚</font>：被克制之气，困顿受阻，事多不利<br/>");
+        sbDirection.append("  <font color='#FF6B6B'>死</font>：得处死之气，衰败不利，诸事不宜<br/>");
+        sbDirection.append("<br/>");
+        if (wangPositions.length() > 0) sbDirection.append("🔥 <font color='#90EE90'>旺</font>方：").append(wangPositions).append("<br/>");
+        if (xiangPositions.length() > 0) sbDirection.append("🌿 <font color='#90EE90'>相</font>方：").append(xiangPositions).append("<br/>");
+        if (xiuPositions.length() > 0) sbDirection.append("😌 <font color='#FFD700'>休</font>方：").append(xiuPositions).append("<br/>");
+        if (qiuPositions.length() > 0) sbDirection.append("🔒 <font color='#FFA500'>囚</font>方：").append(qiuPositions).append("<br/>");
+        if (siPositions.length() > 0) sbDirection.append("💀 <font color='#FF6B6B'>死</font>方：").append(siPositions).append("</font>");
+        expDirection.setText(android.text.Html.fromHtml(sbDirection.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbYiJi = new StringBuilder();
         sbYiJi.append("✅ 宜：");
@@ -2395,6 +2462,118 @@ public class FullNinePalaceActivity extends Activity {
         return sb.toString();
     }
     
+    private String getZhifuExplanation(String star) {
+        if (star == null) return "值符为九星之主，统领全局";
+        switch (star) {
+            case "天蓬": return "值符天蓬星：智谋深远，主策划谋略。值此星者，善于谋划，把握先机";
+            case "天芮": return "值符天芮星：主学习与疾病。值此星者，宜注重健康，刻苦学习";
+            case "天冲": return "值符天冲星：行动力强，主果断进取。值此星者，宜快速决策，勇往直前";
+            case "天辅": return "值符天辅星：贵人相助，主文化教育。值此星者，易得贵人扶持，利于考试升学";
+            case "天禽": return "值符天禽星：中正平和，主统领协调。值此星者，宜居中协调，平衡各方";
+            case "天心": return "值符天心星：智慧谋略，主医疗策划。值此星者，善于策划，利于医疗健康";
+            case "天柱": return "值符天柱星：刚直果断，主变革决断。值此星者，宜当机立断，改革突破";
+            case "天任": return "值符天任星：勤劳踏实，主稳步发展。值此星者，宜脚踏实地，稳扎稳打";
+            case "天英": return "值符天英星：才华出众，主文化展示。值此星者，宜展示才华，追求卓越";
+            default: return "值符为九星之主，统领全局";
+        }
+    }
+    
+    private String getZhishiExplanation(String door) {
+        if (door == null) return "值使为八门之主，掌管人事";
+        switch (door) {
+            case "休": return "值使休门：主休息养生，恢复能量。宜调整状态，蓄势待发";
+            case "生": return "值使生门：主生机勃勃，万物生长。宜开拓进取，求财创业";
+            case "伤": return "值使伤门：主伤害损耗，破财纠纷。宜谨慎行事，避免冒险";
+            case "杜": return "值使杜门：主阻塞不通，隐藏防守。宜静守待时，积蓄力量";
+            case "景": return "值使景门：主光明展示，才华显露。宜考试面试，宣传推广";
+            case "死": return "值使死门：主衰败终结，诸事不宜。宜保守谨慎，不宜进取";
+            case "惊": return "值使惊门：主惊恐不安，口舌是非。宜镇定自若，谨言慎行";
+            case "开": return "值使开门：主开放通达，百事皆宜。宜开业合作，大展宏图";
+            default: return "值使为八门之主，掌管人事";
+        }
+    }
+    
+    private String getDoorDescription(String door) {
+        if (door == null) return "";
+        switch (door) {
+            case "开": return "吉门，主事业顺利、贵人相助、财源广进，利于求职开业";
+            case "休": return "吉门，主身心安宁、贵人扶持、百事顺遂，利于休息养生";
+            case "生": return "吉门，主财运亨通、生意兴隆、身体健康，利于投资求财";
+            case "伤": return "凶门，主损伤争斗、疾病破财、出行不利，忌出行办事";
+            case "杜": return "平门，主闭塞阻滞、隐藏保守，适合静守不适合行动";
+            case "景": return "平门，主名声远播、文书光明、才艺展现，利于考试宣传";
+            case "死": return "凶门，主死亡丧事、疾病缠身、诸事不利，忌婚嫁出行";
+            case "惊": return "凶门，主惊恐不安、口舌是非、官非诉讼，忌谈判签约";
+            default: return "";
+        }
+    }
+    
+    private String getKongWangExplanation(String kongWang) {
+        if (kongWang == null || kongWang.equals("--")) return "空亡指六甲旬中未出现的地支，主事体不实";
+        String[] explanations = {
+            "戌亥空：主孤独空虚，防情感缺失，宜充实内心",
+            "申酉空：主金气不足，防肺呼吸系统，宜润肺养生",
+            "午未空：主火气不足，防心血管系统，宜静心养神",
+            "辰巳空：主土气不足，防脾胃消化系统，宜健脾养胃",
+            "寅卯空：主木气不足，防肝胆神经系统，宜疏肝理气",
+            "子丑空：主水气不足，防肾泌尿系统，宜温补肾阳"
+        };
+        java.util.Map<String, String> map = new java.util.HashMap<>();
+        map.put("戌亥", explanations[0]);
+        map.put("申酉", explanations[1]);
+        map.put("午未", explanations[2]);
+        map.put("辰巳", explanations[3]);
+        map.put("寅卯", explanations[4]);
+        map.put("子丑", explanations[5]);
+        return map.getOrDefault(kongWang, "空亡指六甲旬中未出现的地支，主事体不实");
+    }
+    
+    private String getMaXingExplanation(String maXing) {
+        if (maXing == null || maXing.equals("--")) return "马星主奔波走动，变动迁移";
+        java.util.Map<String, String> map = new java.util.HashMap<>();
+        map.put("寅", "马星寅：主东方之动，利出行东方，宜积极进取");
+        map.put("午", "马星午：主南方之动，利出行南方，宜热情开朗");
+        map.put("申", "马星申：主西方之动，利出行西方，宜果断行动");
+        map.put("亥", "马星亥：主北方之动，利出行北方，宜智慧变通");
+        map.put("巳", "马星巳：主东南之动，利出行东南，宜灵活机动");
+        map.put("酉", "马星酉：主西北之动，利出行西北，宜精细谋划");
+        return map.getOrDefault(maXing, "马星主奔波走动，变动迁移");
+    }
+    
+    private String getRiGanExplanation(String gan) {
+        if (gan == null) return "日干代表自身，反映个人状态";
+        switch (gan) {
+            case "甲": return "甲木参天大树，主领袖气质，积极进取。宜发挥领导力，把握机遇";
+            case "乙": return "乙木花草之木，主柔顺仁慈，以柔克刚。宜耐心处事，善于变通";
+            case "丙": return "丙火太阳之火，主光明热情，积极向上。宜展现才华，追求卓越";
+            case "丁": return "丁火灯烛之火，主文明细致，精益求精。宜注重细节，追求完美";
+            case "戊": return "戊土大地之土，主稳重诚信，脚踏实地。宜诚实守信，稳步发展";
+            case "己": return "己土田园之土，主包容厚德，积累福报。宜宽厚待人，善积功德";
+            case "庚": return "庚金刀剑之金，主果断刚毅，勇往直前。宜当机立断，不畏艰难";
+            case "辛": return "辛金首饰之金，主精致细腻，追求品质。宜注重品质，精益求精";
+            case "壬": return "壬水江海之水，主智慧流动，灵活变通。宜顺势而为，善于应变";
+            case "癸": return "癸水雨露之水，主聪明神秘，低调谋划。宜暗中谋划，厚积薄发";
+            default: return "日干代表自身，反映个人状态";
+        }
+    }
+    
+    private String getShiGanExplanation(String gan) {
+        if (gan == null) return "时干代表事情，反映事物发展";
+        switch (gan) {
+            case "甲": return "甲木主事：事情得贵人相助，发展顺利。宜积极推动，把握良机";
+            case "乙": return "乙木主事：事情柔顺发展，需要耐心。宜循序渐进，静待时机";
+            case "丙": return "丙火主事：事情明朗迅速，机遇显现。宜快速行动，把握机遇";
+            case "丁": return "丁火主事：事情需要细致处理。宜注重细节，精益求精";
+            case "戊": return "戊土主事：事情稳重推进，根基稳固。宜稳扎稳打，步步为营";
+            case "己": return "己土主事：事情需要包容忍耐。宜以柔克刚，耐心等待";
+            case "庚": return "庚金主事：事情需要果断决策。宜当机立断，勇往直前";
+            case "辛": return "辛金主事：事情需要精益求精。宜注重品质，追求卓越";
+            case "壬": return "壬水主事：事情变化多端。宜灵活应对，顺势而为";
+            case "癸": return "癸水主事：事情暗藏玄机。宜谨慎分析，暗中谋划";
+            default: return "时干代表事情，反映事物发展";
+        }
+    }
+    
     private String getDayAdviceByAll(String star, String door, String god, String dayGan) {
         StringBuilder sb = new StringBuilder();
         
@@ -2708,6 +2887,21 @@ public class FullNinePalaceActivity extends Activity {
         return sb.toString();
     }
     
+    private String getWangCuiDescription(String[] wangCui, int riGanPalace) {
+        if (riGanPalace < 0 || riGanPalace >= wangCui.length) {
+            return "旺衰状态不明";
+        }
+        String status = wangCui[riGanPalace];
+        switch (status) {
+            case "旺": return "落宫得令【旺】，气势旺盛，百事顺遂，力量最强";
+            case "相": return "落宫得生【相】，次吉之象，得他人助力，事多有成";
+            case "休": return "落宫休息【休】，平和安宁，不宜过分强求";
+            case "囚": return "落宫受制【囚】，困顿受阻，事多不利，需谨慎";
+            case "死": return "落宫处死【死】，衰败不利，诸事不宜，宜守不宜攻";
+            default: return "旺衰状态不明";
+        }
+    }
+    
     private String getPalaceKeyInfo(String star, String door, String wangCui) {
         if (!wangCui.equals("旺") && !wangCui.equals("死")) return null;
         
@@ -2781,94 +2975,651 @@ public class FullNinePalaceActivity extends Activity {
         
         String dayGanWuXing = getWuXing(dayGan);
         
-        sb.append("<font color='#FFD700'><b>").append(yearPillar).append(" ").append(monthPillar).append(" ").append(dayPillar).append(" ").append(timePillar).append("</b></font><br/><br/>");
+        sb.append("<font color='#FFD700'><b>📊 四柱命理分析</b></font><br/><br/>");
         
-        sb.append("<font color='#98D8F0'>【四柱排布】</font><br/>");
-        sb.append("年 ").append(yearGan).append("<font color='#FF6B6B'>").append(yearZhi).append("</font>")
-          .append(" · 月 ").append(monthGan).append("<font color='#FF6B6B'>").append(monthZhi).append("</font>")
-          .append(" · 日 ").append(dayGan).append("<font color='#FF6B6B'>").append(dayZhi).append("</font>")
-          .append(" · 时 ").append(timeGan).append("<font color='#FF6B6B'>").append(timeZhi).append("</font><br/><br/>");
+        sb.append("<font color='#FFD700'><b>四柱排布：</b></font>").append(yearPillar).append(" ").append(monthPillar).append(" ").append(dayPillar).append(" ").append(timePillar).append("<br/><br/>");
         
         sb.append("<font color='#98D8F0'>【日主核心】</font><br/>");
-        sb.append("日主 <font color='#FFD700'><b>").append(dayGan).append("</b></font> 属").append(dayGanWuXing).append("，").append(getGanDescription(dayGan)).append("<br/><br/>");
+        sb.append("日主 <font color='#FFD700'><b>").append(dayGan).append("</b></font> 属").append(dayGanWuXing).append("，").append(getGanDescription(dayGan)).append("<br/>");
+        sb.append("<font color='#8899AA'>").append(getRiGanDetailedAnalysis(dayGan)).append("</font><br/><br/>");
         
-        sb.append("<font color='#98D8F0'>【五行生克】</font><br/>");
-        String[][] pillars = {{yearGan, yearZhi, "年"}, {monthGan, monthZhi, "月"}, {dayGan, dayZhi, "日"}, {timeGan, timeZhi, "时"}};
+        sb.append("<font color='#98D8F0'>【五行力量分析】</font><br/>");
+        String[][] pillars = {{yearGan, yearZhi}, {monthGan, monthZhi}, {dayGan, dayZhi}, {timeGan, timeZhi}};
+        String[] pillarNames = {"年", "月", "日", "时"};
+        int shengCount = 0, keCount = 0, biCount = 0;
+        
         for (int i = 0; i < pillars.length; i++) {
             String pGan = pillars[i][0];
             String pZhi = pillars[i][1];
-            String pName = pillars[i][2];
+            String pName = pillarNames[i];
             
             String pGanWuXing = getWuXing(pGan);
             String pZhiWuXing = getWuXing(pZhi);
             
-            String ganLabel = pGan + "(" + pGanWuXing + ")";
-            String zhiLabel = pZhi + "(" + pZhiWuXing + ")";
+            sb.append(pName).append("柱 ");
+            sb.append(pGan).append("(").append(pGanWuXing).append(")");
             
-            String relation = "";
-            if (pGanWuXing.equals(pZhiWuXing)) {
-                relation = "<font color='#C0C0C0'>比和</font>";
-            } else if (isSheng(pGanWuXing, pZhiWuXing)) {
-                relation = "<font color='#90EE90'>生</font>";
-            } else if (isSheng(pZhiWuXing, pGanWuXing)) {
-                relation = "<font color='#90EE90'>生</font>";
-            } else if (isKe(pGanWuXing, pZhiWuXing)) {
-                relation = "<font color='#FF6B6B'>克</font>";
-            } else {
-                relation = "<font color='#FF6B6B'>克</font>";
+            String ganRelation = "";
+            if (pGanWuXing.equals(dayGanWuXing)) {
+                ganRelation = "<font color='#C0C0C0'>比和</font>";
+                if (i != 2) biCount++;
+            } else if (isSheng(pGanWuXing, dayGanWuXing)) {
+                ganRelation = "<font color='#90EE90'>生扶</font>";
+                shengCount++;
+            } else if (isKe(pGanWuXing, dayGanWuXing)) {
+                ganRelation = "<font color='#FF6B6B'>克制</font>";
+                keCount++;
+            } else if (isSheng(dayGanWuXing, pGanWuXing)) {
+                ganRelation = "<font color='#FFA500'>泄耗</font>";
+                keCount++;
             }
             
-            sb.append(pName).append("柱 ").append(ganLabel).append(relation).append(zhiLabel);
+            sb.append(ganRelation);
             
-            if (!pGan.equals(dayGan) || !pZhi.equals(dayZhi)) {
-                String toDayRelation = "";
-                if (pGanWuXing.equals(dayGanWuXing)) {
-                    toDayRelation = "<font color='#C0C0C0'>·助身</font>";
-                } else if (isSheng(pGanWuXing, dayGanWuXing)) {
-                    toDayRelation = "<font color='#90EE90'>·生扶</font>";
-                } else if (isSheng(dayGanWuXing, pGanWuXing)) {
-                    toDayRelation = "<font color='#FFA500'>·泄耗</font>";
-                } else if (isKe(pGanWuXing, dayGanWuXing)) {
-                    toDayRelation = "<font color='#FF6B6B'>·克制</font>";
-                } else {
-                    toDayRelation = "<font color='#FF6B6B'>·克制他</font>";
+            if (i == 2) {
+                sb.append(" · ").append(pZhi).append("(").append(pZhiWuXing).append(")");
+                String zhiRelation = "";
+                if (pZhiWuXing.equals(dayGanWuXing)) {
+                    zhiRelation = "<font color='#C0C0C0'>比和</font>";
+                } else if (isSheng(pZhiWuXing, dayGanWuXing)) {
+                    zhiRelation = "<font color='#90EE90'>生扶</font>";
+                    shengCount++;
+                } else if (isKe(pZhiWuXing, dayGanWuXing)) {
+                    zhiRelation = "<font color='#FF6B6B'>克制</font>";
+                    keCount++;
+                } else if (isSheng(dayGanWuXing, pZhiWuXing)) {
+                    zhiRelation = "<font color='#FFA500'>泄耗</font>";
+                    keCount++;
                 }
-                sb.append(toDayRelation);
+                sb.append(zhiRelation);
             }
+            
             sb.append("<br/>");
         }
+        
         sb.append("<br/>");
-        
-        sb.append("<font color='#98D8F0'>【命局总断】</font><br/>");
-        int shengCount = 0, keCount = 0, biCount = 0;
-        for (int i = 0; i < pillars.length; i++) {
-            String pGan = pillars[i][0];
-            String pGanWuXing = getWuXing(pGan);
-            
-            if (pGanWuXing.equals(dayGanWuXing)) biCount++;
-            else if (isSheng(pGanWuXing, dayGanWuXing)) shengCount++;
-            else if (isKe(pGanWuXing, dayGanWuXing)) keCount++;
-            else if (isSheng(dayGanWuXing, pGanWuXing)) keCount++;
-        }
-        
-        sb.append("生扶：").append(shengCount).append(" · 克制：").append(keCount).append(" · 比和：").append(biCount).append("<br/>");
+        sb.append("<font color='#98D8F0'>【命局强弱判断】</font><br/>");
+        sb.append("生扶之力：").append(shengCount).append(" · 克制之力：").append(keCount).append(" · 比和之力：").append(biCount).append("<br/>");
         
         if (shengCount + biCount > keCount) {
-            sb.append("<font color='#90EE90'>身强</font>：得势有力，").append(getGanDescription(dayGan)).append("，宜泄耗克制，适合创业发展<br/>");
+            sb.append("<font color='#90EE90'><b>身强</b></font>（生扶").append(shengCount).append("+比和").append(biCount).append(">克制").append(keCount).append("）<br/>");
+            sb.append("<font color='#8899AA'>").append(getStrengthReason("强", dayGan, dayGanWuXing, shengCount, keCount, biCount)).append("</font><br/>");
+            sb.append("<font color='#90EE90'>宜：</font>").append(getAdviceForStrength("强", dayGan, dayGanWuXing)).append("<br/>");
+            sb.append("<font color='#FF6B6B'>忌：</font>").append(getAdviceForStrength("强忌", dayGan, dayGanWuXing)).append("<br/>");
         } else if (keCount > shengCount + biCount) {
-            sb.append("<font color='#FF6B6B'>身弱</font>：失势不足，").append(getGanDescription(dayGan)).append("，宜生扶比和，适合稳健守成<br/>");
+            sb.append("<font color='#FF6B6B'><b>身弱</b></font>（克制").append(keCount).append(">生扶").append(shengCount).append("+比和").append(biCount).append("）<br/>");
+            sb.append("<font color='#8899AA'>").append(getStrengthReason("弱", dayGan, dayGanWuXing, shengCount, keCount, biCount)).append("</font><br/>");
+            sb.append("<font color='#90EE90'>宜：</font>").append(getAdviceForStrength("弱", dayGan, dayGanWuXing)).append("<br/>");
+            sb.append("<font color='#FF6B6B'>忌：</font>").append(getAdviceForStrength("弱忌", dayGan, dayGanWuXing)).append("<br/>");
         } else {
-            sb.append("<font color='#FFD700'>中和</font>：五行均衡，").append(getGanDescription(dayGan)).append("，运势平稳顺畅<br/>");
+            sb.append("<font color='#FFD700'><b>中和</b></font>（生扶").append(shengCount).append("+比和").append(biCount).append("=克制").append(keCount).append("）<br/>");
+            sb.append("<font color='#8899AA'>原因：五行力量均衡，无明显偏旺偏衰，为最佳命局状态</font><br/>");
+            sb.append("<font color='#FFD700'>宜：</font>顺势而为，把握良机，保持平衡发展<br/>");
+            sb.append("<font color='#FFD700'>忌：</font>过度强求，偏废一方，打破平衡<br/>");
         }
-        sb.append("<br/>");
         
-        sb.append("<font color='#98D8F0'>【综合建议】</font><br/>");
-        sb.append("<font color='#8899AA'>年柱主祖上根基，月柱主事业学业，日柱主自身性格，时柱主晚年子女。</font><br/>");
-        sb.append("<font color='#8899AA'>人生贵在顺势而为，把握时机，扬长避短，积善行德，福禄自来。</font>");
+        sb.append("<br/>");
+        sb.append("<font color='#98D8F0'>【五行喜忌】</font><br/>");
+        sb.append(getFiveElementXiJiDetailed(dayGan, dayGanWuXing, yearGan, yearZhi, monthGan, monthZhi, dayZhi, timeGan, timeZhi));
         
         return sb.toString();
     }
 
+    private String getStrengthReason(String type, String dayGan, String dayGanWuXing, int sheng, int ke, int bi) {
+        StringBuilder sb = new StringBuilder();
+        if (type.equals("强")) {
+            if (sheng > 0) {
+                sb.append("四柱中有").append(sheng).append("个干支生扶日主").append(dayGan).append("(").append(dayGanWuXing).append(")");
+            }
+            if (bi > 0) {
+                if (sb.length() > 0) sb.append("，");
+                sb.append("有").append(bi).append("个干支与日主比和");
+            }
+            sb.append("，生扶力量充足，故").append(dayGan).append("日主气势强盛");
+        } else {
+            if (ke > 0) {
+                sb.append("四柱中有").append(ke).append("个干支克制或泄耗日主").append(dayGan).append("(").append(dayGanWuXing).append(")");
+            }
+            if (sheng + bi == 0) {
+                if (sb.length() > 0) sb.append("，");
+                sb.append("而生扶之力不足");
+            }
+            sb.append("，克制力量过强，故").append(dayGan).append("日主气势衰弱");
+        }
+        return sb.toString();
+    }
+    
+    private String getAdviceForStrength(String type, String dayGan, String dayGanWuXing) {
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土");
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        
+        java.util.Map<String, String> keMap = new java.util.HashMap<>();
+        keMap.put("木", "土"); keMap.put("火", "金");
+        keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
+        
+        String xieHao = shengMap.get(dayGanWuXing);
+        String keHao = keMap.get(dayGanWuXing);
+        String shengHao = "";
+        for (String key : shengMap.keySet()) {
+            if (shengMap.get(key).equals(dayGanWuXing)) {
+                shengHao = key;
+                break;
+            }
+        }
+        
+        if (type.equals("强")) {
+            return "泄耗（" + xieHao + "）、克制（" + keHao + "），创业开拓，发挥才华，注重变通，理财投资";
+        } else if (type.equals("强忌")) {
+            return "生扶（" + shengHao + "）、比和（" + dayGanWuXing + "），固执己见，过度自信，忽视风险";
+        } else if (type.equals("弱")) {
+            return "生扶（" + shengHao + "）、比和（" + dayGanWuXing + "），稳健守成，学习积累，结交贵人，增强自信";
+        } else {
+            return "泄耗（" + xieHao + "）、克制（" + keHao + "），过度消耗，承担过重，冒险投机";
+        }
+    }
+    
+    private String getFiveElementXiJiDetailed(String dayGan, String dayGanWuXing, String yearGan, String yearZhi, String monthGan, String monthZhi, String dayZhi, String timeGan, String timeZhi) {
+        StringBuilder sb = new StringBuilder();
+        
+        int count = 0;
+        String[] allGans = {yearGan, monthGan, dayGan, timeGan};
+        String[] allZhis = {yearZhi, monthZhi, dayZhi, timeZhi};
+        
+        for (String gan : allGans) {
+            if (getWuXing(gan).equals(dayGanWuXing)) count++;
+        }
+        for (String zhi : allZhis) {
+            if (getWuXing(zhi).equals(dayGanWuXing)) count++;
+        }
+        
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土");
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        
+        java.util.Map<String, String> keMap = new java.util.HashMap<>();
+        keMap.put("木", "土"); keMap.put("火", "金");
+        keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
+        
+        String xieHao = shengMap.get(dayGanWuXing);
+        String keHao = keMap.get(dayGanWuXing);
+        String shengHao = "";
+        for (String key : shengMap.keySet()) {
+            if (shengMap.get(key).equals(dayGanWuXing)) {
+                shengHao = key;
+                break;
+            }
+        }
+        
+        sb.append("日主").append(dayGan).append("属").append(dayGanWuXing).append("，");
+        sb.append("四柱中").append(dayGanWuXing).append("出现").append(count).append("次");
+        
+        if (count >= 3) {
+            sb.append("，<font color='#FF6B6B'>偏旺</font>");
+            sb.append("（比劫多）");
+            sb.append("<br/>");
+            sb.append("<font color='#90EE90'>喜用神：</font>").append(xieHao).append("（泄秀）、").append(keHao).append("（制劫）");
+            sb.append("<br/>");
+            sb.append("<font color='#FF6B6B'>忌神：</font>").append(shengHao).append("（生身）、").append(dayGanWuXing).append("（比劫帮身）");
+            sb.append("<br/>");
+            sb.append("<font color='#8899AA'>原因：日主").append(dayGanWuXing).append("过旺，需要").append(xieHao).append("泄其秀气，").append(keHao).append("制其旺气，方能平衡");
+        } else if (count <= 1) {
+            sb.append("，<font color='#FF6B6B'>偏弱</font>");
+            sb.append("（印比少）");
+            sb.append("<br/>");
+            sb.append("<font color='#90EE90'>喜用神：</font>").append(shengHao).append("（生扶）、").append(dayGanWuXing).append("（比劫帮身）");
+            sb.append("<br/>");
+            sb.append("<font color='#FF6B6B'>忌神：</font>").append(xieHao).append("（泄耗）、").append(keHao).append("（克制）");
+            sb.append("<br/>");
+            sb.append("<font color='#8899AA'>原因：日主").append(dayGanWuXing).append("偏弱，需要").append(shengHao).append("来生扶，").append(dayGanWuXing).append("同类来相助，方能增强气势");
+        } else {
+            sb.append("，<font color='#FFD700'>中和</font>");
+            sb.append("（五行均衡）");
+            sb.append("<br/>");
+            sb.append("<font color='#FFD700'>喜用神：</font>视具体组合而定，无明显喜忌");
+            sb.append("<br/>");
+            sb.append("<font color='#8899AA'>原因：日主力量适中，五行不偏不倚，为贵命格局，宜顺势而为</font>");
+        }
+        
+        return sb.toString();
+    }
+    
+    private String getDestinyOverview(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
+        StringBuilder sb = new StringBuilder();
+        
+        String yearGan = yearPillar.substring(0, 1);
+        String yearZhi = yearPillar.substring(1, 2);
+        String monthGan = monthPillar.substring(0, 1);
+        String monthZhi = monthPillar.substring(1, 2);
+        String dayGan = dayPillar.substring(0, 1);
+        String dayZhi = dayPillar.substring(1, 2);
+        String timeGan = timePillar.substring(0, 1);
+        String timeZhi = timePillar.substring(1, 2);
+        
+        String dayGanWuXing = getWuXing(dayGan);
+        String[][] pillars = {{yearGan, yearZhi}, {monthGan, monthZhi}, {dayGan, dayZhi}, {timeGan, timeZhi}};
+        String[] pillarNames = {"年柱", "月柱", "日柱", "时柱"};
+        
+        // ═══════════════════════════════════
+        // 第一部分：专业命盘（专业人士参考）
+        // ═══════════════════════════════════
+        sb.append("<font color='#FF6B6B'><b>━━━ 专业命盘 ━━━</b></font><br/><br/>");
+        
+        // 1. 四柱排布 + 纳音 + 生肖
+        sb.append("<font color='#FFD700'><b>◆ 四柱排布</b></font><br/>");
+        sb.append(yearPillar).append("　").append(monthPillar).append("　").append(dayPillar).append("　").append(timePillar).append("<br/><br/>");
+        
+        sb.append("<font color='#FFD700'><b>◆ 纳音五行</b></font>　<font color='#8899AA'>（干支组合的意象属性，反映命局基调）</font><br/>");
+        String nYear = getNayin(yearGan, yearZhi);
+        String nMonth = getNayin(monthGan, monthZhi);
+        String nDay = getNayin(dayGan, dayZhi);
+        String nTime = getNayin(timeGan, timeZhi);
+        sb.append("年·").append(nYear).append("　月·").append(nMonth).append("<br/>");
+        sb.append("日·").append(nDay).append("　时·").append(nTime).append("<br/><br/>");
+        
+        sb.append("<font color='#FFD700'><b>◆ 生肖属相</b></font>　年支").append(yearZhi).append("·属").append(getZodiacNameFromZhi(yearZhi)).append("<br/><br/>");
+        
+        // 2. 日主核心分析
+        sb.append("<font color='#FFD700'><b>◆ 日主核心</b></font>　<font color='#8899AA'>（日干代表命主本人，是命局核心）</font><br/>");
+        sb.append("日主 <font color='#FFD700'><b>").append(dayGan).append("</b></font> 属<font color='#90EE90'><b>").append(dayGanWuXing).append("</b></font>，").append(getGanDescription(dayGan)).append("<br/>");
+        sb.append("<font color='#8899AA'>").append(getRiGanDetailedAnalysis(dayGan)).append("</font><br/><br/>");
+        
+        // 十二长生
+        String stageDay = getTwelveStage(dayGan, dayZhi);
+        String stageTime = getTwelveStage(dayGan, timeZhi);
+        String stageMonth = getTwelveStage(dayGan, monthZhi);
+        sb.append("<font color='#FFD700'><b>◆ 十二长生</b></font>　<font color='#8899AA'>（日主在各柱地支所处的生命阶段）</font><br/>");
+        sb.append("日主").append(dayGan).append("在日支").append(dayZhi).append("：<font color='#90EE90'><b>").append(stageDay).append("</b></font>").append(" — ").append(getTwelveStageExplanation(stageDay)).append("<br/>");
+        sb.append("日主").append(dayGan).append("在时支").append(timeZhi).append("：").append(stageTime).append(" — ").append(getTwelveStageExplanation(stageTime)).append("<br/>");
+        sb.append("日主").append(dayGan).append("在月支").append(monthZhi).append("（月令）：").append(stageMonth).append(" — ").append(getTwelveStageExplanation(stageMonth)).append("<br/><br/>");
+        
+        // 3. 五行力量分析
+        sb.append("<font color='#FFD700'><b>◆ 五行力量分析</b></font>　<font color='#8899AA'>（各柱与日主的生克关系）</font><br/>");
+        int shengCount = 0, keCount = 0, biCount = 0;
+        
+        for (int i = 0; i < pillars.length; i++) {
+            String pGan = pillars[i][0];
+            String pZhi = pillars[i][1];
+            String pName = pillarNames[i];
+            
+            String pGanWuXing = getWuXing(pGan);
+            String pZhiWuXing = getWuXing(pZhi);
+            
+            // 天干部分
+            sb.append(pName).append("天干 ").append(pGan).append("(").append(pGanWuXing).append(")");
+            if (pGanWuXing.equals(dayGanWuXing)) {
+                sb.append("<font color='#C0C0C0'> ─ 比和</font>");
+                if (i != 2) biCount++;
+            } else if (isSheng(pGanWuXing, dayGanWuXing)) {
+                sb.append("<font color='#90EE90'> → 生扶日主</font>");
+                shengCount++;
+            } else if (isKe(pGanWuXing, dayGanWuXing)) {
+                sb.append("<font color='#FF6B6B'> → 克制日主</font>");
+                keCount++;
+            } else if (isSheng(dayGanWuXing, pGanWuXing)) {
+                sb.append("<font color='#FFA500'> ← 被日主泄耗</font>");
+                keCount++;
+            } else if (isKe(dayGanWuXing, pGanWuXing)) {
+                sb.append("<font color='#87CEEB'> ← 被日主所克</font>");
+                keCount++;
+            }
+            sb.append("<br/>");
+            
+            // 日柱地支单独列出
+            if (i == 2) {
+                sb.append(pName).append("地支 ").append(pZhi).append("(").append(pZhiWuXing).append(")");
+                if (pZhiWuXing.equals(dayGanWuXing)) {
+                    sb.append("<font color='#C0C0C0'> ─ 比和</font>");
+                } else if (isSheng(pZhiWuXing, dayGanWuXing)) {
+                    sb.append("<font color='#90EE90'> → 生扶日主</font>");
+                    shengCount++;
+                } else if (isKe(pZhiWuXing, dayGanWuXing)) {
+                    sb.append("<font color='#FF6B6B'> → 克制日主</font>");
+                    keCount++;
+                } else if (isSheng(dayGanWuXing, pZhiWuXing)) {
+                    sb.append("<font color='#FFA500'> ← 被日主泄耗</font>");
+                    keCount++;
+                } else if (isKe(dayGanWuXing, pZhiWuXing)) {
+                    sb.append("<font color='#87CEEB'> ← 被日主所克</font>");
+                    keCount++;
+                }
+                sb.append("<br/>");
+            }
+        }
+        sb.append("<br/>");
+        
+        // 4. 命局强弱判断
+        sb.append("<font color='#FFD700'><b>◆ 命局强弱判断</b></font><br/>");
+        sb.append("生扶之力：").append(shengCount).append("　克制之力：").append(keCount).append("　比和之力：").append(biCount).append("<br/>");
+        
+        int balance = shengCount + biCount - keCount;
+        if (balance > 0) {
+            sb.append("<font color='#90EE90'><b>日主身强</b></font>（生扶").append(shengCount).append("+比和").append(biCount).append("&gt;克制").append(keCount).append("）<br/>");
+            sb.append("<font color='#8899AA'>解释：日主").append(dayGan).append("在命局中得到较多生扶和同类相助，气势旺盛、精力充沛，有较强的自我驱动力和抗压能力。</font><br/><br/>");
+        } else if (balance < 0) {
+            sb.append("<font color='#FF6B6B'><b>日主身弱</b></font>（克制").append(keCount).append("&gt;生扶").append(shengCount).append("+比和").append(biCount).append("）<br/>");
+            sb.append("<font color='#8899AA'>解释：日主").append(dayGan).append("在命局中受到的克制和泄耗较多，气势偏弱，需要借助外界力量支持，更适合团队合作而非单打独斗。</font><br/><br/>");
+        } else {
+            sb.append("<font color='#FFD700'><b>日主中和</b></font>（生扶").append(shengCount).append("+比和").append(biCount).append("=克制").append(keCount).append("）<br/>");
+            sb.append("<font color='#8899AA'>解释：五行力量均衡，是最理想的命局状态，适应能力强，能够根据环境灵活调整策略。</font><br/><br/>");
+        }
+        
+        // 5. 五行喜忌
+        sb.append("<font color='#FFD700'><b>◆ 五行喜忌</b></font><br/>");
+        sb.append(getFiveElementXiJiDetailed(dayGan, dayGanWuXing, yearGan, yearZhi, monthGan, monthZhi, dayZhi, timeGan, timeZhi));
+        sb.append("<br/><br/>");
+        
+        // 6. 十神全分析（天干）
+        sb.append("<font color='#FFD700'><b>◆ 十神分析</b></font>　<font color='#8899AA'>（以日主为基准，看各天干与日主的十神关系）</font><br/>");
+        String[] ganShen = getTenGods(dayGan, new String[]{yearGan, monthGan, dayGan, timeGan});
+        String[] labelNames = {"年","月","日","时"};
+        
+        for (int i = 0; i < 4; i++) {
+            String tenGod = ganShen[i];
+            sb.append(labelNames[i]).append("干").append(pillars[i][0]).append("：<font color='#90EE90'><b>").append(tenGod).append("</b></font>");
+            sb.append("（").append(getTenGodExplanation(tenGod)).append("）<br/>");
+        }
+        sb.append("<br/>");
+        
+        // 7. 干支生克关系
+        sb.append("<font color='#FFD700'><b>◆ 干支关系</b></font>　<font color='#8899AA'>（每柱天干与地支的相互作用）</font><br/>");
+        for (int i = 0; i < 4; i++) {
+            sb.append(labelNames[i]).append("柱 ").append(pillars[i][0]).append(pillars[i][1]).append("：");
+            sb.append(getGanZhiRelationship(pillars[i][0], pillars[i][1]));
+            String sDesc = getSeasonDescription(pillars[i][1]);
+            if (!sDesc.isEmpty()) sb.append(" · ").append(sDesc);
+            sb.append("<br/>");
+        }
+        sb.append("<br/>");
+        
+        // ═══════════════════════════════════
+        // 第二部分：通俗解读（普通人阅读）
+        // ═══════════════════════════════════
+        sb.append("<font color='#98D8F0'><b>━━━ 通俗解读 ━━━</b></font><br/><br/>");
+        sb.append(getFourPillarComprehensiveAnalysis(yearGan, yearZhi, monthGan, monthZhi, dayGan, dayZhi, timeGan, timeZhi));
+        
+        return sb.toString();
+    }
+    
+    private String getWuXingRelation(String wuxing1, String wuxing2) {
+        if (wuxing1.equals(wuxing2)) return "<font color='#C0C0C0'>比和（同类相助）</font>";
+        
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土");
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        
+        java.util.Map<String, String> keMap = new java.util.HashMap<>();
+        keMap.put("木", "土"); keMap.put("火", "金");
+        keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
+        
+        if (shengMap.get(wuxing1).equals(wuxing2)) {
+            return "<font color='#90EE90'>生扶（" + wuxing1 + "生" + wuxing2 + "）</font>";
+        } else if (shengMap.get(wuxing2).equals(wuxing1)) {
+            return "<font color='#FFA500'>泄耗（" + wuxing1 + "被" + wuxing2 + "生，泄气）</font>";
+        } else if (keMap.get(wuxing1).equals(wuxing2)) {
+            return "<font color='#FF6B6B'>克制（" + wuxing1 + "克" + wuxing2 + "）</font>";
+        } else {
+            return "<font color='#FF6B6B'>被克（" + wuxing1 + "被" + wuxing2 + "克）</font>";
+        }
+    }
+    
+    private String getSeasonDescription(String zhi) {
+        switch(zhi) {
+            case "寅": case "卯": case "辰": return "为春季，木气当旺";
+            case "巳": case "午": case "未": return "为夏季，火气当旺";
+            case "申": case "酉": case "戌": return "为秋季，金气当旺";
+            case "亥": case "子": case "丑": return "为冬季，水气当旺";
+            default: return "";
+        }
+    }
+    
+    // 判断天干阴阳：阳干 甲丙戊庚壬，阴干 乙丁己辛癸
+    private boolean isYangGan(String gan) {
+        return "甲".equals(gan) || "丙".equals(gan) || "戊".equals(gan) || "庚".equals(gan) || "壬".equals(gan);
+    }
+    
+    private String[] getTenGods(String dayGan, String[] otherGans) {
+        String[] result = new String[otherGans.length];
+        for (int i = 0; i < otherGans.length; i++) {
+            result[i] = getTenGodFull(dayGan, otherGans[i]);
+        }
+        return result;
+    }
+    
+    // 完整十神（含阴阳区分）
+    private String getTenGodFull(String dayGan, String gan) {
+        String dayWuXing = getWuXing(dayGan);
+        String ganWuXing = getWuXing(gan);
+        boolean dayYang = isYangGan(dayGan);
+        boolean ganYang = isYangGan(gan);
+        boolean sameYinYang = (dayYang == ganYang);
+        
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土");
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        java.util.Map<String, String> keMap = new java.util.HashMap<>();
+        keMap.put("木", "土"); keMap.put("火", "金");
+        keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
+        
+        if (ganWuXing.equals(dayWuXing)) return sameYinYang ? "比肩" : "劫财";
+        if (shengMap.get(ganWuXing) != null && shengMap.get(ganWuXing).equals(dayWuXing)) return sameYinYang ? "偏印" : "正印";
+        if (keMap.get(ganWuXing) != null && keMap.get(ganWuXing).equals(dayWuXing)) return sameYinYang ? "七杀" : "正官";
+        if (shengMap.get(dayWuXing) != null && shengMap.get(dayWuXing).equals(ganWuXing)) return sameYinYang ? "食神" : "伤官";
+        if (keMap.get(dayWuXing) != null && keMap.get(dayWuXing).equals(ganWuXing)) return sameYinYang ? "偏财" : "正财";
+        
+        return "比肩";
+    }
+    
+    private String getTenGod(String dayGan, String gan) {
+        return getTenGodFull(dayGan, gan);
+    }
+    
+    // 十神通俗解释
+    private String getTenGodExplanation(String tenGod) {
+        switch (tenGod) {
+            case "比肩": return "如兄弟姐妹，代表同辈助力、竞争关系、自我意识";
+            case "劫财": return "如朋友伙伴，代表合作与争夺，性格豪爽但易冲动消费";
+            case "正印": return "如母亲长辈，代表贵人扶持、学识智慧、仁慈包容";
+            case "偏印": return "如继母师长，代表特殊才能、偏门学问、孤僻独特";
+            case "食神": return "如子女晚辈，代表才华表达、口福享受、温和乐观";
+            case "伤官": return "如才华外露，代表聪明机智、创造力强、不拘一格";
+            case "正财": return "如正当收入，代表稳定财运、勤俭持家、务实可靠";
+            case "偏财": return "如意外之财，代表投资理财、慷慨大方、人脉广泛";
+            case "正官": return "如上级领导，代表纪律约束、名声地位、正直守信";
+            case "七杀": return "如将军统帅，代表权威决断、事业心强、敢作敢为";
+            default: return tenGod;
+        }
+    }
+    
+    // 纳音五行
+    private String getNayin(String gan, String zhi) {
+        // 六十甲子纳音表
+        String[][] nayin = {
+            {"甲子","乙丑","海中金"},{"丙寅","丁卯","炉中火"},{"戊辰","己巳","大林木"},
+            {"庚午","辛未","路旁土"},{"壬申","癸酉","剑锋金"},{"甲戌","乙亥","山头火"},
+            {"丙子","丁丑","涧下水"},{"戊寅","己卯","城头土"},{"庚辰","辛巳","白蜡金"},
+            {"壬午","癸未","杨柳木"},{"甲申","乙酉","泉中水"},{"丙戌","丁亥","屋上土"},
+            {"戊子","己丑","霹雳火"},{"庚寅","辛卯","松柏木"},{"壬辰","癸巳","长流水"},
+            {"甲午","乙未","沙中金"},{"丙申","丁酉","山下火"},{"戊戌","己亥","平地木"},
+            {"庚子","辛丑","壁上土"},{"壬寅","癸卯","金箔金"},{"甲辰","乙巳","覆灯火"},
+            {"丙午","丁未","天河水"},{"戊申","己酉","大驿土"},{"庚戌","辛亥","钗钏金"},
+            {"壬子","癸丑","桑柘木"},{"甲寅","乙卯","大溪水"},{"丙辰","丁巳","沙中土"},
+            {"戊午","己未","天上火"},{"庚申","辛酉","石榴木"},{"壬戌","癸亥","大海水"}
+        };
+        String pillar = gan + zhi;
+        for (String[] n : nayin) {
+            if (n[0].equals(pillar) || n[1].equals(pillar)) return n[2];
+        }
+        return "未知";
+    }
+    
+    // 生肖
+    private String getZodiacNameFromZhi(String zhi) {
+        String[] zodiacMap = {"子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"};
+        String[] zodiacName = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
+        for (int i = 0; i < zodiacMap.length; i++) {
+            if (zodiacMap[i].equals(zhi)) return zodiacName[i];
+        }
+        return zhi;
+    }
+    
+    // 十二长生（阳干顺行，阴干逆行）
+    private String getTwelveStage(String gan, String zhi) {
+        String[] yangStages = {"子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"};
+        String[] yinStages = {"子","亥","戌","酉","申","未","午","巳","辰","卯","寅","丑"};
+        // stages[11]="长生", stages[0]="沐浴" ... — 长生在数组末尾方便取模定位
+        String[] stages = {"沐浴","冠带","临官","帝旺","衰","病","死","墓","绝","胎","养","长生"};
+        
+        if (isYangGan(gan)) {
+            int startIdx;
+            switch (gan) {
+                case "甲": startIdx = 0; break;  // 甲长生在亥，亥在yangStages下标11，(0+11)%12=11→长生✓
+                case "丙": startIdx = 9; break;  // 丙长生在寅，(9+2)%12=11→长生✓
+                case "戊": startIdx = 9; break;  // 戊长生在寅，同丙
+                case "庚": startIdx = 6; break;  // 庚长生在巳，(6+5)%12=11→长生✓
+                case "壬": startIdx = 3; break;  // 壬长生在申，(3+8)%12=11→长生✓
+                default: return "未知";
+            }
+            for (int i = 0; i < 12; i++) {
+                if (yangStages[i].equals(zhi)) return stages[(startIdx + i) % 12];
+            }
+        } else {
+            int startIdx;
+            switch (gan) {
+                case "乙": startIdx = 5; break;  // 乙长生在午，(5+6)%12=11→长生✓
+                case "丁": startIdx = 8; break;  // 丁长生在酉，(8+3)%12=11→长生✓
+                case "己": startIdx = 8; break;  // 己长生在酉，同丁
+                case "辛": startIdx = 11; break; // 辛长生在子，(11+0)%12=11→长生✓
+                case "癸": startIdx = 2; break;  // 癸长生在卯，(2+9)%12=11→长生✓
+                default: return "未知";
+            }
+            for (int i = 0; i < 12; i++) {
+                if (yinStages[i].equals(zhi)) return stages[(startIdx + i) % 12];
+            }
+        }
+        return "未知";
+    }
+    
+    // 十二长生通俗解释
+    private String getTwelveStageExplanation(String stage) {
+        switch (stage) {
+            case "长生": return "如婴儿初生，充满生机希望，宜开始新计划";
+            case "沐浴": return "如少年初长，敏感多变，桃花运旺但需防感情用事";
+            case "冠带": return "如青年加冠，逐渐成熟，开始承担责任";
+            case "临官": return "如人到壮年，事业有成，精力充沛，适合奋斗";
+            case "帝旺": return "如人生巅峰，力量最强，但物极必反需谨慎";
+            case "衰": return "如盛极而衰，需放慢节奏，保重身体";
+            case "病": return "如人生低谷，需休养生息，注意健康";
+            case "死": return "如冬眠之时，宜退守等待，不宜冲动";
+            case "墓": return "如入库收藏，宜储蓄积累，保守稳健";
+            case "绝": return "如种子入土，表面沉寂，实则孕育新生";
+            case "胎": return "如母腹孕育，暗中筹划，等待时机";
+            case "养": return "如胎儿成长，蓄势待发，培养实力";
+            default: return "";
+        }
+    }
+    
+    // 纳音通俗解释
+    private String getNayinExplanation(String nayin) {
+        switch (nayin) {
+            case "海中金": return "深海藏金，需经打磨方显价值，先苦后甜之象";
+            case "炉中火": return "炉中烈火烧炼万物，热情进取之象";
+            case "大林木": return "参天古木根基深厚，稳重持久之象";
+            case "路旁土": return "道路尘土平凡踏实，务实可靠之象";
+            case "剑锋金": return "宝剑锋芒锐利无比，果断刚毅之象";
+            case "山头火": return "山头野火燎原之势，爆发力强但难持久";
+            case "涧下水": return "山涧溪水清澈灵动，聪明灵活之象";
+            case "城头土": return "城墙厚土坚固安稳，稳重护家之象";
+            case "白蜡金": return "蜡中藏金精美细致，内秀外拙之象";
+            case "杨柳木": return "杨柳依依柔韧随和，善交际适应力强";
+            case "泉中水": return "泉水清澈甘甜滋养，智慧深藏之象";
+            case "屋上土": return "屋瓦遮风挡雨，有责任感能保护他人";
+            case "霹雳火": return "雷电之火迅猛有力，爆发力强性格刚烈";
+            case "松柏木": return "松柏常青不畏严寒，坚韧不拔之象";
+            case "长流水": return "长流不息源源不断，持续发展之象";
+            case "沙中金": return "沙中淘金需耐心，后发有力之象";
+            case "山下火": return "山下暗火不张扬，内热外冷之象";
+            case "平地木": return "平地之木平凡生长，朴实自然之象";
+            case "壁上土": return "壁间之土稳固可靠，守护家园之象";
+            case "金箔金": return "金箔华美装饰性强，追求品质之象";
+            case "覆灯火": return "灯烛之明温暖人心，文化传承之象";
+            case "天河水": return "天河银汉浩瀚无边，胸怀宽广之象";
+            case "大驿土": return "驿道通达四方，人脉广泛交际强";
+            case "钗钏金": return "首饰之金精美华丽，审美高雅之象";
+            case "桑柘木": return "桑树养蚕贡献于人，默默奉献之象";
+            case "大溪水": return "大溪奔腾不拘小节，豪爽大气之象";
+            case "沙中土": return "沙土松散需聚合力，宜团队合作";
+            case "天上火": return "天上骄阳明照四方，光芒耀眼之象";
+            case "石榴木": return "石榴多子多福，家运兴旺之象";
+            case "大海水": return "大海浩瀚包容万物，胸襟宽广之象";
+            default: return "";
+        }
+    }
+    
+    private String getFiveElementXiJi(String dayGan, String dayWuXing, String yearGan, String yearZhi, String monthGan, String monthZhi, String dayZhi, String timeGan, String timeZhi) {
+        StringBuilder sb = new StringBuilder();
+        
+        int count = 0;
+        String[] allGans = {yearGan, monthGan, dayGan, timeGan};
+        String[] allZhis = {yearZhi, monthZhi, dayZhi, timeZhi};
+        
+        for (String gan : allGans) {
+            if (getWuXing(gan).equals(dayWuXing)) count++;
+        }
+        for (String zhi : allZhis) {
+            if (getWuXing(zhi).equals(dayWuXing)) count++;
+        }
+        
+        sb.append("日主").append(dayGan).append("属").append(dayWuXing);
+        if (count >= 3) {
+            sb.append("<font color='#FF6B6B'>偏旺</font>，");
+            sb.append("<font color='#90EE90'>喜</font>克制泄耗之五行，");
+            sb.append("<font color='#FF6B6B'>忌</font>生扶比和之五行");
+        } else if (count <= 1) {
+            sb.append("<font color='#FF6B6B'>偏弱</font>，");
+            sb.append("<font color='#90EE90'>喜</font>生扶比和之五行，");
+            sb.append("<font color='#FF6B6B'>忌</font>克制泄耗之五行");
+        } else {
+            sb.append("<font color='#FFD700'>中和</font>，");
+            sb.append("五行均衡，喜忌不明显，宜顺势而为");
+        }
+        
+        return sb.toString();
+    }
+    
+    private String getPersonalityAnalysis(String dayGan, String dayZhi) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getGanDescription(dayGan)).append(" · ").append(getZhiDescription(dayZhi));
+        return sb.toString();
+    }
+    
+    private String getFortuneAnalysis(String dayGan, String dayWuXing, String monthGan, String monthZhi) {
+        StringBuilder sb = new StringBuilder();
+        String monthWuXing = getWuXing(monthZhi);
+        
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土");
+        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        
+        java.util.Map<String, String> keMap = new java.util.HashMap<>();
+        keMap.put("木", "土"); keMap.put("火", "金");
+        keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
+        
+        if (monthWuXing.equals(dayWuXing)) {
+            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，与日主").append(dayGan).append("比和，运势平稳");
+        } else if (shengMap.get(monthWuXing).equals(dayWuXing)) {
+            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，生扶日主").append(dayGan).append("，运势助力");
+        } else if (keMap.get(monthWuXing).equals(dayWuXing)) {
+            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，克制日主").append(dayGan).append("，运势压力");
+        } else if (shengMap.get(dayWuXing).equals(monthWuXing)) {
+            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，被日主").append(dayGan).append("生扶，运势消耗");
+        } else {
+            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，克制日主").append(dayGan).append("，运势受阻");
+        }
+        
+        return sb.toString();
+    }
+    
     private String getPillarAnalysis(String gan, String zhi, String pillarType) {
         String ganWuXing = getWuXing(gan);
         String zhiWuXing = getWuXing(zhi);
@@ -2957,7 +3708,34 @@ public class FullNinePalaceActivity extends Activity {
         
         return "关系一般";
     }
-
+    
+    private String getRiGanDetailedAnalysis(String gan) {
+        switch (gan) {
+            case "甲": 
+                return "甲木为参天大树，栋梁之材。性格正直、有领导力，具开创精神。宜在东方发展，适合从事管理、领导、林业等行业。";
+            case "乙": 
+                return "乙木为花草之木，柔顺多姿。性格温和、善于变通，具艺术天赋。宜在东方发展，适合从事艺术、教育、美容等行业。";
+            case "丙": 
+                return "丙火为太阳之火，光明照耀。性格热情、积极向上，具领导魅力。宜在南方发展，适合从事文化、能源、餐饮等行业。";
+            case "丁": 
+                return "丁火为灯烛之火，温暖光明。性格细腻、善于思考，具才华智慧。宜在南方发展，适合从事科技、文化、服务等行业。";
+            case "戊": 
+                return "戊土为大地之土，厚重沉稳。性格踏实、诚实守信，具包容精神。宜在中央发展，适合从事建筑、房地产、农业等行业。";
+            case "己": 
+                return "己土为田园之土，肥沃滋养。性格宽厚、乐于助人，具奉献精神。宜在中央发展，适合从事农业、医药、慈善等行业。";
+            case "庚": 
+                return "庚金为刀剑之金，锐利刚毅。性格果断、勇往直前，具决断力。宜在西方发展，适合从事金融、军事、金属等行业。";
+            case "辛": 
+                return "辛金为首饰之金，精致美丽。性格优雅、追求完美，具审美能力。宜在西方发展，适合从事珠宝、艺术、设计等行业。";
+            case "壬": 
+                return "壬水为江海之水，奔腾不息。性格聪明、善于变通，具商业头脑。宜在北方发展，适合从事商贸、水产、运输等行业。";
+            case "癸": 
+                return "癸水为雨露之水，润物无声。性格神秘、聪明睿智，具洞察力。宜在北方发展，适合从事学术、策划、保密等行业。";
+            default: 
+                return "日干代表自身，反映个人性格与天赋。";
+        }
+    }
+    
     private String getFourPillarSummary(String yearGan, String yearZhi, String monthGan, String monthZhi,
                                         String dayGan, String dayZhi, String timeGan, String timeZhi) {
         StringBuilder sb = new StringBuilder();
@@ -3138,77 +3916,312 @@ public class FullNinePalaceActivity extends Activity {
         StringBuilder sb = new StringBuilder();
         
         String dayGanWuXing = getWuXing(dayGan);
-        sb.append("【日主分析】\n");
-        sb.append("日主 ").append(dayGan).append(" 属").append(dayGanWuXing).append("，代表自身核心特质。\n\n");
+        String dayZhiWuXing = getWuXing(dayZhi);
+        String zodiac = getZodiacNameFromZhi(yearZhi);
+        String dayZodiac = getZodiacNameFromZhi(dayZhi);
+        String stageDay = getTwelveStage(dayGan, dayZhi);
         
+        // 计算十神
+        String yGanShen = getTenGodFull(dayGan, yearGan);
+        String mGanShen = getTenGodFull(dayGan, monthGan);
+        String tGanShen = getTenGodFull(dayGan, timeGan);
+        
+        // 计算身强身弱
         int shengCount = 0, keCount = 0, biCount = 0;
         String[][] pillars = {{yearGan, yearZhi}, {monthGan, monthZhi}, {dayGan, dayZhi}, {timeGan, timeZhi}};
-        String[] pillarNames = {"年柱", "月柱", "日柱", "时柱"};
-        
-        sb.append("【五行力量分析】\n");
         for (int i = 0; i < pillars.length; i++) {
-            String pGan = pillars[i][0];
-            String pZhi = pillars[i][1];
-            
-            String pGanWuXing = getWuXing(pGan);
-            String pZhiWuXing = getWuXing(pZhi);
-            
-            sb.append(pillarNames[i]).append(" ").append(pGan).append(pZhi).append("：");
-            
-            if (pGanWuXing.equals(dayGanWuXing)) {
-                biCount++;
-                sb.append("比和·助身");
-            } else if (isSheng(pGanWuXing, dayGanWuXing)) {
-                shengCount++;
-                sb.append("生扶·助身");
-            } else if (isSheng(dayGanWuXing, pGanWuXing)) {
-                keCount++;
-                sb.append("泄耗·伤身");
-            } else if (isKe(pGanWuXing, dayGanWuXing)) {
-                keCount++;
-                sb.append("克制·伤身");
-            } else if (isKe(dayGanWuXing, pGanWuXing)) {
-                shengCount++;
-                sb.append("克制他物·助身");
-            }
-            sb.append("\n");
+            String pGanWuXing = getWuXing(pillars[i][0]);
+            if (pGanWuXing.equals(dayGanWuXing)) { if (i != 2) biCount++; }
+            else if (isSheng(pGanWuXing, dayGanWuXing)) shengCount++;
+            else if (isKe(pGanWuXing, dayGanWuXing)) keCount++;
+            else if (isSheng(dayGanWuXing, pGanWuXing)) keCount++;
+            else if (isKe(dayGanWuXing, pGanWuXing)) keCount++;
         }
-        sb.append("\n");
         
-        sb.append("【五行统计】\n");
-        sb.append("生扶日主：").append(shengCount).append("个\n");
-        sb.append("克制日主：").append(keCount).append("个\n");
-        sb.append("比和日主：").append(biCount).append("个\n\n");
+        boolean isStrong = (shengCount + biCount > keCount);
+        boolean isWeak = (keCount > shengCount + biCount);
+        boolean isBalance = (!isStrong && !isWeak);
         
-        sb.append("【身旺身弱判断】\n");
-        if (shengCount + biCount > keCount) {
-            sb.append("身强（旺）：日主得势，力量充足。\n");
-            sb.append("喜用神：宜泄耗克制，如").append(getOppositeWuXing(dayGanWuXing)).append("、").append(getKeWuXing(dayGanWuXing)).append("。\n");
-            sb.append("建议：适合创业发展，开拓进取，但需防过度自信。\n");
-        } else if (keCount > shengCount + biCount) {
-            sb.append("身弱：日主失势，力量不足。\n");
-            sb.append("喜用神：宜生扶比和，如").append(dayGanWuXing).append("、").append(getShengWuXing(dayGanWuXing)).append("。\n");
-            sb.append("建议：适合稳健守成，寻求助力，避免孤军奋战。\n");
-        } else {
-            sb.append("中和：五行均衡，运势平稳。\n");
-            sb.append("喜用神：五行流通，顺势而为。\n");
-            sb.append("建议：运势平稳顺畅，可根据实际情况灵活应对。\n");
-        }
-        sb.append("\n");
+        String shengHao = getShengWuXing(dayGanWuXing);
+        String xieHao = ""; // 日主所生
+        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
+        shengMap.put("木", "火"); shengMap.put("火", "土"); shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
+        xieHao = shengMap.get(dayGanWuXing);
         
-        sb.append("【十神关系简述】\n");
-        sb.append("年柱：祖上、长辈、早年运势\n");
-        sb.append("月柱：事业、学业、中年运势\n");
-        sb.append("日柱：自身、性格、婚姻家庭\n");
-        sb.append("时柱：晚年、子女、部属\n");
-        sb.append("\n");
+        // ════════════════════════════
+        // 1. 整体性格
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>🌟 性格特点</b></font><br/>");
+        sb.append(getPersonalityRich(dayGan, dayZhi, dayGanWuXing, isStrong, isWeak, isBalance));
+        sb.append("<br/>");
         
-        sb.append("【综合建议】\n");
-        sb.append("根据四柱分析，你的命局特点如上所述。\n");
-        sb.append("人生贵在顺势而为，把握时机，扬长避短。\n");
-        sb.append("保持良好心态，注重身心健康，多行善事，积累福报。\n");
+        // ════════════════════════════
+        // 2. 事业运势
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>💼 事业运势</b></font><br/>");
+        sb.append(getCareerAnalysisRich(dayGan, dayGanWuXing, monthGan, monthZhi, mGanShen, isStrong, isWeak));
+        sb.append("<br/>");
+        
+        // ════════════════════════════
+        // 3. 财富运势
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>💰 财富运势</b></font><br/>");
+        sb.append(getWealthAnalysisRich(dayGan, dayGanWuXing, pillars, isStrong, isWeak));
+        sb.append("<br/>");
+        
+        // ════════════════════════════
+        // 4. 感情婚姻
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>💕 感情婚姻</b></font><br/>");
+        sb.append(getRelationshipAnalysisRich(dayGan, dayZhi, dayGanWuXing, dayZhiWuXing, dayZodiac));
+        sb.append("<br/>");
+        
+        // ════════════════════════════
+        // 5. 健康建议
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>🏥 健康建议</b></font><br/>");
+        sb.append(getHealthAnalysisRich(dayGanWuXing, shengCount, keCount, biCount));
+        sb.append("<br/>");
+        
+        // ════════════════════════════
+        // 6. 人际关系
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>🤝 人际关系</b></font><br/>");
+        sb.append(getSocialAnalysisRich(dayGan, dayGanWuXing, yGanShen, mGanShen, tGanShen, yearGan, zodiac, isStrong, isWeak));
+        sb.append("<br/>");
+        
+        // ════════════════════════════
+        // 7. 人生发展建议
+        // ════════════════════════════
+        sb.append("<font color='#98D8F0'><b>🎯 人生发展建议</b></font><br/>");
+        sb.append(getLifeAdviceRich(dayGan, dayGanWuXing, zodiac, shengHao, xieHao, isStrong, isWeak, isBalance));
+        sb.append("<br/><br/>");
+        
+        sb.append("<font color='#8899AA'><i>※ 以上解读基于四柱命理分析，仅供参考。命运掌握在自己手中，积极努力、保持善良才是最好的风水。</i></font>");
         
         return sb.toString();
+    }
+    
+    // ═══ 丰富的通俗解读方法 ═══
+    
+    private String getPersonalityRich(String dayGan, String dayZhi, String wuXing, boolean isStrong, boolean isWeak, boolean isBalance) {
+        StringBuilder sb = new StringBuilder();
+        String zodiac = getZodiacNameFromZhi(dayZhi);
+        
+        switch (wuXing) {
+            case "木":
+                sb.append("你如<font color='#90EE90'><b>乔木挺立</b></font>，生命力蓬勃，向上进取。");
+                if (isStrong) sb.append("刚毅自信，有领袖气质，主意正、难动摇。忌刚愎自用，兼听则明。");
+                else if (isWeak) sb.append("如藤附木，善借外力，温雅有礼，人缘佳。需在关键处坚持己见。");
+                else sb.append("刚柔兼济，守原则而知权变。");
+                break;
+            case "火":
+                sb.append("你如<font color='#FF6B6B'><b>明烛暖焰</b></font>，热情洋溢，走到哪里都自带光芒。");
+                if (isStrong) sb.append("精力旺盛、雷厉风行，是天然的行动派。戒急躁冲动，三思后行。");
+                else if (isWeak) sb.append("内热外敛，默默赋能他人。宜崭露头角，让才华被看见。");
+                else sb.append("热情有度、有始有终，诚恳可交。");
+                break;
+            case "土":
+                sb.append("你如<font color='#FFD700'><b>厚土载物</b></font>，踏实稳重，予人安全感。");
+                if (isStrong) sb.append("敦厚诚信，朋友中最是靠得住。稳扎稳打，虽缓而实。偶尔尝试新鲜事物，会有意外之喜。");
+                else if (isWeak) sb.append("心善好施，需警惕被人利用。宜设立底线，护住心神。");
+                else sb.append("务实持重，有条不紊，稳步前行。");
+                break;
+            case "金":
+                sb.append("你如<font color='#C0C0C0'><b>宝剑出匣</b></font>，头脑清晰，果敢利落。");
+                if (isStrong) sb.append("刚正重义，处事爽利。藏锋守拙，过刚易折。");
+                else if (isWeak) sb.append("细致求精，把控力强。勿求完美而自耗，该放则放。");
+                else sb.append("理性果决而不失细腻，善决断也善执行。");
+                break;
+            case "水":
+                sb.append("你如<font color='#87CEEB'><b>清泉灵动</b></font>，头脑灵活，随机应变。");
+                if (isStrong) sb.append("智慧超群，洞察入微，总能觅得佳策。莫思虑过甚，简即是真。");
+                else if (isWeak) sb.append("心思缜密，直觉敏锐，见地独到。当增自信，你之见解实有分量。");
+                else sb.append("聪而不露，圆融处世，天生智囊。");
+                break;
+        }
+        sb.append("<br/>日支").append(dayZhi).append("（属").append(zodiac).append("），主内，").append(getDayZhiPersonality(dayZhi)).append("。");
+        return sb.toString();
+    }
+    
+    private String getDayZhiPersonality(String zhi) {
+        switch (zhi) {
+            case "子": return "温柔细腻，重视家庭温暖";
+            case "丑": return "忠诚踏实，对伴侣专一稳定";
+            case "寅": return "自信独立，在家庭中也追求自我实现";
+            case "卯": return "温和有艺术气质，家庭氛围和谐";
+            case "辰": return "有魅力有担当，是家庭中的主心骨";
+            case "巳": return "聪明体贴，善于经营家庭关系";
+            case "午": return "热情浪漫，让家庭生活丰富多彩";
+            case "未": return "温柔善良，是家庭中的润滑剂";
+            case "申": return "机智灵活，能给家庭带来新鲜感";
+            case "酉": return "精致讲究，注重家庭生活品质";
+            case "戌": return "忠诚可靠，是家庭坚实后盾";
+            case "亥": return "宽厚包容，家庭关系其乐融融";
+            default: return "有独特个性";
+        }
+    }
+    
+    private String getCareerAnalysisRich(String dayGan, String wuXing, String monthGan, String monthZhi, String monthShen, boolean isStrong, boolean isWeak) {
+        StringBuilder sb = new StringBuilder();
+        String monthSeason = getSeasonDescription(monthZhi);
+        
+        switch (wuXing) {
+            case "木": sb.append("天赋在<font color='#90EE90'><b>规划设计、文教领域</b></font>。"); break;
+            case "火": sb.append("天赋在<font color='#FF6B6B'><b>创意表达、市场传播</b></font>。"); break;
+            case "土": sb.append("天赋在<font color='#FFD700'><b>财务建筑、地产实业</b></font>。"); break;
+            case "金": sb.append("天赋在<font color='#C0C0C0'><b>金融法律、技术研发</b></font>。"); break;
+            case "水": sb.append("天赋在<font color='#87CEEB'><b>商贸流通、信息传媒</b></font>。"); break;
+        }
+        
+        if (!monthSeason.isEmpty()) sb.append("月令").append(monthSeason).append("，");
+        
+        if (isStrong) {
+            sb.append("身强可担重任，宜主攻开拓、登大平台任管理。");
+            if (monthShen.equals("正官") || monthShen.equals("七杀")) sb.append("月有官杀，职场得位，管理有方。");
+            if (monthShen.equals("正财") || monthShen.equals("偏财")) sb.append("商才卓越，善理财源。");
+        } else if (isWeak) {
+            sb.append("宜稳中求进，择良木而栖，好团队胜过单打独斗。");
+            if (monthShen.equals("正印") || monthShen.equals("偏印")) sb.append("贵人运旺，长上提携，多向前辈请益。");
+            if (monthShen.equals("比肩") || monthShen.equals("劫财")) sb.append("合作为上，得同道相助则事业顺遂。");
+        } else {
+            sb.append("适应力强，无论环境皆能出彩，宜做复合型人才。");
+        }
+        
+        sb.append("<br/>月干十神：<font color='#90EE90'><b>").append(monthShen).append("</b></font>，主事业指引，").append(getTenGodExplanation(monthShen)).append("。");
+        return sb.toString();
+    }
+    
+    private String getWealthAnalysisRich(String dayGan, String wuXing, String[][] pillars, boolean isStrong, boolean isWeak) {
+        StringBuilder sb = new StringBuilder();
+        
+        boolean hasZhengCai = false, hasPianCai = false;
+        for (int i = 0; i < pillars.length; i++) {
+            String shen = getTenGodFull(dayGan, pillars[i][0]);
+            if (shen.equals("正财")) hasZhengCai = true;
+            if (shen.equals("偏财")) hasPianCai = true;
+        }
+        
+        switch (wuXing) {
+            case "木": sb.append("财源在<font color='#90EE90'><b>土</b></font>（地产、农业、基建）。"); break;
+            case "火": sb.append("财源在<font color='#FF6B6B'><b>金</b></font>（金融、科技、法律）。"); break;
+            case "土": sb.append("财源在<font color='#87CEEB'><b>水</b></font>（商贸、物流、通讯）。"); break;
+            case "金": sb.append("财源在<font color='#90EE90'><b>木</b></font>（文创、教育、医药）。"); break;
+            case "水": sb.append("财源在<font color='#FF6B6B'><b>火</b></font>（餐饮、能源、娱乐）。"); break;
+        }
+        
+        if (hasZhengCai) sb.append("命带<font color='#90EE90'><b>正财</b></font>，正业稳定积累，宜中长线布局。");
+        if (hasPianCai) sb.append("命带<font color='#FFA500'><b>偏财</b></font>，有投资嗅觉，须控风险、莫孤注一掷。");
+        
+        if (isStrong) sb.append("身强能担财，积极开源、善理财，财富空间可观。");
+        else if (isWeak) sb.append("身弱慎财，稳健为主，避高风险，寻良伴共理财更好。");
+        else sb.append("财运平稳，量入为出，积微成著。");
+        return sb.toString();
+    }
+    
+    private String getRelationshipAnalysisRich(String dayGan, String dayZhi, String dayGanWuXing, String dayZhiWuXing, String dayZodiac) {
+        StringBuilder sb = new StringBuilder();
+        
+        String ganZhiRel = getGanZhiRelationship(dayGan, dayZhi);
+        
+        sb.append("配偶宫").append(dayZhi).append("（属").append(dayZodiac).append("），");
+        
+        if (ganZhiRel.contains("比和")) {
+            sb.append("与伴侣志趣相投、琴瑟相谐。唯太似易争，互让为贵。");
+        } else if (ganZhiRel.contains("得助") || ganZhiRel.contains("生天干")) {
+            sb.append("伴侣是人生贵人，温柔扶持、相得益彰，宜珍惜此缘。");
+        } else if (ganZhiRel.contains("泄秀") || ganZhiRel.contains("天干生")) {
+            sb.append("你付出为多，甘为家庭倾注心力。也须学接纳，情义两相衡。");
+        } else if (ganZhiRel.contains("制杀") || ganZhiRel.contains("天干克")) {
+            sb.append("你在家中主导，当不忘尊重，婚姻是两人之舞，非一人独唱。");
+        } else if (ganZhiRel.contains("受制") || ganZhiRel.contains("克天干")) {
+            sb.append("伴侣个性较强势，需多沟通理解，相敬如宾方长久。");
+        }
+        sb.append("<br/>良配：五行互补，性格").append(isYangGan(dayGan) ? "阴柔温润" : "刚健爽朗").append("者，彼此成就。");
+        return sb.toString();
+    }
+    
+    private String getHealthAnalysisRich(String wuXing, int shengCount, int keCount, int biCount) {
+        StringBuilder sb = new StringBuilder();
+        
+        switch (wuXing) {
+            case "木": sb.append("五行属木，护<font color='#90EE90'><b>肝胆筋腱</b></font>。多食青蔬、早睡养肝、舒展筋骨。春为养肝佳时。"); break;
+            case "火": sb.append("五行属火，护<font color='#FF6B6B'><b>心脉血络</b></font>。勿过劳不妄怒，红食养心。夏宜清火。"); break;
+            case "土": sb.append("五行属土，护<font color='#FFD700'><b>脾胃中宫</b></font>。三餐规律、忌生冷油腻，黄粟南瓜最益肠胃。"); break;
+            case "金": sb.append("五行属金，护<font color='#C0C0C0'><b>肺与大肠</b></font>。多行深呼吸吐纳，白木耳百合养肺。秋重保暖。"); break;
+            case "水": sb.append("五行属水，护<font color='#87CEEB'><b>肾元泌尿</b></font>。适量饮水，黑豆黑芝麻入肾。冬暖腰护体。"); break;
+        }
+        
+        if (keCount > shengCount + biCount + 1) {
+            sb.append("<br/>命局克伐较重，注意劳逸结合，定期体检为安。");
+        }
+        return sb.toString();
+    }
+    
+    private String getSocialAnalysisRich(String dayGan, String wuXing, String yShen, String mShen, String tShen, String yearGan, String zodiac, boolean isStrong, boolean isWeak) {
+        StringBuilder sb = new StringBuilder();
+        
+        switch (wuXing) {
+            case "木": sb.append("待人真诚，如大树般予人依靠。"); break;
+            case "火": sb.append("热情开朗，善带动气氛。"); break;
+            case "土": sb.append("敦厚守信，人人信赖。"); break;
+            case "金": sb.append("重义守信，口碑极佳。"); break;
+            case "水": sb.append("善解人意，与各色人等皆能交融。"); break;
+        }
+        
+        if (isStrong) sb.append("团体中往往为领袖，朋友有难第一个想到你。余力学人、亦顾自己。");
+        else if (isWeak) sb.append("贵人缘佳，总有援手。多交良师益友，携手同进。");
+        else sb.append("低调有度，恰到好处的存在感，让人如沐春风。");
+        sb.append("<br/>属").append(zodiac).append("，有较好的适应力和独特魅力。");
+        return sb.toString();
+    }
+    
+    private String getLifeAdviceRich(String dayGan, String wuXing, String zodiac, String shengHao, String xieHao, boolean isStrong, boolean isWeak, boolean isBalance) {
+        StringBuilder sb = new StringBuilder();
+        
+        if (isStrong) {
+            sb.append("命局<font color='#90EE90'><b>身强气盛</b></font>，如良弓待发，找准方向方能致远。<br/>");
+            sb.append("宜投向").append(xieHao).append("属行业，借力使力，刚柔相济。");
+        } else if (isWeak) {
+            sb.append("命局<font color='#FF6B6B'><b>身弱需扶</b></font>，如种待萌，需良土与天时。<br/>");
+            sb.append("多结贵人，").append(shengHao).append("属之人与事是你的后盾；不疾不徐，学以致用。");
+        } else {
+            sb.append("命局<font color='#FFD700'><b>五行中和</b></font>，难得之格，如水流转，进退自如。<br/>");
+            sb.append("保持开放应变，顺势而行，此刻便是黄金期。");
+        }
+        
+        String[] zodiacCompat = getZodiacCompat(zodiac);
+        sb.append("<br/>属").append(zodiac).append("，与").append(zodiacCompat[0]).append("、").append(zodiacCompat[1]).append("、").append(zodiacCompat[2]).append("最合。");
+        sb.append(getDirectionAdvice(wuXing)).append("方位最旺。");
+        return sb.toString();
+    }
+    
+    private String[] getZodiacCompat(String zodiac) {
+        java.util.Map<String, String[]> compat = new java.util.HashMap<>();
+        compat.put("鼠", new String[]{"牛","龙","猴"});
+        compat.put("牛", new String[]{"鼠","蛇","鸡"});
+        compat.put("虎", new String[]{"猪","马","狗"});
+        compat.put("兔", new String[]{"狗","猪","羊"});
+        compat.put("龙", new String[]{"鸡","鼠","猴"});
+        compat.put("蛇", new String[]{"猴","鸡","牛"});
+        compat.put("马", new String[]{"羊","虎","狗"});
+        compat.put("羊", new String[]{"马","兔","猪"});
+        compat.put("猴", new String[]{"蛇","鼠","龙"});
+        compat.put("鸡", new String[]{"龙","蛇","牛"});
+        compat.put("狗", new String[]{"兔","虎","马"});
+        compat.put("猪", new String[]{"虎","兔","羊"});
+        return compat.getOrDefault(zodiac, new String[]{"—","—","—"});
+    }
+    
+    private String getDirectionAdvice(String wuXing) {
+        switch (wuXing) {
+            case "木": return "东方";
+            case "火": return "南方";
+            case "土": return "中央";
+            case "金": return "西方";
+            case "水": return "北方";
+            default: return "中央";
+        }
     }
     
     private String getOppositeWuXing(String wuxing) {
