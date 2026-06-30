@@ -139,16 +139,17 @@ public class FullNinePalaceActivity extends Activity {
         destinyArrow = (TextView) findViewById(R.id.destinyArrow);
         
         View destinyHeader = findViewById(R.id.destinyHeader);
-        destinyHeader.setOnClickListener(v -> {
-            destinyExpanded = !destinyExpanded;
-            if (destinyExpanded) {
-                expDestiny.setVisibility(View.VISIBLE);
-                destinyArrow.setText("▼");
-            } else {
-                expDestiny.setVisibility(View.GONE);
-                destinyArrow.setText("▶");
-            }
-        });
+        if (destinyHeader != null) {
+            destinyHeader.setOnClickListener(v -> {
+                destinyExpanded = !destinyExpanded;
+                if (expDestiny != null) {
+                    expDestiny.setVisibility(destinyExpanded ? View.VISIBLE : View.GONE);
+                }
+                if (destinyArrow != null) {
+                    destinyArrow.setText(destinyExpanded ? "▼" : "▶");
+                }
+            });
+        }
 
         updateHandler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
@@ -794,14 +795,23 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     // 获取天干五行
-    private String getWuXing(String gan) {
-        if (gan == null) return "土";
-        switch (gan) {
+    private String getWuXing(String ganOrZhi) {
+        if (ganOrZhi == null) return "土";
+        switch (ganOrZhi) {
+            // 天干五行
             case "甲": case "乙": return "木";
             case "丙": case "丁": return "火";
             case "戊": case "己": return "土";
             case "庚": case "辛": return "金";
             case "壬": case "癸": return "水";
+            // 地支五行
+            case "子": return "水";
+            case "丑": case "未": return "土";
+            case "寅": case "卯": return "木";
+            case "辰": case "戌": return "土";
+            case "巳": case "午": return "火";
+            case "申": case "酉": return "金";
+            case "亥": return "水";
             default: return "土";
         }
     }
@@ -1008,9 +1018,13 @@ public class FullNinePalaceActivity extends Activity {
         sbBasic.append("   日干").append(dayGan).append("属").append(riGanWuXing).append("，").append(getWangCuiDescription(wangCui, riGanPalace)).append("\n");
         expBasic.setText(sbBasic.toString());
         
-        expSummary.setText(getQiMenSummary(yearPillar, monthPillar, dayPillar, timePillar, zhiFuStar, zhiShiDoor));
+        if (expSummary != null) {
+            expSummary.setText(getQiMenSummary(yearPillar, monthPillar, dayPillar, timePillar, zhiFuStar, zhiShiDoor));
+        }
         
-        expDestiny.setText(android.text.Html.fromHtml(getDestinyOverview(yearPillar, monthPillar, dayPillar, timePillar), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expDestiny != null) {
+            expDestiny.setText(android.text.Html.fromHtml(getDestinyOverview(yearPillar, monthPillar, dayPillar, timePillar), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
         
         StringBuilder sbZhifuZhishi = new StringBuilder();
         String zhiFuColor = getStarLuckColor(zhiFuStar);
