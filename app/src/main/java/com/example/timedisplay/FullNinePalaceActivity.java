@@ -21,7 +21,7 @@ public class FullNinePalaceActivity extends Activity {
     private TextView fullPageTitle;
     
     private TextView expBasic;
-    private android.widget.TextView expDestiny;
+
     private TextView expZhifuZhishi;
     private TextView expGan;
     private TextView expSummary;
@@ -35,8 +35,7 @@ public class FullNinePalaceActivity extends Activity {
     private DetailedNinePalacePanel expPalaces;
     private TextView expTime;
     private TextView expOverall;
-    private TextView destinyArrow;
-    private boolean destinyExpanded = false;
+
     private TextView expTianDiPanDesc;
     private TextView expNineStarsDesc;
     private TextView expEightDoorsDesc;
@@ -135,22 +134,6 @@ public class FullNinePalaceActivity extends Activity {
         expGodsDesc = (TextView) findViewById(R.id.expGodsDesc);
         expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
         
-        expDestiny = (android.widget.TextView) findViewById(R.id.expDestiny);
-        destinyArrow = (TextView) findViewById(R.id.destinyArrow);
-        
-        View destinyHeader = findViewById(R.id.destinyHeader);
-        if (destinyHeader != null) {
-            destinyHeader.setOnClickListener(v -> {
-                destinyExpanded = !destinyExpanded;
-                if (expDestiny != null) {
-                    expDestiny.setVisibility(destinyExpanded ? View.VISIBLE : View.GONE);
-                }
-                if (destinyArrow != null) {
-                    destinyArrow.setText(destinyExpanded ? "▼" : "▶");
-                }
-            });
-        }
-
         updateHandler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
             @Override
@@ -1020,10 +1003,6 @@ public class FullNinePalaceActivity extends Activity {
         
         if (expSummary != null) {
             expSummary.setText(getQiMenSummary(yearPillar, monthPillar, dayPillar, timePillar, zhiFuStar, zhiShiDoor));
-        }
-        
-        if (expDestiny != null) {
-            expDestiny.setText(android.text.Html.fromHtml(getDestinyOverview(yearPillar, monthPillar, dayPillar, timePillar), android.text.Html.FROM_HTML_MODE_LEGACY));
         }
         
         StringBuilder sbZhifuZhishi = new StringBuilder();

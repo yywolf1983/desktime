@@ -1,6 +1,8 @@
 package com.example.timedisplay;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
@@ -53,6 +55,15 @@ public class LuoPanActivity extends android.app.Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 必须在 setContentView 之前应用方向锁定，避免进入后再切换方向
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
+        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            setRequestedOrientation(lockedOrientation);
+        }
+
         setContentView(R.layout.activity_luo_pan);
 
         initViews();

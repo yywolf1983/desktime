@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.timedisplay.FrostedGlassBackground
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:paddingBottom="24dp">
+
+            <!-- 标题 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/card_background"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🧬 命理解读"
+                    android:textColor="@color/gold"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"/>
+            </LinearLayout>
+
+            <!-- 1. 四柱排盘 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/card_background">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📅 四柱排盘"
+                    android:textColor="@color/gold"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="8dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/gold_separator"
+                    android:layout_marginBottom="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="年柱"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/destinyYearPillar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="月柱"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/destinyMonthPillar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="日柱"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/destinyDayPillar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="时柱"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/destinyTimePillar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 四柱五行标签行 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp">
+                    <TextView android:id="@+id/yearWuXing" android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:textSize="11sp"
+                        android:textColor="@color/text_secondary" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_border" android:layout_marginHorizontal="2dp" android:text="年" />
+                    <TextView android:id="@+id/monthWuXing" android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:textSize="11sp"
+                        android:textColor="@color/text_secondary" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_border" android:layout_marginHorizontal="2dp" android:text="月" />
+                    <TextView android:id="@+id/dayWuXing" android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:textSize="11sp"
+                        android:textColor="@color/text_secondary" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_border" android:layout_marginHorizontal="2dp" android:text="日" />
+                    <TextView android:id="@+id/timeWuXing" android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:textSize="11sp"
+                        android:textColor="@color/text_secondary" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_border" android:layout_marginHorizontal="2dp" android:text="时" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 2. 命局核心信息 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/card_background">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="☀ 命局核心"
+                    android:textColor="@color/gold"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    android:layout_marginBottom="8dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/gold_separator"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- 日主 + 日支 + 生肖（三卡片） -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <!-- 日主卡片 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="@drawable/card_border"
+                        android:layout_marginEnd="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="日 主"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_secondary"
+                            android:letterSpacing="0.1"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/dayMasterLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/gold"
+                            android:shadowColor="#40FFD700"
+                            android:shadowRadius="6"/>
+                        <TextView
+                            android:id="@+id/dayMasterWuXingLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/card_border"/>
+                        <TextView
+                            android:id="@+id/dayMasterIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <!-- 日支卡片 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="@drawable/card_border"
+                        android:layout_marginHorizontal="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="日 支"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_secondary"
+                            android:letterSpacing="0.1"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/dayBranchLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/wuxing_fire"/>
+                        <TextView
+                            android:id="@+id/dayBranchZodiac"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="3dp"/>
+                        <TextView
+                            android:id="@+id/dayBranchIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <!-- 年支生肖卡片 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="@drawable/card_border"
+                        android:layout_marginStart="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="生 肖"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_secondary"
+                            android:letterSpacing="0.1"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:id="@+id/zodiacLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/wuxing_fire"/>
+                        <TextView
+                            android:id="@+id/zodiacYearLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="3dp"/>
+                        <TextView
+                            android:id="@+id/zodiacIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 身强身弱 + 提示 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:id="@+id/strengthTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:background="@drawable/card_border"/>
+                    <TextView
+                        android:id="@+id/strengthHint"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_secondary"
+                        android:paddingStart="8dp"
+                        android:lineSpacingExtra="2dp"/>
+                </LinearLayout>
+
+                <!-- 日干详细解读 -->
+                <TextView
+                    android:id="@+id/dayDescText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"
+                    android:padding="8dp"
+                    android:background="@drawable/card_border"
+                    android:layout_marginBottom="10dp"/>
+
+                <!-- 分隔 -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/gold_separator"
+                    android:layout_marginBottom="10dp"/>
+
+                <!-- 纳音详解 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🎵 纳音详解"
+                    android:textColor="@color/gold"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp"/>
+
+                <!-- 四柱纳音 Grid -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="6dp">
+                    <LinearLayout
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:padding="6dp"
+                        android:background="@drawable/card_border" android:layout_marginEnd="3dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="年柱" android:textSize="9sp" android:textColor="@color/text_secondary"/>
+                        <TextView android:id="@+id/nayinYearLabel"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:textSize="14sp" android:textStyle="bold" android:textColor="@color/gold"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:padding="6dp"
+                        android:background="@drawable/card_border" android:layout_marginHorizontal="3dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="月柱" android:textSize="9sp" android:textColor="@color/text_secondary"/>
+                        <TextView android:id="@+id/nayinMonthLabel"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:textSize="14sp" android:textStyle="bold" android:textColor="@color/gold"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:padding="6dp"
+                        android:background="@drawable/card_border" android:layout_marginHorizontal="3dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="日柱" android:textSize="9sp" android:textColor="@color/text_secondary"/>
+                        <TextView android:id="@+id/nayinDayLabel"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:textSize="14sp" android:textStyle="bold" android:textColor="@color/gold"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:gravity="center" android:padding="6dp"
+                        android:background="@drawable/card_border" android:layout_marginStart="3dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="时柱" android:textSize="9sp" android:textColor="@color/text_secondary"/>
+                        <TextView android:id="@+id/nayinTimeLabel"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:textSize="14sp" android:textStyle="bold" android:textColor="@color/gold"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 纳音详细解读 -->
+                <TextView
+                    android:id="@+id/nayinText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp"
+                    android:lineSpacingExtra="3dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <!-- 命宫 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="1dp"
+                    android:paddingHorizontal="6dp"
+                    android:background="@drawable/card_border"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏛"
+                        android:textSize="14sp"
+                        android:layout_marginEnd="4dp"/>
+                    <TextView
+                        android:id="@+id/mingGongValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/gold"
+                        android:layout_marginEnd="5dp"/>
+                    <TextView
+                        android:id="@+id/mingGongDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_accent"
+                        android:lineSpacingExtra="0dp"/>
+                </LinearLayout>
+
+                <!-- 十二长生 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔄 十二长生"
+                    android:textColor="@color/gold"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="6dp">
+                    <TextView
+                        android:id="@+id/changshengDayLabel"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:textSize="13sp" android:textStyle="bold"
+                        android:padding="6dp" android:background="@drawable/card_border"
+                        android:layout_marginEnd="3dp"/>
+                    <TextView
+                        android:id="@+id/changshengMonthLabel"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:textSize="12sp" android:textStyle="bold"
+                        android:padding="6dp" android:background="@drawable/card_border"
+                        android:layout_marginHorizontal="3dp"/>
+                    <TextView
+                        android:id="@+id/changshengTimeLabel"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:textSize="12sp" android:textStyle="bold"
+                        android:padding="6dp" android:background="@drawable/card_border"
+                        android:layout_marginStart="3dp"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/changshengText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_accent"
+                    android:textSize="11sp"
+                    android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+
+            <!-- 3. 十神排布 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/card_background">
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🔗 十神排布" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View
+                    android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/tenGodsText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+
+            <!-- 4. 五行力量 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/card_background">
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="⚡ 五行力量" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View
+                    android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/wuxingPowerText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"
+                    android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/xijiText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"
+                    android:padding="8dp" android:background="@drawable/card_border"/>
+            </LinearLayout>
+
+            <!-- 5. 性格特点 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🌟 性格特点" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/personalityText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 6. 事业运势 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="💼 事业运势" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/careerText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 7. 财富运势 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="💰 财富运势" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/wealthText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 8. 感情婚姻 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="💕 感情婚姻" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/relationshipText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 9. 健康建议 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🏥 健康建议" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/healthText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 10. 人际关系 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🤝 人际关系" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/socialText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 11. 地支藏干 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🌿 地支藏干" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/hiddenStemsText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+
+            <!-- 12. 命局格局 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🏰 命局格局" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/patternText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+            <!-- 13. 六亲分析 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="👪 六亲浅析" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/sixRelText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+
+            <!-- 14. 合冲刑害 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="⚔ 合冲刑害" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/branchRelText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+
+            <!-- 15. 各柱详解 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="📜 四柱详解" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/pillarsDetailText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+
+            <!-- 17. 人生发展建议 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="🎯 人生发展建议" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/lifeAdviceText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="8dp"/>
+            </LinearLayout>
+
+            <!-- 18. 命局综评 -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
+                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="📊 命局综评" android:textColor="@color/gold" android:textSize="14sp"
+                    android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/levelText"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="8dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="※ 以上解读基于四柱命理分析，仅供参考。命运掌握在自己手中，积极努力、保持善良才是最好的风水。"
+                    android:textColor="@color/text_secondary" android:textSize="11sp" android:lineSpacingExtra="2dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

@@ -141,6 +141,28 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         });
+
+        // 点击吉凶解释跳转到命理信息页面
+        if (panExplanation != null) {
+            panExplanation.setClickable(true);
+            panExplanation.setFocusable(true);
+            panExplanation.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(MainActivity.this, DestinyActivity.class);
+                    String fourPillars = fourPillarsTextView.getText().toString();
+                    String[] pillars = fourPillars.split("\\s+");
+                    if (pillars.length >= 4) {
+                        intent.putExtra("yearPillar", pillars[0]);
+                        intent.putExtra("monthPillar", pillars[1]);
+                        intent.putExtra("dayPillar", pillars[2]);
+                        intent.putExtra("timePillar", pillars[3]);
+                    }
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
         
         // 为时辰运势添加点击事件监听器，点击时显示五运六气
         timeFortuneTextView.setOnClickListener(v -> {
