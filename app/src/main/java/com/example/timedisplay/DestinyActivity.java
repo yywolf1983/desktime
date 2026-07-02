@@ -242,22 +242,25 @@ public class DestinyActivity extends android.app.Activity {
         // 日支横屏
         setText(dayZhiLabelL, dayZhi + "（" + dayZodiac + "）");
 
-        // 身强身弱 + 使用提示
+        // 身强身弱 + 使用提示（含判据与通俗释义）
         String strengthStr;
         int strengthColor;
         String strengthHintStr;
         if (isStrong) {
             strengthStr = "🔥 身强";
             strengthColor = Color.parseColor("#FF6B6B");
-            strengthHintStr = "宜泄耗克制，适合创业发展";
+            strengthHintStr = "生扶" + shengCount + "·比和" + biCount + "·克泄" + keCount
+                    + "　|　宜泄耗克制，适合创业发展";
         } else if (isWeak) {
             strengthStr = "💧 身弱";
             strengthColor = Color.parseColor("#87CEEB");
-            strengthHintStr = "宜生扶比和，适合稳健守成";
+            strengthHintStr = "生扶" + shengCount + "·比和" + biCount + "·克泄" + keCount
+                    + "　|　宜生扶比和，适合稳健守成";
         } else {
             strengthStr = "☯ 中和";
             strengthColor = Color.parseColor("#FFD700");
-            strengthHintStr = "五行均衡，宜顺势而为";
+            strengthHintStr = "生扶" + shengCount + "·比和" + biCount + "·克泄" + keCount
+                    + "　|　五行均衡，宜顺势而为";
         }
         setHtmlText(strengthTag, colorSpan(strengthStr, strengthColor));
         setText(strengthHint, strengthHintStr);
@@ -333,6 +336,20 @@ public class DestinyActivity extends android.app.Activity {
                 "繁荣发展，善于表达","变化升腾，格局宏大","礼仪周全，热情洋溢",
                 "旺盛显达，名声远播","包容终结，收藏总结","变革创新，权威威严",
                 "收敛收获，精明务实","防备收藏，忠诚可靠","流动变化，适应力强"};
+        String[] mgPlainMap = {
+            "如水之智，善于应变，晚年思维仍敏捷",
+            "如土之实，厚积薄发，晚年根基稳固",
+            "如木之生，进取不止，晚年仍有开创",
+            "如花之盛，才华外显，晚年名声有成",
+            "如龙之腾，格局宏大，晚年志向高远",
+            "如日之暖，礼数周全，晚年受人敬爱",
+            "如马之奔，显达一方，晚年声名远播",
+            "如秋之收，包容厚重，晚年安享成果",
+            "如金之锐，果敢变革，晚年威望自成",
+            "如秋之实，精打细算，晚年财福双收",
+            "如犬之忠，忠诚可靠，晚年守成安稳",
+            "如水之流，随遇而安，晚年通达无碍"
+        };
 
         int monthIdx = -1, timeIdx = -1;
         for (int i = 0; i < 12; i++) {
@@ -342,7 +359,12 @@ public class DestinyActivity extends android.app.Activity {
         if (monthIdx < 0 || timeIdx < 0) return "未知";
 
         int mgIdx = (14 - monthIdx + timeIdx) % 12;
-        return "后天运势根基，" + mgDescMap[mgIdx];
+        StringBuilder sb = new StringBuilder();
+        sb.append("后天运势根基，").append(mgDescMap[mgIdx]);
+        sb.append("。<br/><font color='#8899AA'>通俗说：命宫是人生的「后天根基」，");
+        sb.append(mgPlainMap[mgIdx]);
+        sb.append("。命宫与命局相互呼应，命局主先天禀赋，命宫主后天造化，二者相辅相成。</font>");
+        return sb.toString();
     }
 
     private String getWuXingColor(String wx) {

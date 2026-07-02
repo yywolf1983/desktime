@@ -3218,13 +3218,29 @@ public class FullNinePalaceActivity extends Activity {
         sb.append("<font color='#8899AA'>").append(getRiGanDetailedAnalysis(dayGan)).append("</font><br/><br/>");
         
         // 十二长生
+        String stageYear = getTwelveStage(dayGan, yearZhi);
+        String stageMonth = getTwelveStage(dayGan, monthZhi);
         String stageDay = getTwelveStage(dayGan, dayZhi);
         String stageTime = getTwelveStage(dayGan, timeZhi);
-        String stageMonth = getTwelveStage(dayGan, monthZhi);
-        sb.append("<font color='#FFD700'><b>◆ 十二长生</b></font>　<font color='#8899AA'>（日主在各柱地支所处的生命阶段）</font><br/>");
-        sb.append("日主").append(dayGan).append("在日支").append(dayZhi).append("：<font color='#90EE90'><b>").append(stageDay).append("</b></font>").append(" — ").append(getTwelveStageExplanation(stageDay)).append("<br/>");
-        sb.append("日主").append(dayGan).append("在时支").append(timeZhi).append("：").append(stageTime).append(" — ").append(getTwelveStageExplanation(stageTime)).append("<br/>");
-        sb.append("日主").append(dayGan).append("在月支").append(monthZhi).append("（月令）：").append(stageMonth).append(" — ").append(getTwelveStageExplanation(stageMonth)).append("<br/><br/>");
+        sb.append("<font color='#FFD700'><b>◆ 十二长生</b></font>　<font color='#8899AA'>（日主在各柱地支的生命阶段，反映人生能量流转）</font><br/>");
+        sb.append("<font color='#8899AA'>十二长生以日干对照四柱地支，模拟万物从生到死、循环往复的过程，分长生、沐浴、冠带、临官、帝旺、衰、病、死、墓、绝、胎、养十二阶段。年柱主早年根基，月柱主青年事业，日柱主中年自身，时柱主晚年成就。</font><br/><br/>");
+
+        sb.append("<font color='#FFD700'><b>【各柱长生阶段】</b></font><br/>");
+        sb.append("年柱·").append(yearZhi).append("：<font color='#90EE90'><b>").append(stageYear).append("</b></font>　");
+        sb.append(getTwelveStageExplanation(stageYear)).append("<br/>");
+        sb.append("<font color='#8899AA'>　").append(getTwelveStagePillarMeaning(stageYear, "年")).append("</font><br/>");
+        sb.append("月柱·").append(monthZhi).append("（月令）：<font color='#90EE90'><b>").append(stageMonth).append("</b></font>　");
+        sb.append(getTwelveStageExplanation(stageMonth)).append("<br/>");
+        sb.append("<font color='#8899AA'>　").append(getTwelveStagePillarMeaning(stageMonth, "月")).append("</font><br/>");
+        sb.append("日柱·").append(dayZhi).append("：<font color='#90EE90'><b>").append(stageDay).append("</b></font>　");
+        sb.append(getTwelveStageExplanation(stageDay)).append("<br/>");
+        sb.append("<font color='#8899AA'>　").append(getTwelveStagePillarMeaning(stageDay, "日")).append("</font><br/>");
+        sb.append("时柱·").append(timeZhi).append("：<font color='#90EE90'><b>").append(stageTime).append("</b></font>　");
+        sb.append(getTwelveStageExplanation(stageTime)).append("<br/>");
+        sb.append("<font color='#8899AA'>　").append(getTwelveStagePillarMeaning(stageTime, "时")).append("</font><br/><br/>");
+
+        sb.append("<font color='#FFD700'><b>【长生总论】</b></font><br/>");
+        sb.append(getTwelveStageComprehensiveAnalysis(stageYear, stageMonth, stageDay, stageTime, dayGan)).append("<br/><br/>");
         
         // 3. 五行力量分析
         sb.append("<font color='#FFD700'><b>◆ 五行力量分析</b></font>　<font color='#8899AA'>（各柱与日主的生克关系）</font><br/>");
@@ -3510,6 +3526,297 @@ public class FullNinePalaceActivity extends Activity {
             case "养": return "如胎儿成长，蓄势待发，培养实力";
             default: return "";
         }
+    }
+
+    // 十二长生在各柱位置的具体含义
+    private String getTwelveStagePillarMeaning(String stage, String pillar) {
+        switch (stage) {
+            case "长生":
+                switch (pillar) {
+                    case "年": return "早年得长辈庇护，家庭根基稳固，幼年生活优渥，起步顺利。祖上有德，承蒙福荫，1-16岁运势亨通。";
+                    case "月": return "青年时期朝气蓬勃，事业起点高，得师长提携，16-32岁发展顺遂，宜把握学习与创业良机。";
+                    case "日": return "中年正值壮年焕发，自身能力强，32-48岁事业家庭双丰收，宜勇担重任、开拓进取。";
+                    case "时": return "晚年焕发第二春，48岁后仍具活力，子女有出息，晚年成就不凡，老当益壮之象。";
+                }
+                break;
+            case "沐浴":
+                switch (pillar) {
+                    case "年": return "早年环境多变，性格敏感早熟，需注意桃花困扰。幼年多有波折，但有长辈呵护可化险为夷。";
+                    case "月": return "青年情感丰富，多才多艺但心思不定，易受外界影响。宜专注学业事业，避免感情用事误前程。";
+                    case "日": return "中年魅力四射，社交活跃，但需防桃花是非。夫妻关系需用心经营，避免因情惹祸。";
+                    case "时": return "晚年心态年轻，兴趣广泛，但需注意感情纠纷。子女缘分较复杂，宜妥善处理家庭关系。";
+                }
+                break;
+            case "冠带":
+                switch (pillar) {
+                    case "年": return "早年家教良好，仪表端庄，少年老成。家庭注重礼教培养，为日后发展奠定良好基础。";
+                    case "月": return "青年学业有成，初入社会即展露头角，开始建立人脉声誉。宜谦虚进取，奠定事业根基。";
+                    case "日": return "中年形象端庄，社会地位提升，受人尊重。自身修养成熟，宜承担更多社会责任。";
+                    case "时": return "晚年德高望重，受人敬仰，晚年形象光辉。子女有教养，家庭和睦，老有所尊。";
+                }
+                break;
+            case "临官":
+                switch (pillar) {
+                    case "年": return "早年家境殷实，长辈有地位，幼年即享福荫。祖业兴旺，承蒙家族资源，起点较高。";
+                    case "月": return "青年事业顺遂，初入职场即得重用，收入稳定。宜趁势而上，建立事业版图，32岁前可小成。";
+                    case "日": return "中年正值事业黄金期，自身能力强，收入丰厚，社会地位稳固。宜把握机遇，更上一层楼。";
+                    case "时": return "晚年事业有成，退休后仍有作为，受人尊敬。子女独立有成，晚年衣食无忧，安享成果。";
+                }
+                break;
+            case "帝旺":
+                switch (pillar) {
+                    case "年": return "早年家境鼎盛，家族势力强盛，幼年锦衣玉食。但盛极必衰，需防年少骄纵，培养谦德。";
+                    case "月": return "青年锋芒毕露，事业冲劲十足，易成少年得志。宜收敛锋芒，避免树敌，稳中求进方能长久。";
+                    case "日": return "中年事业达到巅峰，权势财富双收，但需知进退。物极必反，宜适时谦让，方能保全成果。";
+                    case "时": return "晚年功成名就，成就辉煌，但需防独断专行。宜提携后辈，传承经验，方能善终。";
+                }
+                break;
+            case "衰":
+                switch (pillar) {
+                    case "年": return "早年家道中落，家境逐渐式微，需自力更生。虽根基不稳，但逆境锻炼意志，可后发制人。";
+                    case "月": return "青年运势渐退，事业遇到瓶颈，需调整方向。宜韬光养晦，积蓄力量，等待时机再起。";
+                    case "日": return "中年精力渐衰，事业进入平台期，需注意保养身体。宜稳健经营，不宜冒进，守成为上。";
+                    case "时": return "晚年后劲不足，宜退居二线，安享清福。注意健康管理，减少操劳，颐养天年。";
+                }
+                break;
+            case "病":
+                switch (pillar) {
+                    case "年": return "早年体弱多病，家庭多忧，需长辈悉心照料。但病中磨砺心性，反可培养坚韧品格。";
+                    case "月": return "青年事业受阻，多挫折困扰，需耐心调养。宜避免过度劳累，养精蓄锐，待机而动。";
+                    case "日": return "中年身体透支，事业压力大，需注意健康。夫妻关系易生波折，宜多沟通包容，共度难关。";
+                    case "时": return "晚年健康需警惕，慢性疾病困扰，宜及早养生。子女事务操心，宜适度放手，量力而行。";
+                }
+                break;
+            case "死":
+                switch (pillar) {
+                    case "年": return "早年家境困顿，多有变故，成长环境艰难。但逆境出人才，磨砺之后可成大器，切勿自暴自弃。";
+                    case "月": return "青年事业低迷，多遇阻碍，宜守不宜攻。此阶段重在积累学习，为将来厚积薄发做准备。";
+                    case "日": return "中年事业陷入低谷，自身状态低迷，需调整心态。宜静待时机，不可强求，否极终会泰来。";
+                    case "时": return "晚年运势平淡，宜清心寡欲，安享宁静。注意心理健康，培养兴趣爱好，保持乐观心态。";
+                }
+                break;
+            case "墓":
+                switch (pillar) {
+                    case "年": return "早年家境保守，多有积藏，祖业虽不显但有底蕴。性格内敛沉稳，适合守成，不宜过早张扬。";
+                    case "月": return "青年事业发展缓慢，但积累深厚，宜从事稳定性强的行业。厚积薄发，中年可有所成。";
+                    case "日": return "中年性格沉稳内敛，善于理财储蓄，事业稳健。宜守不宜攻，保守经营可保平安富足。";
+                    case "时": return "晚年积蓄丰厚，生活安稳，有收藏雅好。子女孝顺，晚年衣食无忧，宜享受天伦之乐。";
+                }
+                break;
+            case "绝":
+                switch (pillar) {
+                    case "年": return "早年家境困窘，一切从零开始，但绝处逢生，反能激发斗志。白手起家之命，需自力更生。";
+                    case "月": return "青年事业艰难，多有挫折，但绝境孕育转机。宜保持信念，坚持不懈，终能迎来曙光。";
+                    case "日": return "中年陷入困境，需破釜沉舟，置之死地而后生。此阶段宜变革求新，突破现状方能转机。";
+                    case "时": return "晚年后半程迎来新生，旧业终结，新机萌发。宜放下过往，重新出发，老来可成新事。";
+                }
+                break;
+            case "胎":
+                switch (pillar) {
+                    case "年": return "早年家境暗中酝酿变化，表面平静实则孕育新生。长辈深谋远虑，为日后发展暗中布局。";
+                    case "月": return "青年处于谋划期，事业尚未显露，但已有蓝图。宜耐心等待时机，暗中积蓄实力，厚积薄发。";
+                    case "日": return "中年酝酿新方向，事业转型期，宜深思熟虑。婚姻感情有暗结良缘之象，需用心感受。";
+                    case "时": return "晚年筹划后事，暗中布局传承，为子孙后代谋福。宜提前规划，妥善安排晚年生活。";
+                }
+                break;
+            case "养":
+                switch (pillar) {
+                    case "年": return "早年家境温和，长辈悉心培养，成长环境良好。基础扎实，为日后发展蓄势，未来可期。";
+                    case "月": return "青年处于蓄力期，学业技艺逐步精进，宜踏实学习。虽有抱负但不宜急躁，培养实力是关键。";
+                    case "日": return "中年稳健发展，自身实力稳步提升，宜修养身心。夫妻感情温润如玉，平淡中见真情。";
+                    case "时": return "晚年安享晚年，身心得到滋养，生活悠然。子女关怀备至，晚年温馨，颐养天年之福。";
+                }
+                break;
+        }
+        return "";
+    }
+
+    // 十二长生综合分析
+    private String getTwelveStageComprehensiveAnalysis(String sYear, String sMonth, String sDay, String sTime, String dayGan) {
+        StringBuilder sb = new StringBuilder();
+
+        // 统计各阶段吉凶
+        int prosperous = 0;  // 旺相阶段：长生、冠带、临官、帝旺、养
+        int declining = 0;   // 衰退阶段：衰、病、死、绝
+        int neutral = 0;     // 中间阶段：沐浴、墓、胎
+
+        String[] allStages = {sYear, sMonth, sDay, sTime};
+        for (String s : allStages) {
+            switch (s) {
+                case "长生": case "冠带": case "临官": case "帝旺": case "养":
+                    prosperous++; break;
+                case "衰": case "病": case "死": case "绝":
+                    declining++; break;
+                default:
+                    neutral++; break;
+            }
+        }
+
+        // 整体能量判断
+        sb.append("日主<b>").append(dayGan).append("</b>四柱长生分布：");
+        sb.append("旺相<font color='#90EE90'><b>").append(prosperous).append("</b></font>柱");
+        sb.append("·衰退<font color='#FF6B6B'><b>").append(declining).append("</b></font>柱");
+        sb.append("·平稳<font color='#FFD700'><b>").append(neutral).append("</b></font>柱<br/>");
+
+        // 能量趋势分析
+        if (prosperous >= 3) {
+            sb.append("<font color='#90EE90'><b>【能量充沛型】</b></font>四柱多处长生旺相，日主能量充沛，一生运势强劲。");
+            sb.append("性格积极进取，有强大的生命力和抗压能力，事业多能成功。但需防过于刚强，宜学会收敛谦逊，避免锋芒过露招忌。<br/>");
+        } else if (declining >= 3) {
+            sb.append("<font color='#FF6B6B'><b>【能量内敛型】</b></font>四柱多处衰退死绝，日主能量偏弱，一生多经磨砺。");
+            sb.append("性格内敛坚韧，能在逆境中成长，大器晚成之象。宜知命守分，待时而动，逆境磨砺终可成就非凡。<br/>");
+        } else if (prosperous > 0 && declining > 0) {
+            sb.append("<font color='#FFD700'><b>【能量起伏型】</b></font>四柱旺衰并存，人生运势起伏明显。");
+            sb.append("有顺境也有逆境，需顺势而为，旺时乘势进取，衰时韬光养晦。人生阅历丰富，起伏中见真章。<br/>");
+        } else {
+            sb.append("<font color='#FFD700'><b>【能量平稳型】</b></font>四柱长生阶段平和，一生运势平稳。");
+            sb.append("无大起大落，宜稳扎稳打，循序渐进。性格温和稳定，适合从事长期稳定的行业，平淡中见福气。<br/>");
+        }
+
+        // 人生轨迹分析
+        sb.append("<br/><font color='#FFD700'><b>【人生轨迹】</b></font><br/>");
+        String[] periods = {"早年（年柱）", "青年（月柱）", "中年（日柱）", "晚年（时柱）"};
+        String[] stages = {sYear, sMonth, sDay, sTime};
+        for (int i = 0; i < 4; i++) {
+            String trend = getStageTrend(stages[i]);
+            sb.append(periods[i]).append("：<font color='#8899AA'>").append(stages[i]).append(" — ").append(trend).append("</font><br/>");
+        }
+
+        // 旺衰走势判断
+        sb.append("<br/><font color='#FFD700'><b>【运势走势】</b></font><br/>");
+        String trajectory = getLifeTrajectory(sYear, sMonth, sDay, sTime);
+        sb.append("<font color='#8899AA'>").append(trajectory).append("</font><br/>");
+
+        // 人生建议
+        sb.append("<br/><font color='#FFD700'><b>【人生建议】</b></font><br/>");
+        sb.append("<font color='#8899AA'>").append(getLifeAdviceByStages(sYear, sMonth, sDay, sTime)).append("</font>");
+
+        return sb.toString();
+    }
+
+    // 获取阶段趋势描述
+    private String getStageTrend(String stage) {
+        switch (stage) {
+            case "长生": return "生机萌发，新始之象";
+            case "沐浴": return "过渡多变，需定心性";
+            case "冠带": return "成长成熟，渐入佳境";
+            case "临官": return "事业有成，如日中天";
+            case "帝旺": return "巅峰鼎盛，盛极之象";
+            case "衰": return "盛极而衰，宜守不宜攻";
+            case "病": return "低谷调整，需养身心";
+            case "死": return "运势低迷，宜静待时";
+            case "墓": return "收藏积累，蓄势待发";
+            case "绝": return "绝处逢生，孕育转机";
+            case "胎": return "暗中酝酿，等待时机";
+            case "养": return "滋养成长，蓄势待发";
+            default: return "";
+        }
+    }
+
+    // 人生运势走势分析
+    private String getLifeTrajectory(String sYear, String sMonth, String sDay, String sTime) {
+        // 将十二长生转为能量值：长生=1,沐浴=2,...帝旺=5,衰=-1,病=-2,死=-3,墓=-4,绝=-5,胎=-6,养=0
+        int yearEnergy = getStageEnergy(sYear);
+        int monthEnergy = getStageEnergy(sMonth);
+        int dayEnergy = getStageEnergy(sDay);
+        int timeEnergy = getStageEnergy(sTime);
+
+        // 判断走势
+        boolean earlyRise = (monthEnergy > yearEnergy);
+        boolean midRise = (dayEnergy > monthEnergy);
+        boolean lateRise = (timeEnergy > dayEnergy);
+
+        if (earlyRise && midRise && lateRise) {
+            return "一生运势节节攀升，越走越高，属于先苦后甜、步步高升之命。早年虽平凡，但持续努力终成大器，晚年成就最高。";
+        } else if (!earlyRise && midRise && lateRise) {
+            return "早年运势不错，青年略有起伏，中年后重新崛起，晚年大成。属于中年发迹、晚年辉煌之命，宜在挫折中坚持不放弃。";
+        } else if (earlyRise && !midRise && lateRise) {
+            return "早年顺利，中年遇到瓶颈，晚年再次焕发。属于V型人生，中年需忍耐坚持，晚年可迎来第二春。";
+        } else if (earlyRise && midRise && !lateRise) {
+            return "早年青年中年都顺遂，晚年运势回落。属于先甜后淡之命，宜在中年时多做准备，为晚年积累福报。";
+        } else if (!earlyRise && !midRise && lateRise) {
+            return "早年青年中年都较坎坷，晚年方才转运。属于大器晚成之命，前半生磨砺积累，晚年一飞冲天。";
+        } else if (!earlyRise && midRise && !lateRise) {
+            return "早年平淡，中年达到高峰，晚年后继乏力。属于中年发迹之命，宜在中年时把握机遇，奠定晚年基础。";
+        } else if (earlyRise && !midRise && !lateRise) {
+            return "早年运势最佳，中年开始下滑，晚年平淡。属于早年得志之命，宜在顺境时未雨绸缪，为日后做准备。";
+        } else {
+            return "一生运势起伏不定，各有高低，需顺势而为。旺时乘势进取，衰时韬光养晦，方能平稳度过一生。";
+        }
+    }
+
+    // 获取阶段能量值
+    private int getStageEnergy(String stage) {
+        switch (stage) {
+            case "长生": return 3;
+            case "沐浴": return 1;
+            case "冠带": return 2;
+            case "临官": return 4;
+            case "帝旺": return 5;
+            case "衰": return -1;
+            case "病": return -2;
+            case "死": return -3;
+            case "墓": return -4;
+            case "绝": return -5;
+            case "胎": return 0;
+            case "养": return 1;
+            default: return 0;
+        }
+    }
+
+    // 根据长生阶段给出人生建议
+    private String getLifeAdviceByStages(String sYear, String sMonth, String sDay, String sTime) {
+        StringBuilder advice = new StringBuilder();
+
+        // 根据日柱（自身）阶段给出核心建议
+        switch (sDay) {
+            case "长生": case "临官": case "帝旺":
+                advice.append("中年正值旺相，宜乘势进取，把握事业黄金期。但需知盛极必反，得意时勿忘形，预留退路方能长久。");
+                break;
+            case "冠带": case "养":
+                advice.append("中年稳健成长，宜踏实积累，稳步提升。不急于一时，厚积薄发方能成就大业。");
+                break;
+            case "沐浴":
+                advice.append("中年心思活跃，宜专注主业，避免分心。感情方面需谨慎，以免影响事业家庭。");
+                break;
+            case "衰": case "病":
+                advice.append("中年精力下降，宜调整节奏，注重养生。事业宜守不宜攻，保重身体方能等待转机。");
+                break;
+            case "死": case "绝":
+                advice.append("中年处于低谷，宜韬光养晦，静待时机。切勿冒进，逆境中磨砺心性，终有翻身之日。");
+                break;
+            case "墓":
+                advice.append("中年宜守成储蓄，不宜冒进。稳健经营，积累资源，为晚年打下基础。");
+                break;
+            case "胎":
+                advice.append("中年宜酝酿新方向，为转型做准备。暗中筹划，待时机成熟再行动。");
+                break;
+        }
+
+        // 根据时柱（晚年）阶段补充建议
+        advice.append("<br/><br/>");
+        switch (sTime) {
+            case "长生": case "临官": case "帝旺": case "冠带":
+                advice.append("晚年运势旺盛，仍有作为，宜老当益壮，发挥余热。可从事咨询、传承等事业，将经验传授后辈。");
+                break;
+            case "养": case "胎":
+                advice.append("晚年宜安享清福，修身养性。可培养兴趣爱好，享受天伦之乐，颐养天年。");
+                break;
+            case "衰": case "病":
+                advice.append("晚年宜注重健康养生，定期体检，劳逸结合。减少操劳，保持心情舒畅，方能延年益寿。");
+                break;
+            case "死": case "绝":
+                advice.append("晚年宜清心寡欲，看淡得失。保持乐观心态，培养精神寄托，平安度过晚年。");
+                break;
+            case "墓":
+                advice.append("晚年宜守成享福，妥善安排财务。有收藏爱好可怡情养性，安享积累之福。");
+                break;
+            case "沐浴":
+                advice.append("晚年心态年轻，但需注意感情分寸。保持社交活跃，但避免是非纠纷。");
+                break;
+        }
+
+        return advice.toString();
     }
     
     // 纳音通俗解释

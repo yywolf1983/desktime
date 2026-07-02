@@ -1031,28 +1031,72 @@ public class DestinyCalculator {
     
     public static String getWealthAnalysisRich(String dayGan, String wuXing, String[][] pillars, boolean isStrong, boolean isWeak) {
         StringBuilder sb = new StringBuilder();
-        
+
         boolean hasZhengCai = false, hasPianCai = false;
+        boolean hasBiJian = false, hasJieCai = false;
         for (int i = 0; i < pillars.length; i++) {
             String shen = getTenGodFull(dayGan, pillars[i][0]);
             if (shen.equals("正财")) hasZhengCai = true;
             if (shen.equals("偏财")) hasPianCai = true;
+            if (shen.equals("比肩")) hasBiJian = true;
+            if (shen.equals("劫财")) hasJieCai = true;
         }
-        
+
+        sb.append("<font color='#8899AA'>【财源方位】</font><br/>");
         switch (wuXing) {
-            case "木": sb.append("财源在<font color='#90EE90'><b>土</b></font>（地产、农业、基建）。"); break;
-            case "火": sb.append("财源在<font color='#FF6B6B'><b>金</b></font>（金融、科技、法律）。"); break;
-            case "土": sb.append("财源在<font color='#87CEEB'><b>水</b></font>（商贸、物流、通讯）。"); break;
-            case "金": sb.append("财源在<font color='#90EE90'><b>木</b></font>（文创、教育、医药）。"); break;
-            case "水": sb.append("财源在<font color='#FF6B6B'><b>火</b></font>（餐饮、能源、娱乐）。"); break;
+            case "木": sb.append("日主属木，我克者为财，财源在<font color='#90EE90'><b>土</b></font>（地产·农业·基建·陶瓷）。"); break;
+            case "火": sb.append("日主属火，我克者为财，财源在<font color='#FF6B6B'><b>金</b></font>（金融·科技·法律·珠宝）。"); break;
+            case "土": sb.append("日主属土，我克者为财，财源在<font color='#87CEEB'><b>水</b></font>（商贸·物流·通讯·旅游）。"); break;
+            case "金": sb.append("日主属金，我克者为财，财源在<font color='#90EE90'><b>木</b></font>（文创·教育·医药·林业）。"); break;
+            case "水": sb.append("日主属水，我克者为财，财源在<font color='#FF6B6B'><b>火</b></font>（餐饮·能源·娱乐·传媒）。"); break;
         }
-        
-        if (hasZhengCai) sb.append("命带<font color='#90EE90'><b>正财</b></font>，正业稳定积累，宜中长线布局。");
-        if (hasPianCai) sb.append("命带<font color='#FFA500'><b>偏财</b></font>，有投资嗅觉，须控风险、莫孤注一掷。");
-        
-        if (isStrong) sb.append("身强能担财，积极开源、善理财，财富空间可观。");
-        else if (isWeak) sb.append("身弱慎财，稳健为主，避高风险，寻良伴共理财更好。");
-        else sb.append("财运平稳，量入为出，积微成著。");
+        sb.append("<br/><font color='#8899AA'>通俗说：「财」就是你能掌控的东西，木克土得土之财，就像种树能改良土壤、收获果实。</font><br/>");
+
+        // 财星配置
+        sb.append("<br/><font color='#8899AA'>【财星配置】</font><br/>");
+        if (hasZhengCai && hasPianCai) {
+            sb.append("命带<font color='#90EE90'><b>正财</b></font>＋<font color='#FFA500'><b>偏财</b></font>，正偏财俱全，既有稳定正业，又有投资嗅觉。");
+            sb.append("宜正业为主、投资为辅，七分稳三分搏，方能源源不绝。<br/>");
+        } else if (hasZhengCai) {
+            sb.append("命带<font color='#90EE90'><b>正财</b></font>，财来有道，正业稳定积累。");
+            sb.append("宜中长线布局，靠工资薪酬·稳健经营致富，不贪偏门横财。<br/>");
+        } else if (hasPianCai) {
+            sb.append("命带<font color='#FFA500'><b>偏财</b></font>，有投资嗅觉与经商头脑。");
+            sb.append("须控风险、莫孤注一掷，赚快钱也要留退路，「见好就收」是秘诀。<br/>");
+        } else {
+            sb.append("命局<font color='#FF6B6B'>财星不显</font>，财运多靠技能·才华·人脉间接转化。");
+            sb.append("宜以专长立身，食神伤官生财，「凭本事吃饭」一样富足。<br/>");
+        }
+
+        if (hasBiJian || hasJieCai) {
+            sb.append("命带<font color='#FFA500'>比肩/劫财</font>，财易被分夺，");
+            if (isStrong) sb.append("但身强可抗，反主合伙求财、团队致富之象。");
+            else sb.append("身弱则财来财去，宜避免与人合资、谨防借贷纠纷。");
+            sb.append("<br/>");
+        }
+
+        // 身强弱与担财
+        sb.append("<br/><font color='#8899AA'>【担财能力】</font><br/>");
+        if (isStrong) {
+            sb.append("<font color='#90EE90'><b>身强能担财</b></font>：如大力士举鼎，财富空间可观，积极开源、善理财。");
+            sb.append("<br/><font color='#8899AA'>通俗说：身体好才能扛大财，你有能力驾驭大项目、大投资，但也要防「贪多嚼不烂」。</font><br/>");
+        } else if (isWeak) {
+            sb.append("<font color='#FF6B6B'><b>身弱慎财</b></font>：如体弱者负重，财多反成累赘，稳健为主。");
+            sb.append("<br/><font color='#8899AA'>通俗说：力气小扛不动大箱，莫眼红他人暴富，寻良伴共理财、借团队之力更稳当。</font><br/>");
+        } else {
+            sb.append("<font color='#FFD700'><b>中和担财</b></font>：财运平稳，量入为出，积微成著。");
+            sb.append("<br/><font color='#8899AA'>通俗说：不贪不躁，细水长流，适合自己的才是最好的。</font><br/>");
+        }
+
+        // 求财方位与时机
+        sb.append("<br/><font color='#8899AA'>【求财方位】</font><br/>");
+        switch (wuXing) {
+            case "木": sb.append("求财旺方：<font color='#90EE90'><b>中央·东北·西南</b></font>（土方），此方向求财最为顺遂。"); break;
+            case "火": sb.append("求财旺方：<font color='#FF6B6B'><b>西方·西北</b></font>（金方），此方向求财最为顺遂。"); break;
+            case "土": sb.append("求财旺方：<font color='#87CEEB'><b>北方</b></font>（水方），此方向求财最为顺遂。"); break;
+            case "金": sb.append("求财旺方：<font color='#90EE90'><b>东方·东南</b></font>（木方），此方向求财最为顺遂。"); break;
+            case "水": sb.append("求财旺方：<font color='#FF6B6B'><b>南方</b></font>（火方），此方向求财最为顺遂。"); break;
+        }
         sb.append("<br/><br/>").append(getWealthStyleDetail(wuXing, isStrong, isWeak));
         return sb.toString();
     }
@@ -1083,18 +1127,74 @@ public class DestinyCalculator {
     
     public static String getHealthAnalysisRich(String wuXing, int shengCount, int keCount, int biCount) {
         StringBuilder sb = new StringBuilder();
-        
+
+        sb.append("<font color='#8899AA'>【脏腑对应】</font><br/>");
         switch (wuXing) {
-            case "木": sb.append("五行属木，护<font color='#90EE90'><b>肝胆筋腱</b></font>。多食青蔬、早睡养肝、舒展筋骨。春为养肝佳时。"); break;
-            case "火": sb.append("五行属火，护<font color='#FF6B6B'><b>心脉血络</b></font>。勿过劳不妄怒，红食养心。夏宜清火。"); break;
-            case "土": sb.append("五行属土，护<font color='#FFD700'><b>脾胃中宫</b></font>。三餐规律、忌生冷油腻，黄粟南瓜最益肠胃。"); break;
-            case "金": sb.append("五行属金，护<font color='#C0C0C0'><b>肺与大肠</b></font>。多行深呼吸吐纳，白木耳百合养肺。秋重保暖。"); break;
-            case "水": sb.append("五行属水，护<font color='#87CEEB'><b>肾元泌尿</b></font>。适量饮水，黑豆黑芝麻入肾。冬暖腰护体。"); break;
+            case "木": sb.append("日主属木，主司<font color='#90EE90'><b>肝·胆·筋·目</b></font>。肝为将军之官，主疏泄藏血，情绪起伏最易伤肝。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你的身体就像一棵树，最怕「憋」和「怒」，气血要像树枝一样舒展通畅才健康。</font><br/>"); break;
+            case "火": sb.append("日主属火，主司<font color='#FF6B6B'><b>心·小肠·脉·舌</b></font>。心为君主之官，主神明血脉，过劳与情绪激动最伤心。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你的身体像一团火，最怕「熬」和「急」，心要像烛火一样平稳跳动才安宁。</font><br/>"); break;
+            case "土": sb.append("日主属土，主司<font color='#FFD700'><b>脾·胃·肉·口</b></font>。脾胃为后天之本，气血生化之源，饮食不节最伤脾。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你的身体像一片田地，最怕「撑」和「凉」，脾胃要像和面一样揉得匀才养人。</font><br/>"); break;
+            case "金": sb.append("日主属金，主司<font color='#C0C0C0'><b>肺·大肠·皮·鼻</b></font>。肺为相傅之官，主气司呼吸，悲忧过度最伤肺。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你的身体像一把钟，最怕「悲」和「燥」，呼吸要像秋风一样清肃通畅才润泽。</font><br/>"); break;
+            case "水": sb.append("日主属水，主司<font color='#87CEEB'><b>肾·膀胱·骨·耳</b></font>。肾为先天之本，藏精主骨生髓，惊恐与过劳最伤肾。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你的身体像一口井，最怕「冻」和「怕」，肾气要像泉水一样源源不断才充沛。</font><br/>"); break;
         }
-        
+
+        // 五行失衡专项预警
+        sb.append("<br/><font color='#8899AA'>【失衡预警】</font><br/>");
         if (keCount > shengCount + biCount + 1) {
-            sb.append("<br/>命局克伐较重，注意劳逸结合，定期体检为安。");
+            sb.append("<font color='#FF6B6B'>⚠ 命局克伐较重</font>（生扶").append(shengCount).append("+比和").append(biCount)
+                    .append("＜克泄").append(keCount).append("），正气偏弱，易感外邪。<br/>");
+            switch (wuXing) {
+                case "木": sb.append("肝气郁结风险高，易怒、胸闷、女性经乳胀痛；宜疏肝理气，忌熬夜动怒。"); break;
+                case "火": sb.append("心气不足风险高，心悸、失眠、面色无华；宜养心安神，忌过劳亢奋。"); break;
+                case "土": sb.append("脾胃虚弱风险高，消化不良、食欲差、四肢乏力；宜温补脾胃，忌生冷暴食。"); break;
+                case "金": sb.append("肺气虚损风险高，易感冒、气短、皮肤干燥；宜补肺固表，忌悲忧伤神。"); break;
+                case "水": sb.append("肾元不固风险高，腰膝酸软、畏寒、夜尿频多；宜温补肾阳，忌惊恐劳累。"); break;
+            }
+            sb.append("<br/>");
+        } else if (shengCount + biCount > keCount + 1) {
+            sb.append("<font color='#FFA500'>⚠ 命局生扶较旺</font>（生扶").append(shengCount).append("+比和").append(biCount)
+                    .append("＞克泄").append(keCount).append("），正气虽足但易壅滞。<br/>");
+            switch (wuXing) {
+                case "木": sb.append("肝木过旺易化火，头痛目赤、急躁易怒；宜平肝清热，少酒少辛。"); break;
+                case "火": sb.append("心火偏亢易扰神，口舌生疮、心烦失眠；宜清心降火，少熬夜。"); break;
+                case "土": sb.append("脾土壅滞易生湿，身体困重、口中黏腻；宜健脾化湿，少甜腻。"); break;
+                case "金": sb.append("肺金过燥易伤津，干咳少痰、皮肤起屑；宜润肺生津，多饮水。"); break;
+                case "水": sb.append("肾水泛溢易伤阳，下肢浮肿、畏寒怕冷；宜温阳化水，少咸寒。"); break;
+            }
+            sb.append("<br/>");
+        } else {
+            sb.append("<font color='#90EE90'>✓ 五行力量基本均衡</font>，脏腑协调，健康基础良好，注意日常保养即可。<br/>");
         }
+
+        // 养生宜忌
+        sb.append("<br/><font color='#8899AA'>【养生宜忌】</font><br/>");
+        switch (wuXing) {
+            case "木":
+                sb.append("<font color='#90EE90'>宜：</font>青色食物（菠菜·芹菜·猕猴桃）、酸味入肝、晨起舒展拉伸、踏青散步<br/>");
+                sb.append("<font color='#FF6B6B'>忌：</font>过量饮酒、长期憋怒、熬夜伤肝、久视伤目<br/>");
+                sb.append("<font color='#FFD700'>穴位：</font>太冲·期门·行间，常按可疏肝理气"); break;
+            case "火":
+                sb.append("<font color='#90EE90'>宜：</font>红色食物（红枣·番茄·红豆）、苦味入心、午时小憩、静心冥想<br/>");
+                sb.append("<font color='#FF6B6B'>忌：</font>暴怒激动、过度劳累、辛辣燥热、熬夜耗神<br/>");
+                sb.append("<font color='#FFD700'>穴位：</font>神门·内关·心俞，常按可养心安神"); break;
+            case "土":
+                sb.append("<font color='#90EE90'>宜：</font>黄色食物（南瓜·小米·土豆）、甘味入脾、三餐定时、细嚼慢咽<br/>");
+                sb.append("<font color='#FF6B6B'>忌：</font>生冷油腻、暴饮暴食、思虑过度、久坐伤肉<br/>");
+                sb.append("<font color='#FFD700'>穴位：</font>足三里·中脘·脾俞，常按可健脾和胃"); break;
+            case "金":
+                sb.append("<font color='#90EE90'>宜：</font>白色食物（银耳·百合·雪梨）、辛味入肺、深呼吸吐纳、有氧运动<br/>");
+                sb.append("<font color='#FF6B6B'>忌：</font>悲忧伤肺、干燥环境、吸烟、寒凉直吹<br/>");
+                sb.append("<font color='#FFD700'>穴位：</font>列缺·肺俞·迎香，常按可宣肺利气"); break;
+            case "水":
+                sb.append("<font color='#90EE90'>宜：</font>黑色食物（黑豆·黑芝麻·紫米）、咸味入肾、泡脚暖腰、太极八段锦<br/>");
+                sb.append("<font color='#FF6B6B'>忌：</font>惊恐伤肾、过度房劳、寒凉生冷、久立伤骨<br/>");
+                sb.append("<font color='#FFD700'>穴位：</font>涌泉·肾俞·太溪，常按可固肾培元"); break;
+        }
+
         sb.append("<br/><br/>").append(getSeasonHealthDetail(wuXing));
         return sb.toString();
     }
@@ -1102,19 +1202,55 @@ public class DestinyCalculator {
     public static String getSocialAnalysisRich(String dayGan, String wuXing, String yShen, String mShen, String tShen, String yearGan, String zodiac, boolean isStrong, boolean isWeak,
                                                  String yearZhi, String monthZhi, String dayZhi, String timeZhi) {
         StringBuilder sb = new StringBuilder();
-        
+
+        sb.append("<font color='#8899AA'>【社交特质】</font><br/>");
         switch (wuXing) {
-            case "木": sb.append("待人真诚，如大树般予人依靠。"); break;
-            case "火": sb.append("热情开朗，善带动气氛。"); break;
-            case "土": sb.append("敦厚守信，人人信赖。"); break;
-            case "金": sb.append("重义守信，口碑极佳。"); break;
-            case "水": sb.append("善解人意，与各色人等皆能交融。"); break;
+            case "木":
+                sb.append("待人真诚，如<font color='#90EE90'><b>大树</b></font>般予人依靠，重情义、讲原则。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你是朋友圈里的「老好人」，乐于庇护他人，但有时过于固执己见。</font><br/>");
+                break;
+            case "火":
+                sb.append("热情开朗，如<font color='#FF6B6B'><b>明烛</b></font>般带动气氛，善交际、爱表现。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你是聚会中的「气氛组」，光芒四射，但有时过于急躁冲动。</font><br/>");
+                break;
+            case "土":
+                sb.append("敦厚守信，如<font color='#FFD700'><b>大地</b></font>般人人信赖，稳重可靠、重承诺。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你是朋友眼中的「定海神针」，踏实靠谱，但有时过于保守慢热。</font><br/>");
+                break;
+            case "金":
+                sb.append("重义守信，如<font color='#C0C0C0'><b>金石</b></font>般口碑极佳，刚毅果决、讲规矩。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你是圈中的「正义使者」，爱憎分明，但有时过于刚直易得罪人。</font><br/>");
+                break;
+            case "水":
+                sb.append("善解人意，如<font color='#87CEEB'><b>清泉</b></font>般与各色人等皆能交融，圆融变通。<br/>");
+                sb.append("<font color='#8899AA'>通俗说：你是人脉里的「润滑剂」，八面玲珑，但有时过于圆滑失原则。</font><br/>");
+                break;
         }
-        
-        if (isStrong) sb.append("团体中往往为领袖，朋友有难第一个想到你。余力学人、亦顾自己。");
-        else if (isWeak) sb.append("贵人缘佳，总有援手。多交良师益友，携手同进。");
-        else sb.append("低调有度，恰到好处的存在感，让人如沐春风。");
-        sb.append("<br/>属").append(zodiac).append("，有较好的适应力和独特魅力。");
+
+        sb.append("<br/><font color='#8899AA'>【强弱影响】</font><br/>");
+        if (isStrong) {
+            sb.append("身强主<font color='#90EE90'><b>领袖型</b></font>社交：团体中往往为领袖，朋友有难第一个想到你。");
+            sb.append("宜学会「兼听则明」，勿因刚强而独断，多留余地给他人，方能聚人聚心。<br/>");
+        } else if (isWeak) {
+            sb.append("身弱主<font color='#87CEEB'><b>贵人型</b></font>社交：贵人缘佳，总有援手。");
+            sb.append("宜多交良师益友，借助团队力量成就自己，「独木难成林」是你的写照。<br/>");
+        } else {
+            sb.append("中和主<font color='#FFD700'><b>中庸型</b></font>社交：低调有度，恰到好处的存在感，让人如沐春风。");
+            sb.append("进退有度，既能融入群体又保独立，是难得的社交高手。<br/>");
+        }
+
+        // 合作贵人方位
+        sb.append("<br/><font color='#8899AA'>【贵人方位】</font><br/>");
+        sb.append(getDirectionAdvice(wuXing)).append("方位最旺，往此方向求贤访友、拓展人脉，多有意外之喜。<br/>");
+        switch (wuXing) {
+            case "木": sb.append("合作首选：属<font color='#90EE90'><b>水</b></font>之人（生扶你）与属<font color='#90EE90'><b>木</b></font>之人（同类相助）。"); break;
+            case "火": sb.append("合作首选：属<font color='#90EE90'><b>木</b></font>之人（生扶你）与属<font color='#90EE90'><b>火</b></font>之人（同类相助）。"); break;
+            case "土": sb.append("合作首选：属<font color='#90EE90'><b>火</b></font>之人（生扶你）与属<font color='#90EE90'><b>土</b></font>之人（同类相助）。"); break;
+            case "金": sb.append("合作首选：属<font color='#90EE90'><b>土</b></font>之人（生扶你）与属<font color='#90EE90'><b>金</b></font>之人（同类相助）。"); break;
+            case "水": sb.append("合作首选：属<font color='#90EE90'><b>金</b></font>之人（生扶你）与属<font color='#90EE90'><b>水</b></font>之人（同类相助）。"); break;
+        }
+
+        sb.append("<br/>属").append(zodiac).append("，与三合局之人最为契合，有较好的适应力和独特魅力。");
         sb.append("<br/><br/>").append(getTianYiGuiRenAnalysis(dayGan, yearZhi, monthZhi, dayZhi, timeZhi));
         return sb.toString();
     }
