@@ -2463,4 +2463,232 @@ public class DestinyCalculator {
 
         return sb.toString();
     }
+
+    // ═══════════════════════════════════
+    // 日期转四柱干支 + 当日宜忌
+    // ═══════════════════════════════════
+
+    private static final String[] TIANGAN_ARR = {"甲","乙","丙","丁","戊","己","庚","辛","壬","癸"};
+    private static final String[] DIZHI_ARR = {"子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"};
+    private static final String[] LIUJIAZI_ARR = {
+        "甲子","乙丑","丙寅","丁卯","戊辰","己巳","庚午","辛未","壬申","癸酉",
+        "甲戌","乙亥","丙子","丁丑","戊寅","己卯","庚辰","辛巳","壬午","癸未",
+        "甲申","乙酉","丙戌","丁亥","戊子","己丑","庚寅","辛卯","壬辰","癸巳",
+        "甲午","乙未","丙申","丁酉","戊戌","己亥","庚子","辛丑","壬寅","癸卯",
+        "甲辰","乙巳","丙午","丁未","戊申","己酉","庚戌","辛亥","壬子","癸丑",
+        "甲寅","乙卯","丙辰","丁巳","戊午","己未","庚申","辛酉","壬戌","癸亥"
+    };
+
+    // 计算年柱（立春为界，这里按公历年份近似，以春节后当年干支计）
+    public static String getYearPillar(int year) {
+        int baseYear = 1900;
+        int baseIndex = 36; // 庚子
+        int yearDiff = year - baseYear;
+        int idx = (baseIndex + yearDiff) % 60;
+        if (idx < 0) idx += 60;
+        return LIUJIAZI_ARR[idx];
+    }
+
+    // 计算月柱（按节气月，简化版：以公历月近似，用五虎遁）
+    public static String getMonthPillar(int year, int month, int day) {
+        String yearGan = getYearPillar(year).substring(0, 1);
+        String monthZhi = getMonthZhiSimple(month, day);
+
+        // 五虎遁
+        Map<String, String> wuHuDun = new HashMap<>();
+        wuHuDun.put("甲", "丙"); wuHuDun.put("己", "丙");
+        wuHuDun.put("乙", "戊"); wuHuDun.put("庚", "戊");
+        wuHuDun.put("丙", "庚"); wuHuDun.put("辛", "庚");
+        wuHuDun.put("丁", "壬"); wuHuDun.put("壬", "壬");
+        wuHuDun.put("戊", "甲"); wuHuDun.put("癸", "甲");
+
+        String yinGan = wuHuDun.get(yearGan);
+        if (yinGan == null) yinGan = "丙";
+
+        int yinIdx = indexOf(TIANGAN_ARR, yinGan);
+        int zhiIdx = indexOf(DIZHI_ARR, monthZhi);
+        int ganIdx = (yinIdx + zhiIdx) % 10;
+        return TIANGAN_ARR[ganIdx] + monthZhi;
+    }
+
+    private static String getMonthZhiSimple(int month, int day) {
+        if (month == 1) return day < 6 ? "子" : "丑";
+        if (month == 2) return day < 4 ? "丑" : "寅";
+        Map<Integer, String> map = new HashMap<>();
+        map.put(3, "卯"); map.put(4, "辰"); map.put(5, "巳");
+        map.put(6, "午"); map.put(7, "未"); map.put(8, "申");
+        map.put(9, "酉"); map.put(10, "戌"); map.put(11, "亥"); map.put(12, "子");
+        return map.get(month);
+    }
+
+    // 计算日柱（1900年1月1日为甲戌日，索引10）
+    public static String getDayPillar(int year, int month, int day) {
+        try {
+            java.util.Calendar target = java.util.Calendar.getInstance();
+            target.set(year, month - 1, day);
+            java.util.Calendar base = java.util.Calendar.getInstance();
+            base.set(1900, 0, 1);
+            long daysDiff = (target.getTimeInMillis() - base.getTimeInMillis()) / (1000L * 60 * 60 * 24);
+            int idx = (10 + (int) daysDiff) % 60;
+            if (idx < 0) idx += 60;
+            return LIUJIAZI_ARR[idx];
+        } catch (Exception e) {
+            return "甲午";
+        }
+    }
+
+    // 计算时柱（简化版，按小时）
+    public static String getTimePillar(int hour, int minute, String dayGan) {
+        int adjHour = (minute >= 45) ? (hour + 1) % 24 : hour;
+        String timeZhi;
+        if (adjHour == 23 || adjHour == 0) timeZhi = "子";
+        else timeZhi = DIZHI_ARR[(adjHour + 1) / 2 % 12];
+
+        // 五鼠遁
+        Map<String, String> wuShuDun = new HashMap<>();
+        wuShuDun.put("甲", "甲"); wuShuDun.put("己", "甲");
+        wuShuDun.put("乙", "丙"); wuShuDun.put("庚", "丙");
+        wuShuDun.put("丙", "戊"); wuShuDun.put("辛", "戊");
+        wuShuDun.put("丁", "庚"); wuShuDun.put("壬", "庚");
+        wuShuDun.put("戊", "壬"); wuShuDun.put("癸", "壬");
+
+        String ziGan = wuShuDun.get(dayGan);
+        if (ziGan == null) ziGan = "甲";
+        int ziIdx = indexOf(TIANGAN_ARR, ziGan);
+        int zhiIdx = indexOf(DIZHI_ARR, timeZhi);
+        int ganIdx = (ziIdx + zhiIdx) % 10;
+        return TIANGAN_ARR[ganIdx] + timeZhi;
+    }
+
+    private static int indexOf(String[] arr, String key) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals(key)) return i;
+        }
+        return 0;
+    }
+
+    // 十二建除（以日支定建除）
+    private static final String[] JIANCHU = {"建","除","满","平","定","执","破","危","成","收","开","闭"};
+
+    public static String getJianChu(String dayZhi, String monthZhi) {
+        int monthIdx = indexOf(DIZHI_ARR, monthZhi);
+        int dayIdx = indexOf(DIZHI_ARR, dayZhi);
+        int idx = (dayIdx - monthIdx + 12) % 12;
+        return JIANCHU[idx];
+    }
+
+    // 当日宜忌（基于日干支、十二建除、黄历常用宜忌）
+    public static String getDailyYiJi(int year, int month, int day) {
+        StringBuilder sb = new StringBuilder();
+
+        String dayPillar = getDayPillar(year, month, day);
+        String dayGan = dayPillar.substring(0, 1);
+        String dayZhi = dayPillar.substring(1, 2);
+        String monthPillar = getMonthPillar(year, month, day);
+        String monthZhi = monthPillar.substring(1, 2);
+        String jianchu = getJianChu(dayZhi, monthZhi);
+        String dayNaYin = getNayin(dayGan, dayZhi);
+        String dayWuXing = getWuXing(dayGan);
+
+        sb.append("<font color='#FFD700'><b>").append(year).append("年").append(month).append("月").append(day).append("日</b></font>");
+        sb.append("　<font color='#90EE90'><b>").append(dayPillar).append("日</b></font>");
+        sb.append(" · ").append(dayNaYin);
+        sb.append(" · 建除「<font color='#FFD700'><b>").append(jianchu).append("</b></font>」");
+        sb.append("<br/>");
+
+        // 宜
+        sb.append("<br/><font color='#90EE90'><b>宜：</b></font>");
+        sb.append(getYiList(jianchu, dayZhi, dayGan, dayWuXing));
+        sb.append("<br/>");
+
+        // 忌
+        sb.append("<br/><font color='#FF6B6B'><b>忌：</b></font>");
+        sb.append(getJiList(jianchu, dayZhi, dayGan));
+        sb.append("<br/>");
+
+        // 通俗解读
+        sb.append("<br/><font color='#8899AA'>");
+        sb.append("「").append(jianchu).append("」日解读：").append(getJianChuExplanation(jianchu));
+        sb.append("</font>");
+
+        return sb.toString();
+    }
+
+    private static String getYiList(String jianchu, String dayZhi, String dayGan, String dayWuXing) {
+        StringBuilder yi = new StringBuilder();
+        switch (jianchu) {
+            case "建": yi.append("出行、上任、签约、动土、求财、祈福"); break;
+            case "除": yi.append("除服、疗病、解除、扫舍、求医、整容"); break;
+            case "满": yi.append("祈福、进财、开光、开市、嫁娶、立券"); break;
+            case "平": yi.append("修造、安床、交易、平治道涂、出行"); break;
+            case "定": yi.append("祭祀、祈福、嫁娶、安床、置业、签约"); break;
+            case "执": yi.append("捕捉、狩猎、修造、栽种、开市、纳财"); break;
+            case "破": yi.append("求医、破屋坏垣、拆除、求医治病"); break;
+            case "危": yi.append("祭祀、安床、祈福、登高、出行"); break;
+            case "成": yi.append("嫁娶、开市、立券、入学、求职、出行"); break;
+            case "收": yi.append("进财、纳畜、收藏、收官、嫁娶、祈福"); break;
+            case "开": yi.append("开工、开业、出行、求学、搬家、动土"); break;
+            case "闭": yi.append("安葬、筑堤、收藏、闭关、修仓"); break;
+        }
+
+        // 日支附加宜
+        if (dayZhi.equals("子") || dayZhi.equals("午")) yi.append("、祈福");
+        if (dayZhi.equals("卯") || dayZhi.equals("酉")) yi.append("、祭祀");
+        if (dayZhi.equals("寅") || dayZhi.equals("申")) yi.append("、出行");
+        if (dayZhi.equals("辰") || dayZhi.equals("戌")) yi.append("、修造");
+        if (dayZhi.equals("巳") || dayZhi.equals("亥")) yi.append("、求谋");
+
+        // 日干附加
+        if (dayGan.equals("甲") || dayGan.equals("乙")) yi.append("、栽种");
+        if (dayGan.equals("丙") || dayGan.equals("丁")) yi.append("、会友");
+        if (dayGan.equals("戊") || dayGan.equals("己")) yi.append("、置业");
+        if (dayGan.equals("庚") || dayGan.equals("辛")) yi.append("、交易");
+        if (dayGan.equals("壬") || dayGan.equals("癸")) yi.append("、出游");
+
+        return yi.toString();
+    }
+
+    private static String getJiList(String jianchu, String dayZhi, String dayGan) {
+        StringBuilder ji = new StringBuilder();
+        switch (jianchu) {
+            case "建": ji.append("安葬、破土、大事不宜妄动"); break;
+            case "除": ji.append("嫁娶、开市、出行、远行"); break;
+            case "满": ji.append("服药、求医、打官司、下葬"); break;
+            case "平": ji.append("诉讼、争执、动土、搬家"); break;
+            case "定": ji.append("诉讼、出行、搬迁、求医"); break;
+            case "执": ji.append("出行、搬迁、开市、投资"); break;
+            case "破": ji.append("嫁娶、开市、出行、动土、祈福"); break;
+            case "危": ji.append("登高、远行、冒险、投资"); break;
+            case "成": ji.append("诉讼、打官司、词讼"); break;
+            case "收": ji.append("出行、搬迁、动土、开仓"); break;
+            case "开": ji.append("安葬、关闭、收藏、诉讼"); break;
+            case "闭": ji.append("开市、出行、开工、嫁娶、动土"); break;
+        }
+
+        // 日支附加忌
+        if (dayZhi.equals("子")) ji.append("、属马之人忌大事");
+        if (dayZhi.equals("午")) ji.append("、属鼠之人忌大事");
+        if (dayZhi.equals("卯")) ji.append("、属鸡之人忌大事");
+        if (dayZhi.equals("酉")) ji.append("、属兔之人忌大事");
+
+        return ji.toString();
+    }
+
+    private static String getJianChuExplanation(String jianchu) {
+        switch (jianchu) {
+            case "建": return "建日为一月之始，如月初建寅，万物生发。宜开创进取，但气势初起，忌过度扩张，稳扎稳打为上。";
+            case "除": return "除日为除旧布新之日，如扫庭除秽。宜清理整顿、解决旧问题，但忌开启新局，先除旧再迎新。";
+            case "满": return "满日为圆满充盈之日，如满月当空。宜求财祈福、成事立业，但满则溢，忌贪多无厌、骄傲自满。";
+            case "平": return "平日为平稳中和之日，如水平流。宜守成持平、处理日常事务，不激不厉，稳步推进。";
+            case "定": return "定日为安定稳固之日，如磐石落地。宜定计划、签合同、安床置业，但过于安定则难有突破。";
+            case "执": return "执日为执掌控制之日，如持印掌权。宜坚持目标、执行计划，但须防固执己见、进退失据。";
+            case "破": return "破日为冲破毁坏之日，如冰破春融。宜破旧立新、拆除旧物，忌谋新事、行大礼，先破后立之道。";
+            case "危": return "危日为危难高耸之日，如临深渊。宜谨慎行事、居安思危，忌冒险激进，稳字当头可化险为夷。";
+            case "成": return "成日为成就圆满之日，如功成名就。宜办大事、求结果，诸事易成，但成则思退，方保长久。";
+            case "收": return "收日为收获收敛之日，如秋收冬藏。宜收官总结、纳财收藏，忌开创新局，宜收成不宜播种。";
+            case "开": return "开日为开启舒展之日，如春暖花开。宜开工开业、出行求学，万象更新，运势开启，诸事可为。";
+            case "闭": return "闭日为关闭收藏之日，如冬藏蛰居。宜闭关自省、收敛资源，忌大开大合，韬光养晦待时来。";
+            default: return "十二建除为古代择日之法，以月建为基准，循环十二日，各有宜忌。";
+        }
+    }
 }

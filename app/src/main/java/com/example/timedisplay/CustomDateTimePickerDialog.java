@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +17,7 @@ public class CustomDateTimePickerDialog extends Dialog {
 
     private NumberPicker yearPicker, monthPicker, dayPicker, hourPicker, minutePicker;
     private TextView cancelButton, confirmButton;
+    private TextView tvYiJi;
     private OnDateTimeSetListener listener;
 
     public interface OnDateTimeSetListener {
@@ -38,6 +40,38 @@ public class CustomDateTimePickerDialog extends Dialog {
 
         initPickers(currentCalendar);
         setupButtons();
+        setupYiJi();
+    }
+
+    private void setupYiJi() {
+        tvYiJi = findViewById(R.id.tvYiJi);
+        if (tvYiJi != null) {
+            updateYiJi();
+        }
+
+        // 年/月变化时同时更新日期范围和宜忌
+        NumberPicker.OnValueChangeListener dayAndYiJiUpdater = (picker, oldVal, newVal) -> {
+            updateDayRange();
+            updateYiJi();
+        };
+        yearPicker.setOnValueChangedListener(dayAndYiJiUpdater);
+        monthPicker.setOnValueChangedListener(dayAndYiJiUpdater);
+
+        // 日变化时更新宜忌
+        dayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> updateYiJi());
+    }
+
+    private void updateYiJi() {
+        if (tvYiJi == null) return;
+        try {
+            int year = yearPicker.getValue();
+            int month = monthPicker.getValue();
+            int day = dayPicker.getValue();
+            String html = DestinyCalculator.getDailyYiJi(year, month, day);
+            tvYiJi.setText(Html.fromHtml(html));
+        } catch (Exception e) {
+            tvYiJi.setText("宜忌加载中...");
+        }
     }
 
     private void initPickers(Calendar calendar) {
