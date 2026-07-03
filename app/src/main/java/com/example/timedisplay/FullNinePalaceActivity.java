@@ -1195,18 +1195,18 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getNineStarsDesc(String[] stars) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>九星主天时吉凶，决定事情发展趋势。</font><br/><br/>");
+        desc.append("<font color='#8899AA'>九星主天时吉凶</font><br/><br/>");
 
         String[][] starInfo = {
-            {"天蓬", "吉星", "#90EE90", "水星·智谋财禄，利求财投资；忌水泛破财"},
-            {"天任", "吉星", "#98FB98", "土星·诚信稳定，利置业投资；忌固执阻滞"},
-            {"天冲", "凶星", "#FF6B6B", "木星·勇猛行动，利果断进取；忌冲动争斗"},
-            {"天辅", "吉星", "#ADFF2F", "木星·文昌贵人，利考试文书；忌桃花泛滥"},
-            {"天英", "平星", "#FFD700", "火星·名声光明，利求名展示；忌急躁冒进"},
-            {"天芮", "凶星", "#DC143C", "土星·疾病障碍，利学习研究；忌久病不愈"},
-            {"天柱", "平星", "#FFA500", "金星·变革决断，利改革突破；忌刑伤争斗"},
-            {"天心", "吉星", "#90EE90", "金星·谋略医道，利策划管理；忌药石无功"},
-            {"天禽", "吉星", "#98FB98", "土星·中正贵人，利协调中和；忌优柔寡断"}
+            {"天蓬", "吉星", "#90EE90", "水星·智谋，利投资；忌破财"},
+            {"天任", "吉星", "#98FB98", "土星·诚信，利置业；忌阻滞"},
+            {"天冲", "凶星", "#FF6B6B", "木星·勇猛，利进取；忌冲动"},
+            {"天辅", "吉星", "#ADFF2F", "木星·文昌，利考试；忌桃花"},
+            {"天英", "平星", "#FFD700", "火星·名声，利求名；忌急躁"},
+            {"天芮", "凶星", "#DC143C", "土星·疾病，利学习；忌久病"},
+            {"天柱", "平星", "#FFA500", "金星·变革，利改革；忌争斗"},
+            {"天心", "吉星", "#90EE90", "金星·谋略，利策划；忌药石"},
+            {"天禽", "吉星", "#98FB98", "土星·中正，利协调；忌优柔"}
         };
 
         desc.append("<font color='#FFD700'><b>吉星</b></font><br/>");
@@ -1238,17 +1238,17 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getEightDoorsDesc(String[] doors) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>八门主人事吉凶，决定行动成败。</font><br/><br/>");
+        desc.append("<font color='#8899AA'>八门主人事吉凶</font><br/><br/>");
 
         String[][] doorInfo = {
-            {"休", "吉门", "#90EE90", "水门·休息养生，百事皆宜，利见贵人"},
-            {"生", "吉门", "#98FB98", "土门·最利求财开业，谋事得利，八门之首"},
-            {"伤", "凶门", "#FF6B6B", "木门·损伤争斗，出行不利，易伤灾官非"},
-            {"杜", "平门", "#FFD700", "木门·闭塞隐藏，宜守不宜攻，适合密谈"},
-            {"景", "平门", "#FFA500", "火门·名声文书，利考试求名，吉凶参半"},
-            {"死", "凶门", "#DC143C", "土门·衰败丧事，百事不宜，宜镇不宜动"},
-            {"惊", "凶门", "#FF6B6B", "金门·惊恐口舌，官非诉讼，宜静不宜动"},
-            {"开", "吉门", "#ADFF2F", "金门·通达顺利，贵人相助，利开业求职"}
+            {"休", "吉门", "#90EE90", "水门·休养，百事皆宜"},
+            {"生", "吉门", "#98FB98", "土门·求财，谋事得利"},
+            {"伤", "凶门", "#FF6B6B", "木门·损伤，出行不利"},
+            {"杜", "平门", "#FFD700", "木门·闭塞，宜守不宜攻"},
+            {"景", "平门", "#FFA500", "火门·名声，利考试求名"},
+            {"死", "凶门", "#DC143C", "土门·衰败，百事不宜"},
+            {"惊", "凶门", "#FF6B6B", "金门·惊恐，官非诉讼"},
+            {"开", "吉门", "#ADFF2F", "金门·通达，贵人相助"}
         };
 
         desc.append("<font color='#FFD700'><b>吉门</b></font><br/>");
@@ -1280,17 +1280,17 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getEightGodsDesc(String[] gods) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>八神主外部环境与神秘力量影响。</font><br/><br/>");
+        desc.append("<font color='#8899AA'>八神主外部影响</font><br/><br/>");
 
         String[][] godInfo = {
-            {"值符", "吉神", "#90EE90", "诸神之首·尊贵权力，贵人相助，万事大吉"},
-            {"螣蛇", "凶神", "#FF6B6B", "虚惊之神·怪异缠绕，虚惊恐慌，宜铜器化解"},
-            {"太阴", "吉神", "#98FB98", "庇护之神·暗中助力，贵人庇佑，宜密谋策划"},
-            {"六合", "吉神", "#ADFF2F", "和合之神·合作婚姻，交易和谈，人际和谐"},
-            {"白虎", "凶神", "#DC143C", "杀伐之神·血光灾祸，疾病争斗，宜静水化解"},
-            {"玄武", "凶神", "#FF6B6B", "盗贼之神·偷盗欺骗，暧昧小人，宜加强防范"},
-            {"九地", "平神", "#FFD700", "稳固之神·沉稳蓄势，保守守成，宜静不宜动"},
-            {"九天", "吉神", "#90EE90", "升腾之神·飞黄腾达，进取远行，气势磅礴"}
+            {"值符", "吉神", "#90EE90", "尊贵权力，贵人相助"},
+            {"螣蛇", "凶神", "#FF6B6B", "怪异缠绕，虚惊恐慌"},
+            {"太阴", "吉神", "#98FB98", "暗中助力，贵人庇佑"},
+            {"六合", "吉神", "#ADFF2F", "合作婚姻，交易和谈"},
+            {"白虎", "凶神", "#DC143C", "血光灾祸，疾病争斗"},
+            {"玄武", "凶神", "#FF6B6B", "偷盗欺骗，暧昧小人"},
+            {"九地", "平神", "#FFD700", "沉稳蓄势，保守守成"},
+            {"九天", "吉神", "#90EE90", "飞黄腾达，进取远行"}
         };
 
         desc.append("<font color='#FFD700'><b>吉神</b></font><br/>");
@@ -1321,7 +1321,7 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getPalacesDesc(String[] palaces, String[] stars, String[] doors, String[] gods, String[] lucks) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>九宫综合分析，星门神组合定吉凶：</font><br/>");
+        desc.append("<font color='#8899AA'>九宫组合定吉凶</font><br/>");
         for (int i = 0; i < 9; i++) {
             String palace = palaces[i];
             String star = stars[i];
@@ -1376,89 +1376,89 @@ public class FullNinePalaceActivity extends Activity {
     private String getCareerAdvice(String door, String star) {
         if (door == null) return "谨慎行事";
         switch (door) {
-            case "开": return "事业强劲，宜主动出击，把握良机";
-            case "生": return "事业财运两旺，宜把握机遇，积极进取";
-            case "休": return "宜休息调整，学习进修，规划未来";
-            case "景": return "宜展示才华，积极表现，争取认可";
-            case "伤": return "事业易损，宜稳守待时，防小人作祟";
-            case "杜": return "事业受阻，宜静守待变，加强沟通";
-            case "死": return "事业低迷，防受挫失机，宜守不宜攻";
-            case "惊": return "防口舌是非，宜慎言慎行，低调处事";
-            default: return "事业平稳，宜按部就班";
+            case "开": return "宜主动出击，把握良机";
+            case "生": return "宜把握机遇，积极进取";
+            case "休": return "宜休息调整，学习进修";
+            case "景": return "宜展示才华，积极表现";
+            case "伤": return "宜稳守待时，防小人";
+            case "杜": return "宜静守待变，加强沟通";
+            case "死": return "防受挫失机，宜守不宜攻";
+            case "惊": return "宜慎言慎行，低调处事";
+            default: return "宜按部就班";
         }
     }
     
     private String getWealthAdvice(String door, String star) {
         if (door == null) return "谨慎理财";
         switch (door) {
-            case "生": return "财运旺盛，宜积极求财，投资理财";
-            case "开": return "财源广进，宜大胆尝试，创造财富";
-            case "休": return "宜稳健理财，储蓄守财，不冒风险";
-            case "景": return "财运一般，宜量力而行，见好就收";
-            case "伤": return "防破财，不宜投资，守财为主";
-            case "杜": return "财运受阻，宜静观其变，等待时机";
-            case "死": return "财运低迷，守财为主，防破财";
-            case "惊": return "防财务纠纷，不宜借贷，谨慎理财";
-            default: return "财运平稳，宜稳健理财";
+            case "生": return "宜积极求财，投资理财";
+            case "开": return "宜大胆尝试，创造财富";
+            case "休": return "宜稳健理财，储蓄守财";
+            case "景": return "宜量力而行，见好就收";
+            case "伤": return "不宜投资，守财为主";
+            case "杜": return "宜静观其变，等待时机";
+            case "死": return "守财为主，防破财";
+            case "惊": return "不宜借贷，谨慎理财";
+            default: return "宜稳健理财";
         }
     }
     
     private String getRelationshipAdvice(String door, String star) {
         if (door == null) return "谨慎交往";
         switch (door) {
-            case "休": return "人际和谐，宜主动沟通，增进感情";
-            case "生": return "感情运势佳，适合表白求婚";
-            case "开": return "社交运势好，宜拓展人脉，结识贵人";
+            case "休": return "宜主动沟通，增进感情";
+            case "生": return "适合表白求婚";
+            case "开": return "宜拓展人脉，结识贵人";
             case "景": return "宜展示魅力，积极社交";
-            case "惊": return "防感情风波，宜冷静沟通";
-            case "伤": return "感情易受伤，宜克制情绪";
-            case "死": return "感情冷淡，宜反思修复";
-            case "杜": return "沟通不畅，宜主动沟通，消除误会";
-            default: return "感情平稳，宜顺其自然";
+            case "惊": return "防感情风波，冷静沟通";
+            case "伤": return "宜克制情绪";
+            case "死": return "宜反思修复";
+            case "杜": return "宜主动沟通，消除误会";
+            default: return "宜顺其自然";
         }
     }
     
     private String getHealthAdvice(String door, String star) {
         if (door == null) return "注意保养";
         switch (door) {
-            case "休": return "宜养生休息，劳逸结合，保证睡眠";
-            case "生": return "身体健康，宜适度运动，增强体质";
-            case "开": return "精力充沛，宜户外活动，保持活力";
-            case "死": return "注意健康，防身体不适，定期检查";
+            case "休": return "宜养生休息，劳逸结合";
+            case "生": return "宜适度运动，增强体质";
+            case "开": return "宜户外活动，保持活力";
+            case "死": return "防身体不适，定期检查";
             case "伤": return "防意外伤害，注意安全";
-            case "景": return "防心火过旺，宜清淡饮食，避免熬夜";
-            case "杜": return "防情绪郁结，宜放松心情";
-            case "惊": return "防精神紧张，宜静心安神";
-            default: return "身体平稳，宜保持良好习惯";
+            case "景": return "宜清淡饮食，避免熬夜";
+            case "杜": return "防情绪郁结，放松心情";
+            case "惊": return "防精神紧张，静心安神";
+            default: return "宜保持良好习惯";
         }
     }
     
     private String getStudyAdvice(String door, String star) {
         if (door == null) return "勤奋学习";
         switch (door) {
-            case "景": return "学习运势佳，宜刻苦钻研，把握良机";
-            case "开": return "思维开阔，学习效率高，宜拓展知识";
-            case "生": return "学业进步，适合备考复习，技能提升";
-            case "休": return "宜静心学习，巩固知识，温故知新";
-            case "杜": return "学习受阻，宜多思考实践，克服困难";
-            case "伤": return "学习状态差，防半途而废，需坚持";
-            case "死": return "学习低迷，宜调整心态，寻找方法";
-            case "惊": return "防考试紧张，宜放松心态，沉着应对";
-            default: return "学习平稳，宜循序渐进";
+            case "景": return "宜刻苦钻研，把握良机";
+            case "开": return "宜拓展知识，提高效率";
+            case "生": return "适合备考复习，技能提升";
+            case "休": return "宜静心学习，温故知新";
+            case "杜": return "宜多思考实践，克服困难";
+            case "伤": return "需坚持，防半途而废";
+            case "死": return "宜调整心态，寻找方法";
+            case "惊": return "宜放松心态，沉着应对";
+            default: return "宜循序渐进";
         }
     }
     
     private String getTravelAdvice(String door, String star) {
         if (door == null) return "谨慎出行";
         switch (door) {
-            case "开": return "出行顺利，适合商务出差、旅游观光";
-            case "休": return "宜休闲出行，适合度假放松、短途旅行";
-            case "生": return "出行吉利，适合远足探险、求财出行";
-            case "景": return "宜观光游览，适合拍照打卡、文化体验";
-            case "惊": return "出行多波折，防交通延误，谨慎出行";
-            case "伤": return "防出行意外，注意交通安全";
-            case "死": return "不宜远行，在家为宜，防意外";
-            case "杜": return "出行受阻，防路途不便，谨慎安排";
+            case "开": return "出行顺利，适合出差旅游";
+            case "休": return "宜休闲出行，度假放松";
+            case "生": return "出行吉利，适合远足求财";
+            case "景": return "宜观光游览，文化体验";
+            case "惊": return "防交通延误，谨慎出行";
+            case "伤": return "防出行意外，注意安全";
+            case "死": return "不宜远行，在家为宜";
+            case "杜": return "出行受阻，谨慎安排";
             default: return "出行平稳，注意安全";
         }
     }
@@ -1466,14 +1466,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getDietAdvice(String door, String star) {
         if (door == null) return "饮食清淡";
         switch (door) {
-            case "生": return "宜进补养生，营养均衡，适当进补";
-            case "休": return "宜清淡饮食，素食调理，减轻肠胃负担";
-            case "开": return "宜社交聚餐，商务宴请，朋友聚会";
-            case "景": return "宜清热降火，清淡饮食，避免辛辣";
-            case "死": return "饮食需谨慎，注意卫生，避免生冷";
-            case "伤": return "防饮食损伤，节制饮食，不暴饮暴食";
-            case "惊": return "防情绪性进食，保持规律饮食";
-            case "杜": return "宜简单饮食，家常便饭，口味清淡";
+            case "生": return "宜进补养生，营养均衡";
+            case "休": return "宜清淡饮食，素食调理";
+            case "开": return "宜社交聚餐，朋友聚会";
+            case "景": return "宜清热降火，清淡饮食";
+            case "死": return "饮食需谨慎，注意卫生";
+            case "伤": return "节制饮食，不暴饮暴食";
+            case "惊": return "保持规律饮食";
+            case "杜": return "宜简单饮食，家常便饭";
             default: return "饮食宜规律，营养均衡";
         }
     }
@@ -1481,14 +1481,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getSocialAdvice(String door, String star) {
         if (door == null) return "谨慎交友";
         switch (door) {
-            case "开": return "社交运势佳，宜积极社交，广结善缘";
-            case "休": return "人际和谐，适合维系旧友、家庭聚会";
-            case "生": return "宜合作共赢，商务合作，团队协作";
-            case "景": return "宜展示自我，参加活动，提升影响力";
-            case "惊": return "防口舌是非，宜少言多行";
-            case "伤": return "人际紧张，防朋友反目，宜低调";
-            case "死": return "宜减少社交，不宜聚会应酬";
-            case "杜": return "社交受阻，防沟通不畅，宜主动沟通";
+            case "开": return "宜积极社交，广结善缘";
+            case "休": return "适合维系旧友，家庭聚会";
+            case "生": return "宜合作共赢，团队协作";
+            case "景": return "宜展示自我，参加活动";
+            case "惊": return "防口舌是非，少言多行";
+            case "伤": return "人际紧张，宜低调";
+            case "死": return "宜减少社交，不宜聚会";
+            case "杜": return "社交受阻，宜主动沟通";
             default: return "社交平稳，顺其自然";
         }
     }
@@ -1496,13 +1496,13 @@ public class FullNinePalaceActivity extends Activity {
     private String getMindAdvice(String door, String star) {
         if (door == null) return "保持平和";
         switch (door) {
-            case "休": return "宜修身养性，放松身心，保持平和";
-            case "生": return "心态积极，保持乐观，好运自来";
-            case "开": return "宜开拓视野，勇于尝试，突破自我";
-            case "景": return "宜保持热情，积极探索，追求美好";
-            case "死": return "宜调整心态，面对困难，寻找转机";
-            case "伤": return "宜保持冷静，克制冲动，三思后行";
-            case "惊": return "宜减少焦虑，放松心情，相信自己";
+            case "休": return "宜修身养性，保持平和";
+            case "生": return "心态积极，保持乐观";
+            case "开": return "宜开拓视野，突破自我";
+            case "景": return "宜保持热情，积极探索";
+            case "死": return "宜调整心态，寻找转机";
+            case "伤": return "宜保持冷静，克制冲动";
+            case "惊": return "宜减少焦虑，放松心情";
             case "杜": return "宜保持耐心，静待时机";
             default: return "保持平常心，顺其自然";
         }
@@ -1602,44 +1602,44 @@ public class FullNinePalaceActivity extends Activity {
         if (door != null) {
             switch (door) {
                 case "开":
-                    yiList.add("开业剪彩"); yiList.add("商务洽谈"); yiList.add("签订合同");
-                    yiList.add("投资理财"); yiList.add("拓展市场");
+                    yiList.add("开业"); yiList.add("洽谈"); yiList.add("签约");
+                    yiList.add("投资"); yiList.add("拓市");
                     break;
                 case "生":
-                    yiList.add("投资理财"); yiList.add("置业购房"); yiList.add("储蓄存款");
-                    yiList.add("合作共赢"); yiList.add("创业发展");
+                    yiList.add("投资"); yiList.add("置业"); yiList.add("储蓄");
+                    yiList.add("合作"); yiList.add("创业");
                     break;
                 case "休":
-                    yiList.add("休息疗养"); yiList.add("调养身体"); yiList.add("学习进修");
-                    yiList.add("考试面试"); yiList.add("旅游度假");
+                    yiList.add("休养"); yiList.add("学习"); yiList.add("考试");
+                    yiList.add("旅游"); yiList.add("进修");
                     break;
                 case "景":
-                    yiList.add("文化教育"); yiList.add("考试培训"); yiList.add("展示才华");
-                    yiList.add("社交应酬"); yiList.add("会议发言");
+                    yiList.add("文教"); yiList.add("考试"); yiList.add("展示");
+                    yiList.add("社交"); yiList.add("会议");
                     break;
                 case "杜":
-                    yiList.add("保守秘密"); yiList.add("隐藏行踪"); yiList.add("低调处事");
-                    yiList.add("暗中调查"); yiList.add("内部沟通");
+                    yiList.add("保密"); yiList.add("隐匿"); yiList.add("低调");
+                    yiList.add("暗查"); yiList.add("内通");
                     break;
                 case "伤":
-                    yiList.add("锻炼身体"); yiList.add("竞技比赛"); yiList.add("短途出行");
-                    yiList.add("团队协作"); yiList.add("开拓进取");
+                    yiList.add("健身"); yiList.add("竞技"); yiList.add("出行");
+                    yiList.add("协作"); yiList.add("开拓");
                     break;
                 case "死":
-                    yiList.add("清理整顿"); yiList.add("总结反思"); yiList.add("守财储蓄");
-                    yiList.add("调整心态"); yiList.add("修复关系");
+                    yiList.add("清理"); yiList.add("反思"); yiList.add("守财");
+                    yiList.add("调心"); yiList.add("修复");
                     break;
                 case "惊":
-                    yiList.add("法律咨询"); yiList.add("风险评估"); yiList.add("谨慎决策");
-                    yiList.add("核实信息"); yiList.add("准备预案");
+                    yiList.add("咨询"); yiList.add("评估"); yiList.add("慎决");
+                    yiList.add("核实"); yiList.add("预案");
                     break;
             }
         }
 
-        yiList.add("祭祀祈福");
-        yiList.add("行善积德");
-        yiList.add("拜访长辈");
-        yiList.add("孝敬父母");
+        yiList.add("祭祀");
+        yiList.add("祈福");
+        yiList.add("行善");
+        yiList.add("敬老");
 
         return yiList.toArray(new String[0]);
     }
@@ -1650,40 +1650,40 @@ public class FullNinePalaceActivity extends Activity {
         if (door != null) {
             switch (door) {
                 case "死":
-                    jiList.add("重大决策"); jiList.add("重要签约"); jiList.add("冒险投资");
-                    jiList.add("远行迁徙"); jiList.add("结婚嫁娶");
+                    jiList.add("决策"); jiList.add("签约"); jiList.add("投资");
+                    jiList.add("远行"); jiList.add("嫁娶");
                     break;
                 case "惊":
-                    jiList.add("重大决策"); jiList.add("重要签约"); jiList.add("公开演讲");
-                    jiList.add("与人争执"); jiList.add("诉讼纠纷");
+                    jiList.add("决策"); jiList.add("签约"); jiList.add("演讲");
+                    jiList.add("争执"); jiList.add("诉讼");
                     break;
                 case "伤":
-                    jiList.add("重大决策"); jiList.add("冒险投资"); jiList.add("远行迁徙");
-                    jiList.add("与人争执"); jiList.add("动土施工");
+                    jiList.add("决策"); jiList.add("投资"); jiList.add("远行");
+                    jiList.add("争执"); jiList.add("动土");
                     break;
                 case "杜":
-                    jiList.add("公开演讲"); jiList.add("展示才华"); jiList.add("社交聚会");
-                    jiList.add("商业洽谈"); jiList.add("公开招标");
+                    jiList.add("演讲"); jiList.add("展示"); jiList.add("社交");
+                    jiList.add("洽谈"); jiList.add("招标");
                     break;
                 case "景":
-                    jiList.add("冒险投资"); jiList.add("高风险活动"); jiList.add("过度娱乐");
-                    jiList.add("酒后驾车"); jiList.add("熬夜通宵");
+                    jiList.add("投资"); jiList.add("高风险"); jiList.add("娱乐");
+                    jiList.add("酒驾"); jiList.add("熬夜");
                     break;
                 case "开":
-                    jiList.add("保守秘密"); jiList.add("隐藏行踪"); jiList.add("闭门造车");
+                    jiList.add("保密"); jiList.add("隐匿"); jiList.add("闭关");
                     break;
                 case "休":
-                    jiList.add("过度劳累"); jiList.add("剧烈运动"); jiList.add("冒险行动");
+                    jiList.add("过劳"); jiList.add("剧动"); jiList.add("冒险");
                     break;
                 case "生":
-                    jiList.add("铺张浪费"); jiList.add("盲目投资"); jiList.add("高风险投机");
+                    jiList.add("浪费"); jiList.add("盲投"); jiList.add("投机");
                     break;
             }
         }
 
-        jiList.add("赌博投机");
-        jiList.add("诉讼纠纷");
-        jiList.add("口舌是非");
+        jiList.add("赌博");
+        jiList.add("诉讼");
+        jiList.add("口舌");
 
         return jiList.toArray(new String[0]);
     }
@@ -1751,14 +1751,14 @@ public class FullNinePalaceActivity extends Activity {
     }
 
     private String getKongWangExplanation(String kongWang) {
-        if (kongWang == null || kongWang.equals("--")) return "空亡指六甲旬中未出现的地支，主事体不实";
+        if (kongWang == null || kongWang.equals("--")) return "空亡主事体不实";
         String[] explanations = {
-            "戌亥空：主孤独空虚，防情感缺失，宜充实内心",
-            "申酉空：主金气不足，防肺呼吸系统，宜润肺养生",
-            "午未空：主火气不足，防心血管系统，宜静心养神",
-            "辰巳空：主土气不足，防脾胃消化系统，宜健脾养胃",
-            "寅卯空：主木气不足，防肝胆神经系统，宜疏肝理气",
-            "子丑空：主水气不足，防肾泌尿系统，宜温补肾阳"
+            "主空虚，防情感，宜充实",
+            "主金弱，防肺疾，宜润肺",
+            "主火弱，防心疾，宜静心",
+            "主土弱，防脾胃，宜健脾",
+            "主木弱，防肝胆，宜疏肝",
+            "主水弱，防肾虚，宜补肾"
         };
         java.util.Map<String, String> map = new java.util.HashMap<>();
         map.put("戌亥", explanations[0]);
@@ -1767,19 +1767,19 @@ public class FullNinePalaceActivity extends Activity {
         map.put("辰巳", explanations[3]);
         map.put("寅卯", explanations[4]);
         map.put("子丑", explanations[5]);
-        return map.getOrDefault(kongWang, "空亡指六甲旬中未出现的地支，主事体不实");
+        return map.getOrDefault(kongWang, "空亡主事体不实");
     }
     
     private String getMaXingExplanation(String maXing) {
-        if (maXing == null || maXing.equals("--")) return "马星主奔波走动，变动迁移";
+        if (maXing == null || maXing.equals("--")) return "马星主奔波变动";
         java.util.Map<String, String> map = new java.util.HashMap<>();
-        map.put("寅", "马星寅：主东方之动，利出行东方，宜积极进取");
-        map.put("午", "马星午：主南方之动，利出行南方，宜热情开朗");
-        map.put("申", "马星申：主西方之动，利出行西方，宜果断行动");
-        map.put("亥", "马星亥：主北方之动，利出行北方，宜智慧变通");
-        map.put("巳", "马星巳：主东南之动，利出行东南，宜灵活机动");
-        map.put("酉", "马星酉：主西北之动，利出行西北，宜精细谋划");
-        return map.getOrDefault(maXing, "马星主奔波走动，变动迁移");
+        map.put("寅", "主动，利出行东方");
+        map.put("午", "主动，利出行南方");
+        map.put("申", "主动，利出行西方");
+        map.put("亥", "主动，利出行北方");
+        map.put("巳", "主动，利出行东南");
+        map.put("酉", "主动，利出行西北");
+        return map.getOrDefault(maXing, "马星主奔波变动");
     }
     
     private String getWangCuiDescription(String[] wangCui, int riGanPalace) {
@@ -1788,11 +1788,11 @@ public class FullNinePalaceActivity extends Activity {
         }
         String status = wangCui[riGanPalace];
         switch (status) {
-            case "旺": return "落宫得令【旺】，气势旺盛，百事顺遂，力量最强";
-            case "相": return "落宫得生【相】，次吉之象，得他人助力，事多有成";
-            case "休": return "落宫休息【休】，平和安宁，不宜过分强求";
-            case "囚": return "落宫受制【囚】，困顿受阻，事多不利，需谨慎";
-            case "死": return "落宫处死【死】，衰败不利，诸事不宜，宜守不宜攻";
+            case "旺": return "气势旺，百事顺，力量最强";
+            case "相": return "次吉，得助力，事多有成";
+            case "休": return "平和安宁，不宜强求";
+            case "囚": return "困顿受阻，事多不利";
+            case "死": return "衰败不利，宜守不宜攻";
             default: return "旺衰状态不明";
         }
     }

@@ -167,10 +167,6 @@ public class DestinyActivity extends android.app.Activity {
         dayZhiLabelL = findViewById(R.id.dayZhiLabelL);
         changshengLabelL = findViewById(R.id.changshengLabelL);
         wuxingSumL = findViewById(R.id.wuxingSumL);
-
-        // 日主五行标签与图标已合并至 dayMasterLabel，隐藏冗余视图
-        if (dayMasterWuXingLabel != null) dayMasterWuXingLabel.setVisibility(android.view.View.GONE);
-        if (dayMasterIcon != null) dayMasterIcon.setVisibility(android.view.View.GONE);
     }
 
     private void populateAll() {
@@ -232,10 +228,10 @@ public class DestinyActivity extends android.app.Activity {
     // ──── populateCore 拆分（8 个子方法）────
 
     private void populateDayMaster() {
-        // 日主大字（合并 emoji 图标，五行详述见 dayDescText）
         String wxEmoji = getWuXingEmoji(dayGanWuXing);
-        setText(dayMasterLabel, dayGan + wxEmoji);
-        setText(dayMasterLabelL, dayGan + " · " + dayGanWuXing);
+        setText(dayMasterLabel, dayGan);
+        setText(dayMasterWuXingLabel, dayGan + " · " + dayGanWuXing);
+        if (dayMasterIcon != null) dayMasterIcon.setText(wxEmoji);
     }
 
     private void populateDayBranch() {
@@ -255,22 +251,21 @@ public class DestinyActivity extends android.app.Activity {
     }
 
     private void populateStrength() {
-        // 身强身弱标签 + 通俗建议（判据汇总见 wuxingPowerText，避免多处复述）
         String strengthStr;
         int strengthColor;
         String strengthHintStr;
         if (isStrong) {
             strengthStr = "🔥 身强";
             strengthColor = Color.parseColor("#FF6B6B");
-            strengthHintStr = "宜泄耗克制，适合创业发展";
+            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜泄耗";
         } else if (isWeak) {
             strengthStr = "💧 身弱";
             strengthColor = Color.parseColor("#87CEEB");
-            strengthHintStr = "宜生扶比和，适合稳健守成";
+            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜生扶";
         } else {
             strengthStr = "☯ 中和";
             strengthColor = Color.parseColor("#FFD700");
-            strengthHintStr = "五行均衡，宜顺势而为";
+            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 均衡";
         }
         setHtmlText(strengthTag, colorSpan(strengthStr, strengthColor));
         setText(strengthHint, strengthHintStr);
