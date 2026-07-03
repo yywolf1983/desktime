@@ -423,7 +423,7 @@ function calculateYearPillar(year, month, day) {
 
 // 计算月柱
 function calculateMonthPillar(year, month, day, yearGan) {
-    const monthZhiMap = { 1: '丑', 2: '寅', 3: '卯', 4: '辰', 5: '巳', 6: '午', 7: '未', 8: '申', 9: '酉', 10: '戌', 11: '亥', 12: '子' };
+    const monthZhiMap = { 1: '寅', 2: '卯', 3: '辰', 4: '巳', 5: '午', 6: '未', 7: '申', 8: '酉', 9: '戌', 10: '亥', 11: '子', 12: '丑' };
     const wuhudun = { '甲': '丙', '己': '丙', '乙': '戊', '庚': '戊', '丙': '庚', '辛': '庚', '丁': '壬', '壬': '壬', '戊': '甲', '癸': '甲' };
     const monthZhiList = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
 
@@ -555,11 +555,19 @@ function viewPaiPan(date) {
 // 获取时辰名称
 function getShiChen(hour, minute) {
     const shichen = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'];
-    let adjustedHour = hour;
-    if (minute >= 45) {
-        adjustedHour = (hour + 1) % 24;
-    }
-    let index = Math.floor((adjustedHour + 1) / 2) % 12;
+    let index;
+    if (hour >= 23 || hour < 1) index = 0;
+    else if (hour >= 1 && hour < 3) index = 1;
+    else if (hour >= 3 && hour < 5) index = 2;
+    else if (hour >= 5 && hour < 7) index = 3;
+    else if (hour >= 7 && hour < 9) index = 4;
+    else if (hour >= 9 && hour < 11) index = 5;
+    else if (hour >= 11 && hour < 13) index = 6;
+    else if (hour >= 13 && hour < 15) index = 7;
+    else if (hour >= 15 && hour < 17) index = 8;
+    else if (hour >= 17 && hour < 19) index = 9;
+    else if (hour >= 19 && hour < 21) index = 10;
+    else index = 11;
     return shichen[index];
 }
 

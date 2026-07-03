@@ -317,11 +317,65 @@ public class WuyunLiuqiActivity extends Activity {
     }
     
     private String calculateMonthGanZhi(int year, int month) {
-        int ganIndex = (year - 1900 + 6 + (month - 1) * 2) % 10;
-        if (ganIndex < 0) ganIndex += 10;
-        int zhiIndex = (month - 1) % 12;
-        if (zhiIndex < 0) zhiIndex += 12;
-        return TIANGAN[ganIndex] + DIZHI[zhiIndex];
+        int calcYear = year;
+        int calcMonth = month;
+        
+        if (month < 2 || (month == 2 && getDayOfYear(year, month, 1) < getJieqiDayOfYear(year, 0))) {
+            calcYear = year - 1;
+        }
+        
+        String yearPillar = calculateYearGanZhi(calcYear);
+        String yearGan = yearPillar.substring(0, 1);
+        
+        java.util.HashMap<String, String> wuhudun = new java.util.HashMap<>();
+        wuhudun.put("甲", "丙"); wuhudun.put("己", "丙");
+        wuhudun.put("乙", "戊"); wuhudun.put("庚", "戊");
+        wuhudun.put("丙", "庚"); wuhudun.put("辛", "庚");
+        wuhudun.put("丁", "壬"); wuhudun.put("壬", "壬");
+        wuhudun.put("戊", "甲"); wuhudun.put("癸", "甲");
+        
+        String yinMonthGan = wuhudun.get(yearGan);
+        if (yinMonthGan == null) yinMonthGan = "丙";
+        int yinGanIndex = java.util.Arrays.asList(TIANGAN).indexOf(yinMonthGan);
+        
+        String monthZhi = getMonthZhiForYear(year, month, 1);
+        String[] monthZhiList = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
+        int monthZhiIndex = java.util.Arrays.asList(monthZhiList).indexOf(monthZhi);
+        int monthGanIndex = (yinGanIndex + monthZhiIndex) % 10;
+        
+        return TIANGAN[monthGanIndex] + monthZhi;
+    }
+    
+    private String getMonthZhiForYear(int year, int month, int day) {
+        if (month == 1 && day < 6) return "子";
+        if (month == 1 && day >= 6) return "丑";
+        if (month == 2 && day < 4) return "丑";
+        if (month == 2 && day >= 4) return "寅";
+        
+        String[] monthZhiList = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
+        return monthZhiList[(month - 1) % 12];
+    }
+    
+    private int getDayOfYear(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);
+        return calendar.get(Calendar.DAY_OF_YEAR);
+    }
+    
+    private int getJieqiDayOfYear(int year, int jieqiIndex) {
+        int[] jieqiDays = {4, 19, 6, 21, 5, 21, 6, 22, 8, 23, 8, 23, 8, 23, 8, 23, 8, 24, 7, 23, 7, 22, 5, 20};
+        int dayOfYear = 0;
+        for (int i = 0; i < jieqiIndex; i++) {
+            if (i < 11) {
+                dayOfYear += (i % 2 == 0) ? 31 : 28;
+            } else {
+                int m = (i / 2) + 6;
+                int daysInMonth = (m == 7 || m == 8 || m == 10 || m == 12) ? 31 :
+                                  (m == 9 || m == 11) ? 30 : 28;
+                dayOfYear += daysInMonth;
+            }
+        }
+        return dayOfYear + jieqiDays[jieqiIndex];
     }
     
     private String calculateDayGanZhi(int year, int month, int day) {
@@ -499,12 +553,12 @@ public class WuyunLiuqiActivity extends Activity {
         relation.append("<font color='" + COLOR_LIGHT_BLUE + "'><b>运气与时辰关系：</b></font><br/>");
         
         String[][] yunqiShichen = {
-            {"木运", "厥阴风木", "🌿 肝胆经当令（丑时、寅时）：肝气偏旺，宜早睡养肝，避免熬夜", COLOR_JI},
-            {"火运", "少阴君火", "🔥 心经当令（午时）：心气最盛，宜静心休养，适当午休", COLOR_XIONG},
-            {"火运", "少阳相火", "🔥 三焦经当令（亥时）：阳气潜藏，宜静心安神，不宜剧烈运动", "#FF8C00"},
-            {"土运", "太阴湿土", "🌾 脾胃经当令（辰时、巳时）：脾主运化，宜早餐养胃，细嚼慢咽", COLOR_EARTH},
-            {"金运", "阳明燥金", "🍂 肺经当令（寅时、卯时）：肺气旺盛，宜早起深呼吸，润肺生津", COLOR_METAL},
-            {"水运", "太阳寒水", "💧 肾经当令（酉时、戌时）：肾气收藏，宜早睡养肾，避免劳累", COLOR_WATER}
+            {"木运", "厥阴风木", "🌿 厥阴经当令（丑时、戌时）：丑时肝经主排毒藏血，戌时心包经主喜乐护心", COLOR_JI},
+            {"火运", "少阴君火", "🔥 少阴经当令（午时、酉时）：午时心经主神明宜午休，酉时肾经主收藏宜静养", COLOR_XIONG},
+            {"火运", "少阳相火", "🔥 少阳经当令（子时、亥时）：子时胆经主生发决断，亥时三焦经主通百脉宜安眠", "#FF8C00"},
+            {"土运", "太阴湿土", "🌾 太阴经当令（寅时、巳时）：寅时肺经主宣降宜深呼吸，巳时脾经主运化宜工作", COLOR_EARTH},
+            {"金运", "阳明燥金", "🍂 阳明经当令（卯时、辰时）：卯时大肠经主排泄宜排便，辰时胃经主纳谷宜早餐", COLOR_METAL},
+            {"水运", "太阳寒水", "💧 太阳经当令（未时、申时）：未时小肠经主吸收宜休息，申时膀胱经主气化宜运动", COLOR_WATER}
         };
         
         for (String[] item : yunqiShichen) {

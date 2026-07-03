@@ -573,18 +573,18 @@ public class MainActivity extends Activity {
         WUSHUDUN_MAP.put("癸", "壬");
         
         // 初始化月份到月支的映射
-        MONTH_ZHI_MAP.put(1, "丑");
-        MONTH_ZHI_MAP.put(2, "寅");
-        MONTH_ZHI_MAP.put(3, "卯");
-        MONTH_ZHI_MAP.put(4, "辰");
-        MONTH_ZHI_MAP.put(5, "巳");
-        MONTH_ZHI_MAP.put(6, "午");
-        MONTH_ZHI_MAP.put(7, "未");
-        MONTH_ZHI_MAP.put(8, "申");
-        MONTH_ZHI_MAP.put(9, "酉");
-        MONTH_ZHI_MAP.put(10, "戌");
-        MONTH_ZHI_MAP.put(11, "亥");
-        MONTH_ZHI_MAP.put(12, "子");
+        MONTH_ZHI_MAP.put(1, "寅");
+        MONTH_ZHI_MAP.put(2, "卯");
+        MONTH_ZHI_MAP.put(3, "辰");
+        MONTH_ZHI_MAP.put(4, "巳");
+        MONTH_ZHI_MAP.put(5, "午");
+        MONTH_ZHI_MAP.put(6, "未");
+        MONTH_ZHI_MAP.put(7, "申");
+        MONTH_ZHI_MAP.put(8, "酉");
+        MONTH_ZHI_MAP.put(9, "戌");
+        MONTH_ZHI_MAP.put(10, "亥");
+        MONTH_ZHI_MAP.put(11, "子");
+        MONTH_ZHI_MAP.put(12, "丑");
     }
 
     // 计算年柱
