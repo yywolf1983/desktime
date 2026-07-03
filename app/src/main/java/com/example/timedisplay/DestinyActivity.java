@@ -5,9 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 public class DestinyActivity extends android.app.Activity {
@@ -36,6 +33,8 @@ public class DestinyActivity extends android.app.Activity {
     private String yGanShen, mGanShen, tGanShen;
     private int shengCount, keCount, biCount;
     private boolean isStrong, isWeak, isBalance;
+    // 生肖缓存（一次计算，多处复用，避免重复调用）
+    private String zodiac, dayZodiac, zodiacEmoji, dayZodiacEmoji;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,11 +167,28 @@ public class DestinyActivity extends android.app.Activity {
         dayZhiLabelL = findViewById(R.id.dayZhiLabelL);
         changshengLabelL = findViewById(R.id.changshengLabelL);
         wuxingSumL = findViewById(R.id.wuxingSumL);
+
+        // 日主五行标签与图标已合并至 dayMasterLabel，隐藏冗余视图
+        if (dayMasterWuXingLabel != null) dayMasterWuXingLabel.setVisibility(android.view.View.GONE);
+        if (dayMasterIcon != null) dayMasterIcon.setVisibility(android.view.View.GONE);
     }
 
     private void populateAll() {
+        // 生肖缓存（一次计算，多处复用）
+        zodiac = DestinyCalculator.getZodiacNameFromZhi(yearZhi);
+        dayZodiac = DestinyCalculator.getZodiacNameFromZhi(dayZhi);
+        zodiacEmoji = DestinyCalculator.getZodiacEmoji(yearZhi);
+        dayZodiacEmoji = DestinyCalculator.getZodiacEmoji(dayZhi);
+
         populatePillars();
-        populateCore();
+        populateDayMaster();
+        populateDayBranch();
+        populateZodiac();
+        populateStrength();
+        populateDayDesc();
+        populateNayin();
+        populateMingGong();
+        populateChangsheng();
         populateTenGods();
         populateWuxingPower();
         populatePersonality();
@@ -213,161 +229,129 @@ public class DestinyActivity extends android.app.Activity {
         return gan + gwx + " " + zhi + zwx;
     }
 
-    private void populateCore() {
-        // 日主大字
-        setText(dayMasterLabel, dayGan);
-        setText(dayMasterLabelL, dayGan + " · " + dayGanWuXing);
+    // ──── populateCore 拆分（8 个子方法）────
 
-        // 日主五行标签
-        String wxColor = getWuXingColor(dayGanWuXing);
+    private void populateDayMaster() {
+        // 日主大字（合并 emoji 图标，五行详述见 dayDescText）
         String wxEmoji = getWuXingEmoji(dayGanWuXing);
-        setHtmlText(dayMasterWuXingLabel, colorSpan(dayGanWuXing, Color.parseColor(wxColor)));
-        if (dayMasterIcon != null) dayMasterIcon.setText(wxEmoji);
+        setText(dayMasterLabel, dayGan + wxEmoji);
+        setText(dayMasterLabelL, dayGan + " · " + dayGanWuXing);
+    }
 
+    private void populateDayBranch() {
         // 日支 + 生肖
-        String dayZodiac = DestinyCalculator.getZodiacNameFromZhi(dayZhi);
-        String dayZodiacEmoji = DestinyCalculator.getZodiacEmoji(dayZhi);
         setHtmlText(dayBranchLabel, "<font color='#FFD700'><b>" + dayZhi + "</b></font>");
         setText(dayBranchZodiac, dayZodiac);
         if (dayBranchIcon != null) dayBranchIcon.setText(dayZodiacEmoji);
+        setText(dayZhiLabelL, dayZhi + "（" + dayZodiac + "）");
+    }
 
+    private void populateZodiac() {
         // 生肖
-        String zodiac = DestinyCalculator.getZodiacNameFromZhi(yearZhi);
-        String zodiacEmoji = DestinyCalculator.getZodiacEmoji(yearZhi);
         setText(zodiacLabel, zodiac);
         setText(zodiacYearLabel, "年支 " + yearZhi);
         if (zodiacIcon != null) zodiacIcon.setText(zodiacEmoji);
         setText(zodiacLabelL, zodiac);
+    }
 
-        // 日支横屏
-        setText(dayZhiLabelL, dayZhi + "（" + dayZodiac + "）");
-
-        // 身强身弱 + 使用提示（含判据与通俗释义）
+    private void populateStrength() {
+        // 身强身弱标签 + 通俗建议（判据汇总见 wuxingPowerText，避免多处复述）
         String strengthStr;
         int strengthColor;
         String strengthHintStr;
         if (isStrong) {
             strengthStr = "🔥 身强";
             strengthColor = Color.parseColor("#FF6B6B");
-            strengthHintStr = "生扶" + shengCount + "·比和" + biCount + "·克泄" + keCount
-                    + "　|　宜泄耗克制，适合创业发展";
+            strengthHintStr = "宜泄耗克制，适合创业发展";
         } else if (isWeak) {
             strengthStr = "💧 身弱";
             strengthColor = Color.parseColor("#87CEEB");
-            strengthHintStr = "生扶" + shengCount + "·比和" + biCount + "·克泄" + keCount
-                    + "　|　宜生扶比和，适合稳健守成";
+            strengthHintStr = "宜生扶比和，适合稳健守成";
         } else {
             strengthStr = "☯ 中和";
             strengthColor = Color.parseColor("#FFD700");
-            strengthHintStr = "生扶" + shengCount + "·比和" + biCount + "·克泄" + keCount
-                    + "　|　五行均衡，宜顺势而为";
+            strengthHintStr = "五行均衡，宜顺势而为";
         }
         setHtmlText(strengthTag, colorSpan(strengthStr, strengthColor));
         setText(strengthHint, strengthHintStr);
         setHtmlText(strengthTagL, colorSpan(strengthStr, strengthColor));
+    }
 
-        // 日干详细解读
+    private void populateDayDesc() {
+        // 日干详细解读（五行属性+象征详述在此展示）
         String ganDesc = DestinyCalculator.getGanDescription(dayGan);
         String ganDetail = DestinyCalculator.getRiGanDetailedAnalysis(dayGan);
+        String wxEmoji = getWuXingEmoji(dayGanWuXing);
         setHtmlText(dayDescText, "<font color='#FFD700'><b>" + wxEmoji + " " + dayGan + "日主 · " + ganDesc + "</b></font><br/>"
                 + "<font color='#8899AA'>" + ganDetail + "</font>");
         setText(dayDescTextL, ganDesc);
+    }
 
-        // 纳音四柱 Grid
-        String nYear = DestinyCalculator.getNayin(yearGan, yearZhi);
-        String nMonth = DestinyCalculator.getNayin(monthGan, monthZhi);
-        String nDay = DestinyCalculator.getNayin(dayGan, dayZhi);
-        String nTime = DestinyCalculator.getNayin(timeGan, timeZhi);
+    private void populateNayin() {
+        // 纳音四柱 Grid（循环化）
+        String[] gzArr = {yearGan + yearZhi, monthGan + monthZhi, dayGan + dayZhi, timeGan + timeZhi};
+        String[] nayinArr = {
+            DestinyCalculator.getNayin(yearGan, yearZhi),
+            DestinyCalculator.getNayin(monthGan, monthZhi),
+            DestinyCalculator.getNayin(dayGan, dayZhi),
+            DestinyCalculator.getNayin(timeGan, timeZhi)
+        };
+        TextView[] nayinLabels = {nayinYearLabel, nayinMonthLabel, nayinDayLabel, nayinTimeLabel};
+        for (int i = 0; i < 4; i++) {
+            setHtmlText(nayinLabels[i], "<font color='#8899AA'>" + gzArr[i] + "</font><br/>"
+                    + "<font color='#FFD700'>" + nayinArr[i] + "</font>");
+        }
 
-        setHtmlText(nayinYearLabel, "<font color='#8899AA'>" + yearGan + yearZhi + "</font><br/>"
-                + "<font color='#FFD700'>" + nYear + "</font>");
-        setHtmlText(nayinMonthLabel, "<font color='#8899AA'>" + monthGan + monthZhi + "</font><br/>"
-                + "<font color='#FFD700'>" + nMonth + "</font>");
-        setHtmlText(nayinDayLabel, "<font color='#8899AA'>" + dayGan + dayZhi + "</font><br/>"
-                + "<font color='#FFD700'>" + nDay + "</font>");
-        setHtmlText(nayinTimeLabel, "<font color='#8899AA'>" + timeGan + timeZhi + "</font><br/>"
-                + "<font color='#FFD700'>" + nTime + "</font>");
-
-        // 纳音详细解读
-        setHtmlText(nayinText, "日柱 <font color='#FFD700'><b>" + nDay + "</b></font> — "
-                + DestinyCalculator.getNayinRich(dayGan, dayZhi));
+        // 日柱纳音详细解读（不复述 nayinDayLabel 已显示的纳音名，直接给含义+象征）
+        String nDay = nayinArr[2];
+        String nayinExpl = DestinyCalculator.getNayinExplanation(nDay);
+        setHtmlText(nayinText, "日柱纳音解读：<br/>" + (nayinExpl.isEmpty() ? nDay : nayinExpl));
         setText(nayinLabelL, nDay);
 
-        // 命宫
+        // 五行小结（横屏用，身强弱判据已多处展示，此处仅留五行+纳音）
+        setText(wuxingSumL, dayGanWuXing + " · " + nDay);
+    }
+
+    private void populateMingGong() {
+        // 命宫（单套解读，融合通俗释义，删除同义叠加段）
         String mingGongFull = DestinyCalculator.getMingGong(yearGan, monthZhi, timeZhi);
         int commaIdx = mingGongFull.indexOf("，");
         String mingGongShort = commaIdx > 0 ? mingGongFull.substring(0, commaIdx) : mingGongFull;
         String mingGongDetail = commaIdx > 0 ? mingGongFull.substring(commaIdx + 1) : "";
         setHtmlText(mingGongValue, mingGongShort);
-        setHtmlText(mingGongDesc, mingGongDetail + getMingGongPlain(yearGan, monthZhi, timeZhi));
+        setHtmlText(mingGongDesc, mingGongDetail);
+    }
 
+    private void populateChangsheng() {
         // 十二长生（三柱：日/月/时）
         String stageDay = DestinyCalculator.getTwelveStage(dayGan, dayZhi);
         String stageMonth = DestinyCalculator.getTwelveStage(dayGan, monthZhi);
         String stageTime = DestinyCalculator.getTwelveStage(dayGan, timeZhi);
 
-        String csDayColor = getStageColor(stageDay);
-        String csMonthColor = getStageColor(stageMonth);
-        String csTimeColor = getStageColor(stageTime);
+        String[] csStages = {stageDay, stageMonth, stageTime};
+        String[] csColors = {getStageColor(stageDay), getStageColor(stageMonth), getStageColor(stageTime)};
+        String[] csNames = {"日支", "月令", "时支"};
+        TextView[] csLabels = {changshengDayLabel, changshengMonthLabel, changshengTimeLabel};
 
-        setHtmlText(changshengDayLabel, "<font color='#8899AA'><small>日支</small></font><br/>"
-                + "<font color='" + csDayColor + "'><b>" + stageDay + "</b></font>");
-        setHtmlText(changshengMonthLabel, "<font color='#8899AA'><small>月令</small></font><br/>"
-                + "<font color='" + csMonthColor + "'><b>" + stageMonth + "</b></font>");
-        setHtmlText(changshengTimeLabel, "<font color='#8899AA'><small>时支</small></font><br/>"
-                + "<font color='" + csTimeColor + "'><b>" + stageTime + "</b></font>");
-
-        setHtmlText(changshengText, "日主「<font color='#FFD700'>" + dayGan + "</font>」在日支为 <font color='" + csDayColor + "'><b>" + stageDay + "</b></font> — " + DestinyCalculator.getTwelveStageExplanation(stageDay)
-                + "<br/>在月令为 <font color='" + csMonthColor + "'><b>" + stageMonth + "</b></font> — " + DestinyCalculator.getTwelveStageExplanation(stageMonth)
-                + "<br/>在时支为 <font color='" + csTimeColor + "'><b>" + stageTime + "</b></font> — " + DestinyCalculator.getTwelveStageExplanation(stageTime));
-        setText(changshengLabelL, stageDay);
-
-        // 五行小结（横屏用）
-        String wuSum = dayGanWuXing + " · " + nDay;
-        if (isStrong) wuSum += " · 旺";
-        else if (isWeak) wuSum += " · 弱";
-        else wuSum += " · 平";
-        setText(wuxingSumL, wuSum);
-    }
-
-    private String getMingGongPlain(String yearGan, String monthZhi, String timeZhi) {
-        String[] zhiArr = {"子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"};
-        String[] mgDescMap = {"智慧灵动，变通力强","积累资源，根基稳固","活力充沛，开创性强",
-                "繁荣发展，善于表达","变化升腾，格局宏大","礼仪周全，热情洋溢",
-                "旺盛显达，名声远播","包容终结，收藏总结","变革创新，权威威严",
-                "收敛收获，精明务实","防备收藏，忠诚可靠","流动变化，适应力强"};
-        String[] mgPlainMap = {
-            "如水之智，善于应变，晚年思维仍敏捷",
-            "如土之实，厚积薄发，晚年根基稳固",
-            "如木之生，进取不止，晚年仍有开创",
-            "如花之盛，才华外显，晚年名声有成",
-            "如龙之腾，格局宏大，晚年志向高远",
-            "如日之暖，礼数周全，晚年受人敬爱",
-            "如马之奔，显达一方，晚年声名远播",
-            "如秋之收，包容厚重，晚年安享成果",
-            "如金之锐，果敢变革，晚年威望自成",
-            "如秋之实，精打细算，晚年财福双收",
-            "如犬之忠，忠诚可靠，晚年守成安稳",
-            "如水之流，随遇而安，晚年通达无碍"
-        };
-
-        int monthIdx = -1, timeIdx = -1;
-        for (int i = 0; i < 12; i++) {
-            if (zhiArr[i].equals(monthZhi)) monthIdx = i;
-            if (zhiArr[i].equals(timeZhi)) timeIdx = i;
+        for (int i = 0; i < 3; i++) {
+            setHtmlText(csLabels[i], "<font color='#8899AA'><small>" + csNames[i] + "</small></font><br/>"
+                    + "<font color='" + csColors[i] + "'><b>" + csStages[i] + "</b></font>");
         }
-        if (monthIdx < 0 || timeIdx < 0) return "未知";
 
-        int mgIdx = (14 - monthIdx + timeIdx) % 12;
+        // 长生解读（仅展示解释，不复述阶段名，颜色与上方标签呼应）
         StringBuilder sb = new StringBuilder();
-        sb.append("后天运势根基，").append(mgDescMap[mgIdx]);
-        sb.append("。<br/><font color='#8899AA'>通俗说：命宫是人生的「后天根基」，");
-        sb.append(mgPlainMap[mgIdx]);
-        sb.append("。命宫与命局相互呼应，命局主先天禀赋，命宫主后天造化，二者相辅相成。</font>");
-        return sb.toString();
+        for (int i = 0; i < 3; i++) {
+            if (i > 0) sb.append("<br/>");
+            sb.append(csNames[i]).append("：<font color='").append(csColors[i]).append("'>")
+              .append(DestinyCalculator.getTwelveStageExplanation(csStages[i])).append("</font>");
+        }
+        setHtmlText(changshengText, sb.toString());
+        setText(changshengLabelL, stageDay);
     }
 
-    private String getWuXingColor(String wx) {
+    // ──── 五行 emoji/颜色映射（静态统一）────
+
+    private static String getWuXingColor(String wx) {
         switch (wx) {
             case "木": return "#90EE90";
             case "火": return "#FF6B6B";
@@ -378,7 +362,7 @@ public class DestinyActivity extends android.app.Activity {
         }
     }
 
-    private String getWuXingEmoji(String wx) {
+    private static String getWuXingEmoji(String wx) {
         switch (wx) {
             case "木": return "🌿";
             case "火": return "🔥";
@@ -413,11 +397,9 @@ public class DestinyActivity extends android.app.Activity {
     }
 
     private void populateWuxingPower() {
-        // 五行力量分布
+        // 五行力量分布（颜色/emoji 统一引用静态映射，避免重复定义）
         int[] counts = new int[]{0, 0, 0, 0, 0}; // 木火土金水
         String[] names = {"木", "火", "土", "金", "水"};
-        String[] colors = {"#90EE90", "#FF6B6B", "#FFD700", "#C0C0C0", "#87CEEB"};
-        String[] emoji = {"🌿", "🔥", "🗻", "⚔️", "💧"};
 
         for (int i = 0; i < pillars.length; i++) {
             for (int j = 0; j < 2; j++) {
@@ -433,7 +415,8 @@ public class DestinyActivity extends android.app.Activity {
         for (int c : counts) if (c > maxCount) maxCount = c;
 
         for (int i = 0; i < 5; i++) {
-            sb.append(emoji[i]).append(" <font color='").append(colors[i]).append("'><b>").append(names[i]).append("</b></font>  ");
+            sb.append(getWuXingEmoji(names[i])).append(" <font color='").append(getWuXingColor(names[i]))
+              .append("'><b>").append(names[i]).append("</b></font>  ");
             int bars = (int)((float)counts[i] / maxCount * 10);
             for (int j = 0; j < bars; j++) sb.append("█");
             sb.append(" ").append(counts[i]);
@@ -470,7 +453,6 @@ public class DestinyActivity extends android.app.Activity {
     }
 
     private void populateRelationship() {
-        String dayZodiac = DestinyCalculator.getZodiacNameFromZhi(dayZhi);
         String dayZhiWuXing = DestinyCalculator.getWuXing(dayZhi);
         String rel = DestinyCalculator.getRelationshipAnalysisRich(dayGan, dayZhi, dayGanWuXing, dayZhiWuXing, dayZodiac, yearZhi, monthZhi, timeZhi);
         setHtmlText(relationshipText, rel);
@@ -482,37 +464,33 @@ public class DestinyActivity extends android.app.Activity {
     }
 
     private void populateSocial() {
-        String zodiac = DestinyCalculator.getZodiacNameFromZhi(yearZhi);
         String social = DestinyCalculator.getSocialAnalysisRich(dayGan, dayGanWuXing, yGanShen, mGanShen, tGanShen, yearGan, zodiac, isStrong, isWeak, yearZhi, monthZhi, dayZhi, timeZhi);
         setHtmlText(socialText, social);
     }
 
     private void populatePillarsDetail() {
+        // 四柱详断（循环化，结构相同仅参数不同）
+        String[] names = {"年", "月", "日", "时"};
+        String[] pillarStrs = {yearPillar, monthPillar, dayPillar, timePillar};
+        String[] meanings = {
+            DestinyCalculator.getYearPillarMeaning(yearGan, yearZhi),
+            DestinyCalculator.getMonthPillarMeaning(monthGan, monthZhi),
+            DestinyCalculator.getDayPillarMeaning(dayGan, dayZhi),
+            DestinyCalculator.getTimePillarMeaning(timeGan, timeZhi)
+        };
         StringBuilder sb = new StringBuilder();
-
-        sb.append("<font color='#FFD700'><b>年柱</b></font> ").append(yearPillar).append("<br/>");
-        sb.append(DestinyCalculator.getYearPillarMeaning(yearGan, yearZhi)).append("<br/>");
-        sb.append("<font color='#8899AA'>").append(DestinyCalculator.getPillarRichDetail(dayGan, yearGan, yearZhi, "年")).append("</font><br/><br/>");
-
-        sb.append("<font color='#FFD700'><b>月柱</b></font> ").append(monthPillar).append("<br/>");
-        sb.append(DestinyCalculator.getMonthPillarMeaning(monthGan, monthZhi)).append("<br/>");
-        sb.append("<font color='#8899AA'>").append(DestinyCalculator.getPillarRichDetail(dayGan, monthGan, monthZhi, "月")).append("</font><br/><br/>");
-
-        sb.append("<font color='#FFD700'><b>日柱</b></font> ").append(dayPillar).append("<br/>");
-        sb.append(DestinyCalculator.getDayPillarMeaning(dayGan, dayZhi)).append("<br/>");
-        sb.append("<font color='#8899AA'>").append(DestinyCalculator.getPillarRichDetail(dayGan, dayGan, dayZhi, "日")).append("</font><br/><br/>");
-
-        sb.append("<font color='#FFD700'><b>时柱</b></font> ").append(timePillar).append("<br/>");
-        sb.append(DestinyCalculator.getTimePillarMeaning(timeGan, timeZhi)).append("<br/>");
-        sb.append("<font color='#8899AA'>").append(DestinyCalculator.getPillarRichDetail(dayGan, timeGan, timeZhi, "时")).append("</font>");
-
+        for (int i = 0; i < 4; i++) {
+            sb.append("<font color='#FFD700'><b>").append(names[i]).append("柱</b></font> ").append(pillarStrs[i]).append("<br/>");
+            sb.append(meanings[i]).append("<br/>");
+            sb.append("<font color='#8899AA'>").append(DestinyCalculator.getPillarRichDetail(dayGan, pillars[i][0], pillars[i][1], names[i])).append("</font>");
+            if (i < 3) sb.append("<br/><br/>");
+        }
         setHtmlText(pillarsDetailText, sb.toString());
     }
 
     private void populateLifeAdvice() {
         String shengHao = DestinyCalculator.getShengWuXing(dayGanWuXing);
         String xieHao = getXieHao();
-        String zodiac = DestinyCalculator.getZodiacNameFromZhi(yearZhi);
         String advice = DestinyCalculator.getLifeAdviceRich(dayGan, dayGanWuXing, zodiac, shengHao, xieHao, isStrong, isWeak, isBalance);
         setHtmlText(lifeAdviceText, advice);
     }
