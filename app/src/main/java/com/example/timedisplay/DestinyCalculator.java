@@ -2520,14 +2520,21 @@ public class DestinyCalculator {
         }
     }
 
-    // 计算时柱（简化版，按小时）
     public static String getTimePillar(int hour, int minute, String dayGan) {
-        int adjHour = (minute >= 45) ? (hour + 1) % 24 : hour;
         String timeZhi;
-        if (adjHour == 23 || adjHour == 0) timeZhi = "子";
-        else timeZhi = DIZHI_ARR[(adjHour + 1) / 2 % 12];
+        if (hour >= 23 || hour < 1) timeZhi = "子";
+        else if (hour >= 1 && hour < 3) timeZhi = "丑";
+        else if (hour >= 3 && hour < 5) timeZhi = "寅";
+        else if (hour >= 5 && hour < 7) timeZhi = "卯";
+        else if (hour >= 7 && hour < 9) timeZhi = "辰";
+        else if (hour >= 9 && hour < 11) timeZhi = "巳";
+        else if (hour >= 11 && hour < 13) timeZhi = "午";
+        else if (hour >= 13 && hour < 15) timeZhi = "未";
+        else if (hour >= 15 && hour < 17) timeZhi = "申";
+        else if (hour >= 17 && hour < 19) timeZhi = "酉";
+        else if (hour >= 19 && hour < 21) timeZhi = "戌";
+        else timeZhi = "亥";
 
-        // 五鼠遁
         Map<String, String> wuShuDun = new HashMap<>();
         wuShuDun.put("甲", "甲"); wuShuDun.put("己", "甲");
         wuShuDun.put("乙", "丙"); wuShuDun.put("庚", "丙");

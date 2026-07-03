@@ -487,7 +487,22 @@ public class MainActivity extends Activity {
         // 计算四柱
         String yearPillar = calculateYearPillar(year, month, day);
         String monthPillar = calculateMonthPillar(year, month, day, yearPillar.substring(0, 1));
-        String dayPillar = calculateDayPillar(year, month, day);
+        
+        int calcYear = year;
+        int calcMonth = month;
+        int calcDay = day;
+        if (hour >= 23) {
+            calcDay++;
+            if (calcDay > getDaysInMonth(calcYear, calcMonth)) {
+                calcDay = 1;
+                calcMonth++;
+                if (calcMonth > 12) {
+                    calcMonth = 1;
+                    calcYear++;
+                }
+            }
+        }
+        String dayPillar = calculateDayPillar(calcYear, calcMonth, calcDay);
         String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
         
         // 格式化四柱显示
@@ -664,61 +679,53 @@ public class MainActivity extends Activity {
 
     // 计算时柱（带日柱天干）
     private String calculateTimePillar(int hour, int minute, String dayGan) {
-        // 处理分钟，45分后进入下一个时辰
-        int adjustedHour = hour;
-        if (minute >= 45) {
-            adjustedHour = (hour + 1) % 24;
-        }
-        
-        // 确定时支
         String hourZhi = "子";
         int hourZhiIndex = 0;
         
-        // 时辰对应表
-        String[][] shizhiTable = {
-            {"子", "23", "1", "0"},
-            {"丑", "1", "3", "1"},
-            {"寅", "3", "5", "2"},
-            {"卯", "5", "7", "3"},
-            {"辰", "7", "9", "4"},
-            {"巳", "9", "11", "5"},
-            {"午", "11", "13", "6"},
-            {"未", "13", "15", "7"},
-            {"申", "15", "17", "8"},
-            {"酉", "17", "19", "9"},
-            {"戌", "19", "21", "10"},
-            {"亥", "21", "23", "11"}
-        };
-        
-        for (String[] entry : shizhiTable) {
-            String zhi = entry[0];
-            int start = Integer.parseInt(entry[1]);
-            int end = Integer.parseInt(entry[2]);
-            int index = Integer.parseInt(entry[3]);
-            
-            if (start <= end) {
-                if (start <= adjustedHour && adjustedHour < end) {
-                    hourZhi = zhi;
-                    hourZhiIndex = index;
-                    break;
-                }
-            } else {
-                if (adjustedHour >= start || adjustedHour < end) {
-                    hourZhi = zhi;
-                    hourZhiIndex = index;
-                    break;
-                }
-            }
+        if (hour >= 23 || hour < 1) {
+            hourZhi = "子";
+            hourZhiIndex = 0;
+        } else if (hour >= 1 && hour < 3) {
+            hourZhi = "丑";
+            hourZhiIndex = 1;
+        } else if (hour >= 3 && hour < 5) {
+            hourZhi = "寅";
+            hourZhiIndex = 2;
+        } else if (hour >= 5 && hour < 7) {
+            hourZhi = "卯";
+            hourZhiIndex = 3;
+        } else if (hour >= 7 && hour < 9) {
+            hourZhi = "辰";
+            hourZhiIndex = 4;
+        } else if (hour >= 9 && hour < 11) {
+            hourZhi = "巳";
+            hourZhiIndex = 5;
+        } else if (hour >= 11 && hour < 13) {
+            hourZhi = "午";
+            hourZhiIndex = 6;
+        } else if (hour >= 13 && hour < 15) {
+            hourZhi = "未";
+            hourZhiIndex = 7;
+        } else if (hour >= 15 && hour < 17) {
+            hourZhi = "申";
+            hourZhiIndex = 8;
+        } else if (hour >= 17 && hour < 19) {
+            hourZhi = "酉";
+            hourZhiIndex = 9;
+        } else if (hour >= 19 && hour < 21) {
+            hourZhi = "戌";
+            hourZhiIndex = 10;
+        } else {
+            hourZhi = "亥";
+            hourZhiIndex = 11;
         }
         
-        // 计算时干（日上起时法）
         String startGan = WUSHUDUN_MAP.get(dayGan);
         if (startGan == null) {
             startGan = "甲";
         }
         int startGanIndex = java.util.Arrays.asList(TIANGAN).indexOf(startGan);
         
-        // 计算时干
         int hourGanIndex = (startGanIndex + hourZhiIndex) % 10;
         String hourGan = TIANGAN[hourGanIndex];
         
@@ -1146,7 +1153,22 @@ public class MainActivity extends Activity {
         // 计算四柱
         String yearPillar = calculateYearPillar(year, month, day);
         String monthPillar = calculateMonthPillar(year, month, day, yearPillar.substring(0, 1));
-        String dayPillar = calculateDayPillar(year, month, day);
+        
+        int calcYear = year;
+        int calcMonth = month;
+        int calcDay = day;
+        if (hour >= 23) {
+            calcDay++;
+            if (calcDay > getDaysInMonth(calcYear, calcMonth)) {
+                calcDay = 1;
+                calcMonth++;
+                if (calcMonth > 12) {
+                    calcMonth = 1;
+                    calcYear++;
+                }
+            }
+        }
+        String dayPillar = calculateDayPillar(calcYear, calcMonth, calcDay);
         String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
         
         // 生成详细解读
@@ -1640,5 +1662,18 @@ public class MainActivity extends Activity {
             }
             rotationLockButton.setTextColor(0x33FFFFFF);
         }
+    }
+    
+    private int getDaysInMonth(int year, int month) {
+        int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int days = daysInMonth[month - 1];
+        if (month == 2 && isLeapYear(year)) {
+            days = 29;
+        }
+        return days;
+    }
+    
+    private boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
 }

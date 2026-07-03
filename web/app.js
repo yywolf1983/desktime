@@ -452,43 +452,45 @@ function calculateDayPillar(year, month, day) {
 
 // 计算时柱
 function calculateTimePillar(hour, minute, dayGan) {
-    let adjustedHour = hour;
-    if (minute >= 45) {
-        adjustedHour = (hour + 1) % 24;
-    }
-
     let hourZhi = '子';
     let hourZhiIndex = 0;
 
-    const shizhiTable = [
-        { zhi: '子', start: 23, end: 1, index: 0 },
-        { zhi: '丑', start: 1, end: 3, index: 1 },
-        { zhi: '寅', start: 3, end: 5, index: 2 },
-        { zhi: '卯', start: 5, end: 7, index: 3 },
-        { zhi: '辰', start: 7, end: 9, index: 4 },
-        { zhi: '巳', start: 9, end: 11, index: 5 },
-        { zhi: '午', start: 11, end: 13, index: 6 },
-        { zhi: '未', start: 13, end: 15, index: 7 },
-        { zhi: '申', start: 15, end: 17, index: 8 },
-        { zhi: '酉', start: 17, end: 19, index: 9 },
-        { zhi: '戌', start: 19, end: 21, index: 10 },
-        { zhi: '亥', start: 21, end: 23, index: 11 }
-    ];
-
-    for (const entry of shizhiTable) {
-        if (entry.start <= entry.end) {
-            if (adjustedHour >= entry.start && adjustedHour < entry.end) {
-                hourZhi = entry.zhi;
-                hourZhiIndex = entry.index;
-                break;
-            }
-        } else {
-            if (adjustedHour >= entry.start || adjustedHour < entry.end) {
-                hourZhi = entry.zhi;
-                hourZhiIndex = entry.index;
-                break;
-            }
-        }
+    if (hour >= 23 || hour < 1) {
+        hourZhi = '子';
+        hourZhiIndex = 0;
+    } else if (hour >= 1 && hour < 3) {
+        hourZhi = '丑';
+        hourZhiIndex = 1;
+    } else if (hour >= 3 && hour < 5) {
+        hourZhi = '寅';
+        hourZhiIndex = 2;
+    } else if (hour >= 5 && hour < 7) {
+        hourZhi = '卯';
+        hourZhiIndex = 3;
+    } else if (hour >= 7 && hour < 9) {
+        hourZhi = '辰';
+        hourZhiIndex = 4;
+    } else if (hour >= 9 && hour < 11) {
+        hourZhi = '巳';
+        hourZhiIndex = 5;
+    } else if (hour >= 11 && hour < 13) {
+        hourZhi = '午';
+        hourZhiIndex = 6;
+    } else if (hour >= 13 && hour < 15) {
+        hourZhi = '未';
+        hourZhiIndex = 7;
+    } else if (hour >= 15 && hour < 17) {
+        hourZhi = '申';
+        hourZhiIndex = 8;
+    } else if (hour >= 17 && hour < 19) {
+        hourZhi = '酉';
+        hourZhiIndex = 9;
+    } else if (hour >= 19 && hour < 21) {
+        hourZhi = '戌';
+        hourZhiIndex = 10;
+    } else {
+        hourZhi = '亥';
+        hourZhiIndex = 11;
     }
 
     const wushudun = { '甲': '甲', '己': '甲', '乙': '丙', '庚': '丙', '丙': '戊', '辛': '戊', '丁': '庚', '壬': '庚', '戊': '壬', '癸': '壬' };
@@ -496,6 +498,15 @@ function calculateTimePillar(hour, minute, dayGan) {
     const startGanIndex = TIANGAN.indexOf(startGan);
     const hourGanIndex = (startGanIndex + hourZhiIndex) % 10;
     return TIANGAN[hourGanIndex] + hourZhi;
+}
+
+function getDaysInMonth(year, month) {
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let days = daysInMonth[month - 1];
+    if (month === 2 && ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0)) {
+        days = 29;
+    }
+    return days;
 }
 
 // 计算四柱
@@ -508,7 +519,22 @@ function calculateSiZhu(date) {
 
     const yearPillar = calculateYearPillar(year, month, day);
     const monthPillar = calculateMonthPillar(year, month, day, yearPillar[0]);
-    const dayPillar = calculateDayPillar(year, month, day);
+    
+    let calcYear = year;
+    let calcMonth = month;
+    let calcDay = day;
+    if (hour >= 23) {
+        calcDay++;
+        if (calcDay > getDaysInMonth(calcYear, calcMonth)) {
+            calcDay = 1;
+            calcMonth++;
+            if (calcMonth > 12) {
+                calcMonth = 1;
+                calcYear++;
+            }
+        }
+    }
+    const dayPillar = calculateDayPillar(calcYear, calcMonth, calcDay);
     const timePillar = calculateTimePillar(hour, minute, dayPillar[0]);
 
     return {

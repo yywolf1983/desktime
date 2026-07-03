@@ -267,7 +267,22 @@ public class WuyunLiuqiActivity extends Activity {
         if (yearGanZhi == null || monthGanZhi == null || dayGanZhi == null || timeGanZhi == null) {
             yearGanZhi = calculateYearGanZhi(year);
             monthGanZhi = calculateMonthGanZhi(year, month);
-            dayGanZhi = calculateDayGanZhi(year, month, day);
+            
+            int calcYear = year;
+            int calcMonth = month;
+            int calcDay = day;
+            if (hour >= 23) {
+                calcDay++;
+                if (calcDay > getDaysInMonth(calcYear, calcMonth)) {
+                    calcDay = 1;
+                    calcMonth++;
+                    if (calcMonth > 12) {
+                        calcMonth = 1;
+                        calcYear++;
+                    }
+                }
+            }
+            dayGanZhi = calculateDayGanZhi(calcYear, calcMonth, calcDay);
             timeGanZhi = calculateTimeGanZhi(dayGanZhi.substring(0, 1), hour, minute);
         }
         
@@ -330,9 +345,21 @@ public class WuyunLiuqiActivity extends Activity {
     
     private String calculateTimeGanZhi(String dayGanZhi, int hour, int minute) {
         String dayGan = dayGanZhi.substring(0, 1);
-        int baseIndex = java.util.Arrays.asList(TIANGAN).indexOf(dayGan);
+        
         int shichenIndex = getCurrentShichenIndex(hour, minute);
-        int ganIndex = (baseIndex * 2 + shichenIndex) % 10;
+        
+        String[] wuShuDun = {"甲", "丙", "戊", "庚", "壬"};
+        int baseIndex;
+        switch (dayGan) {
+            case "甲": case "己": baseIndex = 0; break;
+            case "乙": case "庚": baseIndex = 1; break;
+            case "丙": case "辛": baseIndex = 2; break;
+            case "丁": case "壬": baseIndex = 3; break;
+            case "戊": case "癸": baseIndex = 4; break;
+            default: baseIndex = 0;
+        }
+        
+        int ganIndex = (baseIndex + shichenIndex * 2) % 10;
         int zhiIndex = shichenIndex % 12;
         return TIANGAN[ganIndex] + DIZHI[zhiIndex];
     }
@@ -715,22 +742,17 @@ public class WuyunLiuqiActivity extends Activity {
     }
     
     private int getCurrentShichenIndex(int hour, int minute) {
-        int adjustedHour = hour;
-        if (minute >= 45) {
-            adjustedHour = (hour + 1) % 24;
-        }
-        
-        if (adjustedHour >= 23 || adjustedHour < 1) return 0;
-        else if (adjustedHour >= 1 && adjustedHour < 3) return 1;
-        else if (adjustedHour >= 3 && adjustedHour < 5) return 2;
-        else if (adjustedHour >= 5 && adjustedHour < 7) return 3;
-        else if (adjustedHour >= 7 && adjustedHour < 9) return 4;
-        else if (adjustedHour >= 9 && adjustedHour < 11) return 5;
-        else if (adjustedHour >= 11 && adjustedHour < 13) return 6;
-        else if (adjustedHour >= 13 && adjustedHour < 15) return 7;
-        else if (adjustedHour >= 15 && adjustedHour < 17) return 8;
-        else if (adjustedHour >= 17 && adjustedHour < 19) return 9;
-        else if (adjustedHour >= 19 && adjustedHour < 21) return 10;
+        if (hour >= 23 || hour < 1) return 0;
+        else if (hour >= 1 && hour < 3) return 1;
+        else if (hour >= 3 && hour < 5) return 2;
+        else if (hour >= 5 && hour < 7) return 3;
+        else if (hour >= 7 && hour < 9) return 4;
+        else if (hour >= 9 && hour < 11) return 5;
+        else if (hour >= 11 && hour < 13) return 6;
+        else if (hour >= 13 && hour < 15) return 7;
+        else if (hour >= 15 && hour < 17) return 8;
+        else if (hour >= 17 && hour < 19) return 9;
+        else if (hour >= 19 && hour < 21) return 10;
         else return 11;
     }
     
@@ -931,5 +953,18 @@ public class WuyunLiuqiActivity extends Activity {
         String siTian = LIUYI_NAMES[siTianIndex];
 
         return yearGanZhi + "年" + zhongYun + "，司天" + siTian + "，";
+    }
+    
+    private int getDaysInMonth(int year, int month) {
+        int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int days = daysInMonth[month - 1];
+        if (month == 2 && isLeapYear(year)) {
+            days = 29;
+        }
+        return days;
+    }
+    
+    private boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
 }

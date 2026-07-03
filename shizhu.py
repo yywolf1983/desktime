@@ -135,27 +135,47 @@ class FourPillarsCalculator:
         return self.liujiazi[ganzhi_index]
     
     def calculate_hour_pillar(self, hour: int, minute: int, day_gan: str) -> str:
-        """计算时柱 - 修正版"""
-        # 处理分钟，45分后进入下一个时辰
-        adjusted_hour = hour
-        if minute >= 45:
-            adjusted_hour = (hour + 1) % 24
-        
+        """计算时柱"""
         # 确定时支
         hour_zhi = "子"
         hour_zhi_index = 0
         
-        for zhi, start, end, index in self.shizhi_table:
-            if start <= end:  # 正常时间段
-                if start <= adjusted_hour < end:
-                    hour_zhi = zhi
-                    hour_zhi_index = index
-                    break
-            else:  # 跨日的情况（子时）
-                if adjusted_hour >= start or adjusted_hour < end:
-                    hour_zhi = zhi
-                    hour_zhi_index = index
-                    break
+        if hour >= 23 or hour < 1:
+            hour_zhi = "子"
+            hour_zhi_index = 0
+        elif hour >= 1 and hour < 3:
+            hour_zhi = "丑"
+            hour_zhi_index = 1
+        elif hour >= 3 and hour < 5:
+            hour_zhi = "寅"
+            hour_zhi_index = 2
+        elif hour >= 5 and hour < 7:
+            hour_zhi = "卯"
+            hour_zhi_index = 3
+        elif hour >= 7 and hour < 9:
+            hour_zhi = "辰"
+            hour_zhi_index = 4
+        elif hour >= 9 and hour < 11:
+            hour_zhi = "巳"
+            hour_zhi_index = 5
+        elif hour >= 11 and hour < 13:
+            hour_zhi = "午"
+            hour_zhi_index = 6
+        elif hour >= 13 and hour < 15:
+            hour_zhi = "未"
+            hour_zhi_index = 7
+        elif hour >= 15 and hour < 17:
+            hour_zhi = "申"
+            hour_zhi_index = 8
+        elif hour >= 17 and hour < 19:
+            hour_zhi = "酉"
+            hour_zhi_index = 9
+        elif hour >= 19 and hour < 21:
+            hour_zhi = "戌"
+            hour_zhi_index = 10
+        else:
+            hour_zhi = "亥"
+            hour_zhi_index = 11
         
         # 计算时干（日上起时法）
         # 甲己还加甲，乙庚丙作初，丙辛从戊起，丁壬庚子居，戊癸何方发，壬子是真途
@@ -178,21 +198,30 @@ class FourPillarsCalculator:
     
     def get_hour_info(self, hour: int, minute: int) -> Tuple[str, int, str]:
         """获取时辰信息"""
-        adjusted_hour = hour
-        if minute >= 45:
-            adjusted_hour = (hour + 1) % 24
-        
-        for zhi, start, end, index in self.shizhi_table:
-            if start <= end:
-                if start <= adjusted_hour < end:
-                    time_range = f"{start:02d}:00-{end:02d}:00"
-                    return zhi, index, time_range
-            else:
-                if adjusted_hour >= start or adjusted_hour < end:
-                    time_range = f"{start:02d}:00-{end:02d}:00"
-                    return zhi, index, time_range
-        
-        return "子", 0, "00:00-00:00"
+        if hour >= 23 or hour < 1:
+            return "子", 0, "23:00-01:00"
+        elif hour >= 1 and hour < 3:
+            return "丑", 1, "01:00-03:00"
+        elif hour >= 3 and hour < 5:
+            return "寅", 2, "03:00-05:00"
+        elif hour >= 5 and hour < 7:
+            return "卯", 3, "05:00-07:00"
+        elif hour >= 7 and hour < 9:
+            return "辰", 4, "07:00-09:00"
+        elif hour >= 9 and hour < 11:
+            return "巳", 5, "09:00-11:00"
+        elif hour >= 11 and hour < 13:
+            return "午", 6, "11:00-13:00"
+        elif hour >= 13 and hour < 15:
+            return "未", 7, "13:00-15:00"
+        elif hour >= 15 and hour < 17:
+            return "申", 8, "15:00-17:00"
+        elif hour >= 17 and hour < 19:
+            return "酉", 9, "17:00-19:00"
+        elif hour >= 19 and hour < 21:
+            return "戌", 10, "19:00-21:00"
+        else:
+            return "亥", 11, "21:00-23:00"
     
     def calculate_four_pillars(self, year: int, month: int, day: int, 
                                hour: int = 0, minute: int = 0) -> Dict:
@@ -209,7 +238,14 @@ class FourPillarsCalculator:
             # 计算各柱
             year_pillar, year_gan = self.calculate_year_pillar(year, month, day)
             month_pillar = self.calculate_month_pillar(year, month, day, year_gan)
-            day_pillar = self.calculate_day_pillar(year, month, day)
+            
+            # 子时跨日处理：23:00-01:00属于第二天
+            calc_year, calc_month, calc_day = year, month, day
+            if hour >= 23:
+                target_date = datetime(year, month, day) + timedelta(days=1)
+                calc_year, calc_month, calc_day = target_date.year, target_date.month, target_date.day
+            
+            day_pillar = self.calculate_day_pillar(calc_year, calc_month, calc_day)
             day_gan = day_pillar[0]
             hour_pillar = self.calculate_hour_pillar(hour, minute, day_gan)
             
@@ -234,8 +270,7 @@ class FourPillarsCalculator:
                     "hour_zhi": hour_zhi,
                     "time_range": time_range,
                     "hour": hour,
-                    "minute": minute,
-                    "adjusted": minute >= 45
+                    "minute": minute
                 }
             }
             
@@ -264,8 +299,6 @@ def print_detailed_result(result):
     # 时辰信息
     hour_info = result['hour_info']
     print(f"时    辰: {hour_info['hour_zhi']}时 ({hour_info['time_range']})")
-    if hour_info['adjusted']:
-        print(f"时辰调整: {hour_info['minute']}分 ≥ 45分，已进入下一时辰")
     
     print("-" * 60)
     
