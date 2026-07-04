@@ -520,6 +520,37 @@
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📜 排盘依据"
+                        android:textColor="@color/gold"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
+                    <TextView
+                        android:id="@+id/expPaipanYiju"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:lineSpacingExtra="2dp"/>
+                </LinearLayout>
+
             </LinearLayout>
 
         </ScrollView>
