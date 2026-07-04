@@ -41,6 +41,7 @@ public class FullNinePalaceActivity extends Activity {
     private TextView expEightDoorsDesc;
     private TextView expGodsDesc;
     private TextView expPalacesDesc;
+    private TextView expPaipanYiju;
 
     private static final long UPDATE_INTERVAL = 60000;
     private Handler updateHandler;
@@ -133,6 +134,7 @@ public class FullNinePalaceActivity extends Activity {
         expEightDoorsDesc = (TextView) findViewById(R.id.expEightDoorsDesc);
         expGodsDesc = (TextView) findViewById(R.id.expGodsDesc);
         expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
+        expPaipanYiju = (TextView) findViewById(R.id.expPaipanYiju);
         
         updateHandler = new Handler(Looper.getMainLooper());
         updateRunnable = new Runnable() {
@@ -1170,6 +1172,10 @@ public class FullNinePalaceActivity extends Activity {
         if (expEightDoorsDesc != null) expEightDoorsDesc.setText(android.text.Html.fromHtml(getEightDoorsDesc(eightDoors), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expGodsDesc != null) expGodsDesc.setText(android.text.Html.fromHtml(getEightGodsDesc(eightGods), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expPalacesDesc != null) expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
+        
+        if (expPaipanYiju != null) {
+            expPaipanYiju.setText(android.text.Html.fromHtml(getPaipanYiju(yearPillar, monthPillar, dayPillar, timePillar, jieqi, isYangDun, ju, xunShou, zhiFuStar, zhiShiDoor, zhiFuPalace, zhiShiPalace), android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
     }
     
     private String getTianDiPanDesc(String[] palaces, String[] nineStars, String[] palaceNames) {
@@ -1842,6 +1848,82 @@ public class FullNinePalaceActivity extends Activity {
         } else {
             sb.append("★ 平平");
         }
+        return sb.toString();
+    }
+    
+    private String getPaipanYiju(String yearPillar, String monthPillar, String dayPillar, String timePillar,
+                                  String jieqi, boolean isYangDun, int ju,
+                                  String xunShou, String zhiFuStar, String zhiShiDoor,
+                                  int zhiFuPalace, int zhiShiPalace) {
+        String[] PALACE_NAMES = {"坎一", "坤二", "震三", "巽四", "中五", "乾六", "兑七", "艮八", "离九"};
+        
+        String getGoldColor = "<font color='#FFD700'>";
+        String getWoodColor = "<font color='#90EE90'>";
+        String getFireColor = "<font color='#FF6B6B'>";
+        String getEarthColor = "<font color='#DEB887'>";
+        String getMetalColor = "<font color='#C0C0C0'>";
+        String getWaterColor = "<font color='#87CEEB'>";
+        String getTitleColor = "<font color='#CCB866'>";
+        String getClose = "</font>";
+        
+        String dunType = isYangDun ? "阳遁" : "阴遁";
+        String dunColor = isYangDun ? getWoodColor : getMetalColor;
+        String shunNi = isYangDun ? "顺" : "逆";
+        
+        StringBuilder sb = new StringBuilder();
+        
+        // 1. 四柱
+        sb.append(getTitleColor).append("<b>【四柱】</b>").append(getClose).append("<br/>");
+        sb.append("年 ").append(getGoldColor).append(yearPillar).append(getClose)
+          .append("　月 ").append(getGoldColor).append(monthPillar).append(getClose)
+          .append("　日 ").append(getGoldColor).append(dayPillar).append(getClose)
+          .append("　时 ").append(getGoldColor).append(timePillar).append(getClose).append("<br/><br/>");
+        
+        // 2. 节气局数
+        sb.append(getTitleColor).append("<b>【局法】</b>").append(getClose).append("<br/>");
+        sb.append("节气：").append(getGoldColor).append(jieqi).append(getClose)
+          .append("　").append(dunColor).append(dunType).append(ju).append("局").append(getClose)
+          .append("　").append(shunNi).append("行").append("<br/><br/>");
+        
+        // 3. 旬首值符值使
+        sb.append(getTitleColor).append("<b>【值使】</b>").append(getClose).append("<br/>");
+        sb.append("旬首：").append(getGoldColor).append(xunShou).append(getClose).append("<br/>");
+        sb.append("值符：").append(getFireColor).append(zhiFuStar).append("星").append(getClose)
+          .append("　落").append(PALACE_NAMES[zhiFuPalace]).append("宫").append("<br/>");
+        sb.append("值使：").append(getWoodColor).append(zhiShiDoor).append("门").append(getClose)
+          .append("　落").append(PALACE_NAMES[zhiShiPalace]).append("宫").append("<br/><br/>");
+        
+        // 4. 三奇六仪
+        sb.append(getTitleColor).append("<b>【三奇六仪】</b>").append(getClose).append("<br/>");
+        sb.append("三奇：").append(getFireColor).append("丙").append(getClose)
+          .append(getWoodColor).append("乙").append(getClose)
+          .append(getWaterColor).append("丁").append(getClose).append("<br/>");
+        sb.append("六仪：").append(getEarthColor).append("戊己庚辛壬癸").append(getClose).append("<br/>");
+        sb.append("顺序：").append(shunNi).append("排 戊己庚辛壬癸丁丙乙").append("<br/><br/>");
+        
+        // 5. 九星
+        sb.append(getTitleColor).append("<b>【九星】</b>").append(getClose).append("<br/>");
+        sb.append("值符 ").append(getFireColor).append(zhiFuStar).append(getClose)
+          .append(" 落").append(PALACE_NAMES[zhiFuPalace]).append("，")
+          .append(shunNi).append("布：蓬芮冲辅禽心柱任英").append("<br/><br/>");
+        
+        // 6. 八门
+        sb.append(getTitleColor).append("<b>【八门】</b>").append(getClose).append("<br/>");
+        sb.append("值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose)
+          .append(" 落").append(PALACE_NAMES[zhiShiPalace]).append("，")
+          .append(shunNi).append("排：休生伤杜景死惊开").append("<br/><br/>");
+        
+        // 7. 八神
+        sb.append(getTitleColor).append("<b>【八神】</b>").append(getClose).append("<br/>");
+        sb.append("值符落").append(PALACE_NAMES[zhiFuPalace]).append("，")
+          .append(shunNi).append("布：符蛇阴合白玄地天").append("<br/><br/>");
+        
+        // 8. 排盘关键
+        sb.append(getTitleColor).append("<b>【关键】</b>").append(getClose).append("<br/>");
+        sb.append(dunColor).append(dunType).append(shunNi).append("行").append(getClose)
+          .append("　值符星随时干　值使门随时支<br/>");
+        sb.append("天盘主动　地盘主静　星门神仪合断吉凶");
+        
         return sb.toString();
     }
     
