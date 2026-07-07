@@ -15,7 +15,6 @@ public class SplashScreenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 启动时恢复上次保存的横竖屏方向（必须在 setContentView 之前，避免方向闪烁）
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
         int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -28,7 +27,7 @@ public class SplashScreenActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashScreenActivity.this, com.reggate.lib.RegistrationGateActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();

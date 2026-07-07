@@ -1,1 +1,3 @@
 include ':app'
+include ':registration-lib'
+project(':registration-lib').projectDir = new File('/Users/yy/pro-test/anddex/registration-lib')

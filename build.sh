@@ -90,15 +90,15 @@ if [ -z "$JAVAC" ]; then
     exit 1
 fi
 
-# 使用项目中预下载的AndroidX库
-ANDROIDX_DIR="$APP_DIR/../libs/appcompat"
-ANDROIDX_JAR="$ANDROIDX_DIR/classes.jar"
+# 使用项目中预下载的注册库
+REG_LIB_DIR="$APP_DIR/../libs"
+REG_LIB_JAR="$REG_LIB_DIR/registration-lib.jar"
 
-if [ -f "$ANDROIDX_JAR" ]; then
-    echo "使用项目中的AndroidX Appcompat库"
+if [ -f "$REG_LIB_JAR" ]; then
+    echo "使用项目中的注册库"
 else
-    echo "未找到AndroidX库，使用纯Android API"
-    ANDROIDX_JAR=""
+    echo "错误：未找到注册库"
+    exit 1
 fi
 
 # 收集所有Java文件
@@ -106,10 +106,7 @@ JAVA_FILES=$(find "$JAVA_DIR" -name "*.java")
 GEN_JAVA_FILES=$(find "$OUT_DIR/gen" -name "*.java")
 
 # 编译Java文件
-CLASSPATH="$PLATFORM_DIR/android.jar:$OUT_DIR/classes"
-if [ -n "$ANDROIDX_JAR" ]; then
-    CLASSPATH="$CLASSPATH:$ANDROIDX_JAR"
-fi
+CLASSPATH="$PLATFORM_DIR/android.jar:$OUT_DIR/classes:$REG_LIB_JAR:$REG_LIB_DIR/jetified-security-crypto-1.1.0-alpha06-runtime.jar:$REG_LIB_DIR/tink-android-1.8.0.jar"
 
 "$JAVAC" -d "$OUT_DIR/classes" \
     -classpath "$CLASSPATH" \
@@ -134,6 +131,9 @@ CLASS_FILES=$(find "$OUT_DIR/classes" -name "*.class")
 "$D8" \
     --classpath "$PLATFORM_DIR/android.jar" \
     $CLASS_FILES \
+    "$REG_LIB_JAR" \
+    "$REG_LIB_DIR/jetified-security-crypto-1.1.0-alpha06-runtime.jar" \
+    "$REG_LIB_DIR/tink-android-1.8.0.jar" \
     --output "$OUT_DIR"
 
 if [ $? -ne 0 ]; then
