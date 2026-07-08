@@ -58,8 +58,48 @@ echo "使用Android平台版本：34"
 echo "编译资源..."
 AAPT2="$BUILD_TOOLS_DIR/aapt2"
 
-# 编译应用资源
-"$AAPT2" compile --dir "$RES_DIR" -o "$OUT_DIR/res/resources.zip"
+# 创建临时资源目录，合并应用资源和注册库资源
+MERGED_RES_DIR="$OUT_DIR/merged_res"
+mkdir -p "$MERGED_RES_DIR"
+
+# 复制应用资源
+cp -r "$RES_DIR"/* "$MERGED_RES_DIR/" 2>/dev/null || true
+
+# 从注册库源码目录复制必要的资源（只复制 reggate 相关资源，避免覆盖应用主题）
+REG_LIB_SRC="/Users/yy/pro-test/anddex/registration-lib/src/main/res"
+if [ -d "$REG_LIB_SRC" ]; then
+    echo "合并注册库资源..."
+    
+    # 复制布局文件（reggate_activity_*.xml）
+    mkdir -p "$MERGED_RES_DIR/layout"
+    cp "$REG_LIB_SRC/layout/reggate_activity_"*.xml "$MERGED_RES_DIR/layout/" 2>/dev/null || true
+    
+    # 复制 values 目录中的 reggate 资源（字符串、颜色、主题）
+    mkdir -p "$MERGED_RES_DIR/values"
+    cp "$REG_LIB_SRC/values/strings.xml" "$MERGED_RES_DIR/values/reggate_strings.xml" 2>/dev/null || true
+    cp "$REG_LIB_SRC/values/colors.xml" "$MERGED_RES_DIR/values/reggate_colors.xml" 2>/dev/null || true
+    cp "$REG_LIB_SRC/values/themes.xml" "$MERGED_RES_DIR/values/reggate_themes.xml" 2>/dev/null || true
+    
+    # 复制 raw 目录中的公钥文件
+    mkdir -p "$MERGED_RES_DIR/raw"
+    cp "$REG_LIB_SRC/raw/"* "$MERGED_RES_DIR/raw/" 2>/dev/null || true
+    
+    # 复制 drawable 目录中的资源（二维码）
+    mkdir -p "$MERGED_RES_DIR/drawable"
+    cp "$REG_LIB_SRC/drawable/"* "$MERGED_RES_DIR/drawable/" 2>/dev/null || true
+    
+    # 复制 assets 目录中的配置文件
+    REG_LIB_ASSETS="/Users/yy/pro-test/anddex/registration-lib/src/main/assets"
+    if [ -d "$REG_LIB_ASSETS" ]; then
+        mkdir -p "$OUT_DIR/assets"
+        cp "$REG_LIB_ASSETS/"* "$OUT_DIR/assets/" 2>/dev/null || true
+    fi
+else
+    echo "警告：未找到注册库资源目录"
+fi
+
+# 编译合并后的资源
+"$AAPT2" compile --dir "$MERGED_RES_DIR" -o "$OUT_DIR/res/resources.zip"
 
 if [ $? -ne 0 ]; then
     echo "错误：资源编译失败"
@@ -160,9 +200,14 @@ cp "../classes.dex" .
 # 删除META-INF目录（如果存在）
 rm -rf "META-INF"
 
+# 如果存在assets目录，复制到temp_apk
+if [ -d "../assets" ]; then
+    cp -r "../assets" .
+fi
+
 # 使用zip命令创建APK，确保resources.arsc未压缩
 zip -0 -r "../app-unaligned.apk" resources.arsc
-zip -r "../app-unaligned.apk" AndroidManifest.xml classes.dex res/
+zip -r "../app-unaligned.apk" AndroidManifest.xml classes.dex res/ assets/ 2>/dev/null || true
 
 if [ $? -ne 0 ]; then
     echo "错误：APK打包失败"
