@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">时间显示</string>
-    <string name="qi_men_palace">奇门派盘</string>
+<string name="app_name">奇门遁甲</string>
+<string name="qi_men_palace">奇门排盘</string>
 </resources>

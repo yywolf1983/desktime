@@ -203,7 +203,7 @@ public class StopwatchActivity extends Activity {
                     
                     String timeStr;
                     if (hours > 0) {
-                        timeStr = String.format("%d 分 %02d:%02d.%02d", hours, minutes, seconds, millisPart);
+                        timeStr = String.format("%d 时 %02d:%02d.%02d", hours, minutes, seconds, millisPart);
                     } else if (minutes > 0) {
                         timeStr = String.format("%02d:%02d.%02d", minutes, seconds, millisPart);
                     } else {

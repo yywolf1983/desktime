@@ -191,7 +191,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:background="@drawable/btn_round_transparent"
-                        android:contentDescription="复制派盘信息" />
+                        android:contentDescription="复制排盘信息" />
 
                 </LinearLayout>
 

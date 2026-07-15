@@ -250,7 +250,7 @@ public class NinePalacePanel extends View {
     // 存储每宫完整的复制数据: [0]八神 [1]九星 [2]八门 [3]天盘天干 [4]地盘天干 [5]吉凶 [6]旺衰
     private String[][] copyPalaceData = new String[9][7];
 
-    // 获取当前派盘信息的文本（用于复制）- 标准派盘格式
+    // 获取当前排盘信息的文本（用于复制）- 标准排盘格式
     public String getCopyText() {
         StringBuilder sb = new StringBuilder();
         // 九宫顺序：按宫位数排列
@@ -320,7 +320,7 @@ public class NinePalacePanel extends View {
         return super.onTouchEvent(event);
     }
 
-    // 计算奇门派盘（基于正统拆补法时家转盘奇门遁甲标准算法）
+    // 计算奇门排盘（基于正统拆补法时家转盘奇门遁甲标准算法）
     public void calculateQiMenPanel(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
         // 基于四柱信息计算九宫格数据
         String[][] data = new String[9][2];

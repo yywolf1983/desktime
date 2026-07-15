@@ -232,7 +232,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="日 主"
+                            android:text="日主"
                             android:textSize="10sp"
                             android:textColor="@color/text_secondary"
                             android:letterSpacing="0.1"
@@ -276,7 +276,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="日 支"
+                            android:text="日支"
                             android:textSize="10sp"
                             android:textColor="@color/text_secondary"
                             android:letterSpacing="0.1"
@@ -316,7 +316,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="生 肖"
+                            android:text="生肖"
                             android:textSize="10sp"
                             android:textColor="@color/text_secondary"
                             android:letterSpacing="0.1"

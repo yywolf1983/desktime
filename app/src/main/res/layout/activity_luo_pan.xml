@@ -88,7 +88,7 @@
                         android:id="@+id/luopanSummary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="坐子向午，五行属水，吉利方位：东南、东方、东北"
+                        android:text="旋转罗盘选择方位查看详情"
                         android:textSize="14sp"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold"

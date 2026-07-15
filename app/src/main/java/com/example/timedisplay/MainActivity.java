@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
             });
         }
 
-        // 点击复制按钮复制派盘信息
+        // 点击复制按钮复制排盘信息
         if (copyButton != null) {
             copyButton.setOnClickListener(v -> copyPaiPanInfo());
         }
@@ -392,7 +392,7 @@ public class MainActivity extends Activity {
         updateDateTime();
     }
 
-    // 复制派盘信息到剪贴板 - 标准派盘文本格式
+    // 复制排盘信息到剪贴板 - 标准排盘文本格式
     private void copyPaiPanInfo() {
         StringBuilder sb = new StringBuilder();
         
@@ -422,7 +422,7 @@ public class MainActivity extends Activity {
             shichen = timeFortune.substring(0, 2); // 取"子时"等前两字
         }
         
-        // === 组装标准派盘文本 ===
+        // === 组装标准排盘文本 ===
         sb.append("【奇门遁甲排盘】\n");
         sb.append("━━━━━━━━━━━━━━━\n");
         sb.append("时间：").append(dateFormat.format(displayDate));
@@ -447,11 +447,11 @@ public class MainActivity extends Activity {
         
         // 复制到剪贴板
         android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        android.content.ClipData clip = android.content.ClipData.newPlainText("派盘信息", copyText);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("排盘信息", copyText);
         clipboard.setPrimaryClip(clip);
         
         // 显示提示
-        android.widget.Toast.makeText(this, "已复制派盘信息", android.widget.Toast.LENGTH_SHORT).show();
+        android.widget.Toast.makeText(this, "已复制排盘信息", android.widget.Toast.LENGTH_SHORT).show();
     }
 
     // 更新背景为深蓝色，保持沉稳风格
@@ -516,7 +516,7 @@ public class MainActivity extends Activity {
         // 获取当前节气
         String jieqi = getJieqi(year, month, day);
         
-        // 更新奇门派盘（传入节气参数）
+        // 更新奇门排盘（传入节气参数）
         ninePalacePanel.calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
 
         // 更新九宫格解释
@@ -1137,7 +1137,7 @@ public class MainActivity extends Activity {
         handler.removeCallbacksAndMessages(null);
     }
     
-    // 显示当前派盘的详细解读
+    // 显示当前排盘的详细解读
     private void showDetailedInterpretation() {
         // 获取当前时间的四柱
         Date now = new Date();
