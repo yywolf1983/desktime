@@ -9,58 +9,60 @@
     <color name="white">#FFFFFFFF</color>
     <color name="darker_white">#FFB0B0B0</color>
 
-    <!-- 新中式配色系统 -->
-    <color name="bg_dark">#FF0A0A14</color>
-    <color name="bg_card">#FF1a1a2e</color>
-    <color name="bg_card_light">#FF252540</color>
-    
-    <color name="gold">#FFD700</color>
-    <color name="gold_light">#FFE87C</color>
-    <color name="gold_faint">#CCB866</color>
-    <color name="gold_dark">#FFB800</color>
-    <color name="gold_transparent">#40FFD700</color>
-    
-    <color name="text_primary">#FF98D8F0</color>
-    <color name="text_secondary">#FF6B7B8A</color>
-    <color name="text_accent">#FFADD8E6</color>
-    
-    <color name="border_light">#FF4a4a6a</color>
-    <color name="border_gold">#20FFD700</color>
-    
+    <!-- 新中式配色系统（优化版） -->
+    <color name="bg_dark">#FF08080F</color>
+    <color name="bg_card">#FF181826</color>
+    <color name="bg_card_light">#FF23233A</color>
+
+    <!-- 金色系：由刺眼纯黄收敛为温润鎏金 -->
+    <color name="gold">#FFE6C46A</color>
+    <color name="gold_light">#FFF2D98C</color>
+    <color name="gold_faint">#FFD6BE86</color>
+    <color name="gold_dark">#FFC99A3E</color>
+    <color name="gold_transparent">#40E6C46A</color>
+
+    <!-- 文字：提升对比与协调 -->
+    <color name="text_primary">#FFAEDDEF</color>
+    <color name="text_secondary">#FF7C8C9C</color>
+    <color name="text_accent">#FFBFE0EA</color>
+
+    <color name="border_light">#FF4A4A6A</color>
+    <color name="border_gold">#20E6C46A</color>
+
     <color name="success">#FF90EE90</color>
     <color name="warning">#FFFFA500</color>
     <color name="danger">#FFFF6347</color>
-    
-    <color name="wuxing_wood">#FF228B22</color>
-    <color name="wuxing_fire">#FFFF4500</color>
-    <color name="wuxing_earth">#FFFFD700</color>
-    <color name="wuxing_metal">#FF708090</color>
-    <color name="wuxing_water">#FF006994</color>
 
-    <color name="light_blue">#FFADD8E6</color>
-    <color name="sky_blue">#FF87CEEB</color>
-    <color name="deep_sky_blue">#FF00BFFF</color>
-    <color name="cyan">#FF00FFFF</color>
+    <color name="wuxing_wood">#FF3FA34D</color>
+    <color name="wuxing_fire">#FFE0593B</color>
+    <color name="wuxing_earth">#FFD9A441</color>
+    <color name="wuxing_metal">#FF9AA7B8</color>
+    <color name="wuxing_water">#FF3E87C2</color>
+
+    <color name="light_blue">#FFBFE0EA</color>
+    <color name="sky_blue">#FF8FCDEB</color>
+    <color name="deep_sky_blue">#FF3FA8E0</color>
+    <color name="cyan">#FF5FD6D0</color>
     <color name="light_cyan">#FFE0FFFF</color>
-    <color name="electric_blue">#FF0066FF</color>
-    <color name="navy_blue">#FF000080</color>
+    <color name="electric_blue">#FF3E7BE0</color>
+    <color name="navy_blue">#FF1A2A5C</color>
 
-    <color name="background_color">#FF0A0A14</color>
-    
+    <color name="background_color">#FF08080F</color>
+
     <color name="tech_blue">#FF4A90D9</color>
     <color name="tech_dark_blue">#FF2C5AA0</color>
     <color name="tech_cyan">#FF2CC7C2</color>
     <color name="tech_purple">#FF9B59B6</color>
     <color name="tech_silver">#FFA0AEC0</color>
-    <color name="tech_dark">#FF1A1A2E</color>
+    <color name="tech_dark">#FF181826</color>
     <color name="tech_gray">#FF4A5568</color>
     <color name="tech_light_blue">#FF6B9BDB</color>
 
-    <!-- 辅助颜色 -->
-    <color name="date_blue">#FF6B8DD6</color>
-    <color name="jieqi_orange">#FFFFB84D</color>
-    <color name="fortune_green">#FF8FBC8F</color>
-    <color name="explanation_gray">#FF9BA4B0</color>
-    <color name="explanation_purple">#FFB19CD9</color>
-    <color name="colon_color">#FF87CEEB</color>
+    <!-- 首页强调色：更柔和协调 -->
+    <color name="date_blue">#FF8AA6E4</color>
+    <color name="jieqi_orange">#FFF3BA66</color>
+    <color name="fortune_green">#FF9CCB9C</color>
+    <color name="explanation_gray">#FFA8B1BD</color>
+    <color name="explanation_purple">#FFBBA6DE</color>
+    <color name="colon_color">#FF9FD4E8</color>
 </resources>

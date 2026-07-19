@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="8dp"
+            android:padding="16dp"
             android:paddingBottom="24dp">
 
             <!-- 标题 -->
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="12dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background"
                 android:gravity="center">
                 <TextView
@@ -45,8 +45,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background">
                 <TextView
                     android:layout_width="match_parent"
@@ -56,12 +55,12 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="12dp"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@drawable/gold_separator"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="12dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -194,8 +193,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="14dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background">
                 <TextView
                     android:layout_width="match_parent"
@@ -205,7 +203,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.06"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="12dp"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -259,7 +257,7 @@
                             android:id="@+id/dayMasterIcon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
@@ -299,7 +297,7 @@
                             android:id="@+id/dayBranchIcon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
@@ -339,7 +337,7 @@
                             android:id="@+id/zodiacIcon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -350,7 +348,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
                     <TextView
                         android:id="@+id/strengthTag"
                         android:layout_width="wrap_content"
@@ -381,14 +379,14 @@
                     android:lineSpacingExtra="4dp"
                     android:padding="8dp"
                     android:background="@drawable/card_border"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="12dp"/>
 
                 <!-- 分隔 -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@drawable/gold_separator"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="12dp"/>
 
                 <!-- 纳音详解 -->
                 <TextView
@@ -465,7 +463,7 @@
                     android:textColor="@color/text_primary"
                     android:textSize="11sp"
                     android:lineSpacingExtra="3dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="12dp"/>
 
                 <!-- 命宫 -->
                 <LinearLayout
@@ -477,7 +475,7 @@
                     android:paddingVertical="1dp"
                     android:paddingHorizontal="6dp"
                     android:background="@drawable/card_border"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -553,8 +551,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background">
                 <TextView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -562,7 +559,7 @@
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View
                     android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/tenGodsText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
@@ -574,8 +571,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background">
                 <TextView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -583,11 +579,11 @@
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View
                     android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/wuxingPowerText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/xijiText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"
@@ -597,13 +593,13 @@
             <!-- 5. 性格特点 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="🌟 性格特点" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/personalityText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -612,13 +608,13 @@
             <!-- 6. 事业运势 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="💼 事业运势" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/careerText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -627,13 +623,13 @@
             <!-- 7. 财富运势 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="💰 财富运势" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/wealthText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -642,13 +638,13 @@
             <!-- 8. 感情婚姻 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="💕 感情婚姻" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/relationshipText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -657,13 +653,13 @@
             <!-- 9. 健康建议 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="🏥 健康建议" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/healthText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -672,13 +668,13 @@
             <!-- 10. 人际关系 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="🤝 人际关系" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/socialText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -687,13 +683,13 @@
             <!-- 11. 地支藏干 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="🌿 地支藏干" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/hiddenStemsText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
@@ -702,13 +698,13 @@
             <!-- 12. 命局格局 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="🏰 命局格局" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/patternText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"/>
@@ -717,13 +713,13 @@
             <!-- 13. 六亲分析 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="👪 六亲浅析" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/sixRelText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
@@ -732,13 +728,13 @@
             <!-- 14. 合冲刑害 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="⚔ 合冲刑害" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/branchRelText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
@@ -747,13 +743,13 @@
             <!-- 15. 各柱详解 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="📜 四柱详解" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/pillarsDetailText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
@@ -762,33 +758,33 @@
             <!-- 17. 人生发展建议 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="🎯 人生发展建议" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/lifeAdviceText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="12dp"/>
             </LinearLayout>
 
             <!-- 18. 命局综评 -->
             <LinearLayout
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="12dp" android:layout_marginHorizontal="4dp"
-                android:layout_marginBottom="8dp" android:background="@drawable/card_background">
+                android:orientation="vertical" android:padding="14dp"
+                android:layout_marginBottom="12dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="📊 命局综评" android:textColor="@color/gold" android:textSize="14sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
+                    android:background="@drawable/gold_separator" android:layout_marginBottom="12dp"/>
                 <TextView android:id="@+id/levelText"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="12dp"/>
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:text="※ 以上解读基于四柱命理分析，仅供参考。命运掌握在自己手中，积极努力、保持善良才是最好的风水。"
                     android:textColor="@color/text_secondary" android:textSize="11sp" android:lineSpacingExtra="2dp"/>

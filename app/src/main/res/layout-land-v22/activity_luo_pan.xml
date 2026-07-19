@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="6dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -46,8 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -75,8 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -201,8 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -235,8 +232,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -269,8 +265,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -303,8 +298,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -335,8 +329,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -367,8 +360,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -399,8 +391,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -433,8 +424,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="14dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
 
@@ -467,9 +457,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:layout_marginBottom="8dp"
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp"
                     android:background="@drawable/card_background">
 
                     <TextView

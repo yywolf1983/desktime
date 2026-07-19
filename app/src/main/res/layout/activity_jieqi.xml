@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -24,13 +24,13 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background">
 
                 <LinearLayout
                     android:id="@+id/backButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="goBack"
@@ -55,8 +55,8 @@
                     android:letterSpacing="0.08"/>
 
                 <View
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -65,7 +65,6 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:padding="16dp"
-                android:layout_marginHorizontal="4dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/card_background">
 
@@ -98,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginTop="8dp"
-                    android:padding="10dp">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -180,7 +179,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:layout_marginHorizontal="4dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/card_background">
 
@@ -313,7 +311,7 @@
                     android:textSize="13sp"
                     android:textColor="@color/warning"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginTop="8dp"/>
             </LinearLayout>
 
@@ -322,7 +320,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:layout_marginHorizontal="4dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/card_background">
@@ -332,7 +329,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="12dp">
                     <View
                         android:layout_width="6dp"
                         android:layout_height="6dp"

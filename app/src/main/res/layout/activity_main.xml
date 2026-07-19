@@ -36,7 +36,7 @@
             android:gravity="center"
             android:layout_marginBottom="10dp"
             android:padding="8dp"
-            android:background="@drawable/card_background"
+            android:background="@drawable/card_background_flat"
             android:clickable="true"
             android:focusable="true">
 
@@ -81,7 +81,7 @@
             android:layout_marginBottom="6dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:background="@drawable/card_background">
+            android:background="@drawable/card_background_flat">
 
             <!-- 第1行: 日期 + 按钮 -->
             <LinearLayout
@@ -199,7 +199,7 @@
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/card_background">
+            android:background="@drawable/card_background_flat">
 
             <TextView
                 android:id="@+id/timeFortuneTextView"
@@ -232,7 +232,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:background="@drawable/card_background">
+            android:background="@drawable/card_background_flat">
 
             <com.example.timedisplay.NinePalacePanel
                 android:id="@+id/ninePalacePanel"
