@@ -1453,13 +1453,13 @@ public class DestinyCalculator {
         // 格局解释
         switch (patternShen) {
             case "正官":
-                sb.append("正官格主贵气、名声、纪律。宜遵纪守法，从政或大型机构发展，官星有力则仕途亨通。");
+                sb.append("正官格主贵气名声、重纪律。宜守法从政或入职大型机构，官星有力则仕途亨通。");
                 if (isStrong && containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "正印"))
                     sb.append("命带<font color='#90EE90'><b>官印相生</b></font>，贵格也，德才兼备。");
                 if (isWeak) sb.append("身弱官旺则压力较大，需印星化解。");
                 break;
             case "七杀":
-                sb.append("七杀格主权威、果断、执行力。宜军警、管理、创业。杀星有制则化权，无制则多波折。");
+                sb.append("七杀格主权威果断、善执行。宜军警管理创业；杀有制则化权，无制多波折。");
                 if (containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "食神"))
                     sb.append("命带<font color='#90EE90'><b>食神制杀</b></font>，以智勇取胜，成就非凡。");
                 if (isWeak) sb.append("身弱遇杀则挑战重重，需印化杀或食制杀。");
@@ -1470,7 +1470,7 @@ public class DestinyCalculator {
                 if (isWeak) sb.append("身弱财旺反为财累，需谨慎理财。");
                 break;
             case "偏财":
-                sb.append("偏财格主意外之财、投资天赋。商业嗅觉灵敏，宜经商、投资、贸易等行业，但需防冒进。");
+                sb.append("偏财格主意外之财、善投资。商业嗅觉灵敏，宜经商投资贸易，然需防冒进。");
                 if (isStrong) sb.append("身强善用偏财，有富翁潜质，但要见好就收。");
                 if (isWeak) sb.append("身弱不宜投机，应以稳健为主，见财莫贪。");
                 break;
@@ -1485,18 +1485,18 @@ public class DestinyCalculator {
                     sb.append("有<font color='#FF6B6B'>枭神夺食</font>之象，需注意心胸开阔，避免孤僻。");
                 break;
             case "食神":
-                sb.append("食神格主才华、福气、享乐。多才多艺，宜艺术、餐饮、文化创意行业。心态乐观，一生福泽深厚。");
+                sb.append("食神格主才华福气、尚享乐。多才多艺，宜艺术餐饮文创；心态乐观，福泽深厚。");
                 if (isStrong) sb.append("食神泄秀，才华横溢，是天然的艺术家。");
                 if (isWeak) sb.append("食神泄身太过则精力不足，需节制享乐。");
                 break;
             case "伤官":
-                sb.append("伤官格主聪明、不拘一格、创造力强。才华外露，宜创新型行业，但锋芒易招是非。");
+                sb.append("伤官格主聪明不羁、善创造。才华外露，宜创新行业，然锋芒易招是非。");
                 if (containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "正印"))
                     sb.append("命带<font color='#90EE90'><b>伤官佩印</b></font>，才华与智慧并存，极为优秀。");
                 if (isWeak) sb.append("伤官泄身过重，需养精蓄锐，莫贪多求快。");
                 break;
             case "比肩": case "劫财":
-                sb.append("建禄格主自强、独立、实干。靠自身努力打拼，宜自主创业或技术专精。");
+                sb.append("建禄格主自强独立、重实干。靠自身打拼，宜自主创业或技术专精。");
                 if (isStrong) sb.append("比劫林立，竞争意识强，适合需要拼搏的领域。防刚愎自用。");
                 if (isWeak) sb.append("得月令之助，弱中转旺，合作共赢是最佳策略。");
                 break;

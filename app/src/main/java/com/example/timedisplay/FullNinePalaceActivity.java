@@ -1370,7 +1370,7 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getRiShiRelationship(String riGan, String shiGan) {
         if (riGan.equals(shiGan)) {
-            return "比和相助，事情容易达成，自身与事情协调一致";
+            return "比和相助，事易成，主客协调";
         }
         java.util.Map<String, String> shengMap = new java.util.HashMap<>();
         shengMap.put("木", "火"); shengMap.put("火", "土"); 
@@ -1388,13 +1388,13 @@ public class FullNinePalaceActivity extends Activity {
         
         if (riWuxing != null && shiWuxing != null) {
             if (shengMap.get(riWuxing).equals(shiWuxing)) {
-                return "日生时，自身生助事情，需付出努力方能成事";
+                return "日生时，我生事，须奋勉方成";
             }
             if (shengMap.get(shiWuxing).equals(riWuxing)) {
-                return "时生日，事情生助自身，事半功倍，易得帮助";
+                return "时生日，事生我，事半功倍易得助";
             }
         }
-        return "日时关系一般，需努力争取，顺其自然";
+        return "日时平平，宜勉力，顺其自然";
     }
     
     private String getCareerAdvice(String door, String star) {
@@ -1749,7 +1749,7 @@ public class FullNinePalaceActivity extends Activity {
 
         sb.append("📈 整体运势\n");
         if (isLuckyStar && isLuckyDoor) {
-            sb.append("🏆 ★★★ 大吉 - 值符值使皆吉，今日运势极佳\n");
+            sb.append("🏆 ★★★ 大吉 · 值符值使皆吉，运势极佳\n");
         } else if (isLuckyStar || isLuckyDoor) {
             sb.append("👍 ★★ 小吉 - 值符值使一吉，运势平稳\n");
         } else {
@@ -1760,14 +1760,14 @@ public class FullNinePalaceActivity extends Activity {
         sb.append("📋 行事准则\n");
         if (door != null) {
             switch (door) {
-                case "开": sb.append("🚀 大胆开创，积极进取，把握良机\n"); break;
-                case "生": sb.append("🌱 稳扎稳打，步步为营，注重积累\n"); break;
-                case "休": sb.append("😌 劳逸结合，养精蓄锐，厚积薄发\n"); break;
-                case "景": sb.append("✨ 展示才华，注重细节，言出必行\n"); break;
-                case "杜": sb.append("🔒 静守待时，积蓄力量，等待时机\n"); break;
-                case "伤": sb.append("⚠️ 谨慎行事，避免冒险，防损破财\n"); break;
-                case "死": sb.append("🛡️ 保守谨慎，不宜进取，清理整顿\n"); break;
-                case "惊": sb.append("🔔 镇定自若，谨言慎行，防口舌是非\n"); break;
+                case "开": sb.append("🚀 大胆开创，把握良机\n"); break;
+                case "生": sb.append("🌱 稳扎稳打，注重积累\n"); break;
+                case "休": sb.append("😌 劳逸结合，养精蓄锐\n"); break;
+                case "景": sb.append("✨ 展示才华，言出必行\n"); break;
+                case "杜": sb.append("🔒 静守待时，蓄力待发\n"); break;
+                case "伤": sb.append("⚠️ 谨慎行事，防损破财\n"); break;
+                case "死": sb.append("🛡️ 保守谨慎，清理整顿\n"); break;
+                case "惊": sb.append("🔔 镇定自若，防口舌是非\n"); break;
             }
         }
 
@@ -1812,8 +1812,8 @@ public class FullNinePalaceActivity extends Activity {
         }
         String status = wangCui[riGanPalace];
         switch (status) {
-            case "旺": return "气势旺，百事顺，力量最强";
-            case "相": return "次吉，得助力，事多有成";
+            case "旺": return "气势最旺，诸事顺遂";
+            case "相": return "次吉，多助，事易成";
             case "休": return "平和安宁，不宜强求";
             case "囚": return "困顿受阻，事多不利";
             case "死": return "衰败不利，宜守不宜攻";

@@ -610,8 +610,8 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append(BAZHAI_KOUJUE);
 
         sb.append("<font color='#CCB866'>一句话总结：</font>");
-        sb.append("吉方放重要房间（卧室、客厅、大门），凶方放次要房间（厕所、储物间），");
-        sb.append("这就叫「<b>趋吉避凶</b>」，是八宅风水的核心智慧。");
+        sb.append("吉方布卧室厅门，凶方布厕储，");
+        sb.append("即「<b>趋吉避凶</b>」，乃八宅核心之道。");
 
         return sb.toString();
     }
@@ -679,9 +679,8 @@ public class LuoPanActivity extends android.app.Activity {
         String inCenterStar = starNames[baguaNumber - 1];
 
         StringBuilder sb = new StringBuilder();
-        sb.append("九星飞宫，简单说就是「<b>轮流值班</b>」的星象系统。<br/>");
-        sb.append("古人把九颗虚拟星按洛书顺序排布，每颗星管一种运势，");
-        sb.append("中宫之星为「<b>当值星</b>」，决定全局气场基调。<br/><br/>");
+        sb.append("九星飞宫，即九星按洛书顺序轮流入中当值，<br/>");
+        sb.append("中宫之星为「<b>当值星</b>」，定全局气场基调。<br/><br/>");
 
         sb.append("当前坐山<b>").append(bagua).append("</b>卦入中，当值星为「<b>")
           .append(inCenterStar).append("</b>」，其影响如下：<br/>");
@@ -689,31 +688,31 @@ public class LuoPanActivity extends android.app.Activity {
         // 根据入中星给出本局基调解释
         switch (baguaNumber) {
             case 1:
-                sb.append("一白贪狼星（水）入中，水主智、主流通，本局利于学业、考试、远行，整体气场温润柔和，适合读书进修、谋划未来。");
+                sb.append("一白（水）入中，水主智流通，利学业远行，气场温润，宜进修谋划。");
                 break;
             case 2:
-                sb.append("二黑巨门星（土）入中，土主病符，本局气场沉闷易病，需注意脾胃健康，不宜动土兴工，宜静养、忌躁动。");
+                sb.append("二黑（土）入中，土主病符，气场沉闷易病，护脾胃，宜静养忌动土。");
                 break;
             case 3:
-                sb.append("三碧禄存星（木）入中，木主争斗，本局气场躁动易起口舌，须防小人是非、家庭争吵，宜绿色植物化解、忌动怒。");
+                sb.append("三碧（木）入中，木主争斗，易口舌是非，防小人，忌动怒，宜绿植。");
                 break;
             case 4:
-                sb.append("四绿文曲星（木）入中，木主文昌，本局利读书考试、文艺创作，是文职人士、学生的吉时，宜读书学习、签约谈事。");
+                sb.append("四绿（木）入中，木主文昌，利读书创作、签约，宜学宜谈。");
                 break;
             case 5:
-                sb.append("五黄廉贞星（土）入中，土为大凶煞，本局灾祸连连、疾病破财，宜安静、忌动土搬迁，须用金属风铃或铜器化解。");
+                sb.append("五黄（土）入中，大凶煞，灾病破财，宜静忌动土，用铜器化解。");
                 break;
             case 6:
-                sb.append("六白武曲星（金）入中，金主权势，本局利升职、求职、武职行业，是事业发展、贵人相助的好时机，宜进取有为。");
+                sb.append("六白（金）入中，金主权势，利升职求职，贵人助，宜进取。");
                 break;
             case 7:
-                sb.append("七赤破军星（金）入中，金主肃杀，本局易破财招盗、口角争斗，须防小人暗害、官非纠纷，宜守不宜攻、忌投机。");
+                sb.append("七赤（金）入中，金主肃杀，易破财招盗，防小人官非，宜守忌投机。");
                 break;
             case 8:
-                sb.append("八白左辅星（土）入中，土主财运，本局为当下最吉的旺财星，利置业、投资、求财，是积累财富的好时机。");
+                sb.append("八白（土）入中，旺财星，利置业投资求财，宜积累。");
                 break;
             case 9:
-                sb.append("九紫右弼星（火）入中，火主喜庆，本局利婚嫁、添丁、庆祝之事，整体气氛欢快热烈，适合办喜事、谈合作。");
+                sb.append("九紫（火）入中，火主喜庆，利婚嫁添丁，宜办喜事谈合作。");
                 break;
         }
         sb.append("<br/><br/>");
@@ -721,8 +720,8 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append(JIUXING_KOUJUE);
 
         sb.append("<font color='#CCB866'>一句话总结：</font>");
-        sb.append("九星随中宫流转，吉星方位宜活动、办公、休息；凶星方位宜安放金属、植物等物品化解，");
-        sb.append("这就是「<b>星随宫转，吉凶有方</b>」的道理。");
+        sb.append("吉星方宜活动办公，凶星方宜摆金属绿植化解，");
+        sb.append("即「<b>星随宫转，吉凶有方</b>」。");
 
         return sb.toString();
     }
@@ -783,8 +782,8 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append("八门，可以理解为「<b>八扇运势之门</b>」，每扇门后面藏着不同的能量。<br/>");
         sb.append("古人行军打仗、出行办事，都要看走哪扇门「<b>吉凶不同</b>」。<br/><br/>");
 
-        sb.append("其原理是：以坐山卦为起点，把八门按固定顺序排到八方，每方一门。<br/>");
-        sb.append("当前坐山为<b>").append(bagua).append("</b>卦，从此方起休门，依次顺排。<br/><br/>");
+        sb.append("以坐山卦为起点，八门按序排入八方。<br/>");
+        sb.append("当前坐山为<b>").append(bagua).append("</b>卦，自此起休门顺排。<br/><br/>");
 
         sb.append(BAMEN_KOUJUE);
 
@@ -794,8 +793,8 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append("<br/>");
 
         sb.append("<font color='#CCB866'>一句话总结：</font>");
-        sb.append("出门办事、做生意、谈合作，先看走的是「吉门」还是「凶门」方位，");
-        sb.append("吉门方行事顺利，凶门方易生波折，这就是「<b>择门而行</b>」的智慧。");
+        sb.append("办事谈合作，先看吉门凶门方位，");
+        sb.append("吉门顺、凶门波折，即「<b>择门而行</b>」。");
 
         return sb.toString();
     }
@@ -1073,15 +1072,15 @@ public class LuoPanActivity extends android.app.Activity {
 
         String relation = getWuxingRelation(wuxing, mountainWuxing);
         if (relation.equals("【比和】")) {
-            return "<font color='#FFD700'><b>山命同气</b></font> — 坐山与命主五行比和，阴阳调和，福泽绵长，属于上吉之格";
+            return "<font color='#FFD700'><b>山命同气</b></font> — 坐山与命比和，阴阳调和，上吉之格";
         } else if (relation.equals("【生我】")) {
-            return "<font color='#00CC00'><b>山生命主</b></font> — 坐山生助命主，先灵安则后人福，属于大吉之格，子孙昌盛";
+            return "<font color='#00CC00'><b>山生命主</b></font> — 坐山生我，先灵安后人福，大吉，子孙昌盛";
         } else if (relation.equals("【我生】")) {
-            return "<font color='#FFAA00'><b>命主生山</b></font> — 命主生扶坐山，泄秀之象，虽有耗损但文采秀发，后代出文人";
+            return "<font color='#FFAA00'><b>命主生山</b></font> — 我生山，泄秀，后代出文人";
         } else if (relation.equals("【克我】")) {
-            return "<font color='#FF4444'><b>山克命主</b></font> — 坐山克制命主，阴克阳之象，需择吉日良辰安葬，可化凶为吉";
+            return "<font color='#FF4444'><b>山克命主</b></font> — 山克我，需择吉安葬化凶";
         } else {
-            return "<font color='#FF6B6B'><b>命主克山</b></font> — 命主克制坐山，阳克阴之象，占之不利，宜另择吉地或用法化解";
+            return "<font color='#FF6B6B'><b>命主克山</b></font> — 我克山，占之不吉，宜另择吉地";
         }
     }
     

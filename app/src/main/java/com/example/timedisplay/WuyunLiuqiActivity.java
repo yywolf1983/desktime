@@ -154,7 +154,7 @@ public class WuyunLiuqiActivity extends Activity {
 
     private static final String STATIC_TEACHING =
         "<font color='#FFD700'><b>五运六气概述</b></font><br/>" +
-        "<font color='#8899AA'>中医运气学说，以天干地支推演气候与健康关系。</font><br/><br/>" +
+        "<font color='#8899AA'>五运六气，以干支推演气候与人体健康。</font><br/><br/>" +
         "<font color='#FFD700'><b>五运</b></font><br/>" +
         "<font color='#90EE90'>木</font><font color='#8899AA'>主生发，肝胆，疏肝</font> · " +
         "<font color='#FF6B6B'>火</font><font color='#8899AA'>主炎热，心小肠，清心</font><br/>" +
@@ -553,12 +553,12 @@ public class WuyunLiuqiActivity extends Activity {
         relation.append("<font color='" + COLOR_LIGHT_BLUE + "'><b>运气与时辰关系：</b></font><br/>");
         
         String[][] yunqiShichen = {
-            {"木运", "厥阴风木", "🌿 厥阴经当令（丑时、戌时）：丑时肝经主排毒藏血，戌时心包经主喜乐护心", COLOR_JI},
-            {"火运", "少阴君火", "🔥 少阴经当令（午时、酉时）：午时心经主神明宜午休，酉时肾经主收藏宜静养", COLOR_XIONG},
-            {"火运", "少阳相火", "🔥 少阳经当令（子时、亥时）：子时胆经主生发决断，亥时三焦经主通百脉宜安眠", "#FF8C00"},
-            {"土运", "太阴湿土", "🌾 太阴经当令（寅时、巳时）：寅时肺经主宣降宜深呼吸，巳时脾经主运化宜工作", COLOR_EARTH},
-            {"金运", "阳明燥金", "🍂 阳明经当令（卯时、辰时）：卯时大肠经主排泄宜排便，辰时胃经主纳谷宜早餐", COLOR_METAL},
-            {"水运", "太阳寒水", "💧 太阳经当令（未时、申时）：未时小肠经主吸收宜休息，申时膀胱经主气化宜运动", COLOR_WATER}
+            {"木运", "厥阴风木", "🌿 厥阴风木（丑、戌时）：丑时肝经排毒，戌时心包护心", COLOR_JI},
+            {"火运", "少阴君火", "🔥 少阴君火（午、酉时）：午时心经宜午休，酉时肾经宜静养", COLOR_XIONG},
+            {"火运", "少阳相火", "🔥 少阳相火（子、亥时）：子时胆经主决断，亥时三焦通百脉宜眠", "#FF8C00"},
+            {"土运", "太阴湿土", "🌾 太阴湿土（寅、巳时）：寅时肺经宜呼吸，巳时脾经主运化", COLOR_EARTH},
+            {"金运", "阳明燥金", "🍂 阳明燥金（卯、辰时）：卯时大肠宜排便，辰时胃经宜早餐", COLOR_METAL},
+            {"水运", "太阳寒水", "💧 太阳寒水（未、申时）：未时小肠宜休息，申时膀胱宜运动", COLOR_WATER}
         };
         
         for (String[] item : yunqiShichen) {
@@ -625,12 +625,12 @@ public class WuyunLiuqiActivity extends Activity {
         
         StringBuilder qiDetail = new StringBuilder();
         String[][] qiDetails = {
-            {"厥阴风木", "风气主令，生发疏泄。<br/>时段：大寒至春分 · 地支寅卯 · 天干丁壬<br/><br/>⚠️ 易患：头痛眩晕、关节痛、肝气郁结<br/>✅ 养生：防风邪，疏肝理气，多散步<br/>🍃 饮食：多食青色食物，少食酸味", COLOR_JI},
-            {"少阴君火", "热气主令，温热明亮。<br/>时段：春分至小满 · 地支巳午 · 天干戊癸<br/><br/>⚠️ 易患：发热心烦、口舌生疮、失眠<br/>✅ 养生：清热降火，静心安神，宜午休<br/>🍅 饮食：多食红色食物，忌热性食物", COLOR_XIONG},
-            {"少阳相火", "火气主令，炎热躁动。<br/>时段：小满至大暑 · 地支巳午 · 天干戊癸<br/><br/>⚠️ 易患：目赤肿痛、咽喉痛、疮疡、烦躁<br/>✅ 养生：清泻相火，饮食清淡，忌熬夜<br/>🌶️ 饮食：多食苦味食物，以苦泄火", "#FF8C00"},
-            {"太阴湿土", "湿气主令，湿润黏滞。<br/>时段：大暑至秋分 · 地支申酉 · 天干甲己<br/><br/>⚠️ 易患：腹胀腹泻、水肿、脾胃不适、湿疹<br/>✅ 养生：健脾祛湿，适度运动出汗<br/>🌾 饮食：多食黄色食物，忌生冷油腻", COLOR_EARTH},
-            {"阳明燥金", "燥气主令，干燥收敛。<br/>时段：秋分至小雪 · 地支申酉 · 天干甲己<br/><br/>⚠️ 易患：干咳、皮肤干燥、便秘、咽干<br/>✅ 养生：润肺生津，保持室内湿润<br/>🍐 饮食：多食白色食物，忌辛辣烧烤", COLOR_METAL},
-            {"太阳寒水", "寒气主令，寒冷凝滞。<br/>时段：小雪至大寒 · 地支亥子 · 天干丙辛<br/><br/>⚠️ 易患：感冒风寒、关节冷痛、畏寒<br/>✅ 养生：温阳散寒，注意保暖，早睡晚起<br/>🫘 饮食：多食黑色温性食物，忌寒凉", COLOR_WATER}
+            {"厥阴风木", "风气主令，生发疏泄（大寒-春分，寅卯，丁壬）。<br/>⚠️ 易头痛眩晕、关节痛、肝郁。<br/>✅ 防风疏肝，多散步；🍃 食青色，少酸味", COLOR_JI},
+            {"少阴君火", "热气主令，温热明亮（春分-小满，巳午，戊癸）。<br/>⚠️ 易发热心烦、口疮、失眠。<br/>✅ 清热降火，宜午休；🍅 食红色，忌热性", COLOR_XIONG},
+            {"少阳相火", "火气主令，炎热躁动（小满-大暑，巳午，戊癸）。<br/>⚠️ 易目赤咽痛、疮疡烦躁。<br/>✅ 清泻相火，忌熬夜；🌶️ 食苦味泄火", "#FF8C00"},
+            {"太阴湿土", "湿气主令，湿润黏滞（大暑-秋分，申酉，甲己）。<br/>⚠️ 易腹胀泻痢、水肿湿疹。<br/>✅ 健脾祛湿，宜运动；🌾 食黄色，忌生冷", COLOR_EARTH},
+            {"阳明燥金", "燥气主令，干燥收敛（秋分-小雪，申酉，甲己）。<br/>⚠️ 易干咳、肤燥便秘咽干。<br/>✅ 润肺生津，保湿；🍐 食白色，忌辛辣", COLOR_METAL},
+            {"太阳寒水", "寒气主令，寒冷凝滞（小雪-大寒，亥子，丙辛）。<br/>⚠️ 易感冒风寒、关节冷痛畏寒。<br/>✅ 温阳散寒，早睡保暖；🫘 食黑色温性，忌寒凉", COLOR_WATER}
         };
         
         qiDetail.append("<font color='" + COLOR_GOLD + "'><b>💡 当前六气详解：</b></font><br/><br/>");
@@ -852,11 +852,11 @@ public class WuyunLiuqiActivity extends Activity {
         yunshi.append("在泉 ").append(zaiQuan).append("：").append(getLiuyiDetailedAnalysis(zaiQuan)).append("<br/><br/>");
 
         String[][] yunshiAnalysis = {
-            {"木", "木运之年，风气偏盛，肝气易旺。<br/>✅ 事业财运：财运波动，宜把握机遇。<br/>💪 健康：防肝胆病、头痛眩晕。多食绿色食物，疏肝理气。<br/>💕 感情：桃花旺盛，宜社交活动，结识新友。<br/><br/>", COLOR_JI},
-            {"火", "火运之年，热气偏盛，心气易旺。<br/>✅ 事业财运：财运旺，投资宜谨慎。<br/>💪 健康：防心血管病、口舌生疮。多食红色食物，清心降火。<br/>💕 感情：感情升温，宜表白示爱。<br/><br/>", COLOR_XIONG},
-            {"土", "土运之年，湿气偏盛，脾气易旺。<br/>✅ 事业财运：财运平稳，宜稳健理财。<br/>💪 健康：防脾胃病、消化不良。多食黄色食物，健脾祛湿。<br/>💕 感情：感情稳定，宜成家立业。<br/><br/>", COLOR_EARTH},
-            {"金", "金运之年，燥气偏盛，肺气易旺。<br/>✅ 事业财运：财运佳，宜收获成果。<br/>💪 健康：防呼吸病、皮肤干燥。多食白色食物，润肺生津。<br/>💕 感情：感情收敛，宜理性沟通。<br/><br/>", COLOR_METAL},
-            {"水", "水运之年，寒气偏盛，肾气易旺。<br/>✅ 事业财运：财运稳，宜守财蓄势。<br/>💪 健康：防肾病、关节冷痛。多食黑色食物，补肾温阳。<br/>💕 感情：感情深沉，宜坦诚沟通。<br/><br/>", COLOR_WATER}
+            {"木", "木运之年，风气偏盛，肝气易旺。<br/>✅ 财运波动，宜把握机遇。<br/>💪 防肝胆、头痛，多绿色食物疏肝。<br/>💕 桃花旺，宜社交结友。<br/><br/>", COLOR_JI},
+            {"火", "火运之年，热气偏盛，心气易旺。<br/>✅ 财运旺，投资宜谨慎。<br/>💪 防心血管、口疮，多红色食物清心。<br/>💕 感情升温，宜表白示爱。<br/><br/>", COLOR_XIONG},
+            {"土", "土运之年，湿气偏盛，脾气易旺。<br/>✅ 财运平稳，宜稳健理财。<br/>💪 防脾胃不调，多黄色食物健脾。<br/>💕 感情稳定，宜成家立业。<br/><br/>", COLOR_EARTH},
+            {"金", "金运之年，燥气偏盛，肺气易旺。<br/>✅ 财运佳，宜收获成果。<br/>💪 防呼吸、皮肤干燥，多白色食物润肺。<br/>💕 感情收敛，宜理性沟通。<br/><br/>", COLOR_METAL},
+            {"水", "水运之年，寒气偏盛，肾气易旺。<br/>✅ 财运稳，宜守财蓄势。<br/>💪 防肾病、关节冷痛，多黑色食物温阳。<br/>💕 感情深沉，宜坦诚沟通。<br/><br/>", COLOR_WATER}
         };
 
         String wuxing = getWuXing(yearGan);
@@ -879,25 +879,25 @@ public class WuyunLiuqiActivity extends Activity {
 
         switch (wuxing) {
             case "木":
-                return "<font color='" + COLOR_JI + "'>木运属风，主生发条达，对应肝胆。" +
-                       "<br/>太过：风气偏盛，易患风疾、眩晕、抽搐。" +
-                       "<br/>不及：风气不足，易患肝郁、抑郁、筋脉拘挛。</font>";
+                return "<font color='" + COLOR_JI + "'>木运属风，主生发，对应肝胆。" +
+                       "<br/>太过：风盛，易眩晕抽搐；" +
+                       "<br/>不及：风弱，易肝郁拘挛。</font>";
             case "火":
-                return "<font color='" + COLOR_XIONG + "'>火运属热，主炎热向上，对应心小肠。" +
-                       "<br/>太过：热气偏盛，易患热病、烦躁、出血。" +
-                       "<br/>不及：热气不足，易患寒证、心悸、失眠。</font>";
+                return "<font color='" + COLOR_XIONG + "'>火运属热，主炎上，对应心小肠。" +
+                       "<br/>太过：热盛，易烦热出血；" +
+                       "<br/>不及：热弱，易寒悸失眠。</font>";
             case "土":
-                return "<font color='" + COLOR_EARTH + "'>土运属湿，主承载化生，对应脾胃。" +
-                       "<br/>太过：湿气偏盛，易患湿病、胀满、水肿。" +
-                       "<br/>不及：湿气不足，易患燥证、消瘦、乏力。</font>";
+                return "<font color='" + COLOR_EARTH + "'>土运属湿，主承载，对应脾胃。" +
+                       "<br/>太过：湿盛，易胀满水肿；" +
+                       "<br/>不及：湿弱，易燥瘦乏力。</font>";
             case "金":
-                return "<font color='" + COLOR_METAL + "'>金运属燥，主收敛肃杀，对应肺大肠。" +
-                       "<br/>太过：燥气偏盛，易患燥病、咳嗽、便秘。" +
-                       "<br/>不及：燥气不足，易患湿证、气喘、泄泻。</font>";
+                return "<font color='" + COLOR_METAL + "'>金运属燥，主收敛，对应肺大肠。" +
+                       "<br/>太过：燥盛，易咳嗽便秘；" +
+                       "<br/>不及：燥弱，易喘泻湿证。</font>";
             case "水":
-                return "<font color='" + COLOR_WATER + "'>水运属寒，主寒冷封藏，对应肾膀胱。" +
-                       "<br/>太过：寒气偏盛，易患寒病、关节痛、畏寒。" +
-                       "<br/>不及：寒气不足，易患热证、尿频、失眠。</font>";
+                return "<font color='" + COLOR_WATER + "'>水运属寒，主封藏，对应肾膀胱。" +
+                       "<br/>太过：寒盛，易关节痛畏寒；" +
+                       "<br/>不及：寒弱，易热尿频。</font>";
             default:
                 return "未知运气";
         }
@@ -935,13 +935,13 @@ public class WuyunLiuqiActivity extends Activity {
         if (yunWuXing.equals(otherWuXing)) {
             sb.append("<font color='" + COLOR_GOLD + "'>运气同气，本气过盛，需防本脏疾病。</font>");
         } else if (isSheng(yunWuXing, otherWuXing)) {
-            sb.append("<font color='" + COLOR_JI + "'>运生气，气运相生，气候平和，万物繁茂。</font>");
+            sb.append("<font color='" + COLOR_JI + "'>运生气，气运相生，气候平和。</font>");
         } else if (isSheng(otherWuXing, yunWuXing)) {
-            sb.append("<font color='" + COLOR_WATER + "'>气生运，气运相生，气候适宜，作物丰收。</font>");
+            sb.append("<font color='" + COLOR_WATER + "'>气生运，气运相生，气候适宜。</font>");
         } else if (isKe(yunWuXing, otherWuXing)) {
-            sb.append("<font color='" + COLOR_XIONG + "'>运克气，气运相克，气候异常，灾害频发。</font>");
+            sb.append("<font color='" + COLOR_XIONG + "'>运克气，气运相克，气候异常。</font>");
         } else {
-            sb.append("<font color='" + COLOR_EARTH + "'>气克运，气运相克，气候失调，疾病流行。</font>");
+            sb.append("<font color='" + COLOR_EARTH + "'>气克运，气运相克，气候失调。</font>");
         }
         return sb.toString();
     }
