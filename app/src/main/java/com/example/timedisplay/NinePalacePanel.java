@@ -15,9 +15,17 @@ public class NinePalacePanel extends View {
     private Paint centerPaint;
     private Paint bgPaint;
     private Paint borderPaint;
+    private Paint tintPaint;
     private String[][] palaceData;
     private float brightness = 1.0f;
     private float scale = 1f;
+
+    // 绘制缓存：避免在 onDraw 中每帧分配
+    private android.graphics.Shader cellShader;
+    private Paint.FontMetrics fontMetrics = new Paint.FontMetrics();
+    private int lastCellSize = -1;
+    private float h1, h2, h3;
+    private String[][] displayLines = new String[9][];
     
     // 颜色常量（参照 web 页面样式）
     private static final int COLOR_BG_CARD = 0xFF191C26;
@@ -101,12 +109,17 @@ public class NinePalacePanel extends View {
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setAntiAlias(true);
-        borderPaint.setStrokeWidth(2);
+        borderPaint.setStrokeWidth(3);
+
+        tintPaint = new Paint();
+        tintPaint.setStyle(Paint.Style.FILL);
+        tintPaint.setAntiAlias(true);
 
         palaceData = new String[9][2];
         for (int i = 0; i < 9; i++) {
             palaceData[i][0] = PALACE_NAMES[i];
             palaceData[i][1] = "--";
+            displayLines[i] = new String[]{"--"};
         }
 
         setClickable(true);
@@ -131,6 +144,11 @@ public class NinePalacePanel extends View {
         float padding = 8f;
         float radius = 10f;
 
+        if (cellSize != lastCellSize) {
+            computeLayout();
+            lastCellSize = cellSize;
+        }
+
         textPaint.setTextSize(cellSize * 0.15f);
 
         for (int i = 0; i < 9; i++) {
@@ -147,65 +165,35 @@ public class NinePalacePanel extends View {
                 luck = copyPalaceData[i][5];
             }
 
-            String[] dataParts = palaceData[i][1].split("\\n");
+            String[] dataParts = displayLines[i];
 
-            bgPaint.setShader(new android.graphics.LinearGradient(left, top, right, bottom, 
-                COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint);
+
+            // 吉凶淡底纹
+            int[] luckStyle = getLuckStyle(luck);
+            tintPaint.setColor(luckStyle[0]);
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, tintPaint);
 
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
-            } else if (luck.equals("大吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 220), 52, 168, 83));
-            } else if (luck.equals("吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 200), 74, 175, 94));
-            } else if (luck.equals("平吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 180), 126, 186, 139));
-            } else if (luck.equals("大凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 220), 220, 38, 38));
-            } else if (luck.equals("凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 200), 239, 68, 68));
-            } else if (luck.equals("平凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 180), 239, 108, 108));
+                borderPaint.setStrokeWidth(4f);
             } else {
-                borderPaint.setColor(COLOR_BORDER);
+                borderPaint.setColor(luckStyle[1]);
+                borderPaint.setStrokeWidth(3f);
             }
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
 
             float x = (col + 0.5f) * cellSize;
             float lineSpacing = cellSize * 0.02f;
 
-            textPaint.setTextSize(cellSize * 0.15f);
-            float h1 = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
-
-            textPaint.setTextSize(cellSize * 0.13f);
-            float h2 = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
-
-            textPaint.setTextSize(cellSize * 0.12f);
-            float h3 = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
-
+            // h1/h2/h3 来自 computeLayout 缓存，避免每帧计算
             float totalHeight = h1 + lineSpacing + h2 + lineSpacing + h2 + lineSpacing + h3;
             float topPadding = Math.max((cellSize - totalHeight) / 2, cellSize * 0.05f);
 
-            float y = (row + topPadding / cellSize) * cellSize - textPaint.getFontMetrics().ascent;
-
-            if (luck.equals("大吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 240), 34, 197, 94));
-            } else if (luck.equals("吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 52, 211, 153));
-            } else if (luck.equals("平吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 147, 197, 114));
-            } else if (luck.equals("大凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 240), 239, 68, 68));
-            } else if (luck.equals("凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 248, 113, 113));
-            } else if (luck.equals("平凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 251, 146, 60));
-            } else {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 107, 114, 128));
-            }
+            float y = (row + topPadding / cellSize) * cellSize - fontMetrics.ascent;
 
             textPaint.setTextSize(cellSize * 0.15f);
+            textPaint.setColor(i == 4 ? COLOR_GOLD : 0xFFE6E6E6);
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
             if (dataParts.length > 0) {
@@ -223,9 +211,61 @@ public class NinePalacePanel extends View {
             if (dataParts.length > 2) {
                 y += h2 + lineSpacing;
                 textPaint.setTextSize(cellSize * 0.12f);
+                textPaint.setColor(luckStyle[1]);
                 canvas.drawText(dataParts[2], x, y, textPaint);
             }
+
         }
+    }
+
+    // 仅在宫格尺寸变化时计算一次：渐变、字体度量、行高
+    private void computeLayout() {
+        int w = getWidth();
+        int h = getHeight();
+        cellShader = new android.graphics.LinearGradient(0, 0, w, h,
+                COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP);
+        bgPaint.setShader(cellShader);
+        textPaint.setTextSize(w / 3f * 0.15f);
+        textPaint.getFontMetrics(fontMetrics);
+        h1 = fontMetrics.descent - fontMetrics.ascent;
+        textPaint.setTextSize(w / 3f * 0.13f);
+        textPaint.getFontMetrics(fontMetrics);
+        h2 = fontMetrics.descent - fontMetrics.ascent;
+        textPaint.setTextSize(w / 3f * 0.12f);
+        textPaint.getFontMetrics(fontMetrics);
+        h3 = fontMetrics.descent - fontMetrics.ascent;
+    }
+
+    // 吉凶等级 -> 颜色（与底部解释文案同源，保证一致）
+    public static int getLuckColorByLabel(String label) {
+        switch (label) {
+            case "大吉": return 0xFF22C55E;
+            case "吉":   return 0xFF34D399;
+            case "平吉": return 0xFF84CC16;
+            case "平":   return 0xFF6B7280;
+            case "平凶": return 0xFFF97316;
+            case "凶":   return 0xFFEF4444;
+            case "大凶": return 0xFFDC2626;
+            default:     return 0xFF6B7280;
+        }
+    }
+
+    // 吉凶等级 -> {底纹色, 边框色}
+    private int[] getLuckStyle(String label) {
+        int color = getLuckColorByLabel(label);
+        int tint = (color & 0x00FFFFFF) | 0x1A000000; // 约 10% 透明度
+        return new int[]{tint, color};
+    }
+
+    // 值符所在宫的吉凶等级（用于底部整体解读，与九宫配色同源）
+    public String getZhiFuPalaceLuck() {
+        if (copyZhiFu == null) return "平";
+        for (int i = 0; i < 9; i++) {
+            if (copyPalaceData[i][1] != null && copyPalaceData[i][1].equals(copyZhiFu)) {
+                return copyPalaceData[i][5] != null ? copyPalaceData[i][5] : "平";
+            }
+        }
+        return "平";
     }
 
     // 设置九宫格数据
@@ -235,6 +275,10 @@ public class NinePalacePanel extends View {
                 if (data[i].length >= 2) {
                     palaceData[i][0] = data[i][0];
                     palaceData[i][1] = data[i][1];
+                    // 同步拆分展示行，避免在 onDraw 中每帧 split
+                    displayLines[i] = (data[i][1] != null)
+                            ? data[i][1].split("\n")
+                            : new String[]{"--"};
                 }
             }
             invalidate();

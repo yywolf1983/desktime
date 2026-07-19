@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:text="⭐ 值符值使"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView
@@ -158,7 +158,7 @@
                     android:layout_height="wrap_content"
                     android:text="🌙 日时关系"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView
@@ -175,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:text="🧭 方位吉凶"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView
@@ -215,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:text="✅ 今日宜忌"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView
@@ -232,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:text="⏰ 时辰运势"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView
@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:text="🏠 生活提示"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView
@@ -266,7 +266,7 @@
                     android:layout_height="wrap_content"
                     android:text="💡 综合建议"
                     android:textSize="13sp"
-                    android:textColor="@color/wuxing_fire"
+                    android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
                 <TextView

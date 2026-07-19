@@ -62,7 +62,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=":"
-                    android:textSize="54sp"
+                    android:textSize="60sp"
+                    android:includeFontPadding="false"
                     android:textColor="@color/colon_color"
                     android:fontFamily="sans-serif-black"
                     android:shadowColor="@color/colon_color"
@@ -200,8 +201,8 @@
                     android:id="@+id/timeFortuneTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textColor="@color/fortune_green"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:layout_marginTop="4dp"
@@ -212,17 +213,16 @@
                     android:id="@+id/panExplanation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/explanation_purple"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="4dp"
                     android:letterSpacing="0.06"
                     android:lineSpacingExtra="2dp"
-                    android:maxLines="3"
                     android:paddingHorizontal="4dp"
-                    tools:text="阳遁格局\n文星主事利于文书开门见喜\n事易成就气场旺盛万事通达" />
+                    tools:text="文星主事，利学业文书 · 星门俱佳，时机成熟，可全力推进重要事务" />
 
             </LinearLayout>
 
@@ -266,13 +266,7 @@
         android:elevation="10dp"
         android:clickable="true"
         android:focusable="true"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/btn_round_transparent"
         android:contentDescription="锁定/解锁横竖屏" />
-
-    <TextView
-        android:id="@+id/detailedInterpretation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
 </FrameLayout>

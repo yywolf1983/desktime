@@ -20,6 +20,26 @@ mkdir -p "$OUT_DIR/res"
 mkdir -p "$OUT_DIR/META-INF"
 mkdir -p "$OUT_DIR/gen"
 
+# 注册库目录与 AAR 解压：项目使用 .aar（内含 classes.jar 与 res），不再依赖独立的 .jar
+REG_LIB_DIR="$APP_DIR/../libs"
+REG_LIB_AAR="$APP_DIR/libs/registration-lib.aar"
+REG_AAR_EXTRACT="$OUT_DIR/reg_lib_extract"
+REG_LIB_SRC=""
+REG_LIB_JAR=""
+if [ -f "$REG_LIB_AAR" ]; then
+    echo "解压注册库 AAR：$REG_LIB_AAR"
+    mkdir -p "$REG_AAR_EXTRACT"
+    unzip -q -o "$REG_LIB_AAR" -d "$REG_AAR_EXTRACT"
+    REG_LIB_SRC="$REG_AAR_EXTRACT/res"
+    cp "$REG_AAR_EXTRACT/classes.jar" "$OUT_DIR/reg_lib_classes.jar"
+    REG_LIB_JAR="$OUT_DIR/reg_lib_classes.jar"
+    # 复制 AAR 内 assets（如注册配置文件）
+    if [ -d "$REG_AAR_EXTRACT/assets" ]; then
+        mkdir -p "$OUT_DIR/assets"
+        cp -r "$REG_AAR_EXTRACT/assets/." "$OUT_DIR/assets/" 2>/dev/null || true
+    fi
+fi
+
 # 检查Java是否安装
 if ! command -v java &> /dev/null; then
     echo "错误：未找到Java，请确保已安装JDK 8或更高版本"
@@ -65,35 +85,27 @@ mkdir -p "$MERGED_RES_DIR"
 # 复制应用资源
 cp -r "$RES_DIR"/* "$MERGED_RES_DIR/" 2>/dev/null || true
 
-# 从注册库源码目录复制必要的资源（只复制 reggate 相关资源，避免覆盖应用主题）
-REG_LIB_SRC="/Users/yy/pro-test/anddex/registration-lib/src/main/res"
+# 从注册库复制必要的资源（只复制 reggate 相关资源，避免覆盖应用主题）
+# 优先使用已从 AAR 解压出的 res，其次回退到旧的源码目录
+if [ -z "$REG_LIB_SRC" ] || [ ! -d "$REG_LIB_SRC" ]; then
+    REG_LIB_SRC="/Users/yy/pro-test/anddex/registration-lib/src/main/res"
+fi
 if [ -d "$REG_LIB_SRC" ]; then
-    echo "合并注册库资源..."
+    echo "合并注册库资源：$REG_LIB_SRC"
     
-    # 复制布局文件（reggate_activity_*.xml）
-    mkdir -p "$MERGED_RES_DIR/layout"
-    cp "$REG_LIB_SRC/layout/reggate_activity_"*.xml "$MERGED_RES_DIR/layout/" 2>/dev/null || true
+    # 布局 / raw / drawable 直接整体复制（均为 reggate_ 前缀，不冲突）
+    mkdir -p "$MERGED_RES_DIR/layout" "$MERGED_RES_DIR/raw" "$MERGED_RES_DIR/drawable"
+    cp -r "$REG_LIB_SRC/layout/." "$MERGED_RES_DIR/layout/" 2>/dev/null || true
+    cp -r "$REG_LIB_SRC/raw/." "$MERGED_RES_DIR/raw/" 2>/dev/null || true
+    cp -r "$REG_LIB_SRC/drawable/." "$MERGED_RES_DIR/drawable/" 2>/dev/null || true
     
-    # 复制 values 目录中的 reggate 资源（字符串、颜色、主题）
+    # 复制 values 目录中的 reggate 资源（字符串、颜色、主题），重命名避免覆盖应用自身资源
     mkdir -p "$MERGED_RES_DIR/values"
-    cp "$REG_LIB_SRC/values/strings.xml" "$MERGED_RES_DIR/values/reggate_strings.xml" 2>/dev/null || true
-    cp "$REG_LIB_SRC/values/colors.xml" "$MERGED_RES_DIR/values/reggate_colors.xml" 2>/dev/null || true
-    cp "$REG_LIB_SRC/values/themes.xml" "$MERGED_RES_DIR/values/reggate_themes.xml" 2>/dev/null || true
-    
-    # 复制 raw 目录中的公钥文件
-    mkdir -p "$MERGED_RES_DIR/raw"
-    cp "$REG_LIB_SRC/raw/"* "$MERGED_RES_DIR/raw/" 2>/dev/null || true
-    
-    # 复制 drawable 目录中的资源（二维码）
-    mkdir -p "$MERGED_RES_DIR/drawable"
-    cp "$REG_LIB_SRC/drawable/"* "$MERGED_RES_DIR/drawable/" 2>/dev/null || true
-    
-    # 复制 assets 目录中的配置文件
-    REG_LIB_ASSETS="/Users/yy/pro-test/anddex/registration-lib/src/main/assets"
-    if [ -d "$REG_LIB_ASSETS" ]; then
-        mkdir -p "$OUT_DIR/assets"
-        cp "$REG_LIB_ASSETS/"* "$OUT_DIR/assets/" 2>/dev/null || true
-    fi
+    for vf in "$REG_LIB_SRC/values/"*.xml; do
+        [ -e "$vf" ] || continue
+        base=$(basename "$vf")
+        cp "$vf" "$MERGED_RES_DIR/values/reggate_$base" 2>/dev/null || true
+    done
 else
     echo "警告：未找到注册库资源目录"
 fi
@@ -130,14 +142,15 @@ if [ -z "$JAVAC" ]; then
     exit 1
 fi
 
-# 使用项目中预下载的注册库
-REG_LIB_DIR="$APP_DIR/../libs"
-REG_LIB_JAR="$REG_LIB_DIR/registration-lib.jar"
+# 注册库 classes.jar：优先使用前面从 AAR 解压出的文件，回退到独立的 libs/registration-lib.jar
+if [ -z "$REG_LIB_JAR" ] || [ ! -f "$REG_LIB_JAR" ]; then
+    REG_LIB_JAR="$APP_DIR/../libs/registration-lib.jar"
+fi
 
 if [ -f "$REG_LIB_JAR" ]; then
-    echo "使用项目中的注册库"
+    echo "使用项目中的注册库：$REG_LIB_JAR"
 else
-    echo "错误：未找到注册库"
+    echo "错误：未找到注册库（请确认 app/libs/registration-lib.aar 或 libs/registration-lib.jar 存在）"
     exit 1
 fi
 

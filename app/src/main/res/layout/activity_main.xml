@@ -54,7 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-                android:textSize="56sp"
+                android:textSize="64sp"
+                android:includeFontPadding="false"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-black"
                 android:layout_marginStart="2dp"
@@ -205,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="@color/fortune_green"
+                android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:letterSpacing="0.06"
@@ -215,15 +216,14 @@
                 android:id="@+id/panExplanation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="@color/explanation_gray"
+            android:textSize="13sp"
+            android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
                 android:letterSpacing="0.04"
                 android:lineSpacingExtra="3dp"
-                android:maxLines="3"
                 android:paddingHorizontal="4dp"
                 tools:text="大吉\n气场旺盛 · 万事通达\n宜积极进取" />
         </LinearLayout>
@@ -237,8 +237,7 @@
             <com.example.timedisplay.NinePalacePanel
                 android:id="@+id/ninePalacePanel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="280dp" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <TextView
@@ -259,13 +258,13 @@
         android:textSize="18sp"
         android:textColor="@color/gold_faint"
         android:gravity="center"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:elevation="10dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:contentDescription="锁定/解锁横竖屏" />
+            android:layout_gravity="top|end"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:elevation="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/btn_round_transparent"
+            android:contentDescription="锁定/解锁横竖屏" />
 
 </FrameLayout>

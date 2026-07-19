@@ -336,8 +336,7 @@
                     <View
                         android:layout_width="6dp"
                         android:layout_height="6dp"
-                        android:background="@color/gold"
-                        android:shape="oval"
+                        android:background="@drawable/dot_gold"
                         android:layout_marginEnd="8dp"/>
                     <TextView
                         android:layout_width="wrap_content"

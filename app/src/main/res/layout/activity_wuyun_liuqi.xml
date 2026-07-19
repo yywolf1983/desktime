@@ -184,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:text="⏰ 当前时辰"
                         android:textSize="13sp"
-                        android:textColor="@color/wuxing_fire"
+                        android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
                     <TextView
@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:text="🌿 养生宜忌"
                         android:textSize="13sp"
-                        android:textColor="@color/wuxing_fire"
+                        android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
                     <TextView
@@ -218,7 +218,7 @@
                         android:layout_height="wrap_content"
                         android:text="🌟 五运详解"
                         android:textSize="13sp"
-                        android:textColor="@color/wuxing_fire"
+                        android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
                     <TextView
@@ -235,7 +235,7 @@
                         android:layout_height="wrap_content"
                         android:text="💨 六气详解"
                         android:textSize="13sp"
-                        android:textColor="@color/wuxing_fire"
+                        android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
                     <TextView
@@ -252,7 +252,7 @@
                         android:layout_height="wrap_content"
                         android:text="🔗 运气与时辰关联"
                         android:textSize="13sp"
-                        android:textColor="@color/wuxing_fire"
+                        android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
                     <TextView
