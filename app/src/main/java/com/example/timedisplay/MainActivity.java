@@ -91,10 +91,18 @@ public class MainActivity extends Activity {
 
         rotationLockButton.setOnClickListener(v -> toggleRotationLock());
 
-        // 点击四柱跳转到罗盘页面
+        // 点击四柱跳转到命理解读页面
         fourPillarsTextView.setOnClickListener(v -> {
             try {
-                Intent intent = new Intent(MainActivity.this, LuoPanActivity.class);
+                Intent intent = new Intent(MainActivity.this, DestinyActivity.class);
+                String fourPillars = fourPillarsTextView.getText().toString();
+                String[] pillars = fourPillars.split("\\s+");
+                if (pillars.length >= 4) {
+                    intent.putExtra("yearPillar", pillars[0]);
+                    intent.putExtra("monthPillar", pillars[1]);
+                    intent.putExtra("dayPillar", pillars[2]);
+                    intent.putExtra("timePillar", pillars[3]);
+                }
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -140,21 +148,13 @@ public class MainActivity extends Activity {
             }
         });
 
-        // 点击吉凶解释跳转到命理信息页面
+        // 点击吉凶解释跳转到罗盘页面
         if (panExplanation != null) {
             panExplanation.setClickable(true);
             panExplanation.setFocusable(true);
             panExplanation.setOnClickListener(v -> {
                 try {
-                    Intent intent = new Intent(MainActivity.this, DestinyActivity.class);
-                    String fourPillars = fourPillarsTextView.getText().toString();
-                    String[] pillars = fourPillars.split("\\s+");
-                    if (pillars.length >= 4) {
-                        intent.putExtra("yearPillar", pillars[0]);
-                        intent.putExtra("monthPillar", pillars[1]);
-                        intent.putExtra("dayPillar", pillars[2]);
-                        intent.putExtra("timePillar", pillars[3]);
-                    }
+                    Intent intent = new Intent(MainActivity.this, LuoPanActivity.class);
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
