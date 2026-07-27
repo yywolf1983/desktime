@@ -221,8 +221,14 @@ public class JieqiData {
     }
 
     public static String getJieqi(int year, int month, int day) {
+        return getJieqi(year, month, day, 12);
+    }
+
+    // 带 hour 的重载：节气采用公历日取整（寿星公式固有精度），这里以正午 12:00 为界细化“当日临界”归属，
+    // 将原来“整日 ±1 天”的误差收敛为以正午为界的近似，使节气名/倒计时在临界日更贴合真实时刻。
+    public static String getJieqi(int year, int month, int day, int hour) {
         int[] lichunDate = getJieqiDate(year, 0);
-        if (month < lichunDate[1] || (month == lichunDate[1] && day < lichunDate[2])) {
+        if (month < lichunDate[1] || (month == lichunDate[1] && (day < lichunDate[2] || (day == lichunDate[2] && hour < 12)))) {
             return "大寒";
         }
         
@@ -244,7 +250,7 @@ public class JieqiData {
             } else if (year == jYear) {
                 if (month > jMonth) {
                     afterJieqi = true;
-                } else if (month == jMonth && day >= jDay) {
+                } else if (month == jMonth && (day > jDay || (day == jDay && hour >= 12))) {
                     afterJieqi = true;
                 }
             }
@@ -255,7 +261,7 @@ public class JieqiData {
             } else if (year == nextYear) {
                 if (month < nextMonth) {
                     beforeNextJieqi = true;
-                } else if (month == nextMonth && day < nextDay) {
+                } else if (month == nextMonth && (day < nextDay || (day == nextDay && hour < 12))) {
                     beforeNextJieqi = true;
                 }
             }

@@ -540,9 +540,6 @@ public class MainActivity extends Activity {
     // 日上起时法
     private static final java.util.HashMap<String, String> WUSHUDUN_MAP = new java.util.HashMap<String, String>();
     
-    // 月份到月支的映射
-    private static final java.util.HashMap<Integer, String> MONTH_ZHI_MAP = new java.util.HashMap<Integer, String>();
-    
     // 静态初始化块
     static {
         // 初始化五虎遁诀
@@ -569,25 +566,16 @@ public class MainActivity extends Activity {
         WUSHUDUN_MAP.put("戊", "壬");
         WUSHUDUN_MAP.put("癸", "壬");
         
-        // 初始化月份到月支的映射
-        MONTH_ZHI_MAP.put(1, "寅");
-        MONTH_ZHI_MAP.put(2, "卯");
-        MONTH_ZHI_MAP.put(3, "辰");
-        MONTH_ZHI_MAP.put(4, "巳");
-        MONTH_ZHI_MAP.put(5, "午");
-        MONTH_ZHI_MAP.put(6, "未");
-        MONTH_ZHI_MAP.put(7, "申");
-        MONTH_ZHI_MAP.put(8, "酉");
-        MONTH_ZHI_MAP.put(9, "戌");
-        MONTH_ZHI_MAP.put(10, "亥");
-        MONTH_ZHI_MAP.put(11, "子");
-        MONTH_ZHI_MAP.put(12, "丑");
     }
 
-    // 计算年柱
+    // 计算年柱（以立春为年分界，使用节气数据精确判定）
     private String calculateYearPillar(int year, int month, int day) {
-        // 以立春为年分界
-        if (month < 2 || (month == 2 && day < 4)) {
+        // 立春前的节气为小寒、大寒，此时八字年份仍属上一年
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(year, month - 1, day, 12, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        String jieqi = JieqiData.getCurrentJieqi(cal);
+        if ("小寒".equals(jieqi) || "大寒".equals(jieqi)) {
             year = year - 1;
         }
         
@@ -607,27 +595,44 @@ public class MainActivity extends Activity {
         return yearGan + yearZhi;
     }
     
-    // 获取月支
-    private String getMonthZhi(int month, int day) {
-        // 1月6日小寒前为子月，小寒后为丑月
-        if (month == 1 && day < 6) {
-            return "子";
-        } else if (month == 1 && day >= 6) {
-            return "丑";
+    // 获取月支（节月：以二十四节气为分界）
+    private String getMonthZhi(int year, int month, int day) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(year, month - 1, day, 12, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        String jieqi = JieqiData.getCurrentJieqi(cal);
+        switch (jieqi) {
+            case "立春":
+            case "雨水":  return "寅";
+            case "惊蛰":
+            case "春分":  return "卯";
+            case "清明":
+            case "谷雨":  return "辰";
+            case "立夏":
+            case "小满":  return "巳";
+            case "芒种":
+            case "夏至":  return "午";
+            case "小暑":
+            case "大暑":  return "未";
+            case "立秋":
+            case "处暑":  return "申";
+            case "白露":
+            case "秋分":  return "酉";
+            case "寒露":
+            case "霜降":  return "戌";
+            case "立冬":
+            case "小雪":  return "亥";
+            case "大雪":
+            case "冬至":  return "子";
+            case "小寒":
+            case "大寒":  return "丑";
+            default:       return "寅";
         }
-        // 2月4日立春后为寅月
-        if (month == 2 && day >= 4) {
-            return "寅";
-        } else if (month == 2 && day < 4) {
-            return "丑";
-        }
-        
-        return MONTH_ZHI_MAP.get(month);
     }
 
     // 计算月柱
     private String calculateMonthPillar(int year, int month, int day, String yearGan) {
-        String monthZhi = getMonthZhi(month, day);
+        String monthZhi = getMonthZhi(year, month, day);
         
         // 使用五虎遁诀计算月干
         String yinMonthGan = WUHUDUN.get(yearGan);
@@ -774,12 +779,12 @@ public class MainActivity extends Activity {
             android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
             
             sb.append(simpleMeaning);
-            sb.setSpan(new android.text.style.ForegroundColorSpan(0xFF6B7280), 0, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(getResources().getColor(R.color.explanation_gray)), 0, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             
             sb.append(" · ");
             
             sb.append(simpleAdvice);
-            sb.setSpan(new android.text.style.ForegroundColorSpan(0xFFB45309), sb.length() - simpleAdvice.length(), sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(getResources().getColor(R.color.jieqi_orange)), sb.length() - simpleAdvice.length(), sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             
             panExplanation.setText(sb);
         }
@@ -1099,7 +1104,7 @@ public class MainActivity extends Activity {
             } else {
                 rotationLockButton.setText("🔒");
             }
-            rotationLockButton.setTextColor(0x33FFFFFF);
+            rotationLockButton.setTextColor(getResources().getColor(R.color.lock_icon));
         }
     }
     

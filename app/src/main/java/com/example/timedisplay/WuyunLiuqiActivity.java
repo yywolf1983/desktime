@@ -115,15 +115,15 @@ public class WuyunLiuqiActivity extends Activity {
         "厥阴风木", "少阴君火", "少阳相火", "太阴湿土", "阳明燥金", "太阳寒水"
     };
 
-    private static final String COLOR_GOLD = "#FFD700";
+    private static final String COLOR_GOLD = "#E6C46A";
     private static final String COLOR_LIGHT_BLUE = "#98D8F0";
-    private static final String COLOR_GRAY = "#8899AA";
-    private static final String COLOR_JI = "#90EE90";
-    private static final String COLOR_XIONG = "#FF6B6B";
-    private static final String COLOR_PING = "#FFD700";
-    private static final String COLOR_EARTH = "#DEB887";
-    private static final String COLOR_METAL = "#C0C0C0";
-    private static final String COLOR_WATER = "#87CEEB";
+    private static final String COLOR_GRAY = "#7C8C9C";
+    private static final String COLOR_JI = "#3FA34D";
+    private static final String COLOR_XIONG = "#E0593B";
+    private static final String COLOR_PING = "#E6C46A";
+    private static final String COLOR_EARTH = "#D9A441";
+    private static final String COLOR_METAL = "#9AA7B8";
+    private static final String COLOR_WATER = "#3E87C2";
     private static final String COLOR_PERIOD = "#6B7B8A";
     private static final String COLOR_MUTED = "#A0A0A0";
 
@@ -145,34 +145,34 @@ public class WuyunLiuqiActivity extends Activity {
     }
 
     private static final WuxingInfo[] WUXING_INFO = {
-        new WuxingInfo("木", "肝胆", "春", "青色", "#90EE90", "疏肝理气", "忌大怒、熬夜、酸味过度", "保持心情舒畅"),
-        new WuxingInfo("火", "心小肠", "夏", "红色", "#FF6B6B", "清心降火", "忌烦躁、贪凉、辛辣过度", "静心安神"),
-        new WuxingInfo("土", "脾胃", "长夏", "黄色", "#DEB887", "健脾养胃", "忌思虑过度、生冷油腻", "规律饮食"),
-        new WuxingInfo("金", "肺大肠", "秋", "白色", "#C0C0C0", "润肺生津", "忌悲伤、过度劳累、辛辣", "保持室内湿润"),
-        new WuxingInfo("水", "肾膀胱", "冬", "黑色", "#87CEEB", "补肾温阳", "忌恐惧、寒凉、过度劳累", "注意保暖")
+        new WuxingInfo("木", "肝胆", "春", "青色", "#3FA34D", "疏肝理气", "忌大怒、熬夜、酸味过度", "保持心情舒畅"),
+        new WuxingInfo("火", "心小肠", "夏", "红色", "#E0593B", "清心降火", "忌烦躁、贪凉、辛辣过度", "静心安神"),
+        new WuxingInfo("土", "脾胃", "长夏", "黄色", "#D9A441", "健脾养胃", "忌思虑过度、生冷油腻", "规律饮食"),
+        new WuxingInfo("金", "肺大肠", "秋", "白色", "#9AA7B8", "润肺生津", "忌悲伤、过度劳累、辛辣", "保持室内湿润"),
+        new WuxingInfo("水", "肾膀胱", "冬", "黑色", "#3E87C2", "补肾温阳", "忌恐惧、寒凉、过度劳累", "注意保暖")
     };
 
     private static final String STATIC_TEACHING =
-        "<font color='#FFD700'><b>五运六气概述</b></font><br/>" +
-        "<font color='#8899AA'>五运六气，以干支推演气候与人体健康。</font><br/><br/>" +
-        "<font color='#FFD700'><b>五运</b></font><br/>" +
-        "<font color='#90EE90'>木</font><font color='#8899AA'>主生发，肝胆，疏肝</font> · " +
-        "<font color='#FF6B6B'>火</font><font color='#8899AA'>主炎热，心小肠，清心</font><br/>" +
-        "<font color='#DEB887'>土</font><font color='#8899AA'>主承载，脾胃，健脾</font> · " +
-        "<font color='#C0C0C0'>金</font><font color='#8899AA'>主收敛，肺大肠，润肺</font><br/>" +
-        "<font color='#87CEEB'>水</font><font color='#8899AA'>主封藏，肾膀胱，补肾</font><br/><br/>" +
-        "<font color='#FFD700'><b>五运推算</b></font><br/>" +
-        "<font color='#8899AA'>年干定运：甲己土，乙庚金，丙辛水，丁壬木，戊癸火。</font><br/>" +
-        "<font color='#8899AA'>阳干太过，阴干不及。</font><br/><br/>" +
-        "<font color='#FFD700'><b>六气</b></font><br/>" +
-        "<font color='#90EE90'>厥阴风木</font><font color='#8899AA'>大寒-春分</font> · " +
-        "<font color='#FF6B6B'>少阴君火</font><font color='#8899AA'>春分-小满</font><br/>" +
-        "<font color='#FF8C00'>少阳相火</font><font color='#8899AA'>小满-大暑</font> · " +
-        "<font color='#DEB887'>太阴湿土</font><font color='#8899AA'>大暑-秋分</font><br/>" +
-        "<font color='#C0C0C0'>阳明燥金</font><font color='#8899AA'>秋分-小雪</font> · " +
-        "<font color='#87CEEB'>太阳寒水</font><font color='#8899AA'>小雪-大寒</font><br/><br/>" +
-        "<font color='#FFD700'><b>六气推算</b></font><br/>" +
-        "<font color='#8899AA'>年支定气：子午君火，丑未湿土，寅申相火，卯酉燥金，辰戌寒水，巳亥风木。</font><br/><br/>";
+        "<font color='#E6C46A'><b>五运六气概述</b></font><br/>" +
+        "<font color='#7C8C9C'>五运六气，以干支推演气候与人体健康。</font><br/><br/>" +
+        "<font color='#E6C46A'><b>五运</b></font><br/>" +
+        "<font color='#3FA34D'>木</font><font color='#7C8C9C'>主生发，肝胆，疏肝</font> · " +
+        "<font color='#E0593B'>火</font><font color='#7C8C9C'>主炎热，心小肠，清心</font><br/>" +
+        "<font color='#D9A441'>土</font><font color='#7C8C9C'>主承载，脾胃，健脾</font> · " +
+        "<font color='#9AA7B8'>金</font><font color='#7C8C9C'>主收敛，肺大肠，润肺</font><br/>" +
+        "<font color='#3E87C2'>水</font><font color='#7C8C9C'>主封藏，肾膀胱，补肾</font><br/><br/>" +
+        "<font color='#E6C46A'><b>五运推算</b></font><br/>" +
+        "<font color='#7C8C9C'>年干定运：甲己土，乙庚金，丙辛水，丁壬木，戊癸火。</font><br/>" +
+        "<font color='#7C8C9C'>阳干太过，阴干不及。</font><br/><br/>" +
+        "<font color='#E6C46A'><b>六气</b></font><br/>" +
+        "<font color='#3FA34D'>厥阴风木</font><font color='#7C8C9C'>大寒-春分</font> · " +
+        "<font color='#E0593B'>少阴君火</font><font color='#7C8C9C'>春分-小满</font><br/>" +
+        "<font color='#F3BA66'>少阳相火</font><font color='#7C8C9C'>小满-大暑</font> · " +
+        "<font color='#D9A441'>太阴湿土</font><font color='#7C8C9C'>大暑-秋分</font><br/>" +
+        "<font color='#9AA7B8'>阳明燥金</font><font color='#7C8C9C'>秋分-小雪</font> · " +
+        "<font color='#3E87C2'>太阳寒水</font><font color='#7C8C9C'>小雪-大寒</font><br/><br/>" +
+        "<font color='#E6C46A'><b>六气推算</b></font><br/>" +
+        "<font color='#7C8C9C'>年支定气：子午君火，丑未湿土，寅申相火，卯酉燥金，辰戌寒水，巳亥风木。</font><br/><br/>";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -426,7 +426,7 @@ public class WuyunLiuqiActivity extends Activity {
         info.append("<font color='#FFA500'>五行：").append(WUXING_ZODIAC[index]).append("</font><br/>");
         info.append("<font color='" + COLOR_JI + "'>经络：").append(SHICHEN_ZANGFU[index]).append("经").append("</font> · ");
         info.append("<font color='#DDA0DD'>方位：").append(SHICHEN_FANGWEI[index]).append("</font><br/>");
-        info.append("<font color='#FF8C00'>纳音：").append(WUXING_SHEJI[index]).append("</font> · ");
+        info.append("<font color='#F3BA66'>纳音：").append(WUXING_SHEJI[index]).append("</font> · ");
         info.append("<font color='#FFB84D'>物候：").append(SHICHEN_WUYIN[index]).append("</font>");
         if (currentShichenInfo != null) {
             currentShichenInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
@@ -555,7 +555,7 @@ public class WuyunLiuqiActivity extends Activity {
         String[][] yunqiShichen = {
             {"木运", "厥阴风木", "🌿 厥阴风木（丑、戌时）：丑时肝经排毒，戌时心包护心", COLOR_JI},
             {"火运", "少阴君火", "🔥 少阴君火（午、酉时）：午时心经宜午休，酉时肾经宜静养", COLOR_XIONG},
-            {"火运", "少阳相火", "🔥 少阳相火（子、亥时）：子时胆经主决断，亥时三焦通百脉宜眠", "#FF8C00"},
+            {"火运", "少阳相火", "🔥 少阳相火（子、亥时）：子时胆经主决断，亥时三焦通百脉宜眠", "#F3BA66"},
             {"土运", "太阴湿土", "🌾 太阴湿土（寅、巳时）：寅时肺经宜呼吸，巳时脾经主运化", COLOR_EARTH},
             {"金运", "阳明燥金", "🍂 阳明燥金（卯、辰时）：卯时大肠宜排便，辰时胃经宜早餐", COLOR_METAL},
             {"水运", "太阳寒水", "💧 太阳寒水（未、申时）：未时小肠宜休息，申时膀胱宜运动", COLOR_WATER}
@@ -601,7 +601,7 @@ public class WuyunLiuqiActivity extends Activity {
         int currentQiIndex = getCurrentQiIndex(year, month, day);
         
         String[] qiNames = {"初气", "二气", "三气", "四气", "五气", "终气"};
-        String[] qiColors = {COLOR_JI, COLOR_XIONG, "#FF8C00", COLOR_EARTH, COLOR_METAL, COLOR_WATER};
+        String[] qiColors = {COLOR_JI, COLOR_XIONG, "#F3BA66", COLOR_EARTH, COLOR_METAL, COLOR_WATER};
         String[] qiPeriods = {"大寒-春分", "春分-小满", "小满-大暑", "大暑-秋分", "秋分-小雪", "小雪-大寒"};
         String[] qiEarthlyBranches = {"寅卯", "巳午", "巳午", "申酉", "申酉", "亥子"};
         String[] qiHeavenlyStems = {"丁壬", "戊癸", "戊癸", "甲己", "甲己", "丙辛"};
@@ -627,7 +627,7 @@ public class WuyunLiuqiActivity extends Activity {
         String[][] qiDetails = {
             {"厥阴风木", "风气主令，生发疏泄（大寒-春分，寅卯，丁壬）。<br/>⚠️ 易头痛眩晕、关节痛、肝郁。<br/>✅ 防风疏肝，多散步；🍃 食青色，少酸味", COLOR_JI},
             {"少阴君火", "热气主令，温热明亮（春分-小满，巳午，戊癸）。<br/>⚠️ 易发热心烦、口疮、失眠。<br/>✅ 清热降火，宜午休；🍅 食红色，忌热性", COLOR_XIONG},
-            {"少阳相火", "火气主令，炎热躁动（小满-大暑，巳午，戊癸）。<br/>⚠️ 易目赤咽痛、疮疡烦躁。<br/>✅ 清泻相火，忌熬夜；🌶️ 食苦味泄火", "#FF8C00"},
+            {"少阳相火", "火气主令，炎热躁动（小满-大暑，巳午，戊癸）。<br/>⚠️ 易目赤咽痛、疮疡烦躁。<br/>✅ 清泻相火，忌熬夜；🌶️ 食苦味泄火", "#F3BA66"},
             {"太阴湿土", "湿气主令，湿润黏滞（大暑-秋分，申酉，甲己）。<br/>⚠️ 易腹胀泻痢、水肿湿疹。<br/>✅ 健脾祛湿，宜运动；🌾 食黄色，忌生冷", COLOR_EARTH},
             {"阳明燥金", "燥气主令，干燥收敛（秋分-小雪，申酉，甲己）。<br/>⚠️ 易干咳、肤燥便秘咽干。<br/>✅ 润肺生津，保湿；🍐 食白色，忌辛辣", COLOR_METAL},
             {"太阳寒水", "寒气主令，寒冷凝滞（小雪-大寒，亥子，丙辛）。<br/>⚠️ 易感冒风寒、关节冷痛畏寒。<br/>✅ 温阳散寒，早睡保暖；🫘 食黑色温性，忌寒凉", COLOR_WATER}
@@ -909,7 +909,7 @@ public class WuyunLiuqiActivity extends Activity {
         } else if (liuyi.contains("君火")) {
             return "<font color='" + COLOR_XIONG + "'>少阴君火：主热气光明。易患心血管病、热病、神志病。</font>";
         } else if (liuyi.contains("相火")) {
-            return "<font color='#FF8C00'>少阳相火：主热气蒸腾。易患肝胆火旺、热病、炎症。</font>";
+            return "<font color='#F3BA66'>少阳相火：主热气蒸腾。易患肝胆火旺、热病、炎症。</font>";
         } else if (liuyi.contains("湿土")) {
             return "<font color='" + COLOR_EARTH + "'>太阴湿土：主湿气运化。易患脾胃病、消化病、水肿。</font>";
         } else if (liuyi.contains("燥金")) {

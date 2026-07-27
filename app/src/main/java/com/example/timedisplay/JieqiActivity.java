@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 public class JieqiActivity extends Activity {
 
-    private static final String COLOR_GOLD = "#FFD700";
+    private static final String COLOR_GOLD = "#E6C46A";
     private static final String COLOR_GRAY = "#999999";
     private static final String COLOR_SEASON = "#FF87CEEB";
     private static final String COLOR_PAST = "#FFADD8E6";

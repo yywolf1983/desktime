@@ -900,44 +900,44 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     private String getStarLuckColor(String star) {
-        if (star == null) return "#FFD700";
+        if (star == null) return "#E6C46A";
         switch (star) {
-            case "天蓬": return "#90EE90";
-            case "天任": return "#90EE90";
-            case "天冲": return "#FF6B6B";
-            case "天辅": return "#90EE90";
-            case "天英": return "#FF6B6B";
-            case "天芮": return "#FFA500";
-            case "天柱": return "#FFD700";
-            case "天心": return "#90EE90";
-            case "天禽": return "#90EE90";
-            default: return "#FFD700";
+            case "天蓬": return "#3FA34D";
+            case "天任": return "#3FA34D";
+            case "天冲": return "#E0593B";
+            case "天辅": return "#3FA34D";
+            case "天英": return "#E0593B";
+            case "天芮": return "#F3BA66";
+            case "天柱": return "#E6C46A";
+            case "天心": return "#3FA34D";
+            case "天禽": return "#3FA34D";
+            default: return "#E6C46A";
         }
     }
     
     private String getDoorLuckColor(String door) {
-        if (door == null) return "#FFD700";
+        if (door == null) return "#E6C46A";
         switch (door) {
-            case "开": return "#90EE90";
-            case "休": return "#90EE90";
-            case "生": return "#90EE90";
-            case "伤": return "#FF6B6B";
-            case "杜": return "#FFD700";
-            case "景": return "#FFD700";
-            case "死": return "#FF6B6B";
-            case "惊": return "#FF6B6B";
-            default: return "#FFD700";
+            case "开": return "#3FA34D";
+            case "休": return "#3FA34D";
+            case "生": return "#3FA34D";
+            case "伤": return "#E0593B";
+            case "杜": return "#E6C46A";
+            case "景": return "#E6C46A";
+            case "死": return "#E0593B";
+            case "惊": return "#E0593B";
+            default: return "#E6C46A";
         }
     }
     
     private String getRiShiRelationColor(String relation) {
-        if (relation == null) return "#FFD700";
+        if (relation == null) return "#E6C46A";
         if (relation.contains("生") || relation.contains("合") || relation.contains("比")) {
-            return "#90EE90";
+            return "#3FA34D";
         } else if (relation.contains("克") || relation.contains("冲")) {
-            return "#FF6B6B";
+            return "#E0593B";
         } else {
-            return "#FFD700";
+            return "#E6C46A";
         }
     }
 
@@ -991,14 +991,14 @@ public class FullNinePalaceActivity extends Activity {
         StringBuilder sbBasic = new StringBuilder();
         sbBasic.append("<font color='#CCB866'><b>").append(jieqi).append(" · ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局</b></font><br/><br/>");
         
-        sbBasic.append("📆 旬首 <font color='#FFD700'><b>").append(xunShou).append("</b></font> · 空亡 <font color='#FFA500'><b>").append(kongWang).append("</b></font><br/>");
-        sbBasic.append("<font color='#8899AA'>").append(getKongWangExplanation(kongWang)).append("</font><br/><br/>");
+        sbBasic.append("📆 旬首 <font color='#E6C46A'><b>").append(xunShou).append("</b></font> · 空亡 <font color='#F3BA66'><b>").append(kongWang).append("</b></font><br/>");
+        sbBasic.append("<font color='#7C8C9C'>").append(getKongWangExplanation(kongWang)).append("</font><br/><br/>");
         
-        sbBasic.append("🐴 马星 <font color='#FFD700'><b>").append(maXing).append("</b></font><br/>");
-        sbBasic.append("<font color='#8899AA'>").append(getMaXingExplanation(maXing)).append("</font><br/><br/>");
+        sbBasic.append("🐴 马星 <font color='#E6C46A'><b>").append(maXing).append("</b></font><br/>");
+        sbBasic.append("<font color='#7C8C9C'>").append(getMaXingExplanation(maXing)).append("</font><br/><br/>");
         
         sbBasic.append("⚡ <font color='#CCB866'><b>旺衰判断</b></font><br/>");
-        sbBasic.append("<font color='#8899AA'>").append(getWangCuiDescription(wangCui, riGanPalace)).append("</font>");
+        sbBasic.append("<font color='#7C8C9C'>").append(getWangCuiDescription(wangCui, riGanPalace)).append("</font>");
         expBasic.setText(android.text.Html.fromHtml(sbBasic.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         if (expSummary != null) {
@@ -1097,18 +1097,18 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
         
-        if (luckyDirections.length() > 0) sbDirection.append("✅ <font color='#90EE90'>吉方</font>：").append(luckyDirections).append("<br/>");
-        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#FFD700'>平方</font>：").append(neutralDirections).append("<br/>");
-        if (unluckyDirections.length() > 0) sbDirection.append("❌ <font color='#FF6B6B'>凶方</font>：").append(unluckyDirections).append("<br/>");
+        if (luckyDirections.length() > 0) sbDirection.append("✅ <font color='#3FA34D'>吉方</font>：").append(luckyDirections).append("<br/>");
+        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#E6C46A'>平方</font>：").append(neutralDirections).append("<br/>");
+        if (unluckyDirections.length() > 0) sbDirection.append("❌ <font color='#E0593B'>凶方</font>：").append(unluckyDirections).append("<br/>");
 
         sbDirection.append("<br/>");
         sbDirection.append("<b>⚡ 旺相休囚死分布：</b><br/>");
         // 紧凑汇总形式，省去5行解释
-        if (wangPositions.length() > 0) sbDirection.append("🔥 <font color='#90EE90'>旺</font>：").append(wangPositions).append("（得时·百事顺）<br/>");
-        if (xiangPositions.length() > 0) sbDirection.append("🌿 <font color='#90EE90'>相</font>：").append(xiangPositions).append("（得生·次吉）<br/>");
-        if (xiuPositions.length() > 0) sbDirection.append("😌 <font color='#FFD700'>休</font>：").append(xiuPositions).append("（休息·宜静）<br/>");
-        if (qiuPositions.length() > 0) sbDirection.append("🔒 <font color='#FFA500'>囚</font>：").append(qiuPositions).append("（受克·不利）<br/>");
-        if (siPositions.length() > 0) sbDirection.append("💀 <font color='#FF6B6B'>死</font>：").append(siPositions).append("（处死·衰败）</font>");
+        if (wangPositions.length() > 0) sbDirection.append("🔥 <font color='#3FA34D'>旺</font>：").append(wangPositions).append("（得时·百事顺）<br/>");
+        if (xiangPositions.length() > 0) sbDirection.append("🌿 <font color='#3FA34D'>相</font>：").append(xiangPositions).append("（得生·次吉）<br/>");
+        if (xiuPositions.length() > 0) sbDirection.append("😌 <font color='#E6C46A'>休</font>：").append(xiuPositions).append("（休息·宜静）<br/>");
+        if (qiuPositions.length() > 0) sbDirection.append("🔒 <font color='#F3BA66'>囚</font>：").append(qiuPositions).append("（受克·不利）<br/>");
+        if (siPositions.length() > 0) sbDirection.append("💀 <font color='#E0593B'>死</font>：").append(siPositions).append("（处死·衰败）</font>");
         expDirection.setText(android.text.Html.fromHtml(sbDirection.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbYiJi = new StringBuilder();
@@ -1180,7 +1180,7 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getTianDiPanDesc(String[] palaces, String[] nineStars, String[] palaceNames) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>天盘主天时，地盘主地利，天地交合定吉凶。</font><br/><br/>");
+        desc.append("<font color='#7C8C9C'>天盘主天时，地盘主地利，天地交合定吉凶。</font><br/><br/>");
 
         String[] directions = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
 
@@ -1196,7 +1196,7 @@ public class FullNinePalaceActivity extends Activity {
             {"离", "火·南，主明主礼，对应心、眼"}
         };
 
-        desc.append("<font color='#FFA500'><b>地盘（九宫）</b></font><br/>");
+        desc.append("<font color='#F3BA66'><b>地盘（九宫）</b></font><br/>");
         for (int i = 0; i < 9; i++) {
             if (!palaceNames[i].isEmpty() && !palaceNames[i].equals("--")) {
                 String palace = palaceNames[i].substring(0, 1);
@@ -1207,9 +1207,9 @@ public class FullNinePalaceActivity extends Activity {
                         break;
                     }
                 }
-                desc.append("<font color='#FFA500'>").append(palace).append("宫</font> ");
+                desc.append("<font color='#F3BA66'>").append(palace).append("宫</font> ");
                 desc.append("<font color='#98D8F0'>(").append(directions[i]).append(")</font> ");
-                desc.append("<font color='#8899AA'>").append(palaceInfo).append("</font>");
+                desc.append("<font color='#7C8C9C'>").append(palaceInfo).append("</font>");
                 if (i < 8) desc.append("<br/>");
             }
         }
@@ -1219,21 +1219,21 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getNineStarsDesc(String[] stars) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>九星主天时吉凶</font><br/><br/>");
+        desc.append("<font color='#7C8C9C'>九星主天时吉凶</font><br/><br/>");
 
         String[][] starInfo = {
-            {"天蓬", "吉星", "#90EE90", "水星·智谋，利投资；忌破财"},
+            {"天蓬", "吉星", "#3FA34D", "水星·智谋，利投资；忌破财"},
             {"天任", "吉星", "#98FB98", "土星·诚信，利置业；忌阻滞"},
-            {"天冲", "凶星", "#FF6B6B", "木星·勇猛，利进取；忌冲动"},
+            {"天冲", "凶星", "#E0593B", "木星·勇猛，利进取；忌冲动"},
             {"天辅", "吉星", "#ADFF2F", "木星·文昌，利考试；忌桃花"},
-            {"天英", "平星", "#FFD700", "火星·名声，利求名；忌急躁"},
+            {"天英", "平星", "#E6C46A", "火星·名声，利求名；忌急躁"},
             {"天芮", "凶星", "#DC143C", "土星·疾病，利学习；忌久病"},
-            {"天柱", "平星", "#FFA500", "金星·变革，利改革；忌争斗"},
-            {"天心", "吉星", "#90EE90", "金星·谋略，利策划；忌药石"},
+            {"天柱", "平星", "#F3BA66", "金星·变革，利改革；忌争斗"},
+            {"天心", "吉星", "#3FA34D", "金星·谋略，利策划；忌药石"},
             {"天禽", "吉星", "#98FB98", "土星·中正，利协调；忌优柔"}
         };
 
-        desc.append("<font color='#FFD700'><b>吉星</b></font><br/>");
+        desc.append("<font color='#E6C46A'><b>吉星</b></font><br/>");
         for (String[] info : starInfo) {
             if (info[1].equals("吉星")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
@@ -1241,7 +1241,7 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
 
-        desc.append("<br/><font color='#FFD700'><b>平星</b></font><br/>");
+        desc.append("<br/><font color='#E6C46A'><b>平星</b></font><br/>");
         for (String[] info : starInfo) {
             if (info[1].equals("平星")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
@@ -1249,7 +1249,7 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
 
-        desc.append("<br/><font color='#FF6B6B'><b>凶星</b></font><br/>");
+        desc.append("<br/><font color='#E0593B'><b>凶星</b></font><br/>");
         for (String[] info : starInfo) {
             if (info[1].equals("凶星")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
@@ -1262,20 +1262,20 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getEightDoorsDesc(String[] doors) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>八门主人事吉凶</font><br/><br/>");
+        desc.append("<font color='#7C8C9C'>八门主人事吉凶</font><br/><br/>");
 
         String[][] doorInfo = {
-            {"休", "吉门", "#90EE90", "水门·休养，百事皆宜"},
+            {"休", "吉门", "#3FA34D", "水门·休养，百事皆宜"},
             {"生", "吉门", "#98FB98", "土门·求财，谋事得利"},
-            {"伤", "凶门", "#FF6B6B", "木门·损伤，出行不利"},
-            {"杜", "平门", "#FFD700", "木门·闭塞，宜守不宜攻"},
-            {"景", "平门", "#FFA500", "火门·名声，利考试求名"},
+            {"伤", "凶门", "#E0593B", "木门·损伤，出行不利"},
+            {"杜", "平门", "#E6C46A", "木门·闭塞，宜守不宜攻"},
+            {"景", "平门", "#F3BA66", "火门·名声，利考试求名"},
             {"死", "凶门", "#DC143C", "土门·衰败，百事不宜"},
-            {"惊", "凶门", "#FF6B6B", "金门·惊恐，官非诉讼"},
+            {"惊", "凶门", "#E0593B", "金门·惊恐，官非诉讼"},
             {"开", "吉门", "#ADFF2F", "金门·通达，贵人相助"}
         };
 
-        desc.append("<font color='#FFD700'><b>吉门</b></font><br/>");
+        desc.append("<font color='#E6C46A'><b>吉门</b></font><br/>");
         for (String[] info : doorInfo) {
             if (info[1].equals("吉门")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
@@ -1283,7 +1283,7 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
 
-        desc.append("<br/><font color='#FFD700'><b>平门</b></font><br/>");
+        desc.append("<br/><font color='#E6C46A'><b>平门</b></font><br/>");
         for (String[] info : doorInfo) {
             if (info[1].equals("平门")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
@@ -1291,7 +1291,7 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
 
-        desc.append("<br/><font color='#FF6B6B'><b>凶门</b></font><br/>");
+        desc.append("<br/><font color='#E0593B'><b>凶门</b></font><br/>");
         for (String[] info : doorInfo) {
             if (info[1].equals("凶门")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
@@ -1304,20 +1304,20 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getEightGodsDesc(String[] gods) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>八神主外部影响</font><br/><br/>");
+        desc.append("<font color='#7C8C9C'>八神主外部影响</font><br/><br/>");
 
         String[][] godInfo = {
-            {"值符", "吉神", "#90EE90", "尊贵权力，贵人相助"},
-            {"螣蛇", "凶神", "#FF6B6B", "怪异缠绕，虚惊恐慌"},
+            {"值符", "吉神", "#3FA34D", "尊贵权力，贵人相助"},
+            {"螣蛇", "凶神", "#E0593B", "怪异缠绕，虚惊恐慌"},
             {"太阴", "吉神", "#98FB98", "暗中助力，贵人庇佑"},
             {"六合", "吉神", "#ADFF2F", "合作婚姻，交易和谈"},
             {"白虎", "凶神", "#DC143C", "血光灾祸，疾病争斗"},
-            {"玄武", "凶神", "#FF6B6B", "偷盗欺骗，暧昧小人"},
-            {"九地", "平神", "#FFD700", "沉稳蓄势，保守守成"},
-            {"九天", "吉神", "#90EE90", "飞黄腾达，进取远行"}
+            {"玄武", "凶神", "#E0593B", "偷盗欺骗，暧昧小人"},
+            {"九地", "平神", "#E6C46A", "沉稳蓄势，保守守成"},
+            {"九天", "吉神", "#3FA34D", "飞黄腾达，进取远行"}
         };
 
-        desc.append("<font color='#FFD700'><b>吉神</b></font><br/>");
+        desc.append("<font color='#E6C46A'><b>吉神</b></font><br/>");
         for (String[] info : godInfo) {
             if (info[1].equals("吉神")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
@@ -1325,7 +1325,7 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
 
-        desc.append("<br/><font color='#FFD700'><b>平神</b></font><br/>");
+        desc.append("<br/><font color='#E6C46A'><b>平神</b></font><br/>");
         for (String[] info : godInfo) {
             if (info[1].equals("平神")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
@@ -1333,7 +1333,7 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
 
-        desc.append("<br/><font color='#FF6B6B'><b>凶神</b></font><br/>");
+        desc.append("<br/><font color='#E0593B'><b>凶神</b></font><br/>");
         for (String[] info : godInfo) {
             if (info[1].equals("凶神")) {
                 desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
@@ -1345,7 +1345,7 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getPalacesDesc(String[] palaces, String[] stars, String[] doors, String[] gods, String[] lucks) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#8899AA'>九宫组合定吉凶</font><br/>");
+        desc.append("<font color='#7C8C9C'>九宫组合定吉凶</font><br/>");
         for (int i = 0; i < 9; i++) {
             String palace = palaces[i];
             String star = stars[i];
@@ -1354,15 +1354,15 @@ public class FullNinePalaceActivity extends Activity {
             String luck = lucks[i];
             desc.append("<font color='#98D8F0'>").append(palace).append("</font>");
             if (!star.isEmpty()) {
-                desc.append("·<font color='#FFD700'>").append(star).append("星</font>");
+                desc.append("·<font color='#E6C46A'>").append(star).append("星</font>");
             }
             if (door != null && !door.isEmpty()) {
-                desc.append("·<font color='#90EE90'>").append(door).append("门</font>");
+                desc.append("·<font color='#3FA34D'>").append(door).append("门</font>");
             }
             if (god != null && !god.isEmpty()) {
                 desc.append("·<font color='#DDA0DD'>").append(god).append("</font>");
             }
-            String luckColor = luck.contains("吉") ? "#90EE90" : (luck.contains("凶") ? "#FF6B6B" : "#8899AA");
+            String luckColor = luck.contains("吉") ? "#3FA34D" : (luck.contains("凶") ? "#E0593B" : "#7C8C9C");
             desc.append(" → <font color='").append(luckColor).append("'>").append(luck).append("</font><br/>");
         }
         return desc.toString();
@@ -1857,12 +1857,12 @@ public class FullNinePalaceActivity extends Activity {
                                   int zhiFuPalace, int zhiShiPalace) {
         String[] PALACE_NAMES = {"坎一", "坤二", "震三", "巽四", "中五", "乾六", "兑七", "艮八", "离九"};
         
-        String getGoldColor = "<font color='#FFD700'>";
-        String getWoodColor = "<font color='#90EE90'>";
-        String getFireColor = "<font color='#FF6B6B'>";
+        String getGoldColor = "<font color='#E6C46A'>";
+        String getWoodColor = "<font color='#3FA34D'>";
+        String getFireColor = "<font color='#E0593B'>";
         String getEarthColor = "<font color='#DEB887'>";
-        String getMetalColor = "<font color='#C0C0C0'>";
-        String getWaterColor = "<font color='#87CEEB'>";
+        String getMetalColor = "<font color='#9AA7B8'>";
+        String getWaterColor = "<font color='#3E87C2'>";
         String getTitleColor = "<font color='#CCB866'>";
         String getClose = "</font>";
         

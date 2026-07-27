@@ -31,7 +31,7 @@ public class NinePalacePanel extends View {
     private static final int COLOR_BG_CARD = 0xFF191C26;
     private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
     private static final int COLOR_BORDER = 0xFF262A36;
-    private static final int COLOR_GOLD = 0xFFBFA055;
+    private static final int COLOR_GOLD = 0xFFE6C46A;
     private static final int COLOR_GREEN = 0xFF7A9A60;
     private static final int COLOR_RED = 0xFFC47B5E;
 
@@ -423,8 +423,8 @@ public class NinePalacePanel extends View {
         // 10. 排八神（从值符落宫开始）
         String[] eightGods = arrangeEightGodsStandard(zhiFuPalace, isYangDun);
         
-        // 11. 判断旺衰
-        String[] wangCui = calculateWangCui(dayGan);
+        // 11. 判断旺衰（以月令地支五行为基准）
+        String[] wangCui = calculateWangCui(monthZhi);
         
         // 12. 计算九宫格数据（按照qimen.py的宫位顺序）
         String[] gongwei = {"坎", "坤", "震", "巽", "中", "乾", "兑", "艮", "离"};
@@ -538,32 +538,47 @@ public class NinePalacePanel extends View {
         return new Object[]{xunGan, xunZhi, zhiFuStar, zhiShiDoor};
     }
     
-    // 计算旺衰
-    private String[] calculateWangCui(String dayGan) {
+    // 计算旺衰（以「月令」即节月地支五行为基准）
+    private String[] calculateWangCui(String monthZhi) {
         String[] wangCui = new String[9];
-        // 根据日干五行与九宫五行的生克关系计算旺衰
-        // 同我者→旺，生我者→相，我生者→休，克我者→囚，我克者→死
-        String riGanWuXing = getWuXing(dayGan);
+        // 奇门旺衰由月令定：同我者→旺，生我者→相，我生者→休，克我者→囚，我克者→死
+        // 「我」= 当前节月地支五行，而非日干
+        String yueLingWuXing = getZhiWuXing(monthZhi);
         
         for (int i = 0; i < 9; i++) {
             String gongWuXing = PALACE_WUXING[i];
-            
-            if (riGanWuXing.equals(gongWuXing)) {
-                wangCui[i] = "旺"; // 同我者→旺
-            } else if (isSheng(gongWuXing, riGanWuXing)) {
-                wangCui[i] = "相"; // 生我者→相
-            } else if (isSheng(riGanWuXing, gongWuXing)) {
-                wangCui[i] = "休"; // 我生者→休
-            } else if (isKe(gongWuXing, riGanWuXing)) {
-                wangCui[i] = "囚"; // 克我者→囚
-            } else if (isKe(riGanWuXing, gongWuXing)) {
-                wangCui[i] = "死"; // 我克者→死
+
+            // 「我」= 月令(yueLingWuXing)。五行旺相休囚死标准：
+            // 同我→旺；我生者→相；生我者→休；克我者→囚；我克者→死
+            // （验证：春木月 → 木旺、火相、土死、金囚、水休）
+            if (yueLingWuXing.equals(gongWuXing)) {
+                wangCui[i] = "旺"; // 同我者→旺（当令）
+            } else if (isSheng(yueLingWuXing, gongWuXing)) {
+                wangCui[i] = "相"; // 我（月令）生者→相
+            } else if (isSheng(gongWuXing, yueLingWuXing)) {
+                wangCui[i] = "休"; // 生我（月令）者→休
+            } else if (isKe(yueLingWuXing, gongWuXing)) {
+                wangCui[i] = "囚"; // 克我（月令）者→囚
+            } else if (isKe(gongWuXing, yueLingWuXing)) {
+                wangCui[i] = "死"; // 我（月令）克者→死
             } else {
-                wangCui[i] = "平"; // 无生克关系
+                wangCui[i] = "平"; // 无生克关系（五行完备时不会触发）
             }
         }
         
         return wangCui;
+    }
+    
+    // 获取地支五行（用于奇门月令旺衰）
+    private String getZhiWuXing(String zhi) {
+        switch (zhi) {
+            case "寅": case "卯": return "木";
+            case "巳": case "午": return "火";
+            case "辰": case "戌": case "丑": case "未": return "土";
+            case "申": case "酉": return "金";
+            case "亥": case "子": return "水";
+            default: return "土";
+        }
     }
     
     // 获取天干五行

@@ -101,8 +101,22 @@ public class DestinyActivity extends android.app.Activity {
                 else keCount++;
             }
         }
-        isStrong = (shengCount + biCount > keCount);
-        isWeak = (keCount > shengCount + biCount);
+        // 加权评分：月令（得令/失令）权重最高，地支通根次之；个数法仅用于上方展示
+        int score = shengCount + biCount - keCount;
+        String monthZhiWx = DestinyCalculator.getWuXing(monthZhi);
+        if (monthZhiWx.equals(dayGanWuXing)) score += 3;                  // 月令比和，得令
+        else if (DestinyCalculator.isSheng(monthZhiWx, dayGanWuXing)) score += 3; // 月令生我
+        else if (DestinyCalculator.isSheng(dayGanWuXing, monthZhiWx)) score -= 2; // 我生月令（泄）
+        else if (DestinyCalculator.isKe(monthZhiWx, dayGanWuXing)) score -= 3;    // 月令克我
+        else score -= 1;                                                  // 我克月令
+        // 地支通根：年/时支有日主同五行之根
+        for (int i = 0; i < pillars.length; i++) {
+            if (i == 2) continue;
+            String pZhiWx = DestinyCalculator.getWuXing(pillars[i][1]);
+            if (pZhiWx.equals(dayGanWuXing)) score += 1;
+        }
+        isStrong = (score >= 4);
+        isWeak = (score <= -2);
         isBalance = (!isStrong && !isWeak);
     }
 
@@ -236,7 +250,7 @@ public class DestinyActivity extends android.app.Activity {
 
     private void populateDayBranch() {
         // 日支 + 生肖
-        setHtmlText(dayBranchLabel, "<font color='#FFD700'><b>" + dayZhi + "</b></font>");
+        setHtmlText(dayBranchLabel, "<font color='#E6C46A'><b>" + dayZhi + "</b></font>");
         setText(dayBranchZodiac, dayZodiac);
         if (dayBranchIcon != null) dayBranchIcon.setText(dayZodiacEmoji);
         setText(dayZhiLabelL, dayZhi + "（" + dayZodiac + "）");
@@ -256,15 +270,15 @@ public class DestinyActivity extends android.app.Activity {
         String strengthHintStr;
         if (isStrong) {
             strengthStr = "🔥 身强";
-            strengthColor = Color.parseColor("#FF6B6B");
+            strengthColor = Color.parseColor("#E0593B");
             strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜泄耗";
         } else if (isWeak) {
             strengthStr = "💧 身弱";
-            strengthColor = Color.parseColor("#87CEEB");
+            strengthColor = Color.parseColor("#3E87C2");
             strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜生扶";
         } else {
             strengthStr = "☯ 中和";
-            strengthColor = Color.parseColor("#FFD700");
+            strengthColor = Color.parseColor("#E6C46A");
             strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 均衡";
         }
         setHtmlText(strengthTag, colorSpan(strengthStr, strengthColor));
@@ -277,8 +291,8 @@ public class DestinyActivity extends android.app.Activity {
         String ganDesc = DestinyCalculator.getGanDescription(dayGan);
         String ganDetail = DestinyCalculator.getRiGanDetailedAnalysis(dayGan);
         String wxEmoji = getWuXingEmoji(dayGanWuXing);
-        setHtmlText(dayDescText, "<font color='#FFD700'><b>" + wxEmoji + " " + dayGan + "日主 · " + ganDesc + "</b></font><br/>"
-                + "<font color='#8899AA'>" + ganDetail + "</font>");
+        setHtmlText(dayDescText, "<font color='#E6C46A'><b>" + wxEmoji + " " + dayGan + "日主 · " + ganDesc + "</b></font><br/>"
+                + "<font color='#7C8C9C'>" + ganDetail + "</font>");
         setText(dayDescTextL, ganDesc);
     }
 
@@ -293,8 +307,8 @@ public class DestinyActivity extends android.app.Activity {
         };
         TextView[] nayinLabels = {nayinYearLabel, nayinMonthLabel, nayinDayLabel, nayinTimeLabel};
         for (int i = 0; i < 4; i++) {
-            setHtmlText(nayinLabels[i], "<font color='#8899AA'>" + gzArr[i] + "</font><br/>"
-                    + "<font color='#FFD700'>" + nayinArr[i] + "</font>");
+            setHtmlText(nayinLabels[i], "<font color='#7C8C9C'>" + gzArr[i] + "</font><br/>"
+                    + "<font color='#E6C46A'>" + nayinArr[i] + "</font>");
         }
 
         // 日柱纳音详细解读（不复述 nayinDayLabel 已显示的纳音名，直接给含义+象征）
@@ -329,7 +343,7 @@ public class DestinyActivity extends android.app.Activity {
         TextView[] csLabels = {changshengDayLabel, changshengMonthLabel, changshengTimeLabel};
 
         for (int i = 0; i < 3; i++) {
-            setHtmlText(csLabels[i], "<font color='#8899AA'><small>" + csNames[i] + "</small></font><br/>"
+            setHtmlText(csLabels[i], "<font color='#7C8C9C'><small>" + csNames[i] + "</small></font><br/>"
                     + "<font color='" + csColors[i] + "'><b>" + csStages[i] + "</b></font>");
         }
 
@@ -348,12 +362,12 @@ public class DestinyActivity extends android.app.Activity {
 
     private static String getWuXingColor(String wx) {
         switch (wx) {
-            case "木": return "#90EE90";
-            case "火": return "#FF6B6B";
-            case "土": return "#FFD700";
-            case "金": return "#C0C0C0";
-            case "水": return "#87CEEB";
-            default: return "#FFD700";
+            case "木": return "#3FA34D";
+            case "火": return "#E0593B";
+            case "土": return "#D9A441";
+            case "金": return "#9AA7B8";
+            case "水": return "#3E87C2";
+            default: return "#D9A441";
         }
     }
 
@@ -370,22 +384,22 @@ public class DestinyActivity extends android.app.Activity {
 
     private String getStageColor(String stage) {
         if (stage.equals("长生") || stage.equals("冠带") || stage.equals("临官") || stage.equals("帝旺"))
-            return "#90EE90"; // 旺相 - green
+            return "#3FA34D"; // 旺相 - 木绿
         if (stage.equals("沐浴") || stage.equals("衰"))
-            return "#FFD700"; // 中和 - gold
+            return "#E6C46A"; // 中和 - 金
         if (stage.equals("病") || stage.equals("死") || stage.equals("墓") || stage.equals("绝"))
-            return "#FF6B6B"; // 衰 - red
-        return "#87CEEB"; // 胎养 - blue
+            return "#E0593B"; // 衰 - 火红
+        return "#3E87C2"; // 胎养 - 水蓝
     }
 
     private void populateTenGods() {
         StringBuilder sb = new StringBuilder();
-        sb.append("年干 ").append(yearGan).append("：").append(coloredText(yGanShen, "#90EE90")).append("　");
+        sb.append("年干 ").append(yearGan).append("：").append(coloredText(yGanShen, "#3FA34D")).append("　");
         sb.append(DestinyCalculator.getTenGodExplanation(yGanShen)).append("<br/>");
-        sb.append("月干 ").append(monthGan).append("：").append(coloredText(mGanShen, "#90EE90")).append("　");
+        sb.append("月干 ").append(monthGan).append("：").append(coloredText(mGanShen, "#3FA34D")).append("　");
         sb.append(DestinyCalculator.getTenGodExplanation(mGanShen)).append("<br/>");
-        sb.append("日干 ").append(dayGan).append("：").append(coloredText("日元", "#FFD700")).append("　命主自身<br/>");
-        sb.append("时干 ").append(timeGan).append("：").append(coloredText(tGanShen, "#90EE90")).append("　");
+        sb.append("日干 ").append(dayGan).append("：").append(coloredText("日元", "#E6C46A")).append("　命主自身<br/>");
+        sb.append("时干 ").append(timeGan).append("：").append(coloredText(tGanShen, "#3FA34D")).append("　");
         sb.append(DestinyCalculator.getTenGodExplanation(tGanShen)).append("<br/><br/>");
         sb.append(DestinyCalculator.getTenGodComboAnalysis(dayGan, yearGan, monthGan, timeGan));
         setHtmlText(tenGodsText, sb.toString());
@@ -415,14 +429,14 @@ public class DestinyActivity extends android.app.Activity {
             int bars = (int)((float)counts[i] / maxCount * 10);
             for (int j = 0; j < bars; j++) sb.append("█");
             sb.append(" ").append(counts[i]);
-            if (names[i].equals(dayGanWuXing)) sb.append(" <font color='#FFD700'><b>★日主</b></font>");
+            if (names[i].equals(dayGanWuXing)) sb.append(" <font color='#E6C46A'><b>★日主</b></font>");
             sb.append("<br/>");
         }
 
         sb.append("<br/>生扶: ").append(shengCount + biCount).append("　克泄: ").append(keCount).append("　");
-        if (isStrong) sb.append(coloredText("→ 身强", "#FF6B6B"));
-        else if (isWeak) sb.append(coloredText("→ 身弱", "#87CEEB"));
-        else sb.append(coloredText("→ 中和", "#FFD700"));
+        if (isStrong) sb.append(coloredText("→ 身强", "#E0593B"));
+        else if (isWeak) sb.append(coloredText("→ 身弱", "#3E87C2"));
+        else sb.append(coloredText("→ 中和", "#E6C46A"));
 
         setHtmlText(wuxingPowerText, sb.toString());
 
@@ -475,9 +489,9 @@ public class DestinyActivity extends android.app.Activity {
         };
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 4; i++) {
-            sb.append("<font color='#FFD700'><b>").append(names[i]).append("柱</b></font> ").append(pillarStrs[i]).append("<br/>");
+            sb.append("<font color='#E6C46A'><b>").append(names[i]).append("柱</b></font> ").append(pillarStrs[i]).append("<br/>");
             sb.append(meanings[i]).append("<br/>");
-            sb.append("<font color='#8899AA'>").append(DestinyCalculator.getPillarRichDetail(dayGan, pillars[i][0], pillars[i][1], names[i])).append("</font>");
+            sb.append("<font color='#7C8C9C'>").append(DestinyCalculator.getPillarRichDetail(dayGan, pillars[i][0], pillars[i][1], names[i])).append("</font>");
             if (i < 3) sb.append("<br/><br/>");
         }
         setHtmlText(pillarsDetailText, sb.toString());

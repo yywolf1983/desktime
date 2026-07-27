@@ -65,4 +65,7 @@
     <color name="explanation_gray">#FFA8B1BD</color>
     <color name="explanation_purple">#FFBBA6DE</color>
     <color name="colon_color">#FF9FD4E8</color>
+
+    <!-- 锁屏旋转按钮（暗金，与主题协调） -->
+    <color name="lock_icon">#55D6BE86</color>
 </resources>

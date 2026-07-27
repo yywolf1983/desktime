@@ -100,6 +100,7 @@ public class LuoPanActivity extends android.app.Activity {
             + "• <font color='#FF4444'><b>惊门</b></font>（凶）：惊恐怪异，宜诉讼、捕盗。<br/><br/>";
 
     private LuoPanView luoPanView;
+    private String currentMonthWuxing = "木";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +118,7 @@ public class LuoPanActivity extends android.app.Activity {
 
         initViews();
         setupLuoPanRotation();
+        currentMonthWuxing = getMonthWuxingByJieqi(JieqiData.getCurrentJieqi(java.util.Calendar.getInstance()));
         updateInfo();
     }
 
@@ -339,7 +341,7 @@ public class LuoPanActivity extends android.app.Activity {
                 String zhaoxiangHtml = "<b>格局：</b>" + bfBagua + "卦·" + bfWuxing + "·" + beast +
                     " " + relation + wuxingRelation +
                     "<font color='" + luckColor + "'>【" + jiXiong + "】</font>" +
-                    "<br/><font color='#8899AA'>　" + zhaoxiangDetail + "</font>" +
+                    "<br/><font color='#7C8C9C'>　" + zhaoxiangDetail + "</font>" +
                     "<br/><b>坐向：</b>" + zuoXiangDetail;
                 zhaoxiangViews[i].setText(Html.fromHtml(zhaoxiangHtml));
             }
@@ -347,14 +349,14 @@ public class LuoPanActivity extends android.app.Activity {
                 String[] currentShuiSha = jiXiong.equals("吉") ? shuiShaJiInfo[i] :
                                          jiXiong.equals("凶") ? shuiShaXiongInfo[i] : shuiShaPingInfo[i];
                 String shuishaHtml = "<b>砂水：</b>" + currentShuiSha[0] +
-                    "<br/><font color='#8899AA'>　" + currentShuiSha[1] + "</font>";
+                    "<br/><font color='#7C8C9C'>　" + currentShuiSha[1] + "</font>";
                 shuishaViews[i].setText(Html.fromHtml(shuishaHtml));
             }
             if (layoutViews[i] != null) {
                 String[] currentLayout = jiXiong.equals("吉") ? layoutJiInfo[i] :
                                          jiXiong.equals("凶") ? layoutXiongInfo[i] : layoutPingInfo[i];
                 String layoutHtml = "<b>布局：</b>" + currentLayout[0] +
-                    "<br/><font color='#8899AA'>　" + currentLayout[1] + "</font>";
+                    "<br/><font color='#7C8C9C'>　" + currentLayout[1] + "</font>";
                 layoutViews[i].setText(Html.fromHtml(layoutHtml));
             }
         }
@@ -509,11 +511,30 @@ public class LuoPanActivity extends android.app.Activity {
     }
 
     private String getJiXiong(String mountain, String wuxing) {
-        String[] luckyMountains = {"子", "午", "卯", "酉", "艮", "坤", "巽", "乾"};
-        for (String lm : luckyMountains) {
-            if (lm.equals(mountain)) return "吉";
+        // 以坐山五行与当前月令（节气）五行生克判定旺衰：得令生扶为吉，失令受克为凶，其余为平
+        String rel = getWuxingRelation(currentMonthWuxing, wuxing);
+        if (rel.equals("【比和】") || rel.equals("【生我】")) return "吉";
+        if (rel.equals("【克我】")) return "凶";
+        return "平";
+    }
+
+    // 节气名 → 节月地支五行（用于罗盘坐山旺衰）
+    private static String getMonthWuxingByJieqi(String jieqi) {
+        switch (jieqi) {
+            case "立春": case "雨水": return "木";
+            case "惊蛰": case "春分": return "木";
+            case "清明": case "谷雨": return "土";
+            case "立夏": case "小满": return "火";
+            case "芒种": case "夏至": return "火";
+            case "小暑": case "大暑": return "土";
+            case "立秋": case "处暑": return "金";
+            case "白露": case "秋分": return "金";
+            case "寒露": case "霜降": return "土";
+            case "立冬": case "小雪": return "水";
+            case "大雪": case "冬至": return "水";
+            case "小寒": case "大寒": return "土";
+            default: return "木";
         }
-        return "中";
     }
 
     private String getGuiZang(String wuxing) {
@@ -584,7 +605,7 @@ public class LuoPanActivity extends android.app.Activity {
         }
 
         // 通俗原因解读
-        sb.append("<br/><font color='#CCB866'><b>💡 通俗解读：</b></font><br/>");
+        sb.append("<br/><font color='#D6BE86'><b>💡 通俗解读：</b></font><br/>");
         sb.append(getBazhaiPlainExplanation(bagua));
         bazhaiDesc.setText(Html.fromHtml(sb.toString()));
     }
@@ -609,7 +630,7 @@ public class LuoPanActivity extends android.app.Activity {
 
         sb.append(BAZHAI_KOUJUE);
 
-        sb.append("<font color='#CCB866'>一句话总结：</font>");
+        sb.append("<font color='#D6BE86'>一句话总结：</font>");
         sb.append("吉方布卧室厅门，凶方布厕储，");
         sb.append("即「<b>趋吉避凶</b>」，乃八宅核心之道。");
 
@@ -665,7 +686,7 @@ public class LuoPanActivity extends android.app.Activity {
         }
 
         // 通俗原因解读
-        sb.append("<br/><font color='#CCB866'><b>💡 通俗解读：</b></font><br/>");
+        sb.append("<br/><font color='#D6BE86'><b>💡 通俗解读：</b></font><br/>");
         sb.append(getJiuxingPlainExplanation(bagua, baguaNumber));
         jiuxingDesc.setText(Html.fromHtml(sb.toString()));
     }
@@ -719,7 +740,7 @@ public class LuoPanActivity extends android.app.Activity {
 
         sb.append(JIUXING_KOUJUE);
 
-        sb.append("<font color='#CCB866'>一句话总结：</font>");
+        sb.append("<font color='#D6BE86'>一句话总结：</font>");
         sb.append("吉星方宜活动办公，凶星方宜摆金属绿植化解，");
         sb.append("即「<b>星随宫转，吉凶有方</b>」。");
 
@@ -769,7 +790,7 @@ public class LuoPanActivity extends android.app.Activity {
         }
 
         // 通俗原因解读
-        sb.append("<br/><font color='#CCB866'><b>💡 通俗解读：</b></font><br/>");
+        sb.append("<br/><font color='#D6BE86'><b>💡 通俗解读：</b></font><br/>");
         sb.append(getBamenPlainExplanation(bagua, baguaNumber));
         bamenDesc.setText(Html.fromHtml(sb.toString()));
     }
@@ -788,11 +809,11 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append(BAMEN_KOUJUE);
 
         // 根据当前坐山卦，给出实战建议
-        sb.append("<font color='#CCB866'>生活应用建议：</font><br/>");
+        sb.append("<font color='#D6BE86'>生活应用建议：</font><br/>");
         sb.append(getBamenLifeAdvice(baguaNumber));
         sb.append("<br/>");
 
-        sb.append("<font color='#CCB866'>一句话总结：</font>");
+        sb.append("<font color='#D6BE86'>一句话总结：</font>");
         sb.append("办事谈合作，先看吉门凶门方位，");
         sb.append("吉门顺、凶门波折，即「<b>择门而行</b>」。");
 
@@ -820,7 +841,7 @@ public class LuoPanActivity extends android.app.Activity {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<b>山水格局：").append(mountain).append("山").append(chaoXiang).append("向</b><br/>");
-        sb.append("<font color='#8899AA'>山管人丁水管财，山环水抱富贵来</font><br/><br/>");
+        sb.append("<font color='#7C8C9C'>山管人丁水管财，山环水抱富贵来</font><br/><br/>");
 
         // 四兽格局总览
         sb.append("<b>【四兽总览】</b><br/>");
@@ -915,7 +936,7 @@ public class LuoPanActivity extends android.app.Activity {
 
         // 判断山水格局类型
         String pattern = getShanshuiPattern(mountain, wuxing);
-        sb.append("　格局判定：<font color='#FFD700'><b>").append(pattern).append("</b></font><br/>");
+        sb.append("　格局判定：<font color='#E6C46A'><b>").append(pattern).append("</b></font><br/>");
 
         return sb.toString();
     }
@@ -964,7 +985,7 @@ public class LuoPanActivity extends android.app.Activity {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<b>寻龙点穴，龙穴砂水向五吉</b><br/>");
-        sb.append("<font color='#8899AA'>阴宅重藏风聚气，先人安则后代宁</font><br/><br/>");
+        sb.append("<font color='#7C8C9C'>阴宅重藏风聚气，先人安则后代宁</font><br/><br/>");
 
         // 龙穴砂水向 五要素
         sb.append("<b>【地理五诀】</b><br/>");
@@ -1024,8 +1045,8 @@ public class LuoPanActivity extends android.app.Activity {
         String chaoXiangDir = getChaoXiangDirection(chaoXiang);
 
         sb.append("　<font color='#90EE90'><b>龙</b></font>：主贵贱，宜有来龙<br/>");
-        sb.append("　<font color='#FFD700'><b>穴</b></font>：主吉凶，藏风聚气<br/>");
-        sb.append("　<font color='#FFA500'><b>砂</b></font>：主贤愚，四兽齐备<br/>");
+        sb.append("　<font color='#E6C46A'><b>穴</b></font>：主吉凶，藏风聚气<br/>");
+        sb.append("　<font color='#F3BA66'><b>砂</b></font>：主贤愚，四兽齐备<br/>");
         sb.append("　<font color='#87CEEB'><b>水</b></font>：主财运，环抱为佳<br/>");
         sb.append("　<font color='#FF6B6B'><b>向</b></font>：主兴衰，向法合度<br/>");
 
@@ -1072,7 +1093,7 @@ public class LuoPanActivity extends android.app.Activity {
 
         String relation = getWuxingRelation(wuxing, mountainWuxing);
         if (relation.equals("【比和】")) {
-            return "<font color='#FFD700'><b>山命同气</b></font> — 坐山与命比和，阴阳调和，上吉之格";
+            return "<font color='#E6C46A'><b>山命同气</b></font> — 坐山与命比和，阴阳调和，上吉之格";
         } else if (relation.equals("【生我】")) {
             return "<font color='#00CC00'><b>山生命主</b></font> — 坐山生我，先灵安后人福，大吉，子孙昌盛";
         } else if (relation.equals("【我生】")) {
@@ -1122,17 +1143,23 @@ public class LuoPanActivity extends android.app.Activity {
     
     private String getLuoPanSummary(String mountain, String chaoXiang, String wuxing) {
         String jixiong = getJiXiong(mountain, wuxing);
-        String[] luckyDirs = {"南方", "东南方", "东方", "东北方", "西方", "西南方", "西北方", "北方"};
-        
-        int mountainIndex = 0;
-        for (int i = 0; i < mountainNames.length; i++) {
-            if (mountainNames[i].equals(mountain)) {
-                mountainIndex = i;
-                break;
+        // 吉利方位：坐山五行所「喜」（生我、比和）之方位
+        String[] dirNames = {"东方", "东南方", "南方", "西南方", "西方", "西北方", "北方", "东北方"};
+        String[] dirWuxing = {"木", "木", "火", "土", "金", "金", "水", "土"};
+        StringBuilder lucky = new StringBuilder();
+        for (int pass = 0; pass < 2; pass++) {
+            for (int i = 0; i < dirNames.length; i++) {
+                String rel = getWuxingRelation(dirWuxing[i], wuxing);
+                if (pass == 0 && rel.equals("【生我】")) {
+                    if (lucky.length() > 0) lucky.append("、");
+                    lucky.append(dirNames[i]).append("(生方)");
+                } else if (pass == 1 && rel.equals("【比和】")) {
+                    if (lucky.length() > 0) lucky.append("、");
+                    lucky.append(dirNames[i]).append("(旺方)");
+                }
             }
         }
-        String luckyDir = luckyDirs[mountainIndex % 8];
-
+        String luckyDir = lucky.length() > 0 ? lucky.toString() : "无特别方位";
         return "坐" + mountain + "向" + chaoXiang + "，五行属" + wuxing + "，" + jixiong + "。吉利方位：" + luckyDir;
     }
 }
