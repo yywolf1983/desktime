@@ -65,39 +65,39 @@ public class LuoPanActivity extends android.app.Activity {
     // 八宅吉凶方释义口诀
     private static final String BAZHAI_KOUJUE =
             "八宅方位吉凶：<br/>"
-            + "• <font color='#00CC00'><b>生气方</b></font>（最吉）：主丁财两旺，宜主卧、大门；<br/>"
-            + "• <font color='#00CC00'><b>天医方</b></font>（次吉）：主祛病延年，宜体弱居住；<br/>"
-            + "• <font color='#00CC00'><b>延年方</b></font>（次吉）：主婚姻美满、健康长寿，宜夫妻房；<br/>"
-            + "• <font color='#FFAA00'><b>伏位方</b></font>（平）：主平稳守成，宜静养读书；<br/>"
-            + "• <font color='#FF4444'><b>祸害方</b></font>（凶）：主口舌是非、胃病，宜作厕所；<br/>"
-            + "• <font color='#FF4444'><b>六煞方</b></font>（凶）：主感情纠纷、失眠，宜作储物间；<br/>"
-            + "• <font color='#FF4444'><b>五鬼方</b></font>（凶）：主官非破财、火灾，宜作厨房；<br/>"
-            + "• <font color='#FF4444'><b>绝命方</b></font>（大凶）：主伤残、绝嗣，宜作厕所仓库。<br/><br/>";
+            + "• <font color='#3FA34D'><b>生气方</b></font>（最吉）：主丁财两旺，宜主卧、大门；<br/>"
+            + "• <font color='#3FA34D'><b>天医方</b></font>（次吉）：主祛病延年，宜体弱居住；<br/>"
+            + "• <font color='#3FA34D'><b>延年方</b></font>（次吉）：主婚姻美满、健康长寿，宜夫妻房；<br/>"
+            + "• <font color='#E6C46A'><b>伏位方</b></font>（平）：主平稳守成，宜静养读书；<br/>"
+            + "• <font color='#E0593B'><b>祸害方</b></font>（凶）：主口舌是非、胃病，宜作厕所；<br/>"
+            + "• <font color='#E0593B'><b>六煞方</b></font>（凶）：主感情纠纷、失眠，宜作储物间；<br/>"
+            + "• <font color='#E0593B'><b>五鬼方</b></font>（凶）：主官非破财、火灾，宜作厨房；<br/>"
+            + "• <font color='#E0593B'><b>绝命方</b></font>（大凶）：主伤残、绝嗣，宜作厕所仓库。<br/><br/>";
 
     // 九星吉凶口诀
     private static final String JIUXING_KOUJUE =
             "九星吉凶：<br/>"
-            + "• <font color='#00CC00'><b>一白</b></font>（水）→ 文昌官贵，利考试求职；<br/>"
-            + "• <font color='#FF4444'><b>二黑</b></font>（土）→ 病符，主脾胃病灾；<br/>"
-            + "• <font color='#FF4444'><b>三碧</b></font>（木）→ 是非，主口舌争斗；<br/>"
-            + "• <font color='#00CC00'><b>四绿</b></font>（木）→ 文曲，利读书创作；<br/>"
-            + "• <font color='#FF4444'><b>五黄</b></font>（土）→ 大煞，主灾祸破财；<br/>"
-            + "• <font color='#00CC00'><b>六白</b></font>（金）→ 武曲，利升职；<br/>"
-            + "• <font color='#FF4444'><b>七赤</b></font>（金）→ 破军，主贼盗官非；<br/>"
-            + "• <font color='#00CC00'><b>八白</b></font>（土）→ 旺财，利置业投资；<br/>"
-            + "• <font color='#00CC00'><b>九紫</b></font>（火）→ 喜庆，利婚嫁添丁。<br/><br/>";
+            + "• <font color='#3FA34D'><b>一白</b></font>（水）→ 文昌官贵，利考试求职；<br/>"
+            + "• <font color='#E0593B'><b>二黑</b></font>（土）→ 病符，主脾胃病灾；<br/>"
+            + "• <font color='#E0593B'><b>三碧</b></font>（木）→ 是非，主口舌争斗；<br/>"
+            + "• <font color='#3FA34D'><b>四绿</b></font>（木）→ 文曲，利读书创作；<br/>"
+            + "• <font color='#E0593B'><b>五黄</b></font>（土）→ 大煞，主灾祸破财；<br/>"
+            + "• <font color='#3FA34D'><b>六白</b></font>（金）→ 武曲，利升职；<br/>"
+            + "• <font color='#E0593B'><b>七赤</b></font>（金）→ 破军，主贼盗官非；<br/>"
+            + "• <font color='#3FA34D'><b>八白</b></font>（土）→ 旺财，利置业投资；<br/>"
+            + "• <font color='#3FA34D'><b>九紫</b></font>（火）→ 喜庆，利婚嫁添丁。<br/><br/>";
 
     // 八门性格与用途口诀
     private static final String BAMEN_KOUJUE =
             "八门吉凶与用途：<br/>"
-            + "• <font color='#00CC00'><b>开门</b></font>（吉）：通达顺利，宜开业、求职、谈判；<br/>"
-            + "• <font color='#00CC00'><b>休门</b></font>（吉）：百事皆宜，宜婚嫁、求财、休养；<br/>"
-            + "• <font color='#00CC00'><b>生门</b></font>（吉）：财源广进，宜求财、交易、建造；<br/>"
-            + "• <font color='#FFAA00'><b>杜门</b></font>（平）：闭塞隐藏，宜躲避、保密；<br/>"
-            + "• <font color='#FFAA00'><b>景门</b></font>（平）：文书吉庆，宜考试、诉讼；<br/>"
-            + "• <font color='#FF4444'><b>伤门</b></font>（凶）：损伤争斗，宜追债、擒贼；<br/>"
-            + "• <font color='#FF4444'><b>死门</b></font>（凶）：衰败丧事，宜安葬；<br/>"
-            + "• <font color='#FF4444'><b>惊门</b></font>（凶）：惊恐怪异，宜诉讼、捕盗。<br/><br/>";
+            + "• <font color='#3FA34D'><b>开门</b></font>（吉）：通达顺利，宜开业、求职、谈判；<br/>"
+            + "• <font color='#3FA34D'><b>休门</b></font>（吉）：百事皆宜，宜婚嫁、求财、休养；<br/>"
+            + "• <font color='#3FA34D'><b>生门</b></font>（吉）：财源广进，宜求财、交易、建造；<br/>"
+            + "• <font color='#E6C46A'><b>杜门</b></font>（平）：闭塞隐藏，宜躲避、保密；<br/>"
+            + "• <font color='#E6C46A'><b>景门</b></font>（平）：文书吉庆，宜考试、诉讼；<br/>"
+            + "• <font color='#E0593B'><b>伤门</b></font>（凶）：损伤争斗，宜追债、擒贼；<br/>"
+            + "• <font color='#E0593B'><b>死门</b></font>（凶）：衰败丧事，宜安葬；<br/>"
+            + "• <font color='#E0593B'><b>惊门</b></font>（凶）：惊恐怪异，宜诉讼、捕盗。<br/><br/>";
 
     private LuoPanView luoPanView;
     private String currentMonthWuxing = "木";
@@ -332,7 +332,7 @@ public class LuoPanActivity extends android.app.Activity {
 
             String wuxingRelation = getWuxingRelation(wuxing, bfWuxing);
             String jiXiong = getLuckFromWuxingRelation(wuxingRelation);
-            String luckColor = jiXiong.equals("吉") ? "#00CC00" : jiXiong.equals("凶") ? "#FF4444" : "#FFAA00";
+            String luckColor = jiXiong.equals("吉") ? "#3FA34D" : jiXiong.equals("凶") ? "#E0593B" : "#E6C46A";
 
             String zhaoxiangDetail = getZhaoxiangDetail(bfBagua, bfWuxing, beast, jiXiong);
             String zuoXiangDetail = getZuoXiangDetail(direction, mountain, chaoXiang, relation);
@@ -595,8 +595,8 @@ public class LuoPanActivity extends android.app.Activity {
                 int dirIndex = i;
                 if (dirIndex >= 4) dirIndex++;
 
-                String luckColor = bazhaiLuck[starIndex].equals("吉") ? "#00CC00" :
-                                   bazhaiLuck[starIndex].equals("凶") ? "#FF4444" : "#FFAA00";
+                String luckColor = bazhaiLuck[starIndex].equals("吉") ? "#3FA34D" :
+                                   bazhaiLuck[starIndex].equals("凶") ? "#E0593B" : "#E6C46A";
                 sb.append(bazhaiNames[starIndex]);
                 sb.append("<font color='").append(luckColor).append("'>【").append(bazhaiLuck[starIndex]).append("】</font>");
                 sb.append(directions[dirIndex]).append("·").append(baguaList[dirIndex]).append("卦·").append(wuxingList[dirIndex]);
@@ -605,7 +605,7 @@ public class LuoPanActivity extends android.app.Activity {
         }
 
         // 通俗原因解读
-        sb.append("<br/><font color='#D6BE86'><b>💡 通俗解读：</b></font><br/>");
+        sb.append("<br/><font color='#D6BE86'><b>通俗解读：</b></font><br/>");
         sb.append(getBazhaiPlainExplanation(bagua));
         bazhaiDesc.setText(Html.fromHtml(sb.toString()));
     }
@@ -676,8 +676,8 @@ public class LuoPanActivity extends android.app.Activity {
             int starIndex = starNum - 1;
             
             if (i != 4) {
-                String luckColor = jiuxingLuck[starIndex].equals("吉") ? "#00CC00" : 
-                                   jiuxingLuck[starIndex].equals("凶") ? "#FF4444" : "#FFAA00";
+                String luckColor = jiuxingLuck[starIndex].equals("吉") ? "#3FA34D" : 
+                                   jiuxingLuck[starIndex].equals("凶") ? "#E0593B" : "#E6C46A";
                 sb.append(jiuxingNames[starIndex]);
                 sb.append("<font color='").append(luckColor).append("'>【").append(jiuxingLuck[starIndex]).append("】</font>");
                 sb.append(directions[i]).append("·").append(baguaList[i]).append("卦·").append(jiuxingWuxing[starIndex]);
@@ -686,7 +686,7 @@ public class LuoPanActivity extends android.app.Activity {
         }
 
         // 通俗原因解读
-        sb.append("<br/><font color='#D6BE86'><b>💡 通俗解读：</b></font><br/>");
+        sb.append("<br/><font color='#D6BE86'><b>通俗解读：</b></font><br/>");
         sb.append(getJiuxingPlainExplanation(bagua, baguaNumber));
         jiuxingDesc.setText(Html.fromHtml(sb.toString()));
     }
@@ -781,8 +781,8 @@ public class LuoPanActivity extends android.app.Activity {
             int posIndex = (i + baguaNumber - 1 + 8) % 8;
             int adjustedPos = validPositions[posIndex];
             
-            String luckColor = bamenLuck[i].equals("吉") ? "#00CC00" : 
-                               bamenLuck[i].equals("凶") ? "#FF4444" : "#FFAA00";
+            String luckColor = bamenLuck[i].equals("吉") ? "#3FA34D" : 
+                               bamenLuck[i].equals("凶") ? "#E0593B" : "#E6C46A";
             sb.append(bamenNames[i]);
             sb.append("<font color='").append(luckColor).append("'>【").append(bamenLuck[i]).append("】</font>");
             sb.append(directions[adjustedPos]).append("·").append(baguaList[adjustedPos]).append("卦");
@@ -790,7 +790,7 @@ public class LuoPanActivity extends android.app.Activity {
         }
 
         // 通俗原因解读
-        sb.append("<br/><font color='#D6BE86'><b>💡 通俗解读：</b></font><br/>");
+        sb.append("<br/><font color='#D6BE86'><b>通俗解读：</b></font><br/>");
         sb.append(getBamenPlainExplanation(bagua, baguaNumber));
         bamenDesc.setText(Html.fromHtml(sb.toString()));
     }
@@ -851,8 +851,8 @@ public class LuoPanActivity extends android.app.Activity {
         // 水法详解
         sb.append("<b>【水法详解】</b><br/>");
         sb.append("水为财源，山为人根；天门宜开，地户宜闭。<br/>");
-        sb.append("<font color='#00CC00'>【吉水】</font>环抱水·九曲水·朝海水<br/>");
-        sb.append("<font color='#FF4444'>【凶水】</font>直冲水·反弓水·割脚水<br/>");
+        sb.append("<font color='#3FA34D'>【吉水】</font>环抱水·九曲水·朝海水<br/>");
+        sb.append("<font color='#E0593B'>【凶水】</font>直冲水·反弓水·割脚水<br/>");
         sb.append("　水口：").append(getShuikouDirection(mountain)).append("方，宜有关拦<br/>");
         sb.append("　来水：").append(getLaishuiDirection(mountain)).append("方，宜开阔<br/>");
 
@@ -896,7 +896,7 @@ public class LuoPanActivity extends android.app.Activity {
         for (int i = 0; i < 4; i++) {
             String relation = getWuxingRelation(wuxing, beastWuxings[i]);
             String jiXiong = getLuckFromWuxingRelation(relation);
-            String color = jiXiong.equals("吉") ? "#00CC00" : jiXiong.equals("凶") ? "#FF4444" : "#FFAA00";
+            String color = jiXiong.equals("吉") ? "#3FA34D" : jiXiong.equals("凶") ? "#E0593B" : "#E6C46A";
             sb.append("　<font color='").append(color).append("'>【").append(jiXiong).append("】</font>");
             sb.append(beastNames[i]).append("：");
             if (forYinzhai) {
@@ -994,21 +994,21 @@ public class LuoPanActivity extends android.app.Activity {
 
         // 寻龙要点（扩充）
         sb.append("<b>【寻龙点穴】</b><br/>");
-        sb.append("<font color='#00CC00'>【龙】</font>龙要真：起伏有气势，有祖宗<br/>");
-        sb.append("<font color='#00CC00'>【龙】</font>龙要活：蜿蜒有生气，草木茂<br/>");
-        sb.append("<font color='#00CC00'>【龙】</font>龙要旺：山形饱满，生气旺<br/>");
-        sb.append("<font color='#00CC00'>【龙】</font>龙要止：到头有结作，有水护<br/>");
-        sb.append("<font color='#FF4444'>【忌】</font>龙怕断：气不连，后代贫病<br/>");
-        sb.append("<font color='#FF4444'>【忌】</font>龙怕硬：僵硬无生气，人丁稀<br/><br/>");
+        sb.append("<font color='#3FA34D'>【龙】</font>龙要真：起伏有气势，有祖宗<br/>");
+        sb.append("<font color='#3FA34D'>【龙】</font>龙要活：蜿蜒有生气，草木茂<br/>");
+        sb.append("<font color='#3FA34D'>【龙】</font>龙要旺：山形饱满，生气旺<br/>");
+        sb.append("<font color='#3FA34D'>【龙】</font>龙要止：到头有结作，有水护<br/>");
+        sb.append("<font color='#E0593B'>【忌】</font>龙怕断：气不连，后代贫病<br/>");
+        sb.append("<font color='#E0593B'>【忌】</font>龙怕硬：僵硬无生气，人丁稀<br/><br/>");
 
         // 点穴要领（扩充）
         sb.append("<b>【点穴秘法】</b><br/>");
-        sb.append("<font color='#00CC00'>【穴】</font>穴要的：藏风聚气，差之千里<br/>");
-        sb.append("<font color='#00CC00'>【穴】</font>穴要暖：土质温润，人多福寿<br/>");
-        sb.append("<font color='#00CC00'>【穴】</font>穴要稳：背靠主山，根基固<br/>");
-        sb.append("<font color='#00CC00'>【穴】</font>穴要净：清净无恶石，福绵长<br/>");
-        sb.append("<font color='#FF4444'>【忌】</font>穴怕风：气散，后代贫寒<br/>");
-        sb.append("<font color='#FF4444'>【忌】</font>穴怕水：气散，败财损丁<br/><br/>");
+        sb.append("<font color='#3FA34D'>【穴】</font>穴要的：藏风聚气，差之千里<br/>");
+        sb.append("<font color='#3FA34D'>【穴】</font>穴要暖：土质温润，人多福寿<br/>");
+        sb.append("<font color='#3FA34D'>【穴】</font>穴要稳：背靠主山，根基固<br/>");
+        sb.append("<font color='#3FA34D'>【穴】</font>穴要净：清净无恶石，福绵长<br/>");
+        sb.append("<font color='#E0593B'>【忌】</font>穴怕风：气散，后代贫寒<br/>");
+        sb.append("<font color='#E0593B'>【忌】</font>穴怕水：气散，败财损丁<br/><br/>");
 
         // 砂水环抱（扩充，随坐山变化）
         sb.append("<b>【砂水环抱】</b><br/>");
@@ -1018,8 +1018,8 @@ public class LuoPanActivity extends android.app.Activity {
         // 水口详解
         sb.append("<b>【水口关拦】</b><br/>");
         sb.append("水口为财库门户。<br/>");
-        sb.append("<font color='#00CC00'>【吉】</font>紧锁有关拦，财气不散<br/>");
-        sb.append("<font color='#FF4444'>【凶】</font>直泄无遮拦，财去人散<br/>");
+        sb.append("<font color='#3FA34D'>【吉】</font>紧锁有关拦，财气不散<br/>");
+        sb.append("<font color='#E0593B'>【凶】</font>直泄无遮拦，财去人散<br/>");
         sb.append("　水口方位：").append(getShuikouDirection(mountain)).append("方，宜有山峦洲渚关拦<br/>");
         sb.append("　天门开：来水之方宜开阔，水有源则财无尽<br/>");
         sb.append("　地户闭：去水之方宜紧闭，水有拦则财常聚<br/><br/>");
@@ -1044,11 +1044,11 @@ public class LuoPanActivity extends android.app.Activity {
         String mountainDir = getMountainDirection(mountain);
         String chaoXiangDir = getChaoXiangDirection(chaoXiang);
 
-        sb.append("　<font color='#90EE90'><b>龙</b></font>：主贵贱，宜有来龙<br/>");
+        sb.append("　<font color='#3FA34D'><b>龙</b></font>：主贵贱，宜有来龙<br/>");
         sb.append("　<font color='#E6C46A'><b>穴</b></font>：主吉凶，藏风聚气<br/>");
         sb.append("　<font color='#F3BA66'><b>砂</b></font>：主贤愚，四兽齐备<br/>");
-        sb.append("　<font color='#87CEEB'><b>水</b></font>：主财运，环抱为佳<br/>");
-        sb.append("　<font color='#FF6B6B'><b>向</b></font>：主兴衰，向法合度<br/>");
+        sb.append("　<font color='#3E87C2'><b>水</b></font>：主财运，环抱为佳<br/>");
+        sb.append("　<font color='#E0593B'><b>向</b></font>：主兴衰，向法合度<br/>");
 
         return sb.toString();
     }
@@ -1059,8 +1059,8 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append("　内明堂：宜平整，主初兴<br/>");
         sb.append("　中明堂：宜明亮，主发福<br/>");
         sb.append("　外明堂：宜广阔，主荣昌<br/>");
-        sb.append("　<font color='#00CC00'>【吉】</font>四周高中间低，水聚天心，富贵双全<br/>");
-        sb.append("　<font color='#FF4444'>【凶】</font>水去直泄无遮拦，财散人离，家道败落<br/>");
+        sb.append("　<font color='#3FA34D'>【吉】</font>四周高中间低，水聚天心，富贵双全<br/>");
+        sb.append("　<font color='#E0593B'>【凶】</font>水去直泄无遮拦，财散人离，家道败落<br/>");
         sb.append("　").append(chaoXiang).append("向之明堂：宜开阔平整有朝山，案山近则速发，朝山远则福长");
 
         return sb.toString();
@@ -1095,13 +1095,13 @@ public class LuoPanActivity extends android.app.Activity {
         if (relation.equals("【比和】")) {
             return "<font color='#E6C46A'><b>山命同气</b></font> — 坐山与命比和，阴阳调和，上吉之格";
         } else if (relation.equals("【生我】")) {
-            return "<font color='#00CC00'><b>山生命主</b></font> — 坐山生我，先灵安后人福，大吉，子孙昌盛";
+            return "<font color='#3FA34D'><b>山生命主</b></font> — 坐山生我，先灵安后人福，大吉，子孙昌盛";
         } else if (relation.equals("【我生】")) {
-            return "<font color='#FFAA00'><b>命主生山</b></font> — 我生山，泄秀，后代出文人";
+            return "<font color='#E6C46A'><b>命主生山</b></font> — 我生山，泄秀，后代出文人";
         } else if (relation.equals("【克我】")) {
-            return "<font color='#FF4444'><b>山克命主</b></font> — 山克我，需择吉安葬化凶";
+            return "<font color='#E0593B'><b>山克命主</b></font> — 山克我，需择吉安葬化凶";
         } else {
-            return "<font color='#FF6B6B'><b>命主克山</b></font> — 我克山，占之不吉，宜另择吉地";
+            return "<font color='#E0593B'><b>命主克山</b></font> — 我克山，占之不吉，宜另择吉地";
         }
     }
     

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -96,7 +97,7 @@ public class LuoPanView extends View {
 
     private void init() {
         outerCirclePaint = new Paint();
-        outerCirclePaint.setColor(Color.YELLOW);
+        outerCirclePaint.setColor(0xFFFFD700);
         outerCirclePaint.setStyle(Paint.Style.STROKE);
         outerCirclePaint.setStrokeWidth(4);
         outerCirclePaint.setAntiAlias(true);
@@ -127,14 +128,14 @@ public class LuoPanView extends View {
         linePaint.setAntiAlias(true);
         
         arrowPaint = new Paint();
-        arrowPaint.setColor(Color.RED);
+        arrowPaint.setColor(Color.argb(225, 255, 59, 48));
         arrowPaint.setStyle(Paint.Style.FILL);
         arrowPaint.setAntiAlias(true);
-        
+
         borderPaint = new Paint();
-        borderPaint.setColor(Color.rgb(180, 0, 0));
+        borderPaint.setColor(0xFFFFD700);
         borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(0.8f);
+        borderPaint.setStrokeWidth(2.5f);
         borderPaint.setAntiAlias(true);
         
         bgPaint = new Paint();
@@ -215,7 +216,7 @@ public class LuoPanView extends View {
         
         // 外圈每5度刻度标记（以北为准）
         Paint tickPaint = new Paint();
-        tickPaint.setColor(Color.YELLOW);
+        tickPaint.setColor(0xFFFFD700);
         tickPaint.setStrokeWidth(2);
         tickPaint.setAntiAlias(true);
         
@@ -279,7 +280,7 @@ public class LuoPanView extends View {
             textPaint.setTextSize(r * 0.09f);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(TWENTY_FOUR_MOUNTAINS[i], x, centerY, textPaint);
+            drawTextO(canvas, TWENTY_FOUR_MOUNTAINS[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -299,7 +300,7 @@ public class LuoPanView extends View {
             textPaint.setColor(Color.rgb(255, 182, 193));
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(TWELVE_ZHI[i], x, centerY, textPaint);
+            drawTextO(canvas, TWELVE_ZHI[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -318,13 +319,13 @@ public class LuoPanView extends View {
             textPaint.setColor(Color.rgb(74, 144, 217));
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(EIGHT_TRIGRAMS[i], x - r * 0.05f, centerY, textPaint);
+            drawTextO(canvas, EIGHT_TRIGRAMS[i], x - r * 0.05f, centerY, textPaint);
             
             textPaint.setTextSize(r * 0.08f);
             textPaint.setColor(Color.rgb(191, 160, 85));
             fm = textPaint.getFontMetrics();
             centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(EIGHT_TRIGRAMS_NAMES[i], x + r * 0.05f, centerY, textPaint);
+            drawTextO(canvas, EIGHT_TRIGRAMS_NAMES[i], x + r * 0.05f, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -346,7 +347,7 @@ public class LuoPanView extends View {
             textPaint.setColor(Color.rgb(173, 255, 47));
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(TEN_GAN[i], x, centerY, textPaint);
+            drawTextO(canvas, TEN_GAN[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -366,7 +367,7 @@ public class LuoPanView extends View {
             textPaint.setFakeBoldText(true);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(EIGHT_DIRECTIONS[i], x, centerY, textPaint);
+            drawTextO(canvas, EIGHT_DIRECTIONS[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -382,7 +383,7 @@ public class LuoPanView extends View {
                 textPaint.setFakeBoldText(true);
                 Paint.FontMetrics fm = textPaint.getFontMetrics();
                 float centerY = cy - (fm.ascent + fm.descent) / 2;
-                canvas.drawText("天" + NINE_STARS[i], cx, centerY, textPaint);
+                drawTextO(canvas, "天" + NINE_STARS[i], cx, centerY, textPaint);
                 continue;
             }
             
@@ -398,7 +399,7 @@ public class LuoPanView extends View {
             textPaint.setFakeBoldText(true);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText("天" + NINE_STARS[i], x, centerY, textPaint);
+            drawTextO(canvas, "天" + NINE_STARS[i], x, centerY, textPaint);
             canvas.restore();
         }
     }
@@ -418,57 +419,96 @@ public class LuoPanView extends View {
             textPaint.setFakeBoldText(true);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
-            canvas.drawText(EIGHT_DOORS[i] + "门", x, centerY, textPaint);
+            drawTextO(canvas, EIGHT_DOORS[i] + "门", x, centerY, textPaint);
             canvas.restore();
         }
     }
 
+    private void drawTextO(Canvas canvas, String text, float x, float y, Paint paint) {
+        if (text == null || paint == null) return;
+        Paint.Style prevStyle = paint.getStyle();
+        int prevColor = paint.getColor();
+        float prevWidth = paint.getStrokeWidth();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(Math.max(1f, paint.getTextSize() * 0.10f));
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setColor(0xDD10243B);
+        canvas.drawText(text, x, y, paint);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(prevColor);
+        canvas.drawText(text, x, y, paint);
+        paint.setStyle(prevStyle);
+        paint.setStrokeWidth(prevWidth);
+    }
+
     private void drawCenter(Canvas canvas, int cx, int cy, float r) {
-        canvas.drawCircle(cx, cy, r * 0.045f, centerPaint);
-        
+        float tr = r * 0.06f;
+        taijiPaint.setStyle(Paint.Style.FILL);
+        // 白底
         taijiPaint.setColor(Color.WHITE);
-        canvas.drawCircle(cx, cy, r * 0.018f, taijiPaint);
-        
+        canvas.drawCircle(cx, cy, tr, taijiPaint);
+        // 阴阳鱼：右半黑 + 上下鱼头
+        canvas.save();
+        Path clip = new Path();
+        clip.addCircle(cx, cy, tr, Path.Direction.CW);
+        canvas.clipPath(clip);
         taijiPaint.setColor(Color.BLACK);
-        canvas.drawCircle(cx, cy, r * 0.008f, taijiPaint);
+        canvas.drawRect(cx, cy - tr, cx + tr, cy + tr, taijiPaint);
+        canvas.drawCircle(cx, cy - tr / 2, tr / 2, taijiPaint);
+        taijiPaint.setColor(Color.WHITE);
+        canvas.drawCircle(cx, cy + tr / 2, tr / 2, taijiPaint);
+        canvas.restore();
+        // 鱼眼
+        taijiPaint.setColor(Color.WHITE);
+        canvas.drawCircle(cx, cy - tr / 2, tr / 6, taijiPaint);
+        taijiPaint.setColor(Color.BLACK);
+        canvas.drawCircle(cx, cy + tr / 2, tr / 6, taijiPaint);
+        // 金色外圈
+        taijiPaint.setStyle(Paint.Style.STROKE);
+        taijiPaint.setColor(0xFFD4AF37);
+        taijiPaint.setStrokeWidth(tr * 0.10f);
+        canvas.drawCircle(cx, cy, tr, taijiPaint);
+        taijiPaint.setStyle(Paint.Style.FILL);
     }
     
     private void drawFixedPointer(Canvas canvas, int cx, int cy, float r) {
-        float baseRadius = r * 0.96f;
-        float tipRadius = r * 1.01f;
-        float shoulderRadius = r * 0.985f;
-        
+        float baseRadius = r * 0.93f;
+        float tipRadius = r * 1.03f;
+        float shoulderRadius = r * 0.965f;
+
         double upAngle = Math.toRadians(-90);
-        double leftAngle = Math.toRadians(-90 - 7);
-        double rightAngle = Math.toRadians(-90 + 7);
-        
+        double leftAngle = Math.toRadians(-90 - 6);
+        double rightAngle = Math.toRadians(-90 + 6);
+
         float tipX = cx + (float) (tipRadius * Math.cos(upAngle));
         float tipY = cy + (float) (tipRadius * Math.sin(upAngle));
-        
         float baseX = cx + (float) (baseRadius * Math.cos(upAngle));
         float baseY = cy + (float) (baseRadius * Math.sin(upAngle));
-        
         float shoulderLeftX = cx + (float) (shoulderRadius * Math.cos(leftAngle));
         float shoulderLeftY = cy + (float) (shoulderRadius * Math.sin(leftAngle));
-        
         float shoulderRightX = cx + (float) (shoulderRadius * Math.cos(rightAngle));
         float shoulderRightY = cy + (float) (shoulderRadius * Math.sin(rightAngle));
-        
-        android.graphics.Path arrowPath = new android.graphics.Path();
+
+        Path arrowPath = new Path();
         arrowPath.moveTo(tipX, tipY);
         arrowPath.lineTo(shoulderLeftX, shoulderLeftY);
         arrowPath.lineTo(baseX, baseY);
         arrowPath.lineTo(shoulderRightX, shoulderRightY);
         arrowPath.close();
+
         canvas.drawPath(arrowPath, arrowPaint);
-        
         canvas.drawPath(arrowPath, borderPaint);
-        
-        textPaint.setTextSize(r * 0.035f);
+
+        // 指针根部金色圆点
+        taijiPaint.setStyle(Paint.Style.FILL);
+        taijiPaint.setColor(0xFFFFD700);
+        canvas.drawCircle(cx, cy + r * 0.965f, r * 0.013f, taijiPaint);
+
+        textPaint.setTextSize(r * 0.04f);
         textPaint.setColor(Color.RED);
         textPaint.setFakeBoldText(true);
-        float textY = cy - r * 1.1f;
-        canvas.drawText("北", cx, textY, textPaint);
+        float textY = cy - r * 1.12f;
+        drawTextO(canvas, "北", cx, textY, textPaint);
     }
 
     public void setRotation(float rotation) {

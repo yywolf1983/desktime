@@ -25,6 +25,7 @@
     <color name="text_primary">#FFAEDDEF</color>
     <color name="text_secondary">#FF7C8C9C</color>
     <color name="text_accent">#FFBFE0EA</color>
+    <color name="text_annotation">#FF9AA7B8</color>
 
     <color name="border_light">#FF4A4A6A</color>
     <color name="border_gold">#20E6C46A</color>

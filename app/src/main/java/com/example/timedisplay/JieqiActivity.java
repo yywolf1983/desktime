@@ -16,8 +16,8 @@ public class JieqiActivity extends Activity {
 
     private static final String COLOR_GOLD = "#E6C46A";
     private static final String COLOR_GRAY = "#999999";
-    private static final String COLOR_SEASON = "#FF87CEEB";
-    private static final String COLOR_PAST = "#FFADD8E6";
+    private static final String COLOR_SEASON = "#FF8FCDEB";
+    private static final String COLOR_PAST = "#FF9AA7B8";
     private static final String HOU_PREFIX_1 = "初候 · ";
     private static final String HOU_PREFIX_2 = "二候 · ";
     private static final String HOU_PREFIX_3 = "三候 · ";
@@ -257,7 +257,7 @@ public class JieqiActivity extends Activity {
         boxName.setGravity(android.view.Gravity.CENTER);
         TextView boxDate = new TextView(this);
         boxDate.setText(dateStr);
-        boxDate.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 13);
+        boxDate.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 15);
         boxDate.setGravity(android.view.Gravity.CENTER);
         boxDate.setPadding(0, (int) (2 * density), 0, 0);
 

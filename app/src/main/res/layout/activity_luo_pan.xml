@@ -55,7 +55,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📖 深度解读"
+                        android:text="通俗解读"
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -72,7 +72,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔮 综合总评"
+                        android:text="综合总评"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -137,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="五行: 水"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/wuxing_water"
                             android:gravity="center" />
                         <TextView
@@ -146,7 +146,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="地支: 子"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_accent"
                             android:gravity="center" />
                         <TextView
@@ -155,7 +155,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="天干: 壬"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/success"
                             android:gravity="center" />
                     </LinearLayout>
@@ -171,7 +171,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="八卦: 坎"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/wuxing_water"
                             android:gravity="center" />
                         <TextView
@@ -180,7 +180,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="朝向: 午"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/success"
                             android:gravity="center" />
                         <TextView
@@ -189,7 +189,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="纳音: 桑柘木"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/wuxing_wood"
                             android:gravity="center" />
                     </LinearLayout>
@@ -205,7 +205,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="神煞: 天德"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/warning"
                             android:gravity="center" />
                         <TextView
@@ -214,7 +214,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="吉凶: 吉"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/success"
                             android:gravity="center" />
                         <TextView
@@ -223,7 +223,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="归藏: 水"
-                            android:textSize="13sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_accent"
                             android:gravity="center" />
                     </LinearLayout>
@@ -255,7 +255,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="东方"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_wood"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -269,7 +269,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：震卦·木·青龙【吉】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -277,7 +277,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜开门纳气，旺文昌"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -285,7 +285,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜高耸苍翠，忌破碎低矮"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -293,7 +293,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建书房、开门，忌尖角冲射"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -302,7 +302,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="南方"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_fire"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -316,7 +316,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：离卦·火·朱雀【吉】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -324,7 +324,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜开门纳阳气，旺事业"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -332,7 +332,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜端庄秀丽，忌尖射冲煞"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -340,7 +340,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建客厅、开门，忌阴暗潮湿"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -349,7 +349,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="西方"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_metal"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -363,7 +363,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：兑卦·金·白虎【平】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -371,7 +371,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜纳气平和，利口才"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -379,7 +379,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜驯服柔顺，忌高大雄健"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -387,7 +387,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建厨房储藏室，忌高大建筑"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -396,7 +396,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="北方"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_water"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -410,7 +410,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：坎卦·水·玄武【凶】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -418,7 +418,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜有水蓄财，忌开门纳气"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -426,7 +426,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜厚实稳重，忌空虚塌陷"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -434,7 +434,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建水池，忌开门高大障碍"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -443,7 +443,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="东南"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_wood"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -457,7 +457,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：巽卦·木·青龙【吉】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -465,7 +465,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜开门纳气，旺文昌"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -473,7 +473,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜清秀高耸，忌堵塞压迫"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -481,7 +481,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建书房办公，忌堵塞污秽"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -490,7 +490,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="西南"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_earth"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -504,7 +504,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：坤卦·土·白虎【平】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -512,7 +512,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜纳气稳重，旺人丁"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -520,7 +520,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜稳重厚实，忌陡峭险峻"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -528,7 +528,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建卧室储藏室，忌空旷尖角"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -537,7 +537,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="西北"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_metal"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -551,7 +551,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：乾卦·金·玄武【平】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -559,7 +559,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜纳气尊贵，旺贵人"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -567,7 +567,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜高大雄伟，忌低洼潮湿"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -575,7 +575,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建主卧书房，忌低洼潮湿"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -584,7 +584,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="东北"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/wuxing_earth"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -597,7 +597,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="格局：艮卦·土·青龙【吉】"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -605,7 +605,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="坐向：宜开门纳气，旺贵人"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -613,7 +613,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="砂水：宜敦厚稳重，忌崩塌破碎"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                         <TextView
@@ -621,7 +621,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="布局：宜建大门靠山，忌低洼道路直冲"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp"/>
                     </LinearLayout>
@@ -648,12 +648,21 @@
                         android:layout_height="1dp"
                         android:background="@drawable/gold_separator"
                         android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="口诀：山管人丁、水管财；左青龙、右白虎、前朱雀、后玄武，是选址布局的基础。"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_annotation"
+                        android:layout_marginBottom="8dp"/>
+
                     <TextView
                         android:id="@+id/shanshuiFengshui"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="山水相依，藏风聚气。左青龙右白虎，前朱雀后玄武。山管人丁水管财，山环水绕富贵来。"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
@@ -695,7 +704,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="寻龙点穴，择吉而葬。龙真穴的，砂水环绕，明堂开阔，水口紧锁。"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="2dp" />
                     </LinearLayout>
@@ -711,7 +720,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔬 专业研判"
+                        android:text="专业参考"
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -729,7 +738,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🏠 八宅吉凶研判"
+                        android:text="八宅吉凶研判"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
@@ -740,12 +749,20 @@
                         android:layout_height="1dp"
                         android:background="@drawable/gold_separator"
                         android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="八宅＝按房屋坐向把方位分成八种格局，判断各方位吉凶宜忌。"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_annotation"
+                        android:layout_marginBottom="8dp"/>
 
                     <TextView
                         android:id="@+id/bazhaiDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -760,7 +777,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="✨ 九星飞宫研判"
+                        android:text="九星飞宫研判"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
@@ -771,12 +788,20 @@
                         android:layout_height="1dp"
                         android:background="@drawable/gold_separator"
                         android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="九星＝飞临各宫的九种星气，代表不同吉凶能量（如贪狼主文昌、破军主破耗）。"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_annotation"
+                        android:layout_marginBottom="8dp"/>
 
                     <TextView
                         android:id="@+id/jiuxingDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -791,7 +816,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🚪 八门遁法研判"
+                        android:text="八门遁法研判"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
@@ -804,10 +829,18 @@
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="八门＝八种行动方位（开/休/生为吉门，死/惊/伤为凶门），提示进退趋避。"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_annotation"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
                         android:id="@+id/bamenDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 

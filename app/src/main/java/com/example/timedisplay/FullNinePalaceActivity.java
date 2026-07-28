@@ -997,7 +997,7 @@ public class FullNinePalaceActivity extends Activity {
         sbBasic.append("🐴 马星 <font color='#E6C46A'><b>").append(maXing).append("</b></font><br/>");
         sbBasic.append("<font color='#7C8C9C'>").append(getMaXingExplanation(maXing)).append("</font><br/><br/>");
         
-        sbBasic.append("⚡ <font color='#CCB866'><b>旺衰判断</b></font><br/>");
+        sbBasic.append("<font color='#CCB866'><b>旺衰判断</b></font><br/>");
         sbBasic.append("<font color='#7C8C9C'>").append(getWangCuiDescription(wangCui, riGanPalace)).append("</font>");
         expBasic.setText(android.text.Html.fromHtml(sbBasic.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
@@ -1097,22 +1097,22 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
         
-        if (luckyDirections.length() > 0) sbDirection.append("✅ <font color='#3FA34D'>吉方</font>：").append(luckyDirections).append("<br/>");
+        if (luckyDirections.length() > 0) sbDirection.append("<font color='#3FA34D'>吉方</font>：").append(luckyDirections).append("<br/>");
         if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#E6C46A'>平方</font>：").append(neutralDirections).append("<br/>");
-        if (unluckyDirections.length() > 0) sbDirection.append("❌ <font color='#E0593B'>凶方</font>：").append(unluckyDirections).append("<br/>");
+        if (unluckyDirections.length() > 0) sbDirection.append("<font color='#E0593B'>凶方</font>：").append(unluckyDirections).append("<br/>");
 
         sbDirection.append("<br/>");
-        sbDirection.append("<b>⚡ 旺相休囚死分布：</b><br/>");
+        sbDirection.append("<b>旺相休囚死分布：</b><br/>");
         // 紧凑汇总形式，省去5行解释
-        if (wangPositions.length() > 0) sbDirection.append("🔥 <font color='#3FA34D'>旺</font>：").append(wangPositions).append("（得时·百事顺）<br/>");
-        if (xiangPositions.length() > 0) sbDirection.append("🌿 <font color='#3FA34D'>相</font>：").append(xiangPositions).append("（得生·次吉）<br/>");
+        if (wangPositions.length() > 0) sbDirection.append("<font color='#3FA34D'>旺</font>：").append(wangPositions).append("（得时·百事顺）<br/>");
+        if (xiangPositions.length() > 0) sbDirection.append("<font color='#3FA34D'>相</font>：").append(xiangPositions).append("（得生·次吉）<br/>");
         if (xiuPositions.length() > 0) sbDirection.append("😌 <font color='#E6C46A'>休</font>：").append(xiuPositions).append("（休息·宜静）<br/>");
-        if (qiuPositions.length() > 0) sbDirection.append("🔒 <font color='#F3BA66'>囚</font>：").append(qiuPositions).append("（受克·不利）<br/>");
+        if (qiuPositions.length() > 0) sbDirection.append("<font color='#F3BA66'>囚</font>：").append(qiuPositions).append("（受克·不利）<br/>");
         if (siPositions.length() > 0) sbDirection.append("💀 <font color='#E0593B'>死</font>：").append(siPositions).append("（处死·衰败）</font>");
         expDirection.setText(android.text.Html.fromHtml(sbDirection.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbYiJi = new StringBuilder();
-        sbYiJi.append("✅ 宜：");
+        sbYiJi.append("宜：");
         String[] yiItems = getYiActivitiesDetailed(zhiFuStar, zhiShiDoor);
         for (int i = 0; i < Math.min(yiItems.length, 5); i++) {
             if (i > 0) {
@@ -1121,7 +1121,7 @@ public class FullNinePalaceActivity extends Activity {
             sbYiJi.append(yiItems[i]);
         }
         sbYiJi.append("\n");
-        sbYiJi.append("❌ 忌：");
+        sbYiJi.append("忌：");
         String[] jiItems = getJiActivitiesDetailed(zhiFuStar, zhiShiDoor);
         for (int i = 0; i < Math.min(jiItems.length, 5); i++) {
             if (i > 0) {
@@ -1135,10 +1135,10 @@ public class FullNinePalaceActivity extends Activity {
         String shiGanLuck = shiGanPalace >= 0 ? luckData[shiGanPalace] : "未知";
         
         StringBuilder sbLife = new StringBuilder();
-        sbLife.append("💼 <font color='#CCB866'><b>事业学业</b></font>：").append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getStudyAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("💰 <font color='#CCB866'><b>财运</b></font>：").append(getWealthAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("💪 <font color='#CCB866'><b>健康饮食</b></font>：").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getDietAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("💕 <font color='#CCB866'><b>感情人际</b></font>：").append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getSocialAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
+        sbLife.append("<font color='#CCB866'><b>事业学业</b></font>：").append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getStudyAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
+        sbLife.append("<font color='#CCB866'><b>财运</b></font>：").append(getWealthAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
+        sbLife.append("<font color='#CCB866'><b>健康饮食</b></font>：").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getDietAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
+        sbLife.append("<font color='#CCB866'><b>感情人际</b></font>：").append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getSocialAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
         sbLife.append("🚗 <font color='#CCB866'><b>出行</b></font>：").append(getTravelAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
         sbLife.append("🧘 <font color='#CCB866'><b>心态</b></font>：").append(getMindAdvice(zhiShiDoor, zhiFuStar));
         expLife.setText(android.text.Html.fromHtml(sbLife.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
@@ -1753,20 +1753,20 @@ public class FullNinePalaceActivity extends Activity {
         } else if (isLuckyStar || isLuckyDoor) {
             sb.append("👍 ★★ 小吉 - 值符值使一吉，运势平稳\n");
         } else {
-            sb.append("⚡ ★ 平平 - 值符值使欠佳，宜谨慎行事\n");
+            sb.append("★ 平平 - 值符值使欠佳，宜谨慎行事\n");
         }
         sb.append("\n");
 
-        sb.append("📋 行事准则\n");
+        sb.append("行事准则\n");
         if (door != null) {
             switch (door) {
                 case "开": sb.append("🚀 大胆开创，把握良机\n"); break;
                 case "生": sb.append("🌱 稳扎稳打，注重积累\n"); break;
                 case "休": sb.append("😌 劳逸结合，养精蓄锐\n"); break;
-                case "景": sb.append("✨ 展示才华，言出必行\n"); break;
-                case "杜": sb.append("🔒 静守待时，蓄力待发\n"); break;
-                case "伤": sb.append("⚠️ 谨慎行事，防损破财\n"); break;
-                case "死": sb.append("🛡️ 保守谨慎，清理整顿\n"); break;
+                case "景": sb.append("展示才华，言出必行\n"); break;
+                case "杜": sb.append("静守待时，蓄力待发\n"); break;
+                case "伤": sb.append("谨慎行事，防损破财\n"); break;
+                case "死": sb.append("保守谨慎，清理整顿\n"); break;
                 case "惊": sb.append("🔔 镇定自若，防口舌是非\n"); break;
             }
         }

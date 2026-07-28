@@ -1102,7 +1102,7 @@ public class MainActivity extends Activity {
             if (isRotationLocked) {
                 rotationLockButton.setText("🔓");
             } else {
-                rotationLockButton.setText("🔒");
+                rotationLockButton.setText("锁");
             }
             rotationLockButton.setTextColor(getResources().getColor(R.color.lock_icon));
         }

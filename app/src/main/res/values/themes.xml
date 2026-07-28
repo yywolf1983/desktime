@@ -26,13 +26,13 @@
     </style>
 
     <style name="PickerTextStyle" parent="android:Theme.DeviceDefault.Light.NoActionBar.Fullscreen">
-        <item name="android:textColor">#CCB866</item>
-        <item name="android:textColorPrimary">#CCB866</item>
-        <item name="android:textColorSecondary">#9A9A9A</item>
-        <item name="android:textColorHint">#88CCB866</item>
-        <item name="android:colorControlNormal">#CCB866</item>
-        <item name="android:colorControlActivated">#D4C88E</item>
-        <item name="android:colorAccent">#CCB866</item>
+        <item name="android:textColor">@color/gold</item>
+        <item name="android:textColorPrimary">@color/gold</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">#88E6C46A</item>
+        <item name="android:colorControlNormal">@color/gold</item>
+        <item name="android:colorControlActivated">@color/gold_light</item>
+        <item name="android:colorAccent">@color/gold</item>
         <item name="android:textSize">26sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif</item>

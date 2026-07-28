@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="6dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="4dp"
-            android:layout_marginEnd="4dp"
+            android:padding="14dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/card_background">
 
             <com.example.timedisplay.LuoPanView
@@ -40,13 +40,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="4dp">
+                android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="五行: 水"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/wuxing_water"
                             android:gravity="center" />
 
@@ -102,7 +102,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="地支: 子"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_accent"
                             android:gravity="center" />
 
@@ -112,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="天干: 壬"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/success"
                             android:gravity="center" />
 
@@ -131,7 +131,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="八卦: 坎"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/wuxing_water"
                             android:gravity="center" />
 
@@ -141,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="朝向: 午"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/success"
                             android:gravity="center" />
 
@@ -151,7 +151,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="纳音: 桑柘木"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/wuxing_wood"
                             android:gravity="center" />
 
@@ -170,7 +170,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="神煞: 天德"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/warning"
                             android:gravity="center" />
 
@@ -180,7 +180,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="吉凶: 吉"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/success"
                             android:gravity="center" />
 
@@ -190,7 +190,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="归藏: 水"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_accent"
                             android:gravity="center" />
 
@@ -201,7 +201,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -209,8 +209,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💡 坐山提示"
-                        android:textSize="13sp"
+                        android:text="坐山提示"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -226,7 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="子: 正北水位，阴阳交界，万物根基"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
@@ -235,7 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -244,7 +244,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="📌 坐向分析"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -260,7 +260,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="坐子向午，水火既济，主富贵双全"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
@@ -269,7 +269,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -278,7 +278,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏔 砂水判断"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -294,7 +294,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="北方宜有水，南方宜有山，青龙高耸，白虎柔顺"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
@@ -303,7 +303,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -311,8 +311,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🏠 八宅吉凶"
-                        android:textSize="13sp"
+                        android:text="八宅吉凶"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -327,7 +327,7 @@
                         android:id="@+id/bazhaiDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -335,7 +335,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -343,8 +343,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="✨ 九星飞宫"
-                        android:textSize="13sp"
+                        android:text="九星飞宫"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -359,7 +359,7 @@
                         android:id="@+id/jiuxingDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -367,7 +367,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -375,8 +375,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🚪 八门遁法"
-                        android:textSize="13sp"
+                        android:text="八门遁法"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -391,7 +391,7 @@
                         android:id="@+id/bamenDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -399,7 +399,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -408,7 +408,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="🏗 建筑建议"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -424,7 +424,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="宜坐北朝南，大门宜开南方或东南方，忌开北方"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/success"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
@@ -433,7 +433,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/card_background">
@@ -442,7 +442,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="💫 命理提示"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
@@ -458,7 +458,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="子年生人属鼠，五行属水，性格聪明伶俐，机智灵活"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
@@ -467,7 +467,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="14dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/card_background">
@@ -475,7 +475,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📋 综合总结"
+                        android:text="综合总结"
                         android:textSize="14sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
@@ -492,7 +492,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="坐山：子，五行属水，坐北朝南，吉利方位：东南、东方、东北"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>

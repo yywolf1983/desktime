@@ -63,7 +63,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📖 深度解读"
+                    android:text="通俗解读"
                     android:textSize="16sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
@@ -80,8 +80,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🔮 综合总评"
-                    android:textSize="15sp"
+                    android:text="综合总评"
+                    android:textSize="14sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"
@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"/>
             </LinearLayout>
 
@@ -121,9 +121,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🔭 时空分析"
+                    android:text="时空分析"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"
                     android:layout_marginBottom="6dp"/>
@@ -136,25 +136,32 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="⭐ 值符值使"
-                    android:textSize="13sp"
+                    android:text="值符值使"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="值符＝当值的大星（诸神之首，代表贵人助力）；值使＝它统领的门，定整盘基调。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
                 <TextView
                     android:id="@+id/expZhifuZhishi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🌙 日时关系"
-                    android:textSize="13sp"
+                    android:text="日时关系"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
@@ -163,15 +170,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🧭 方位吉凶"
-                    android:textSize="13sp"
+                    android:text="方位吉凶"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
@@ -180,7 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"/>
             </LinearLayout>
 
@@ -194,9 +201,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📅 今日指引"
+                    android:text="今日指引"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"
                     android:layout_marginBottom="6dp"/>
@@ -209,8 +216,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="✅ 今日宜忌"
-                    android:textSize="13sp"
+                    android:text="今日宜忌"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
@@ -219,15 +226,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="⏰ 时辰运势"
-                    android:textSize="13sp"
+                    android:text="时辰运势"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
@@ -236,15 +243,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🏠 生活提示"
-                    android:textSize="13sp"
+                    android:text="生活提示"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
@@ -253,15 +260,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="12dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="💡 综合建议"
-                    android:textSize="13sp"
+                    android:text="综合建议"
+                    android:textSize="15sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"/>
@@ -270,7 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"/>
             </LinearLayout>
 
@@ -284,7 +291,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🔬 专业研判"
+                    android:text="专业参考"
                     android:textSize="16sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
@@ -301,9 +308,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🏛 天盘地盘"
+                    android:text="天盘地盘"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"
                     android:paddingBottom="6dp"
@@ -314,10 +321,17 @@
                     android:background="@drawable/gold_separator"
                     android:layout_marginBottom="6dp"/>
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="天盘＝星神飞布的上层（变化），地盘＝八卦方位的下层（固定），两层叠加看吉凶。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
                     android:id="@+id/expTianDiPanDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="6dp"/>
                 <com.example.timedisplay.DetailedNinePalacePanel
@@ -337,9 +351,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="✨ 九星排布"
+                    android:text="九星排布"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"
                     android:paddingBottom="6dp"
@@ -350,10 +364,17 @@
                     android:background="@drawable/gold_separator"
                     android:layout_marginBottom="6dp"/>
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="九星是飞临各宫的能量：吉星（如天辅、天心）助运，凶星（如天芮、天蓬）需规避。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
                     android:id="@+id/expNineStarsDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="6dp"/>
                 <com.example.timedisplay.DetailedNinePalacePanel
@@ -373,9 +394,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🚪 八门排布"
+                    android:text="八门排布"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"
                     android:paddingBottom="6dp"
@@ -386,10 +407,17 @@
                     android:background="@drawable/gold_separator"
                     android:layout_marginBottom="6dp"/>
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="八门是行动选择：开、休、生为吉门宜进取；死、惊、伤为凶门宜回避。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
                     android:id="@+id/expEightDoorsDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="6dp"/>
                 <com.example.timedisplay.DetailedNinePalacePanel
@@ -409,9 +437,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="👑 八神排布"
+                    android:text="八神排布"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"
                     android:paddingBottom="6dp"
@@ -422,10 +450,17 @@
                     android:background="@drawable/gold_separator"
                     android:layout_marginBottom="6dp"/>
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="八神是八种神煞气场（如值符、腾蛇、白虎），叠在星门之上影响吉凶走向。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
                     android:id="@+id/expGodsDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="6dp"/>
                 <com.example.timedisplay.DetailedNinePalacePanel
@@ -445,9 +480,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🏯 各宫详解"
+                    android:text="各宫详解"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"
                     android:paddingBottom="6dp"
@@ -458,10 +493,17 @@
                     android:background="@drawable/gold_separator"
                     android:layout_marginBottom="6dp"/>
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="把九宫逐一拆解，看每宫里星、门、神的组合与对应的吉凶含义。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
                     android:id="@+id/expPalacesDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="6dp"/>
                 <com.example.timedisplay.DetailedNinePalacePanel
@@ -481,9 +523,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📜 排盘依据"
+                    android:text="排盘依据"
                     android:textColor="@color/gold"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp"
                     android:paddingBottom="6dp"
@@ -494,10 +536,17 @@
                     android:background="@drawable/gold_separator"
                     android:layout_marginBottom="12dp"/>
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="说明本盘所用的历法、奇门局数（阳遁／阴遁几局）与起局规则，便于核对。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
                     android:id="@+id/expPaipanYiju"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:textColor="@color/text_primary"
                     android:lineSpacingExtra="4dp"/>
             </LinearLayout>

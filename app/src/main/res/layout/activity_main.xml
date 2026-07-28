@@ -36,7 +36,7 @@
             android:gravity="center"
             android:layout_marginBottom="10dp"
             android:padding="8dp"
-            android:background="@drawable/card_background_flat"
+            android:background="@drawable/card_background"
             android:clickable="true"
             android:focusable="true">
 
@@ -81,7 +81,7 @@
             android:layout_marginBottom="6dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:background="@drawable/card_background_flat">
+            android:background="@drawable/card_background">
 
             <!-- 第1行: 日期 + 按钮 -->
             <LinearLayout
@@ -181,8 +181,8 @@
                 android:id="@+id/copyButton"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:text="📋"
-                android:textSize="14sp"
+                android:text="⧉"
+                android:textSize="16sp"
                 android:textColor="@color/gold_faint"
                 android:gravity="center"
                 android:layout_marginStart="6dp"
@@ -199,7 +199,7 @@
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/card_background_flat">
+            android:background="@drawable/card_background">
 
             <TextView
                 android:id="@+id/timeFortuneTextView"
@@ -232,7 +232,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:background="@drawable/card_background_flat">
+            android:background="@drawable/card_background">
 
             <com.example.timedisplay.NinePalacePanel
                 android:id="@+id/ninePalacePanel"
@@ -254,7 +254,7 @@
         android:id="@+id/rotationLockButton"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:text="🔒"
+        android:text="锁"
         android:textSize="18sp"
         android:textColor="@color/gold_faint"
         android:gravity="center"

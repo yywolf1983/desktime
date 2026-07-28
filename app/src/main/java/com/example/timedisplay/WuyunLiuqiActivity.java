@@ -70,18 +70,18 @@ public class WuyunLiuqiActivity extends Activity {
     };
     
     private static final String[] SHICHEN_YIJI = {
-        "宜：安睡养阳、打坐冥想\n忌：熬夜、饮酒、剧烈运动\n💡 子时阴气最盛，熟睡养胆",
-        "宜：深睡养肝、放松肌肉\n忌：饮酒、熬夜、情绪激动\n💡 丑时肝经排毒，熟睡面色红",
-        "宜：熟睡静卧、深呼吸\n忌：剧烈运动、大声喧哗\n💡 寅时肺经当令，呼吸助宣降",
-        "宜：排便、饮温水、伸展\n忌：忍便、空腹出门\n💡 卯时大肠经旺，排便排毒",
-        "宜：早餐营养、从容工作\n忌：空腹、不吃早餐\n💡 辰时胃经最旺，早餐宜丰盛",
-        "宜：专注工作、学习思考\n忌：懒惰、分心、久坐\n💡 巳时脾经当令，学习效率高",
-        "宜：午休小憩、养心安神\n忌：劳累过度、情绪激动\n💡 午时心经当令，小睡15-30分钟",
-        "宜：放松休息、缓慢活动\n忌：剧烈运动、暴饮暴食\n💡 未时小肠经旺，慢节奏工作",
-        "宜：运动锻炼、多饮水\n忌：憋尿、久坐\n💡 申时膀胱经旺，运动排汗助代谢",
-        "宜：静养收藏、泡脚补肾\n忌：操劳过度、剧烈运动\n💡 酉时肾经当令，泡脚助肾气",
-        "宜：心情愉悦、轻松休闲\n忌：忧愁焦虑、过度思考\n💡 戌时心包经旺，愉悦护心血管",
-        "宜：泡脚安眠、放松身心\n忌：多虑、兴奋、熬夜\n💡 亥时三焦通百脉，入睡养精"
+        "宜：安睡养阳、打坐冥想\n忌：熬夜、饮酒、剧烈运动\n子时阴气最盛，熟睡养胆",
+        "宜：深睡养肝、放松肌肉\n忌：饮酒、熬夜、情绪激动\n丑时肝经排毒，熟睡面色红",
+        "宜：熟睡静卧、深呼吸\n忌：剧烈运动、大声喧哗\n寅时肺经当令，呼吸助宣降",
+        "宜：排便、饮温水、伸展\n忌：忍便、空腹出门\n卯时大肠经旺，排便排毒",
+        "宜：早餐营养、从容工作\n忌：空腹、不吃早餐\n辰时胃经最旺，早餐宜丰盛",
+        "宜：专注工作、学习思考\n忌：懒惰、分心、久坐\n巳时脾经当令，学习效率高",
+        "宜：午休小憩、养心安神\n忌：劳累过度、情绪激动\n午时心经当令，小睡15-30分钟",
+        "宜：放松休息、缓慢活动\n忌：剧烈运动、暴饮暴食\n未时小肠经旺，慢节奏工作",
+        "宜：运动锻炼、多饮水\n忌：憋尿、久坐\n申时膀胱经旺，运动排汗助代谢",
+        "宜：静养收藏、泡脚补肾\n忌：操劳过度、剧烈运动\n酉时肾经当令，泡脚助肾气",
+        "宜：心情愉悦、轻松休闲\n忌：忧愁焦虑、过度思考\n戌时心包经旺，愉悦护心血管",
+        "宜：泡脚安眠、放松身心\n忌：多虑、兴奋、熬夜\n亥时三焦通百脉，入睡养精"
     };
     
     private static final String[] SHICHEN_ZANGFU = {
@@ -124,8 +124,8 @@ public class WuyunLiuqiActivity extends Activity {
     private static final String COLOR_EARTH = "#D9A441";
     private static final String COLOR_METAL = "#9AA7B8";
     private static final String COLOR_WATER = "#3E87C2";
-    private static final String COLOR_PERIOD = "#6B7B8A";
-    private static final String COLOR_MUTED = "#A0A0A0";
+    private static final String COLOR_PERIOD = "#7C8C9C";
+    private static final String COLOR_MUTED = "#8A93A3";
 
     private static class WuxingInfo {
         final String element;
@@ -437,13 +437,11 @@ public class WuyunLiuqiActivity extends Activity {
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i];
             if (part.startsWith("宜：")) {
-                yiJi.append("<br/><font color='" + COLOR_JI + "'>✅ ").append(part).append("</font>");
+                yiJi.append("<br/><font color='" + COLOR_JI + "'>").append(part).append("</font>");
             } else if (part.startsWith("忌：")) {
-                yiJi.append("<br/><font color='" + COLOR_XIONG + "'>❌ ").append(part).append("</font>");
-            } else if (part.startsWith("💡")) {
-                yiJi.append("<br/><font color='" + COLOR_GOLD + "'>").append(part).append("</font>");
+                yiJi.append("<br/><font color='" + COLOR_XIONG + "'>").append(part).append("</font>");
             } else {
-                yiJi.append("<br/>").append(part);
+                yiJi.append("<br/><font color='" + COLOR_GOLD + "'>").append(part).append("</font>");
             }
         }
         if (shichenDetail != null) {
@@ -502,13 +500,13 @@ public class WuyunLiuqiActivity extends Activity {
                 info.append("<font color='" + COLOR_PERIOD + "'>(").append(periods[i]).append(" · ").append(yunDetails[elemIndex][3]).append(")");
                 info.append(" - <font color='").append(yunDetails[elemIndex][2]).append("'>").append(yunDetails[elemIndex][1]).append("</font>");
             } else {
-                info.append("  <font color='" + COLOR_MUTED + "'>▫️ ").append(labels[i]).append("</font> ");
+                info.append("  <font color='" + COLOR_MUTED + "'>").append(labels[i]).append("</font> ");
                 info.append("<font color='" + COLOR_MUTED + "'>").append(sijiYun[i]).append("运").append("</font>");
                 info.append("<font color='" + COLOR_MUTED + "'>(").append(periods[i]).append(")</font>");
             }
             if (i < 4) info.append("<br/>");
         }
-        info.append("<br/><br/><font color='" + COLOR_GOLD + "'><b>💡 当前").append(yunDetails[detailIndex][3]).append(sijiYun[currentYunIndex]).append("运养生要点：</b></font><br/>");
+        info.append("<br/><br/><font color='" + COLOR_GOLD + "'><b>当前").append(yunDetails[detailIndex][3]).append(sijiYun[currentYunIndex]).append("运养生要点：</b></font><br/>");
         info.append("<font color='").append(yunDetails[detailIndex][2]).append("'>").append(wuyunYangsheng[detailIndex][1]).append("</font>");
         if (wuyunInfo != null) {
             wuyunInfo.setText(android.text.Html.fromHtml(info.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
@@ -553,12 +551,12 @@ public class WuyunLiuqiActivity extends Activity {
         relation.append("<font color='" + COLOR_LIGHT_BLUE + "'><b>运气与时辰关系：</b></font><br/>");
         
         String[][] yunqiShichen = {
-            {"木运", "厥阴风木", "🌿 厥阴风木（丑、戌时）：丑时肝经排毒，戌时心包护心", COLOR_JI},
-            {"火运", "少阴君火", "🔥 少阴君火（午、酉时）：午时心经宜午休，酉时肾经宜静养", COLOR_XIONG},
-            {"火运", "少阳相火", "🔥 少阳相火（子、亥时）：子时胆经主决断，亥时三焦通百脉宜眠", "#F3BA66"},
-            {"土运", "太阴湿土", "🌾 太阴湿土（寅、巳时）：寅时肺经宜呼吸，巳时脾经主运化", COLOR_EARTH},
-            {"金运", "阳明燥金", "🍂 阳明燥金（卯、辰时）：卯时大肠宜排便，辰时胃经宜早餐", COLOR_METAL},
-            {"水运", "太阳寒水", "💧 太阳寒水（未、申时）：未时小肠宜休息，申时膀胱宜运动", COLOR_WATER}
+            {"木运", "厥阴风木", "厥阴风木（丑、戌时）：丑时肝经排毒，戌时心包护心", COLOR_JI},
+            {"火运", "少阴君火", "少阴君火（午、酉时）：午时心经宜午休，酉时肾经宜静养", COLOR_XIONG},
+            {"火运", "少阳相火", "少阳相火（子、亥时）：子时胆经主决断，亥时三焦通百脉宜眠", "#F3BA66"},
+            {"土运", "太阴湿土", "太阴湿土（寅、巳时）：寅时肺经宜呼吸，巳时脾经主运化", COLOR_EARTH},
+            {"金运", "阳明燥金", "阳明燥金（卯、辰时）：卯时大肠宜排便，辰时胃经宜早餐", COLOR_METAL},
+            {"水运", "太阳寒水", "太阳寒水（未、申时）：未时小肠宜休息，申时膀胱宜运动", COLOR_WATER}
         };
         
         for (String[] item : yunqiShichen) {
@@ -567,10 +565,10 @@ public class WuyunLiuqiActivity extends Activity {
             }
         }
         
-        relation.append("<br/><font color='" + COLOR_GOLD + "'><b>💡 当前").append(getSeasonName(month)).append("养生策略：</b></font><br/>");
+        relation.append("<br/><font color='" + COLOR_GOLD + "'><b>当前").append(getSeasonName(month)).append("养生策略：</b></font><br/>");
         relation.append("<font color='" + COLOR_GRAY + "'>根据当前五运六气特点，结合时辰养生规律，建议：</font><br/>");
         WuxingInfo strategyInfo = getWuxingInfo(zhongYun);
-        relation.append("<font color='" + COLOR_JI + "'>✅ 顺应时令：").append(zhongYun).append("之年，").append(currentQi).append("主令</font><br/>");
+        relation.append("<font color='" + COLOR_JI + "'>顺应时令：").append(zhongYun).append("之年，").append(currentQi).append("主令</font><br/>");
         relation.append(formatYiJi(strategyInfo.advice + "，" + strategyInfo.adviceSuffix, strategyInfo.avoid.substring(1), strategyInfo.foodColor + "食物")).append("<br/>");
         relation.append("<font color='" + COLOR_GOLD + "'>⏰ 按时而养：十二时辰各有经络当令，宜循时而作，按时作息</font>");
         
@@ -614,7 +612,7 @@ public class WuyunLiuqiActivity extends Activity {
                 qiInfo.append("<font color='").append(qiColors[i]).append("'><b>").append(liuqi[i]).append("</b></font>");
                 qiInfo.append("<font color='" + COLOR_PERIOD + "'>(").append(qiPeriods[i]).append(")</font>");
             } else {
-                qiInfo.append("<font color='" + COLOR_MUTED + "'>▫️ ").append(qiNames[i]).append("</font> ");
+                qiInfo.append("<font color='" + COLOR_MUTED + "'>").append(qiNames[i]).append("</font> ");
                 qiInfo.append("<font color='" + COLOR_MUTED + "'>").append(liuqi[i]).append("</font>");
             }
             if (i < 5) qiInfo.append("<br/>");
@@ -625,22 +623,22 @@ public class WuyunLiuqiActivity extends Activity {
         
         StringBuilder qiDetail = new StringBuilder();
         String[][] qiDetails = {
-            {"厥阴风木", "风气主令，生发疏泄（大寒-春分，寅卯，丁壬）。<br/>⚠️ 易头痛眩晕、关节痛、肝郁。<br/>✅ 防风疏肝，多散步；🍃 食青色，少酸味", COLOR_JI},
-            {"少阴君火", "热气主令，温热明亮（春分-小满，巳午，戊癸）。<br/>⚠️ 易发热心烦、口疮、失眠。<br/>✅ 清热降火，宜午休；🍅 食红色，忌热性", COLOR_XIONG},
-            {"少阳相火", "火气主令，炎热躁动（小满-大暑，巳午，戊癸）。<br/>⚠️ 易目赤咽痛、疮疡烦躁。<br/>✅ 清泻相火，忌熬夜；🌶️ 食苦味泄火", "#F3BA66"},
-            {"太阴湿土", "湿气主令，湿润黏滞（大暑-秋分，申酉，甲己）。<br/>⚠️ 易腹胀泻痢、水肿湿疹。<br/>✅ 健脾祛湿，宜运动；🌾 食黄色，忌生冷", COLOR_EARTH},
-            {"阳明燥金", "燥气主令，干燥收敛（秋分-小雪，申酉，甲己）。<br/>⚠️ 易干咳、肤燥便秘咽干。<br/>✅ 润肺生津，保湿；🍐 食白色，忌辛辣", COLOR_METAL},
-            {"太阳寒水", "寒气主令，寒冷凝滞（小雪-大寒，亥子，丙辛）。<br/>⚠️ 易感冒风寒、关节冷痛畏寒。<br/>✅ 温阳散寒，早睡保暖；🫘 食黑色温性，忌寒凉", COLOR_WATER}
+            {"厥阴风木", "风气主令，生发疏泄（大寒-春分，寅卯，丁壬）。<br/>易头痛眩晕、关节痛、肝郁。<br/>防风疏肝，多散步；食青色，少酸味", COLOR_JI},
+            {"少阴君火", "热气主令，温热明亮（春分-小满，巳午，戊癸）。<br/>易发热心烦、口疮、失眠。<br/>清热降火，宜午休；食红色，忌热性", COLOR_XIONG},
+            {"少阳相火", "火气主令，炎热躁动（小满-大暑，巳午，戊癸）。<br/>易目赤咽痛、疮疡烦躁。<br/>清泻相火，忌熬夜；食苦味泄火", "#F3BA66"},
+            {"太阴湿土", "湿气主令，湿润黏滞（大暑-秋分，申酉，甲己）。<br/>易腹胀泻痢、水肿湿疹。<br/>健脾祛湿，宜运动；食黄色，忌生冷", COLOR_EARTH},
+            {"阳明燥金", "燥气主令，干燥收敛（秋分-小雪，申酉，甲己）。<br/>易干咳、肤燥便秘咽干。<br/>润肺生津，保湿；食白色，忌辛辣", COLOR_METAL},
+            {"太阳寒水", "寒气主令，寒冷凝滞（小雪-大寒，亥子，丙辛）。<br/>易感冒风寒、关节冷痛畏寒。<br/>温阳散寒，早睡保暖；食黑色温性，忌寒凉", COLOR_WATER}
         };
         
-        qiDetail.append("<font color='" + COLOR_GOLD + "'><b>💡 当前六气详解：</b></font><br/><br/>");
+        qiDetail.append("<font color='" + COLOR_GOLD + "'><b>当前六气详解：</b></font><br/><br/>");
         qiDetail.append("<font color='").append(qiDetails[currentQiIndex][2]).append("' size='+1'><b>").append(qiDetails[currentQiIndex][0]).append("</b></font>");
         qiDetail.append("<font color='" + COLOR_PERIOD + "'>").append(qiDetails[currentQiIndex][1]).append("</font>");
         
         qiDetail.append("<br/><br/><font color='" + COLOR_MUTED + "'><b>其他六气（非当前时段）：</b></font><br/>");
         for (int i = 0; i < 6; i++) {
             if (i != currentQiIndex) {
-                qiDetail.append("<font color='" + COLOR_MUTED + "'>▫️ ").append(qiDetails[i][0]).append("</font>");
+                qiDetail.append("<font color='" + COLOR_MUTED + "'>").append(qiDetails[i][0]).append("</font>");
                 if (i < 5 && i != currentQiIndex - 1) qiDetail.append(" · ");
             }
         }
@@ -663,7 +661,7 @@ public class WuyunLiuqiActivity extends Activity {
         detail.append("<font color='" + COLOR_LIGHT_BLUE + "'>年干").append(yearGan).append("：").append(zhongYun).append("</font><br/>");
         detail.append("<font color='" + COLOR_LIGHT_BLUE + "'>年支").append(yearZhi).append("：").append(LIUYI_NAMES[siTianIndex]).append("司天</font><br/>");
 
-        detail.append("<br/><font color='" + COLOR_GOLD + "'><b>💡 养生原则</b></font><br/>");
+        detail.append("<br/><font color='" + COLOR_GOLD + "'><b>养生原则</b></font><br/>");
         detail.append("<font color='" + COLOR_GRAY + "'>五运六气揭示年度气候规律，人体应顺应自然变化：春养肝、夏养心、长夏养脾、秋养肺、冬养肾。根据当年运气特点，调整饮食起居，达到“天人合一”的养生境界。</font>");
 
         if (wuyunLiuqiDetail != null) {
@@ -852,11 +850,11 @@ public class WuyunLiuqiActivity extends Activity {
         yunshi.append("在泉 ").append(zaiQuan).append("：").append(getLiuyiDetailedAnalysis(zaiQuan)).append("<br/><br/>");
 
         String[][] yunshiAnalysis = {
-            {"木", "木运之年，风气偏盛，肝气易旺。<br/>✅ 财运波动，宜把握机遇。<br/>💪 防肝胆、头痛，多绿色食物疏肝。<br/>💕 桃花旺，宜社交结友。<br/><br/>", COLOR_JI},
-            {"火", "火运之年，热气偏盛，心气易旺。<br/>✅ 财运旺，投资宜谨慎。<br/>💪 防心血管、口疮，多红色食物清心。<br/>💕 感情升温，宜表白示爱。<br/><br/>", COLOR_XIONG},
-            {"土", "土运之年，湿气偏盛，脾气易旺。<br/>✅ 财运平稳，宜稳健理财。<br/>💪 防脾胃不调，多黄色食物健脾。<br/>💕 感情稳定，宜成家立业。<br/><br/>", COLOR_EARTH},
-            {"金", "金运之年，燥气偏盛，肺气易旺。<br/>✅ 财运佳，宜收获成果。<br/>💪 防呼吸、皮肤干燥，多白色食物润肺。<br/>💕 感情收敛，宜理性沟通。<br/><br/>", COLOR_METAL},
-            {"水", "水运之年，寒气偏盛，肾气易旺。<br/>✅ 财运稳，宜守财蓄势。<br/>💪 防肾病、关节冷痛，多黑色食物温阳。<br/>💕 感情深沉，宜坦诚沟通。<br/><br/>", COLOR_WATER}
+            {"木", "木运之年，风气偏盛，肝气易旺。<br/>财运波动，宜把握机遇。<br/>防肝胆、头痛，多绿色食物疏肝。<br/>桃花旺，宜社交结友。<br/><br/>", COLOR_JI},
+            {"火", "火运之年，热气偏盛，心气易旺。<br/>财运旺，投资宜谨慎。<br/>防心血管、口疮，多红色食物清心。<br/>感情升温，宜表白示爱。<br/><br/>", COLOR_XIONG},
+            {"土", "土运之年，湿气偏盛，脾气易旺。<br/>财运平稳，宜稳健理财。<br/>防脾胃不调，多黄色食物健脾。<br/>感情稳定，宜成家立业。<br/><br/>", COLOR_EARTH},
+            {"金", "金运之年，燥气偏盛，肺气易旺。<br/>财运佳，宜收获成果。<br/>防呼吸、皮肤干燥，多白色食物润肺。<br/>感情收敛，宜理性沟通。<br/><br/>", COLOR_METAL},
+            {"水", "水运之年，寒气偏盛，肾气易旺。<br/>财运稳，宜守财蓄势。<br/>防肾病、关节冷痛，多黑色食物温阳。<br/>感情深沉，宜坦诚沟通。<br/><br/>", COLOR_WATER}
         };
 
         String wuxing = getWuXing(yearGan);
@@ -867,7 +865,7 @@ public class WuyunLiuqiActivity extends Activity {
             }
         }
 
-        yunshi.append("<font color='" + COLOR_GOLD + "'><b>💡 年度建议</b></font><br/>");
+        yunshi.append("<font color='" + COLOR_GOLD + "'><b>年度建议</b></font><br/>");
         yunshi.append(getYunQiCombinationAnalysis(zhongYun, siTian, zaiQuan)).append("<br/>");
         yunshi.append("<font color='" + COLOR_GRAY + "'>").append(getYearAdvice(yearGan, yearZhi)).append("</font>");
 
@@ -981,11 +979,11 @@ public class WuyunLiuqiActivity extends Activity {
         }
 
         String[][] adviceMap = {
-            {"木", "宜：积极进取、学习提升<br/>忌：冲动急躁、过度劳累<br/>💡 把握良机，开创事业"},
-            {"火", "宜：展示才华、静心修养<br/>忌：情绪激动、贪功冒进<br/>💡 言行谦逊，名声易起"},
-            {"土", "宜：稳扎稳打、诚信待人<br/>忌：犹豫不决、贪图安逸<br/>💡 守成发展，厚积薄发"},
-            {"金", "宜：果断决策、改革创新<br/>忌：刚愎自用、过度消费<br/>💡 把握时机，迎接挑战"},
-            {"水", "宜：智慧谋划、修身养性<br/>忌：盲目跟风、轻信他人<br/>💡 低调行事，静待时机"}
+            {"木", "宜：积极进取、学习提升<br/>忌：冲动急躁、过度劳累<br/>把握良机，开创事业"},
+            {"火", "宜：展示才华、静心修养<br/>忌：情绪激动、贪功冒进<br/>言行谦逊，名声易起"},
+            {"土", "宜：稳扎稳打、诚信待人<br/>忌：犹豫不决、贪图安逸<br/>守成发展，厚积薄发"},
+            {"金", "宜：果断决策、改革创新<br/>忌：刚愎自用、过度消费<br/>把握时机，迎接挑战"},
+            {"水", "宜：智慧谋划、修身养性<br/>忌：盲目跟风、轻信他人<br/>低调行事，静待时机"}
         };
 
         for (String[] advice : adviceMap) {

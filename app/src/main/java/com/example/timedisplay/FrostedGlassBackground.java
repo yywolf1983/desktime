@@ -50,24 +50,24 @@ public class FrostedGlassBackground extends View {
         ringPaint.setAntiAlias(true);
         
         symbolPaint = new Paint();
-        symbolPaint.setColor(0x306A90B0);
+        symbolPaint.setColor(0x204A6E8C);
         symbolPaint.setTextSize(80f);
         symbolPaint.setAntiAlias(true);
         symbolPaint.setTextAlign(Paint.Align.CENTER);
         
         namePaint = new Paint();
-        namePaint.setColor(0x255A80A0);
+        namePaint.setColor(0x183A5870);
         namePaint.setTextSize(64f);
         namePaint.setAntiAlias(true);
         namePaint.setTextAlign(Paint.Align.CENTER);
         
         baguaLinePaint = new Paint();
-        baguaLinePaint.setColor(0x0A3A6080);
+        baguaLinePaint.setColor(0x082A485E);
         baguaLinePaint.setStrokeWidth(1f);
         
         arcPaint = new Paint();
         arcPaint.setStyle(Paint.Style.STROKE);
-        arcPaint.setColor(0x104A7090);
+        arcPaint.setColor(0x0C305068);
         arcPaint.setStrokeWidth(1f);
         
         taijiPaint = new Paint();
@@ -104,14 +104,14 @@ public class FrostedGlassBackground extends View {
         
         RadialGradient glowGradient = new RadialGradient(
             centerX, centerY, radius * 2f,
-            new int[] {0x204A70A0, 0x106080A0, 0x08305060, 0x00000000},
+            new int[] {0x183A5878, 0x0C284860, 0x06182030, 0x00000000},
             new float[] {0f, 0.4f, 0.7f, 1f},
             Shader.TileMode.CLAMP
         );
         glowPaint.setShader(glowGradient);
         glowPaint.setAlpha(100);
         
-        gridPaint.setColor(0x104A70A0);
+        gridPaint.setColor(0x0B305068);
         gridPaint.setStrokeWidth(1f);
     }
     
@@ -146,7 +146,7 @@ public class FrostedGlassBackground extends View {
     
     private void drawBaGuaArray(Canvas canvas) {
         float[] ringRadii = {radius * 0.3f, radius * 0.5f, radius * 0.7f, radius * 0.85f};
-        int[] ringColors = {0x255A80C0, 0x1A4A70A0, 0x103A6080, 0x0A2A5060};
+        int[] ringColors = {0x1E4A6C9C, 0x143A5878, 0x0E2E485E, 0x081F3850};
         int[] ringWidths = {2, 2, 1, 1};
         
         for (int i = 0; i < ringRadii.length; i++) {
@@ -205,7 +205,7 @@ public class FrostedGlassBackground extends View {
             0, 180, true, taijiPaint
         );
         
-        taijiPaint.setColor(0x205A80B0);
+        taijiPaint.setColor(0x18304860);
         canvas.drawArc(
             centerX - size, centerY - size,
             centerX + size, centerY + size,
@@ -215,10 +215,10 @@ public class FrostedGlassBackground extends View {
         taijiPaint.setColor(0xFF0A0A12);
         canvas.drawCircle(centerX, centerY - halfSize, halfSize, taijiPaint);
         
-        taijiPaint.setColor(0x205A80B0);
+        taijiPaint.setColor(0x18304860);
         canvas.drawCircle(centerX, centerY + halfSize, halfSize, taijiPaint);
         
-        taijiPaint.setColor(0x205A80B0);
+        taijiPaint.setColor(0x18304860);
         canvas.drawCircle(centerX, centerY - halfSize, halfSize * 0.3f, taijiPaint);
         
         taijiPaint.setColor(0xFF0A0A12);

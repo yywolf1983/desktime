@@ -167,7 +167,7 @@ public class WuyunLiuqiView extends View {
             canvas.drawText(wuxingLabels[i], centerX, centerY + availableHeight * 0.20f, textPaint);
             
             textPaint.setTextSize(labelSize);
-            textPaint.setColor(isCurrent ? Color.parseColor("#90EE90") : Color.parseColor("#90EE90"));
+            textPaint.setColor(isCurrent ? Color.parseColor("#3FA34D") : Color.parseColor("#3FA34D"));
             canvas.drawText(meridianLabels[i], centerX, centerY + availableHeight * 0.35f, textPaint);
         }
     }

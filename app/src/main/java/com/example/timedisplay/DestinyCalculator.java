@@ -917,49 +917,49 @@ public class DestinyCalculator {
         // ════════════════════════════
         // 1. 整体性格
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>🌟 性格特点</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>性格特点</b></font><br/>");
         sb.append(getPersonalityRich(dayGan, dayZhi, dayGanWuXing, isStrong, isWeak, isBalance));
         sb.append("<br/>");
         
         // ════════════════════════════
         // 2. 事业运势
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>💼 事业运势</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>事业运势</b></font><br/>");
         sb.append(getCareerAnalysisRich(dayGan, dayGanWuXing, monthGan, monthZhi, mGanShen, isStrong, isWeak));
         sb.append("<br/>");
         
         // ════════════════════════════
         // 3. 财富运势
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>💰 财富运势</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>财富运势</b></font><br/>");
         sb.append(getWealthAnalysisRich(dayGan, dayGanWuXing, pillars, isStrong, isWeak));
         sb.append("<br/>");
         
         // ════════════════════════════
         // 4. 感情婚姻
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>💕 感情婚姻</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>感情婚姻</b></font><br/>");
         sb.append(getRelationshipAnalysisRich(dayGan, dayZhi, dayGanWuXing, dayZhiWuXing, dayZodiac, yearZhi, monthZhi, timeZhi));
         sb.append("<br/>");
         
         // ════════════════════════════
         // 5. 健康建议
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>🏥 健康建议</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>健康建议</b></font><br/>");
         sb.append(getHealthAnalysisRich(dayGanWuXing, shengCount, keCount, biCount));
         sb.append("<br/>");
         
         // ════════════════════════════
         // 6. 人际关系
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>🤝 人际关系</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>人际关系</b></font><br/>");
         sb.append(getSocialAnalysisRich(dayGan, dayGanWuXing, yGanShen, mGanShen, tGanShen, yearGan, zodiac, isStrong, isWeak, yearZhi, monthZhi, dayZhi, timeZhi));
         sb.append("<br/>");
         
         // ════════════════════════════
         // 7. 人生发展建议
         // ════════════════════════════
-        sb.append("<font color='#98D8F0'><b>🎯 人生发展建议</b></font><br/>");
+        sb.append("<font color='#98D8F0'><b>人生发展建议</b></font><br/>");
         sb.append(getLifeAdviceRich(dayGan, dayGanWuXing, zodiac, shengHao, xieHao, isStrong, isWeak, isBalance));
         sb.append("<br/><br/>");
         
@@ -1162,7 +1162,7 @@ public class DestinyCalculator {
         // 五行失衡专项预警
         sb.append("<br/><font color='#7C8C9C'>【失衡预警】</font><br/>");
         if (keCount > shengCount + biCount + 1) {
-            sb.append("<font color='#E0593B'>⚠ 克伐较重</font>，正气偏弱。<br/>");
+            sb.append("<font color='#E0593B'>克伐较重</font>，正气偏弱。<br/>");
             switch (wuXing) {
                 case "木": sb.append("肝气郁结，宜疏肝理气，忌熬夜动怒。"); break;
                 case "火": sb.append("心气不足，宜养心安神，忌过劳亢奋。"); break;
@@ -1172,7 +1172,7 @@ public class DestinyCalculator {
             }
             sb.append("<br/>");
         } else if (shengCount + biCount > keCount + 1) {
-            sb.append("<font color='#F3BA66'>⚠ 生扶较旺</font>，正气易壅滞。<br/>");
+            sb.append("<font color='#F3BA66'>生扶较旺</font>，正气易壅滞。<br/>");
             switch (wuXing) {
                 case "木": sb.append("肝木过旺，宜平肝清热，少酒少辛。"); break;
                 case "火": sb.append("心火偏亢，宜清心降火，少熬夜。"); break;
@@ -1182,32 +1182,32 @@ public class DestinyCalculator {
             }
             sb.append("<br/>");
         } else {
-            sb.append("<font color='#3FA34D'>✓ 五行均衡</font>，脏腑协调，注意日常保养。<br/>");
+            sb.append("<font color='#3FA34D'>五行均衡</font>，脏腑协调，注意日常保养。<br/>");
         }
 
         // 养生宜忌
         sb.append("<br/><font color='#7C8C9C'>【养生宜忌】</font><br/>");
         switch (wuXing) {
             case "木":
-                sb.append("<font color='#3FA34D'>宜：</font>青色食物（菠菜·芹菜·猕猴桃）、酸味入肝、晨起舒展拉伸、踏青散步<br/>");
-                sb.append("<font color='#E0593B'>忌：</font>过量饮酒、长期憋怒、熬夜伤肝、久视伤目<br/>");
-                sb.append("<font color='#D9A441'>穴位：</font>太冲·期门·行间，常按可疏肝理气"); break;
+                sb.append("<font color='#3FA34D'>宜：</font>青绿食物（菠菜·芹菜·猕猴桃）、酸味养肝、晨起舒展、踏青散步<br/>");
+                sb.append("<font color='#E0593B'>忌：</font>酗酒、憋怒、熬夜、久视<br/>");
+                sb.append("<font color='#D9A441'>穴：</font>太冲·期门·行间（疏肝理气）"); break;
             case "火":
-                sb.append("<font color='#3FA34D'>宜：</font>红色食物（红枣·番茄·红豆）、苦味入心、午时小憩、静心冥想<br/>");
-                sb.append("<font color='#E0593B'>忌：</font>暴怒激动、过度劳累、辛辣燥热、熬夜耗神<br/>");
-                sb.append("<font color='#D9A441'>穴位：</font>神门·内关·心俞，常按可养心安神"); break;
+                sb.append("<font color='#3FA34D'>宜：</font>红色食物（红枣·番茄·红豆）、苦味清心、午休、静心<br/>");
+                sb.append("<font color='#E0593B'>忌：</font>暴怒、过劳、辛辣、熬夜<br/>");
+                sb.append("<font color='#D9A441'>穴：</font>神门·内关·心俞（养心安神）"); break;
             case "土":
-                sb.append("<font color='#3FA34D'>宜：</font>黄色食物（南瓜·小米·土豆）、甘味入脾、三餐定时、细嚼慢咽<br/>");
-                sb.append("<font color='#E0593B'>忌：</font>生冷油腻、暴饮暴食、思虑过度、久坐伤肉<br/>");
-                sb.append("<font color='#D9A441'>穴位：</font>足三里·中脘·脾俞，常按可健脾和胃"); break;
+                sb.append("<font color='#3FA34D'>宜：</font>黄色食物（南瓜·小米·土豆）、甘味健脾、三餐定时、细嚼慢咽<br/>");
+                sb.append("<font color='#E0593B'>忌：</font>生冷油腻、暴饮暴食、思虑、久坐<br/>");
+                sb.append("<font color='#D9A441'>穴：</font>足三里·中脘·脾俞（健脾和胃）"); break;
             case "金":
-                sb.append("<font color='#3FA34D'>宜：</font>白色食物（银耳·百合·雪梨）、辛味入肺、深呼吸吐纳、有氧运动<br/>");
-                sb.append("<font color='#E0593B'>忌：</font>悲忧伤肺、干燥环境、吸烟、寒凉直吹<br/>");
-                sb.append("<font color='#D9A441'>穴位：</font>列缺·肺俞·迎香，常按可宣肺利气"); break;
+                sb.append("<font color='#3FA34D'>宜：</font>白色食物（银耳·百合·雪梨）、辛润养肺、深呼吸、有氧运动<br/>");
+                sb.append("<font color='#E0593B'>忌：</font>悲忧、干燥、吸烟、寒凉直吹<br/>");
+                sb.append("<font color='#D9A441'>穴：</font>列缺·肺俞·迎香（宣肺利气）"); break;
             case "水":
-                sb.append("<font color='#3FA34D'>宜：</font>黑色食物（黑豆·黑芝麻·紫米）、咸味入肾、泡脚暖腰、太极八段锦<br/>");
-                sb.append("<font color='#E0593B'>忌：</font>惊恐伤肾、过度房劳、寒凉生冷、久立伤骨<br/>");
-                sb.append("<font color='#D9A441'>穴位：</font>涌泉·肾俞·太溪，常按可固肾培元"); break;
+                sb.append("<font color='#3FA34D'>宜：</font>黑色食物（黑豆·黑芝麻·紫米）、咸味入肾、泡脚暖腰、太极<br/>");
+                sb.append("<font color='#E0593B'>忌：</font>惊恐、房劳过度、生冷、久立<br/>");
+                sb.append("<font color='#D9A441'>穴：</font>涌泉·肾俞·太溪（固肾培元）"); break;
         }
 
         sb.append("<br/><br/>").append(getSeasonHealthDetail(wuXing));
@@ -1637,10 +1637,10 @@ public class DestinyCalculator {
         boolean hasShenZiChen = hasZhis(zhis, new String[]{"申","子","辰"});
         boolean hasHaiMaoWei = hasZhis(zhis, new String[]{"亥","卯","未"});
 
-        if (hasYinWuXu) { sb.append("🔥 <font color='#E0593B'><b>寅午戌三合火局</b></font> — 火气极旺，热情奔放，事业心强<br/>"); hasRel = true; }
-        if (hasSiYouChou) { sb.append("⚔ <font color='#9AA7B8'><b>巳酉丑三合金局</b></font> — 金气凝聚，果断刚毅，财运佳<br/>"); hasRel = true; }
-        if (hasShenZiChen) { sb.append("💧 <font color='#3E87C2'><b>申子辰三合水局</b></font> — 水气流通，智慧过人，善变通<br/>"); hasRel = true; }
-        if (hasHaiMaoWei) { sb.append("🌿 <font color='#3FA34D'><b>亥卯未三合木局</b></font> — 木气生发，仁慈宽厚，创造力强<br/>"); hasRel = true; }
+        if (hasYinWuXu) { sb.append("<font color='#E0593B'><b>寅午戌三合火局</b></font> — 火气极旺，热情奔放，事业心强<br/>"); hasRel = true; }
+        if (hasSiYouChou) { sb.append("<font color='#9AA7B8'><b>巳酉丑三合金局</b></font> — 金气凝聚，果断刚毅，财运佳<br/>"); hasRel = true; }
+        if (hasShenZiChen) { sb.append("<font color='#3E87C2'><b>申子辰三合水局</b></font> — 水气流通，智慧过人，善变通<br/>"); hasRel = true; }
+        if (hasHaiMaoWei) { sb.append("<font color='#3FA34D'><b>亥卯未三合木局</b></font> — 木气生发，仁慈宽厚，创造力强<br/>"); hasRel = true; }
 
         if (hasRel) sb.append("<br/>");
 
@@ -1652,7 +1652,7 @@ public class DestinyCalculator {
                 // 六合
                 for (String[] lh : liuHe) {
                     if (lh[0].equals(z1) && lh[1].equals(z2)) {
-                        sb.append("🤝 ").append(labels[i]).append(z1).append("与").append(labels[j]).append(z2).append("<font color='#3FA34D'><b>六合</b></font>");
+                        sb.append("").append(labels[i]).append(z1).append("与").append(labels[j]).append(z2).append("<font color='#3FA34D'><b>六合</b></font>");
                         sb.append(" — 关系和谐，互相吸引，有天然默契<br/>");
                         hasRel = true;
                     }
@@ -1660,7 +1660,7 @@ public class DestinyCalculator {
                 // 六冲
                 for (String[] lc : liuChong) {
                     if (lc[0].equals(z1) && lc[1].equals(z2)) {
-                        sb.append("⚡ ").append(labels[i]).append(z1).append("与").append(labels[j]).append(z2).append("<font color='#E0593B'><b>六冲</b></font>");
+                        sb.append("").append(labels[i]).append(z1).append("与").append(labels[j]).append(z2).append("<font color='#E0593B'><b>六冲</b></font>");
                         sb.append(" — 对冲激荡，变化多端，宜以柔克刚<br/>");
                         hasRel = true;
                     }
@@ -1674,7 +1674,7 @@ public class DestinyCalculator {
             if (z.equals("辰") || z.equals("午") || z.equals("酉") || z.equals("亥")) {
                 for (int j = i + 1; j < 4; j++) {
                     if (zhis[j].equals(z)) {
-                        sb.append("⚠ ").append(labels[i]).append("与").append(labels[j]).append("同为").append(z).append("，<font color='#F3BA66'><b>自刑</b></font> — 内心纠结，自我矛盾，需豁达<br/>");
+                        sb.append("").append(labels[i]).append("与").append(labels[j]).append("同为").append(z).append("，<font color='#F3BA66'><b>自刑</b></font> — 内心纠结，自我矛盾，需豁达<br/>");
                         hasRel = true;
                     }
                 }
@@ -1895,35 +1895,15 @@ public class DestinyCalculator {
         }
         switch (targetWx) {
             case "木":
-                sb.append("宜<font color='#3FA34D'><b>青绿色系</b></font>衣着饰品，");
-                sb.append("<font color='#3FA34D'><b>东方</b></font>发展或摆放绿植，");
-                sb.append("多食绿色蔬果（菠菜、芹菜、绿豆），");
-                sb.append("春季是运势旺盛期。");
-                break;
+                sb.append("宜<font color='#3FA34D'><b>青绿</b></font>衣饰、东方绿植、绿色蔬果（菠菜芹菜绿豆），春季运势旺。"); break;
             case "火":
-                sb.append("宜<font color='#E0593B'><b>红紫色系</b></font>衣着饰品，");
-                sb.append("<font color='#E0593B'><b>南方</b></font>发展或使用暖色灯光，");
-                sb.append("多食红色食物（红枣、番茄、红豆），");
-                sb.append("夏季是运势旺盛期。");
-                break;
+                sb.append("宜<font color='#E0593B'><b>红紫</b></font>衣饰、南方暖光、红色食物（红枣番茄红豆），夏季运势旺。"); break;
             case "土":
-                sb.append("宜<font color='#D9A441'><b>黄棕色系</b></font>衣着饰品，");
-                sb.append("<font color='#D9A441'><b>中央/本地</b></font>发展稳守，");
-                sb.append("多食黄色谷物（小米、玉米、南瓜），");
-                sb.append("四季末（辰戌丑未月）运势较旺。");
-                break;
+                sb.append("宜<font color='#D9A441'><b>黄棕</b></font>衣饰、中央稳守、黄色谷物（小米玉米南瓜），四季末旺。"); break;
             case "金":
-                sb.append("宜<font color='#9AA7B8'><b>白金银色系</b></font>衣着饰品，");
-                sb.append("<font color='#9AA7B8'><b>西方</b></font>发展或佩戴金属饰品，");
-                sb.append("多食白色食物（白萝卜、银耳、百合），");
-                sb.append("秋季是运势旺盛期。");
-                break;
+                sb.append("宜<font color='#9AA7B8'><b>白金</b></font>衣饰、西方金属、白色食物（萝卜银耳百合），秋季运势旺。"); break;
             case "水":
-                sb.append("宜<font color='#3E87C2'><b>黑蓝色系</b></font>衣着饰品，");
-                sb.append("<font color='#3E87C2'><b>北方</b></font>发展或摆放水景，");
-                sb.append("多食黑色食物（黑豆、黑芝麻、海带），");
-                sb.append("冬季是运势旺盛期。");
-                break;
+                sb.append("宜<font color='#3E87C2'><b>黑蓝</b></font>衣饰、北方水景、黑色食物（黑豆芝麻海带），冬季运势旺。"); break;
         }
         return sb.toString();
     }
@@ -1941,62 +1921,62 @@ public class DestinyCalculator {
         switch (wuXing) {
             case "木":
                 if (isStrong) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>仁爱正直，有领导力，目标感强，勇于开拓<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>有时固执己见，不听劝告，一根筋走到底");
+                    sb.append("<font color='#3FA34D'>优点：</font>仁爱正直，有领导力，目标感强，勇于开拓<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>有时固执己见，不听劝告，一根筋走到底");
                 } else if (isWeak) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>柔韧随和，善借外力，人缘好，适应力强<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>缺乏主见，优柔寡断，易被他人左右");
+                    sb.append("<font color='#3FA34D'>优点：</font>柔韧随和，善借外力，人缘好，适应力强<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>缺乏主见，优柔寡断，易被他人左右");
                 } else {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>仁而有节，刚柔并济，既有原则又知变通<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>中庸之道有时显得缺乏鲜明个性");
+                    sb.append("<font color='#3FA34D'>优点：</font>仁而有节，刚柔并济，既有原则又知变通<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>中庸之道有时显得缺乏鲜明个性");
                 }
                 break;
             case "火":
                 if (isStrong) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>热情奔放，行动力强，感染力十足，是天生的领袖<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>急躁冲动，三分钟热度，易半途而废");
+                    sb.append("<font color='#3FA34D'>优点：</font>热情奔放，行动力强，感染力十足，是天生的领袖<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>急躁冲动，三分钟热度，易半途而废");
                 } else if (isWeak) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>温暖细腻，善解人意，是优秀的倾听者和支持者<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>缺乏自信，不敢展示才华，容易被人忽略");
+                    sb.append("<font color='#3FA34D'>优点：</font>温暖细腻，善解人意，是优秀的倾听者和支持者<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>缺乏自信，不敢展示才华，容易被人忽略");
                 } else {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>热情有度，温暖而不灼人，有始有终<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>有时过于克制，压抑真实情感");
+                    sb.append("<font color='#3FA34D'>优点：</font>热情有度，温暖而不灼人，有始有终<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>有时过于克制，压抑真实情感");
                 }
                 break;
             case "土":
                 if (isStrong) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>诚信可靠，脚踏实地，是团队的中流砥柱<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>保守固执，缺乏变通，遇事反应慢半拍");
+                    sb.append("<font color='#3FA34D'>优点：</font>诚信可靠，脚踏实地，是团队的中流砥柱<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>保守固执，缺乏变通，遇事反应慢半拍");
                 } else if (isWeak) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>敦厚善良，乐于助人，不计较得失<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>易受人利用，缺乏边界感，需学会拒绝");
+                    sb.append("<font color='#3FA34D'>优点：</font>敦厚善良，乐于助人，不计较得失<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>易受人利用，缺乏边界感，需学会拒绝");
                 } else {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>稳重而不失灵活，可靠又知情趣<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>有时过分求稳，错失良机");
+                    sb.append("<font color='#3FA34D'>优点：</font>稳重而不失灵活，可靠又知情趣<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>有时过分求稳，错失良机");
                 }
                 break;
             case "金":
                 if (isStrong) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>刚毅果断，义气重诺，执行力一流<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>锋芒太露，刚极易折，需学会藏锋守拙");
+                    sb.append("<font color='#3FA34D'>优点：</font>刚毅果断，义气重诺，执行力一流<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>锋芒太露，刚极易折，需学会藏锋守拙");
                 } else if (isWeak) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>细腻精致，追求品质，审美出众<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>过于计较细节，完美主义导致内耗");
+                    sb.append("<font color='#3FA34D'>优点：</font>细腻精致，追求品质，审美出众<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>过于计较细节，完美主义导致内耗");
                 } else {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>理性与感性兼备，刚柔适度<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>有时过于理性，显得不够热情");
+                    sb.append("<font color='#3FA34D'>优点：</font>理性与感性兼备，刚柔适度<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>有时过于理性，显得不够热情");
                 }
                 break;
             case "水":
                 if (isStrong) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>智慧超群，灵活善变，总能找到最佳路径<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>思虑过重，易陷入过度分析而行动迟缓");
+                    sb.append("<font color='#3FA34D'>优点：</font>智慧超群，灵活善变，总能找到最佳路径<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>思虑过重，易陷入过度分析而行动迟缓");
                 } else if (isWeak) {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>直觉敏锐，心思缜密，洞察力过人<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>缺乏安全感，情绪波动大，需增强自信");
+                    sb.append("<font color='#3FA34D'>优点：</font>直觉敏锐，心思缜密，洞察力过人<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>缺乏安全感，情绪波动大，需增强自信");
                 } else {
-                    sb.append("<font color='#3FA34D'>✓ 优点：</font>聪而不露，心思通透，大智若愚<br/>");
-                    sb.append("<font color='#E0593B'>⚠ 注意：</font>有时过于低调，才华被埋没");
+                    sb.append("<font color='#3FA34D'>优点：</font>聪而不露，心思通透，大智若愚<br/>");
+                    sb.append("<font color='#E0593B'>注意：</font>有时过于低调，才华被埋没");
                 }
                 break;
         }
@@ -2011,28 +1991,28 @@ public class DestinyCalculator {
         sb.append("<font color='#7C8C9C'>发展指南：</font><br/>");
         switch (wuXing) {
             case "木":
-                sb.append("🏢 宜：教育、文化、出版、园林、医药、环保、设计<br/>");
+                sb.append("宜：教育、文化、出版、园林、医药、环保、设计<br/>");
                 isStrong = false; // dummy
                 break;
             case "火":
-                sb.append("🏢 宜：传媒、演艺、餐饮、能源、互联网、美业、公关<br/>");
+                sb.append("宜：传媒、演艺、餐饮、能源、互联网、美业、公关<br/>");
                 break;
             case "土":
-                sb.append("🏢 宜：建筑、地产、金融、仓储、农业、顾问、行政<br/>");
+                sb.append("宜：建筑、地产、金融、仓储、农业、顾问、行政<br/>");
                 break;
             case "金":
-                sb.append("🏢 宜：法律、金融、科技、机械、管理、审计、珠宝<br/>");
+                sb.append("宜：法律、金融、科技、机械、管理、审计、珠宝<br/>");
                 break;
             case "水":
-                sb.append("🏢 宜：商贸、物流、旅游、传媒、咨询、水产、信息<br/>");
+                sb.append("宜：商贸、物流、旅游、传媒、咨询、水产、信息<br/>");
                 break;
         }
         if (isStrong) {
-            sb.append("🎯 <font color='#3FA34D'>适合创业或管理岗</font>，能独当一面，建议选择有发展空间的平台。");
+            sb.append("<font color='#3FA34D'>适合创业或管理岗</font>，能独当一面，建议选择有发展空间的平台。");
         } else if (isWeak) {
-            sb.append("🎯 <font color='#3E87C2'>适合专业型或协作型岗位</font>，以技术专精取胜，好团队胜过好平台。");
+            sb.append("<font color='#3E87C2'>适合专业型或协作型岗位</font>，以技术专精取胜，好团队胜过好平台。");
         } else {
-            sb.append("🎯 <font color='#D9A441'>职场适应力强</font>，创业或就业皆宜，关键在于选择自己真正热爱的方向。");
+            sb.append("<font color='#D9A441'>职场适应力强</font>，创业或就业皆宜，关键在于选择自己真正热爱的方向。");
         }
         return sb.toString();
     }
@@ -2045,27 +2025,27 @@ public class DestinyCalculator {
         sb.append("<font color='#7C8C9C'>理财建议：</font><br/>");
         switch (wuXing) {
             case "木":
-                sb.append("💡 理财风格：战略性投资，看长期趋势，不贪图快钱。<br/>");
+                sb.append("理财风格：战略性投资，看长期趋势，不贪图快钱。<br/>");
                 if (isStrong) sb.append("适合：股权投资、绿色产业、教育培训产业投资。");
                 else sb.append("适合：定投基金、储蓄型保险、稳健型理财产品。");
                 break;
             case "火":
-                sb.append("💡 理财风格：凭直觉行动，行情好时敢于下注。<br/>");
+                sb.append("理财风格：凭直觉行动，行情好时敢于下注。<br/>");
                 if (isStrong) sb.append("适合：股票短线、新兴行业投资、品牌加盟。");
                 else sb.append("适合：分批买入、避免追高、设置止损线。");
                 break;
             case "土":
-                sb.append("💡 理财风格：保守稳健，偏好实体资产，不轻信高回报承诺。<br/>");
+                sb.append("理财风格：保守稳健，偏好实体资产，不轻信高回报承诺。<br/>");
                 if (isStrong) sb.append("适合：房地产、黄金、长期国债、实业投资。");
                 else sb.append("适合：定期储蓄、国债逆回购、保守型固收产品。");
                 break;
             case "金":
-                sb.append("💡 理财风格：精打细算，风险控制意识强。<br/>");
+                sb.append("理财风格：精打细算，风险控制意识强。<br/>");
                 if (isStrong) sb.append("适合：金融衍生品、量化投资、金属相关产业。");
                 else sb.append("适合：分散投资、货币基金、短期理财。");
                 break;
             case "水":
-                sb.append("💡 理财风格：灵活多变，善于发现套利机会。<br/>");
+                sb.append("理财风格：灵活多变，善于发现套利机会。<br/>");
                 if (isStrong) sb.append("适合：跨境电商、物流投资、信息产业创投。");
                 else sb.append("适合：流动性强的理财产品，确保随时可变现。");
                 break;
@@ -2235,7 +2215,7 @@ public class DestinyCalculator {
                         (zhis[i].equals(hd[1]) && zhis[j].equals(hd[0]))) {
                         if (!hasHai) sb.append("<font color='#7C8C9C'>相害关系：</font>");
                         hasHai = true;
-                        sb.append("<br/>⚠ ").append(labels[i]).append(zhis[i]).append("与").append(labels[j]).append(zhis[j]).append("：");
+                        sb.append("<br/>").append(labels[i]).append(zhis[i]).append("与").append(labels[j]).append(zhis[j]).append("：");
                         sb.append("<font color='#F3BA66'>").append(hd[2]).append("</font>");
                     }
                 }
@@ -2284,34 +2264,19 @@ public class DestinyCalculator {
         sb.append("<font color='#7C8C9C'>开运锦囊：</font><br/>");
         switch (wuXing) {
             case "木":
-                sb.append("🎨 幸运色：<font color='#3FA34D'>青色、绿色</font>　🔢 幸运数：3、8<br/>");
-                sb.append("💎 佩戴：绿松石、翡翠、木质饰品<br/>");
-                sb.append("📅 旺月：春季（寅卯辰月）<br/>");
-                break;
+                sb.append("幸运色<font color='#3FA34D'>青·绿</font>｜数3·8｜绿松石/翡翠/木质｜旺春月<br/>"); break;
             case "火":
-                sb.append("🎨 幸运色：<font color='#E0593B'>红色、紫色</font>　🔢 幸运数：2、7<br/>");
-                sb.append("💎 佩戴：红玛瑙、紫水晶、红宝石<br/>");
-                sb.append("📅 旺月：夏季（巳午未月）<br/>");
-                break;
+                sb.append("幸运色<font color='#E0593B'>红·紫</font>｜数2·7｜红玛瑙/紫晶/红宝｜旺夏月<br/>"); break;
             case "土":
-                sb.append("🎨 幸运色：<font color='#D9A441'>黄色、棕色</font>　🔢 幸运数：5、0<br/>");
-                sb.append("💎 佩戴：黄水晶、蜜蜡、陶瓷饰品<br/>");
-                sb.append("📅 旺月：四季末（辰未戌丑月）<br/>");
-                break;
+                sb.append("幸运色<font color='#D9A441'>黄·棕</font>｜数5·0｜黄晶/蜜蜡/陶瓷｜旺四季末月<br/>"); break;
             case "金":
-                sb.append("🎨 幸运色：<font color='#9AA7B8'>白色、银色</font>　🔢 幸运数：4、9<br/>");
-                sb.append("💎 佩戴：白水晶、银饰、白金饰品<br/>");
-                sb.append("📅 旺月：秋季（申酉戌月）<br/>");
-                break;
+                sb.append("幸运色<font color='#9AA7B8'>白·银</font>｜数4·9｜白晶/银饰/白金｜旺秋月<br/>"); break;
             case "水":
-                sb.append("🎨 幸运色：<font color='#3E87C2'>黑色、蓝色</font>　🔢 幸运数：1、6<br/>");
-                sb.append("💎 佩戴：黑曜石、海蓝宝、黑水晶<br/>");
-                sb.append("📅 旺月：冬季（亥子丑月）<br/>");
-                break;
+                sb.append("幸运色<font color='#3E87C2'>黑·蓝</font>｜数1·6｜黑曜石/海蓝宝/黑晶｜旺冬月<br/>"); break;
         }
         sb.append("🌅 每日宜：保持心平气和，顺应自然节奏。<br/>");
         String[] compat = getZodiacCompat(zodiac);
-        sb.append("🤝 贵人属相：").append(compat[0]).append("、").append(compat[1]).append("、").append(compat[2]);
+        sb.append("贵人属相：").append(compat[0]).append("、").append(compat[1]).append("、").append(compat[2]);
         return sb.toString();
     }
 
@@ -2325,31 +2290,31 @@ public class DestinyCalculator {
             case "木":
                 sb.append("🌸 <font color='#3FA34D'>春：</font>养肝护胆，早睡早起，多拉伸舒展<br/>");
                 sb.append("☀ 夏：防肝火过旺，少怒少酒，多饮菊花茶<br/>");
-                sb.append("🍂 秋：肺金克木，注意呼吸道保养<br/>");
+                sb.append("秋：肺金克木，注意呼吸道保养<br/>");
                 sb.append("❄ 冬：藏精养肝，早卧晚起，少熬夜");
                 break;
             case "火":
                 sb.append("🌸 春：木生火旺，宜多运动散发能量<br/>");
                 sb.append("☀ <font color='#E0593B'>夏：</font>养心安神，午休为要，忌暴怒过劳<br/>");
-                sb.append("🍂 秋：火气收敛，注意情绪调节<br/>");
+                sb.append("秋：火气收敛，注意情绪调节<br/>");
                 sb.append("❄ 冬：水克火，注意保暖护心脑血管");
                 break;
             case "土":
                 sb.append("🌸 春：木克土，注意脾胃调理<br/>");
                 sb.append("☀ 夏：火生土，消化力强，但仍需规律饮食<br/>");
-                sb.append("🍂 <font color='#D9A441'>秋：</font>土生金泄气，宜进补养胃<br/>");
+                sb.append("<font color='#D9A441'>秋：</font>土生金泄气，宜进补养胃<br/>");
                 sb.append("❄ 冬：脾胃为后天之本，四季皆需温养");
                 break;
             case "金":
                 sb.append("🌸 春：金克木劳神，注意休息<br/>");
                 sb.append("☀ 夏：火克金，防呼吸道感染<br/>");
-                sb.append("🍂 <font color='#9AA7B8'>秋：</font>养肺润燥，多食白色食物，深呼吸吐纳<br/>");
+                sb.append("<font color='#9AA7B8'>秋：</font>养肺润燥，多食白色食物，深呼吸吐纳<br/>");
                 sb.append("❄ 冬：金生水泄气，注意保暖防寒");
                 break;
             case "水":
                 sb.append("🌸 春：水生木泄气，适当进补<br/>");
                 sb.append("☀ 夏：水克火耗神，注意补水休息<br/>");
-                sb.append("🍂 秋：金生水得助，是进补好时机<br/>");
+                sb.append("秋：金生水得助，是进补好时机<br/>");
                 sb.append("❄ <font color='#3E87C2'>冬：</font>养肾固元，注意腰膝保暖，宜食黑色食物");
                 break;
         }

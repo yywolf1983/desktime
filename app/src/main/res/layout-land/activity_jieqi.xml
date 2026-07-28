@@ -87,7 +87,7 @@
                         android:id="@+id/jieqiEnglish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="4dp"/>
 
@@ -95,7 +95,7 @@
                         android:id="@+id/jieqiDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textColor="@color/warning"
                         android:layout_marginTop="4dp"/>
 
@@ -109,8 +109,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="📜 传统习俗"
-                            android:textSize="13sp"
+                            android:text="传统习俗"
+                            android:textSize="15sp"
                             android:textColor="@color/gold"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"
@@ -125,7 +125,7 @@
                             android:id="@+id/tradition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_primary"
                             android:lineSpacingExtra="3dp"/>
                     </LinearLayout>
@@ -219,7 +219,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="13sp"
+                                android:textSize="15sp"
                                 android:textColor="@color/gold"/>
                             <TextView
                                 android:id="@+id/hou1Days"
@@ -234,7 +234,7 @@
                             android:id="@+id/hou1Desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="11sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_secondary"
                             android:paddingTop="3dp"
                             android:paddingStart="4dp"/>
@@ -262,7 +262,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="13sp"
+                                android:textSize="15sp"
                                 android:textColor="@color/gold"/>
                             <TextView
                                 android:id="@+id/hou2Days"
@@ -277,7 +277,7 @@
                             android:id="@+id/hou2Desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="11sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_secondary"
                             android:paddingTop="3dp"
                             android:paddingStart="4dp"/>
@@ -304,7 +304,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="13sp"
+                                android:textSize="15sp"
                                 android:textColor="@color/gold"/>
                             <TextView
                                 android:id="@+id/hou3Days"
@@ -319,7 +319,7 @@
                             android:id="@+id/hou3Desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="11sp"
+                            android:textSize="15sp"
                             android:textColor="@color/text_secondary"
                             android:paddingTop="3dp"
                             android:paddingStart="4dp"/>
@@ -329,7 +329,7 @@
                         android:id="@+id/daysToNext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textColor="@color/warning"
                         android:fontFamily="sans-serif-light"
                         android:gravity="center"
@@ -361,8 +361,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📅 全年节气"
-                        android:textSize="13sp"
+                        android:text="全年节气"
+                        android:textSize="15sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"/>

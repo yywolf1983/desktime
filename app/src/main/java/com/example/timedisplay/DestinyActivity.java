@@ -269,15 +269,15 @@ public class DestinyActivity extends android.app.Activity {
         int strengthColor;
         String strengthHintStr;
         if (isStrong) {
-            strengthStr = "🔥 身强";
+            strengthStr = "身强";
             strengthColor = Color.parseColor("#E0593B");
             strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜泄耗";
         } else if (isWeak) {
-            strengthStr = "💧 身弱";
+            strengthStr = "身弱";
             strengthColor = Color.parseColor("#3E87C2");
             strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜生扶";
         } else {
-            strengthStr = "☯ 中和";
+            strengthStr = "中和";
             strengthColor = Color.parseColor("#E6C46A");
             strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 均衡";
         }
@@ -394,6 +394,7 @@ public class DestinyActivity extends android.app.Activity {
 
     private void populateTenGods() {
         StringBuilder sb = new StringBuilder();
+        sb.append("<font color='#9AA7B8'><small>十神＝日主与其他干支的十种关系，通俗讲就是「你与外界（亲人、事业、钱财）的互动模式」。</small></font><br/><br/>");
         sb.append("年干 ").append(yearGan).append("：").append(coloredText(yGanShen, "#3FA34D")).append("　");
         sb.append(DestinyCalculator.getTenGodExplanation(yGanShen)).append("<br/>");
         sb.append("月干 ").append(monthGan).append("：").append(coloredText(mGanShen, "#3FA34D")).append("　");
@@ -437,6 +438,7 @@ public class DestinyActivity extends android.app.Activity {
         if (isStrong) sb.append(coloredText("→ 身强", "#E0593B"));
         else if (isWeak) sb.append(coloredText("→ 身弱", "#3E87C2"));
         else sb.append(coloredText("→ 中和", "#E6C46A"));
+        sb.append("<br/><font color='#9AA7B8'><small>通俗说：身强＝自身能量足，宜克泄耗；身弱＝底气不足，宜生扶比助；中和＝顺其自然最好。</small></font>");
 
         setHtmlText(wuxingPowerText, sb.toString());
 

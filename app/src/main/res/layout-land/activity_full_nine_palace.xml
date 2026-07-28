@@ -66,9 +66,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📊 基本信息"
+                        android:text="基本信息"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -97,9 +97,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔮 综合总评"
+                        android:text="综合总评"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -114,7 +114,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -128,9 +128,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💡 综合建议"
+                        android:text="综合建议"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -145,7 +145,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -159,9 +159,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⏰ 时辰运势"
+                        android:text="时辰运势"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -176,7 +176,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -190,9 +190,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🧭 方位吉凶"
+                        android:text="方位吉凶"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -207,7 +207,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -221,9 +221,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="✅ 今日宜忌"
+                        android:text="今日宜忌"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -238,7 +238,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -252,9 +252,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⭐ 值符值使"
+                        android:text="值符值使"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -269,7 +269,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -283,9 +283,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🌙 日时关系"
+                        android:text="日时关系"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -300,7 +300,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -314,9 +314,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🏠 生活提示"
+                        android:text="生活提示"
                         android:textColor="@color/gold"
-                        android:textSize="13sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -331,7 +331,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
@@ -345,9 +345,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🏛 天盘地盘"
+                        android:text="天盘地盘"
                         android:textColor="@color/gold"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -362,7 +362,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"
                         android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
@@ -382,9 +382,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="✨ 九星排布"
+                        android:text="九星排布"
                         android:textColor="@color/gold"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -399,7 +399,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"
                         android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
@@ -419,9 +419,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🚪 八门排布"
+                        android:text="八门排布"
                         android:textColor="@color/gold"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -436,7 +436,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"
                         android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
@@ -456,9 +456,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="👑 八神排布"
+                        android:text="八神排布"
                         android:textColor="@color/gold"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -473,7 +473,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"
                         android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
@@ -493,9 +493,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🏯 各宫详解"
+                        android:text="各宫详解"
                         android:textColor="@color/gold"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -510,7 +510,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"
                         android:layout_marginBottom="4dp"/>
                     <com.example.timedisplay.DetailedNinePalacePanel
@@ -530,9 +530,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📜 排盘依据"
+                        android:text="排盘依据"
                         android:textColor="@color/gold"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp"
                         android:paddingBottom="6dp"
@@ -547,7 +547,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="11sp"
+                        android:textSize="15sp"
                         android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 

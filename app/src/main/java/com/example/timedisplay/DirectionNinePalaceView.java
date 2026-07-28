@@ -33,10 +33,10 @@ public class DirectionNinePalaceView extends View {
     
     private static final int COLOR_BG_CARD = 0xFF191C26;
     private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
-    private static final int COLOR_GOLD = 0xFFBFA055;
-    private static final int COLOR_GREEN = 0xFF7A9A60;
-    private static final int COLOR_RED = 0xFFC47B5E;
-    private static final int COLOR_BLUE = 0xFF87CEEB;
+    private static final int COLOR_GOLD = 0xFFE6C46A;
+    private static final int COLOR_GREEN = 0xFF3FA34D;
+    private static final int COLOR_RED = 0xFFE0593B;
+    private static final int COLOR_BLUE = 0xFF3E87C2;
     private static final int COLOR_BORDER = 0xFF262A36;
     
     private float rotation = 0f;

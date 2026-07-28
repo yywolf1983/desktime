@@ -32,8 +32,8 @@ public class NinePalacePanel extends View {
     private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
     private static final int COLOR_BORDER = 0xFF262A36;
     private static final int COLOR_GOLD = 0xFFE6C46A;
-    private static final int COLOR_GREEN = 0xFF7A9A60;
-    private static final int COLOR_RED = 0xFFC47B5E;
+    private static final int COLOR_GREEN = 0xFF3FA34D;
+    private static final int COLOR_RED = 0xFFE0593B;
 
 
     // 九宫格布局位置（按照指南针顺序：上北下南，左西右东）
@@ -239,14 +239,14 @@ public class NinePalacePanel extends View {
     // 吉凶等级 -> 颜色（与底部解释文案同源，保证一致）
     public static int getLuckColorByLabel(String label) {
         switch (label) {
-            case "大吉": return 0xFF22C55E;
-            case "吉":   return 0xFF34D399;
-            case "平吉": return 0xFF84CC16;
-            case "平":   return 0xFF6B7280;
-            case "平凶": return 0xFFF97316;
-            case "凶":   return 0xFFEF4444;
-            case "大凶": return 0xFFDC2626;
-            default:     return 0xFF6B7280;
+            case "大吉": return 0xFF2E9E5B;
+            case "吉":   return 0xFF3FA34D;
+            case "平吉": return 0xFF7CA86A;
+            case "平":   return 0xFF7C8C9C;
+            case "平凶": return 0xFFC9873F;
+            case "凶":   return 0xFFE0593B;
+            case "大凶": return 0xFFC0392B;
+            default:     return 0xFF7C8C9C;
         }
     }
 
