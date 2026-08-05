@@ -1871,58 +1871,54 @@ public class FullNinePalaceActivity extends Activity {
         String shunNi = isYangDun ? "顺" : "逆";
         
         StringBuilder sb = new StringBuilder();
+        String tip = "<br/>　<font color='#7C8C9C'>▸ ";
+        String tipEnd = "</font>";
         
         // 1. 四柱
-        sb.append(getTitleColor).append("<b>【四柱】</b>").append(getClose).append("<br/>");
-        sb.append("年 ").append(getGoldColor).append(yearPillar).append(getClose)
-          .append("　月 ").append(getGoldColor).append(monthPillar).append(getClose)
-          .append("　日 ").append(getGoldColor).append(dayPillar).append(getClose)
-          .append("　时 ").append(getGoldColor).append(timePillar).append(getClose).append("<br/><br/>");
+        sb.append(getTitleColor).append("<b>【四柱】</b> ").append(getClose)
+          .append(yearPillar).append(" ").append(monthPillar).append(" ").append(dayPillar).append(" ").append(timePillar)
+          .append(tip).append("日柱为立极之本").append(tipEnd).append("<br/><br/>");
         
-        // 2. 节气局数
-        sb.append(getTitleColor).append("<b>【局法】</b>").append(getClose).append("<br/>");
-        sb.append("节气：").append(getGoldColor).append(jieqi).append(getClose)
-          .append("　").append(dunColor).append(dunType).append(ju).append("局").append(getClose)
-          .append("　").append(shunNi).append("行").append("<br/><br/>");
+        // 2. 局法
+        sb.append(getTitleColor).append("<b>【局法】</b> ").append(getClose)
+          .append(jieqi).append("　").append(dunType).append(ju).append("局").append(shunNi).append("行")
+          .append(tip).append("冬至阳遁 · 夏至阴遁 · 拆补法定局").append(tipEnd).append("<br/><br/>");
         
-        // 3. 旬首值符值使
-        sb.append(getTitleColor).append("<b>【值使】</b>").append(getClose).append("<br/>");
-        sb.append("旬首：").append(getGoldColor).append(xunShou).append(getClose).append("<br/>");
-        sb.append("值符：").append(getFireColor).append(zhiFuStar).append("星").append(getClose)
-          .append("　落").append(PALACE_NAMES[zhiFuPalace]).append("宫").append("<br/>");
-        sb.append("值使：").append(getWoodColor).append(zhiShiDoor).append("门").append(getClose)
-          .append("　落").append(PALACE_NAMES[zhiShiPalace]).append("宫").append("<br/><br/>");
+        // 3. 值符值使
+        sb.append(getTitleColor).append("<b>【值符值使】</b> ").append(getClose)
+          .append("时柱定旬首 ").append(xunShou).append("<br/>");
+        sb.append("　<font color='#7C8C9C'>旬首→值符星·值使门</font><br/>");
+        sb.append("　甲子天蓬/休　甲戌天芮/生　甲申天冲/伤<br/>");
+        sb.append("　甲午天辅/杜　甲辰天禽/景　甲寅天心/死<br/>");
+        sb.append("　值符 ").append(getFireColor).append(zhiFuStar).append(getClose).append("落").append(PALACE_NAMES[zhiFuPalace])
+          .append("　值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose).append("落").append(PALACE_NAMES[zhiShiPalace])
+          .append(tip).append("值符随时干 · 值使随时支").append(tipEnd).append("<br/><br/>");
         
         // 4. 三奇六仪
-        sb.append(getTitleColor).append("<b>【三奇六仪】</b>").append(getClose).append("<br/>");
-        sb.append("三奇：").append(getFireColor).append("丙").append(getClose)
-          .append(getWoodColor).append("乙").append(getClose)
-          .append(getWaterColor).append("丁").append(getClose).append("<br/>");
-        sb.append("六仪：").append(getEarthColor).append("戊己庚辛壬癸").append(getClose).append("<br/>");
-        sb.append("顺序：").append(shunNi).append("排 戊己庚辛壬癸丁丙乙").append("<br/><br/>");
+        sb.append(getTitleColor).append("<b>【三奇六仪】</b> ").append(getClose)
+          .append("三奇 ").append(getFireColor).append("乙丙丁").append(getClose)
+          .append("　六仪 ").append(getEarthColor).append("戊己庚辛壬癸").append(getClose)
+          .append(tip).append("地盘六仪顺布、三奇逆插；天盘随时干转动").append(tipEnd).append("<br/><br/>");
         
         // 5. 九星
-        sb.append(getTitleColor).append("<b>【九星】</b>").append(getClose).append("<br/>");
-        sb.append("值符 ").append(getFireColor).append(zhiFuStar).append(getClose)
-          .append(" 落").append(PALACE_NAMES[zhiFuPalace]).append("，")
-          .append(shunNi).append("布：蓬芮冲辅禽心柱任英").append("<br/><br/>");
+        sb.append(getTitleColor).append("<b>【九星】</b> ").append(getClose)
+          .append("值符 ").append(getFireColor).append(zhiFuStar).append(getClose).append("自").append(PALACE_NAMES[zhiFuPalace]).append(shunNi).append("飞：蓬芮冲辅禽心柱任英")
+          .append(tip).append("星随符转 · 天禽居中五").append(tipEnd).append("<br/><br/>");
         
         // 6. 八门
-        sb.append(getTitleColor).append("<b>【八门】</b>").append(getClose).append("<br/>");
-        sb.append("值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose)
-          .append(" 落").append(PALACE_NAMES[zhiShiPalace]).append("，")
-          .append(shunNi).append("排：休生伤杜景死惊开").append("<br/><br/>");
+        sb.append(getTitleColor).append("<b>【八门】</b> ").append(getClose)
+          .append("值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose).append("自").append(PALACE_NAMES[zhiShiPalace]).append(shunNi).append("飞：休生伤杜景死惊开")
+          .append(tip).append("门随使转 · 中宫无门").append(tipEnd).append("<br/><br/>");
         
         // 7. 八神
-        sb.append(getTitleColor).append("<b>【八神】</b>").append(getClose).append("<br/>");
-        sb.append("值符落").append(PALACE_NAMES[zhiFuPalace]).append("，")
-          .append(shunNi).append("布：符蛇阴合白玄地天").append("<br/><br/>");
+        sb.append(getTitleColor).append("<b>【八神】</b> ").append(getClose)
+          .append("自").append(PALACE_NAMES[zhiFuPalace]).append(shunNi).append("布：符蛇阴合白玄地天")
+          .append(tip).append("神随符走 · 中宫空 · 阴阳遁序异").append(tipEnd).append("<br/><br/>");
         
-        // 8. 排盘关键
-        sb.append(getTitleColor).append("<b>【关键】</b>").append(getClose).append("<br/>");
-        sb.append(dunColor).append(dunType).append(shunNi).append("行").append(getClose)
-          .append("　值符星随时干　值使门随时支<br/>");
-        sb.append("天盘主动　地盘主静　星门神仪合断吉凶");
+        // 8. 关键
+        sb.append(getTitleColor).append("<b>【关键】</b> ").append(getClose)
+          .append(dunType).append(shunNi).append("行　值符星随时干　值使门随时支")
+          .append(tip).append("天盘主动地盘静 · 星门神仪合参").append(tipEnd);
         
         return sb.toString();
     }

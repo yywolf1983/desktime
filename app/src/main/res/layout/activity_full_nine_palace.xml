@@ -548,7 +548,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:textColor="@color/text_primary"
-                    android:lineSpacingExtra="4dp"/>
+                    android:lineSpacingExtra="5dp"
+                    android:lineSpacingMultiplier="1.05"/>
             </LinearLayout>
 
         </LinearLayout>
