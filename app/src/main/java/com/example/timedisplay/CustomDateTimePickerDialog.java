@@ -3,26 +3,35 @@ package com.example.timedisplay;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.NumberPicker;
+import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
+import android.widget.GridView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CustomDateTimePickerDialog extends Dialog {
 
-    private EditText yearEdit;
-    private TextView yearMinus, yearPlus;
-    private NumberPicker monthPicker, dayPicker, hourPicker, minutePicker;
+    private GridView yearGrid, monthGrid, dayGrid, hourGrid, minuteGrid;
+    private TextView ymTitle;
+    private TextView tvYiJi, tvDateGap;
     private TextView cancelButton, confirmButton;
-    private TextView tvYiJi;
-    private TextView tvDateGap;
+    private TextView sumYear, sumMonth, sumDay, sumHour, sumMinute;
     private OnDateTimeSetListener listener;
+
+    private int selYear, selMonth, selDay, selHour, selMinute;
+    private int yearPageBase;
+    private View currentPanel;
 
     public interface OnDateTimeSetListener {
         void onDateTimeSet(int year, int month, int day, int hour, int minute);
@@ -32,57 +41,275 @@ public class CustomDateTimePickerDialog extends Dialog {
         super(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         this.listener = listener;
 
+        selYear = currentCalendar.get(Calendar.YEAR);
+        selMonth = currentCalendar.get(Calendar.MONTH) + 1;
+        selDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
+        selHour = currentCalendar.get(Calendar.HOUR_OF_DAY);
+        selMinute = currentCalendar.get(Calendar.MINUTE);
+        yearPageBase = (selYear / 20) * 20;
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_custom_datetime_picker);
 
-        // Make dialog background transparent
         Window window = getWindow();
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         }
 
-        initPickers(currentCalendar);
-        setupButtons();
-        setupYiJi();
+        initViews();
+        refreshSummary();
+        updateYiJi();
+        updateDateGap();
     }
 
-    private void setupYiJi() {
+    private void initViews() {
+        yearGrid = findViewById(R.id.yearGrid);
+        monthGrid = findViewById(R.id.monthGrid);
+        dayGrid = findViewById(R.id.dayGrid);
+        hourGrid = findViewById(R.id.hourGrid);
+        minuteGrid = findViewById(R.id.minuteGrid);
+        ymTitle = findViewById(R.id.dayTitle);
         tvYiJi = findViewById(R.id.tvYiJi);
         tvDateGap = findViewById(R.id.tvDateGap);
-        if (tvYiJi != null) {
-            updateYiJi();
-        }
-        updateDateGap();
+        cancelButton = findViewById(R.id.cancelButton);
+        confirmButton = findViewById(R.id.confirmButton);
+        sumYear = findViewById(R.id.sumYear);
+        sumMonth = findViewById(R.id.sumMonth);
+        sumDay = findViewById(R.id.sumDay);
+        sumHour = findViewById(R.id.sumHour);
+        sumMinute = findViewById(R.id.sumMinute);
 
-        // 年/月/日变化时同时更新日期范围、宜忌及与今日差距
-        NumberPicker.OnValueChangeListener dayAndYiJiUpdater = (picker, oldVal, newVal) -> {
-            updateDayRange();
+        // 顶部日期文字各部分单独点击展开对应面板（24小时制国际标准）
+        bindPart(R.id.sumYear, R.id.yearPanel, R.id.yearChevron, () -> showYearPage());
+        bindPart(R.id.sumMonth, R.id.monthPanel, R.id.monthChevron, () -> showMonthPage());
+        bindPart(R.id.sumDay, R.id.dayPanel, R.id.dayChevron, () -> showDayPage());
+        bindPart(R.id.sumHour, R.id.hourPanel, R.id.hourChevron, () -> highlightOnly(hourGrid, selHour));
+        bindPart(R.id.sumMinute, R.id.minutePanel, R.id.minuteChevron, () -> highlightOnly(minuteGrid, selMinute / 5));
+
+        // 日：网格点选
+        dayGrid.setOnItemClickListener((parent, view, position, id) -> {
+            selDay = position + 1;
+            refreshRows();
+            refreshSummary();
             updateYiJi();
             updateDateGap();
-        };
-        monthPicker.setOnValueChangedListener(dayAndYiJiUpdater);
-
-        // 日变化时更新宜忌及差距
-        dayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-            updateYiJi();
-            updateDateGap();
+            View panel = findViewById(R.id.dayPanel);
+            panel.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.dayChevron)).setText("›");
+            currentPanel = null;
         });
+
+        // 月：网格点选
+        monthGrid.setOnItemClickListener((parent, view, position, id) -> {
+            selMonth = position + 1;
+            refreshRows();
+            refreshSummary();
+            updateYiJi();
+            updateDateGap();
+            View panel = findViewById(R.id.monthPanel);
+            panel.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.monthChevron)).setText("›");
+            currentPanel = null;
+        });
+
+        // 年份翻页
+        findViewById(R.id.yearPrev).setOnClickListener(v -> { yearPageBase -= 20; showYearPage(); });
+        findViewById(R.id.yearNext).setOnClickListener(v -> { yearPageBase += 20; showYearPage(); });
+
+        // 日面板翻月
+        findViewById(R.id.dayPrev).setOnClickListener(v -> stepMonth(-1));
+        findViewById(R.id.dayNext).setOnClickListener(v -> stepMonth(1));
+
+        // 时：24小时网格（00-23）
+        List<String> hours = new ArrayList<>();
+        for (int i = 0; i < 24; i++) hours.add(String.format("%02d", i));
+        hourGrid.setAdapter(makeAdapter(hours, selHour));
+        hourGrid.setOnItemClickListener((parent, view, position, id) -> {
+            selHour = position;
+            highlightOnly(hourGrid, position);
+            refreshRows();
+            refreshSummary();
+            View panel = findViewById(R.id.hourPanel);
+            panel.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.hourChevron)).setText("›");
+            currentPanel = null;
+        });
+
+        // 分：以5分段 00,05,...,55
+        List<String> minutes = new ArrayList<>();
+        for (int i = 0; i < 60; i += 5) minutes.add(String.format("%02d", i));
+        minuteGrid.setAdapter(makeAdapter(minutes, selMinute / 5));
+        minuteGrid.setOnItemClickListener((parent, view, position, id) -> {
+            selMinute = position * 5;
+            highlightOnly(minuteGrid, position);
+            refreshRows();
+            refreshSummary();
+            View panel = findViewById(R.id.minutePanel);
+            panel.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.minuteChevron)).setText("›");
+            currentPanel = null;
+        });
+
+        // 五个独立项绑定已移至上方 bindPart 调用
+
+        cancelButton.setOnClickListener(v -> dismiss());
+        confirmButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDateTimeSet(selYear, selMonth, selDay, selHour, selMinute);
+            }
+            dismiss();
+        });
+    }
+
+    private void bindPart(int valueId, int panelId, int chevronId, Runnable onOpen) {
+        View panel = findViewById(panelId);
+        TextView chevron = findViewById(chevronId);
+        View value = findViewById(valueId);
+        value.setClickable(true);
+        value.setOnClickListener(v -> {
+            boolean open = panel.getVisibility() != View.VISIBLE;
+            if (currentPanel != null && currentPanel != panel) {
+                currentPanel.setVisibility(View.GONE);
+                resetChevron(currentPanel);
+            }
+            panel.setVisibility(open ? View.VISIBLE : View.GONE);
+            chevron.setText(open ? "∨" : "›");
+            if (open) {
+                currentPanel = panel;
+                onOpen.run();
+            } else {
+                currentPanel = null;
+            }
+        });
+    }
+
+    private void resetChevron(View panel) {
+        if (panel == null) return;
+        int chevronId;
+        if (panel.getId() == R.id.yearPanel) chevronId = R.id.yearChevron;
+        else if (panel.getId() == R.id.monthPanel) chevronId = R.id.monthChevron;
+        else if (panel.getId() == R.id.dayPanel) chevronId = R.id.dayChevron;
+        else if (panel.getId() == R.id.hourPanel) chevronId = R.id.hourChevron;
+        else if (panel.getId() == R.id.minutePanel) chevronId = R.id.minuteChevron;
+        else return;
+        ((TextView) findViewById(chevronId)).setText("›");
+    }
+
+    private void showYearPage() {
+        List<String> years = new ArrayList<>();
+        for (int i = 0; i < 20; i++) years.add(String.valueOf(yearPageBase + i));
+        yearGrid.setAdapter(makeAdapter(years, selYear - yearPageBase));
+        yearGrid.setOnItemClickListener((parent, view, position, id) -> {
+            selYear = yearPageBase + position;
+            refreshRows();
+            refreshSummary();
+            updateYiJi();
+            updateDateGap();
+            // 选中后收起年面板
+            View panel = findViewById(R.id.yearPanel);
+            panel.setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.yearChevron)).setText("›");
+            currentPanel = null;
+        });
+        TextView page = findViewById(R.id.yearPage);
+        if (page != null) page.setText(String.format("%d – %d", yearPageBase, yearPageBase + 19));
+    }
+
+    private void showMonthPage() {
+        List<String> months = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) months.add(String.valueOf(i));
+        monthGrid.setAdapter(makeAdapter(months, selMonth - 1));
+    }
+
+    private void showDayPage() {
+        int max = maxDay(selYear, selMonth);
+        List<String> days = new ArrayList<>();
+        for (int i = 1; i <= max; i++) days.add(String.valueOf(i));
+        dayGrid.setAdapter(makeAdapter(days, selDay - 1));
+        dayGrid.setNumColumns(max > 28 ? 7 : 7);
+        ymTitle.setText(String.format("%d-%02d", selYear, selMonth));
+    }
+
+    private void stepMonth(int delta) {
+        selMonth += delta;
+        if (selMonth < 1) { selMonth = 12; selYear--; }
+        if (selMonth > 12) { selMonth = 1; selYear++; }
+        int max = maxDay(selYear, selMonth);
+        if (selDay > max) selDay = max;
+        showDayPage();
+        refreshRows();
+        refreshSummary();
+        updateYiJi();
+        updateDateGap();
+    }
+
+    private void refreshRows() {
+        setText(R.id.sumYear, String.valueOf(selYear));
+        setText(R.id.sumMonth, String.format("%02d", selMonth));
+        setText(R.id.sumDay, String.format("%02d", selDay));
+        setText(R.id.sumHour, String.format("%02d", selHour));
+        setText(R.id.sumMinute, String.format("%02d", selMinute));
+    }
+
+    private void refreshSummary() {
+        refreshRows();
+    }
+
+    private void setText(int id, String s) {
+        TextView tv = findViewById(id);
+        if (tv != null) tv.setText(s);
+    }
+
+    private ArrayAdapter<String> makeAdapter(List<String> items, int selected) {
+        return new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, items) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setGravity(Gravity.CENTER);
+                tv.setTextSize(16);
+                tv.setTypeface(null, Typeface.BOLD);
+                if (position == selected) {
+                    tv.setTextColor(Color.parseColor("#CCB866"));
+                    tv.setBackgroundResource(R.drawable.card_background);
+                } else {
+                    tv.setTextColor(Color.parseColor("#E8DFC8"));
+                    tv.setBackgroundColor(Color.TRANSPARENT);
+                }
+                return tv;
+            }
+        };
+    }
+
+    private void highlightOnly(GridView grid, int position) {
+        for (int i = 0; i < grid.getChildCount(); i++) {
+            TextView tv = (TextView) grid.getChildAt(i);
+            if (tv == null) continue;
+            if (i == position) {
+                tv.setTextColor(Color.parseColor("#CCB866"));
+                tv.setBackgroundResource(R.drawable.card_background);
+            } else {
+                tv.setTextColor(Color.parseColor("#E8DFC8"));
+                tv.setBackgroundColor(Color.TRANSPARENT);
+            }
+        }
+    }
+
+    private int maxDay(int y, int m) {
+        Calendar c = Calendar.getInstance();
+        c.set(y, m - 1, 1);
+        return c.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     private void updateDateGap() {
         if (tvDateGap == null) return;
         try {
-            int y = getYearValue();
-            int m = monthPicker.getValue();
-            int d = dayPicker.getValue();
-
             Calendar now = Calendar.getInstance();
             now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
             now.set(Calendar.MILLISECOND, 0);
 
             Calendar target = Calendar.getInstance();
-            target.set(y, m - 1, d, 0, 0, 0);
+            target.set(selYear, selMonth - 1, selDay, 0, 0, 0);
             target.set(Calendar.MILLISECOND, 0);
 
             long diffDays = (target.getTimeInMillis() - now.getTimeInMillis()) / (1000L * 60 * 60 * 24);
@@ -95,18 +322,16 @@ public class CustomDateTimePickerDialog extends Dialog {
             boolean future = diffDays > 0;
             int sign = future ? 1 : -1;
 
-            int yDiff = y - now.get(Calendar.YEAR);
-            int mDiff = m - (now.get(Calendar.MONTH) + 1);
-            int dDiff = d - now.get(Calendar.DAY_OF_MONTH);
+            int yDiff = selYear - now.get(Calendar.YEAR);
+            int mDiff = selMonth - (now.get(Calendar.MONTH) + 1);
+            int dDiff = selDay - now.get(Calendar.DAY_OF_MONTH);
 
-            // 日借位
             if (dDiff * sign < 0) {
                 mDiff -= sign;
                 Calendar prev = (Calendar) target.clone();
                 prev.add(Calendar.DATE, -sign);
                 dDiff += sign * prev.getActualMaximum(Calendar.DAY_OF_MONTH);
             }
-            // 月借位
             if (mDiff * sign < 0) {
                 yDiff -= sign;
                 mDiff += sign * 12;
@@ -122,184 +347,10 @@ public class CustomDateTimePickerDialog extends Dialog {
     private void updateYiJi() {
         if (tvYiJi == null) return;
         try {
-            int year = getYearValue();
-            int month = monthPicker.getValue();
-            int day = dayPicker.getValue();
-            String html = DestinyCalculator.getDailyYiJi(year, month, day);
+            String html = DestinyCalculator.getDailyYiJi(selYear, selMonth, selDay);
             tvYiJi.setText(Html.fromHtml(html));
         } catch (Exception e) {
             tvYiJi.setText("宜忌加载中...");
         }
-    }
-
-    private void initPickers(Calendar calendar) {
-        yearEdit = findViewById(R.id.yearEdit);
-        yearMinus = findViewById(R.id.yearMinus);
-        yearPlus = findViewById(R.id.yearPlus);
-        monthPicker = findViewById(R.id.monthPicker);
-        dayPicker = findViewById(R.id.dayPicker);
-        hourPicker = findViewById(R.id.hourPicker);
-        minutePicker = findViewById(R.id.minutePicker);
-
-        int currentYear = calendar.get(Calendar.YEAR);
-
-        // Year: 可点击输入 + 加减按钮，避免滚轮滚动上百年的麻烦
-        yearEdit.setText(String.valueOf(currentYear));
-        yearMinus.setOnClickListener(v -> adjustYear(-1));
-        yearPlus.setOnClickListener(v -> adjustYear(1));
-        yearEdit.setOnEditorActionListener((v, actionId, event) -> {
-            syncYearFromInput();
-            yearEdit.clearFocus();
-            return true;
-        });
-        yearEdit.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) syncYearFromInput();
-        });
-        yearEdit.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int st, int b, int c) {}
-            @Override public void onTextChanged(CharSequence s, int st, int b, int c) {
-                updateDateGap();
-            }
-            @Override public void afterTextChanged(android.text.Editable s) {}
-        });
-
-        // Month: 1-12，显示为 "01月" 格式
-        monthPicker.setMinValue(1);
-        monthPicker.setMaxValue(12);
-        monthPicker.setValue(calendar.get(Calendar.MONTH) + 1);
-        monthPicker.setFormatter(i -> String.format("%02d月", i));
-
-        // Day: 1-31 (will update based on month)，显示为 "01日" 格式
-        updateDayRange();
-        dayPicker.setValue(calendar.get(Calendar.DAY_OF_MONTH));
-        dayPicker.setFormatter(i -> String.format("%02d日", i));
-
-        // Hour: 0-23，显示为 "00时" 格式
-        hourPicker.setMinValue(0);
-        hourPicker.setMaxValue(23);
-        hourPicker.setValue(calendar.get(Calendar.HOUR_OF_DAY));
-        hourPicker.setFormatter(i -> String.format("%02d时", i));
-
-        // Minute: 0-59，显示为 "00分" 格式
-        minutePicker.setMinValue(0);
-        minutePicker.setMaxValue(59);
-        minutePicker.setValue(calendar.get(Calendar.MINUTE));
-        minutePicker.setFormatter(i -> String.format("%02d分", i));
-
-        // Update day when month changes
-        NumberPicker.OnValueChangeListener dayUpdater = (picker, oldVal, newVal) -> updateDayRange();
-        monthPicker.setOnValueChangedListener(dayUpdater);
-
-        // Style the pickers
-        styleNumberPicker(monthPicker);
-        styleNumberPicker(dayPicker);
-        styleNumberPicker(hourPicker);
-        styleNumberPicker(minutePicker);
-    }
-
-    private int getYearValue() {
-        try {
-            String s = yearEdit.getText().toString().trim();
-            if (s.isEmpty()) return Calendar.getInstance().get(Calendar.YEAR);
-            return Integer.parseInt(s);
-        } catch (Exception e) {
-            return Calendar.getInstance().get(Calendar.YEAR);
-        }
-    }
-
-    private void syncYearFromInput() {
-        int y = getYearValue();
-        yearEdit.setText(String.valueOf(y));
-        updateDayRange();
-    }
-
-    private void adjustYear(int delta) {
-        int y = getYearValue() + delta;
-        yearEdit.setText(String.valueOf(y));
-        updateDayRange();
-    }
-
-    private void updateDayRange() {
-        int year = getYearValue();
-        int month = monthPicker.getValue();
-        int maxDay = getMaxDayOfMonth(year, month);
-        dayPicker.setMinValue(1);
-        dayPicker.setMaxValue(maxDay);
-        if (dayPicker.getValue() > maxDay) {
-            dayPicker.setValue(maxDay);
-        }
-    }
-
-    private int getMaxDayOfMonth(int year, int month) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month - 1, 1);
-        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }
-
-    private void styleNumberPicker(NumberPicker picker) {
-        // Disable manual keyboard input - scroll only
-        picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-
-        // 设置分割线颜色为半透明金色
-        try {
-            java.lang.reflect.Field[] fields = picker.getClass().getDeclaredFields();
-            for (java.lang.reflect.Field field : fields) {
-                if (field.getName().equals("mSelectionDivider")) {
-                    field.setAccessible(true);
-                    java.lang.reflect.Field colorField = java.lang.reflect.Field.class.getDeclaredField("accessFlags");
-                    colorField.setAccessible(true);
-                    colorField.setInt(field, field.getModifiers() & ~java.lang.reflect.Modifier.FINAL);
-                    field.set(picker, null);
-                }
-                if (field.getName().equals("mSelectionDividerHeight")) {
-                    field.setAccessible(true);
-                    field.set(picker, 2);
-                }
-            }
-        } catch (Exception ignored) {}
-
-        // 设置滚轮文字颜色为金色、放大
-        try {
-            java.lang.reflect.Field paintField = picker.getClass().getDeclaredField("mSelectorWheelPaint");
-            paintField.setAccessible(true);
-            android.text.TextPaint paint = (android.text.TextPaint) paintField.get(picker);
-            paint.setColor(Color.parseColor("#CCB866"));
-            paint.setTextSize(42f);
-            paint.setAntiAlias(true);
-            paint.setFakeBoldText(true);
-            picker.invalidate();
-        } catch (Exception ignored) {}
-
-        // 也尝试设置内部 EditText 的文字颜色
-        try {
-            int childCount = picker.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                android.view.View child = picker.getChildAt(i);
-                if (child instanceof android.widget.EditText) {
-                    android.widget.EditText editText = (android.widget.EditText) child;
-                    editText.setTextColor(Color.parseColor("#CCB866"));
-                    editText.setTextSize(24f);
-                }
-            }
-        } catch (Exception ignored) {}
-    }
-
-    private void setupButtons() {
-        cancelButton = findViewById(R.id.cancelButton);
-        confirmButton = findViewById(R.id.confirmButton);
-
-        cancelButton.setOnClickListener(v -> dismiss());
-        confirmButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDateTimeSet(
-                    getYearValue(),
-                    monthPicker.getValue(),
-                    dayPicker.getValue(),
-                    hourPicker.getValue(),
-                    minutePicker.getValue()
-                );
-            }
-            dismiss();
-        });
     }
 }

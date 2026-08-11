@@ -20,6 +20,8 @@
     <color name="gold_faint">#FFD6BE86</color>
     <color name="gold_dark">#FFC99A3E</color>
     <color name="gold_transparent">#40E6C46A</color>
+    <!-- 时间数字淡金色 -->
+    <color name="time_gold">#E8D9A8</color>
 
     <!-- 文字：提升对比与协调 -->
     <color name="text_primary">#FFAEDDEF</color>
