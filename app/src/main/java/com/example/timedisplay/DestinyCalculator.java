@@ -235,13 +235,13 @@ public class DestinyCalculator {
         int balance = shengCount + biCount - keCount;
         if (balance > 0) {
             sb.append("<font color='#3FA34D'><b>日主身强</b></font>（生扶").append(shengCount).append("+比和").append(biCount).append("&gt;克制").append(keCount).append("）<br/>");
-            sb.append("<font color='#7C8C9C'>解释：日主").append(dayGan).append("在命局中得到较多生扶和同类相助，气势旺盛、精力充沛，有较强的自我驱动力和抗压能力。</font><br/><br/>");
+            sb.append("<font color='#7C8C9C'>解：生扶同类多，气势旺、精力足，抗压自强。</font><br/><br/>");
         } else if (balance < 0) {
             sb.append("<font color='#E0593B'><b>日主身弱</b></font>（克制").append(keCount).append("&gt;生扶").append(shengCount).append("+比和").append(biCount).append("）<br/>");
-            sb.append("<font color='#7C8C9C'>解释：日主").append(dayGan).append("在命局中受到的克制和泄耗较多，气势偏弱，需要借助外界力量支持，更适合团队合作而非单打独斗。</font><br/><br/>");
+            sb.append("<font color='#7C8C9C'>解：克制泄耗多，气势偏弱，宜借外力，合作为宜。</font><br/><br/>");
         } else {
             sb.append("<font color='#D9A441'><b>日主中和</b></font>（生扶").append(shengCount).append("+比和").append(biCount).append("=克制").append(keCount).append("）<br/>");
-            sb.append("<font color='#7C8C9C'>解释：五行力量均衡，是最理想的命局状态，适应能力强，能够根据环境灵活调整策略。</font><br/><br/>");
+            sb.append("<font color='#7C8C9C'>解：五行均衡，最理想，适应强，能随境而调。</font><br/><br/>");
         }
         
         // 5. 五行喜忌
@@ -555,15 +555,15 @@ public class DestinyCalculator {
         keMap.put("土", "水"); keMap.put("金", "木"); keMap.put("水", "火");
         
         if (monthWuXing.equals(dayWuXing)) {
-            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，与日主").append(dayGan).append("比和，运势平稳");
+            sb.append("月令").append(monthZhi).append("属").append(monthWuXing).append("，与日主比和，运平稳");
         } else if (shengMap.get(monthWuXing).equals(dayWuXing)) {
-            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，生扶日主").append(dayGan).append("，运势助力");
+            sb.append("月令").append(monthZhi).append("属").append(monthWuXing).append("，生扶日主，运助力");
         } else if (keMap.get(monthWuXing).equals(dayWuXing)) {
-            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，克制日主").append(dayGan).append("，运势压力");
+            sb.append("月令").append(monthZhi).append("属").append(monthWuXing).append("，克日主，运有压");
         } else if (shengMap.get(dayWuXing).equals(monthWuXing)) {
-            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，被日主").append(dayGan).append("生扶，运势消耗");
+            sb.append("月令").append(monthZhi).append("属").append(monthWuXing).append("，被日主生，运耗散");
         } else {
-            sb.append("当前月令").append(monthZhi).append("属").append(monthWuXing).append("，克制日主").append(dayGan).append("，运势受阻");
+            sb.append("月令").append(monthZhi).append("属").append(monthWuXing).append("，克日主，运受阻");
         }
         
         return sb.toString();
@@ -583,16 +583,16 @@ public class DestinyCalculator {
 
     public static String getGanDescription(String gan) {
         switch (gan) {
-            case "甲": return "阳木·主尊贵权威";
-            case "乙": return "阴木·主柔顺仁慈";
-            case "丙": return "阳火·主光明热情";
-            case "丁": return "阴火·主文明细致";
-            case "戊": return "阳土·主稳重诚信";
-            case "己": return "阴土·主包容厚德";
-            case "庚": return "阳金·主果断刚毅";
-            case "辛": return "阴金·主精致细腻";
-            case "壬": return "阳水·主智慧流动";
-            case "癸": return "阴水·主聪明神秘";
+            case "甲": return "阳木·尊贵权威";
+            case "乙": return "阴木·柔顺仁慈";
+            case "丙": return "阳火·光明热情";
+            case "丁": return "阴火·文明细致";
+            case "戊": return "阳土·稳重诚信";
+            case "己": return "阴土·包容厚德";
+            case "庚": return "阳金·果断刚毅";
+            case "辛": return "阴金·精致细腻";
+            case "壬": return "阳水·智慧流动";
+            case "癸": return "阴水·聪明神秘";
             default: return gan + "·未知";
         }
     }
@@ -609,18 +609,18 @@ public class DestinyCalculator {
         }
         
         switch (zhi) {
-            case "子": return "鼠·水·北方·主智慧藏蓄";
-            case "丑": return "牛·土·东北·主积蓄稳重";
-            case "寅": return "虎·木·东北·主生发进取";
-            case "卯": return "兔·木·东方·主生长繁荣";
-            case "辰": return "龙·土·东南·主变化升腾";
-            case "巳": return "蛇·火·东南·主温暖礼仪";
-            case "午": return "马·火·南方·主旺盛显达";
-            case "未": return "羊·土·西南·主收藏终结";
-            case "申": return "猴·金·西南·主肃杀变革";
-            case "酉": return "鸡·金·西方·主收敛收获";
-            case "戌": return "狗·土·西北·主收藏防备";
-            case "亥": return "猪·水·西北·主流动变化";
+            case "子": return "鼠·水·北·智藏";
+            case "丑": return "牛·土·东北·稳蓄";
+            case "寅": return "虎·木·东北·生发";
+            case "卯": return "兔·木·东·繁茂";
+            case "辰": return "龙·土·东南·变升";
+            case "巳": return "蛇·火·东南·温礼";
+            case "午": return "马·火·南·显达";
+            case "未": return "羊·土·西南·收藏";
+            case "申": return "猴·金·西南·肃变";
+            case "酉": return "鸡·金·西·收敛";
+            case "戌": return "狗·土·西北·防备";
+            case "亥": return "猪·水·西北·流动";
             default: return zhi + "·未知";
         }
     }
@@ -661,25 +661,25 @@ public class DestinyCalculator {
     public static String getRiGanDetailedAnalysis(String gan) {
         switch (gan) {
             case "甲":
-                return "甲木日主，仁厚刚直，有雄才之量，具开创之风。利东方，宜司牧、将帅、林麓之业。";
+                return "甲木日主，仁厚刚直，有雄才，具开创。利东方，宜将帅、林麓。";
             case "乙":
-                return "乙木日主，温润善变，多艺而敏，具风雅之姿。利东方，宜文翰、庠序、容饰之业。";
+                return "乙木日主，温润善变，多艺而敏，具风雅。利东方，宜文翰、容饰。";
             case "丙":
-                return "丙火日主，热情朗曜，有领袖之威，声名易彰。利南方，宜文教、薪传、庖厨之业。";
+                return "丙火日主，热情朗曜，有领袖威，声名易彰。利南方，宜文教、薪传。";
             case "丁":
-                return "丁火日主，细密善思，怀锦心之慧，才藻内蕴。利南方，宜机巧、文翰、服御之业。";
+                return "丁火日主，细密善思，怀锦心慧，才藻内蕴。利南方，宜机巧、文翰。";
             case "戊":
-                return "戊土日主，敦厚诚信，能容载万物，足可托付。利中央，宜版筑、田庐、仓廪之业。";
+                return "戊土日主，敦厚诚信，能容万物，足可托。利中央，宜田庐、仓廪。";
             case "己":
-                return "己土日主，宽和乐施，有含弘之德，善育群生。利中央，宜农桑、医济、慈惠之业。";
+                return "己土日主，宽和乐施，有含弘德，善育群生。利中央，宜农桑、慈惠。";
             case "庚":
-                return "庚金日主，果毅刚断，持正义之衡，临难不苟。利西方，宜泉布、戎政、百工之业。";
+                return "庚金日主，果毅刚断，持正义衡，临难不苟。利西方，宜戎政、百工。";
             case "辛":
-                return "辛金日主，清雅好修，尚精微之美，品藻自高。利西方，宜珠玉、丹青、匠作之业。";
+                return "辛金日主，清雅好修，尚精微美，品藻自高。利西方，宜珠玉、匠作。";
             case "壬":
-                return "壬水日主，睿智通变，有江湖之量，善贾而知时。利北方，宜懋迁、舟楫、漕运之业。";
+                return "壬水日主，睿智通变，有江湖量，善贾知时。利北方，宜舟楫、漕运。";
             case "癸":
-                return "癸水日主，幽微多智，具玄览之明，深识隐机。利北方，宜稽古、运筹、秘计之业。";
+                return "癸水日主，幽微多智，具玄览明，深识隐机。利北方，宜稽古、运筹。";
             default:
                 return "日干者，命主之身也，主性情材器所禀。";
         }
@@ -773,18 +773,18 @@ public class DestinyCalculator {
         }
         
         switch (zhi) {
-            case "子": return "鼠·水·北方。主智慧藏蓄，聪明伶俐。子水为阳水，象征万物之始源，具有开创之力。子时生人思维敏捷，善于谋划。";
-            case "丑": return "牛·土·东北。主积蓄稳重，勤劳踏实。丑土为阴土，为金库，主财库积聚。丑时生人性格稳重，值得信赖。";
-            case "寅": return "虎·木·东北。主生发进取，勇猛果敢。寅木为阳木，主万物生发，具有开创之力。寅时生人性格积极向上，勇于挑战。";
-            case "卯": return "兔·木·东方。主生长繁荣，温和善良。卯木为阴木，主万物生长，生机勃勃。卯时生人性格温和，多才多艺。";
-            case "辰": return "龙·土·东南。主变化升腾，神秘威严。辰土为阳土，为水库，主智慧谋略。辰时生人性格聪明，善于变通。";
-            case "巳": return "蛇·火·东南。主温暖礼仪，神秘睿智。巳火为阴火，主文化教育。巳时生人性格文雅，富有才华。";
-            case "午": return "马·火·南方。主旺盛显达，热情奔放。午火为阳火，主阳气最盛，事业辉煌。午时生人性格积极进取，事业心强。";
-            case "未": return "羊·土·西南。主收藏终结，温顺善良。未土为阴土，主收获成果。未时生人性格温和，善于包容。";
-            case "申": return "猴·金·西南。主肃杀变革，聪明机智。申金为阳金，主决断行动。申时生人性格聪明，反应敏捷。";
-            case "酉": return "鸡·金·西方。主收敛收获，勤劳守信。酉金为阴金，主财富积累。酉时生人性格精明，善于理财。";
-            case "戌": return "狗·土·西北。主收藏防备，忠诚可靠。戌土为阳土，主守护家园。戌时生人性格忠诚，责任感强。";
-            case "亥": return "猪·水·西北。主流动变化，憨厚朴实。亥水为阴水，主智慧思辨。亥时生人性格聪明，思维敏捷。";
+            case "子": return "鼠·水·北。智藏聪敏，善谋。";
+            case "丑": return "牛·土·东北。稳重勤劳，财库积。";
+            case "寅": return "虎·木·东北。生发进取，敢挑战。";
+            case "卯": return "兔·木·东。温和善良，多才艺。";
+            case "辰": return "龙·土·东南。变化升腾，智谋深。";
+            case "巳": return "蛇·火·东南。温文睿智，富才华。";
+            case "午": return "马·火·南。显达热情，事业强。";
+            case "未": return "羊·土·西南。温顺包容，善收获。";
+            case "申": return "猴·金·西南。聪明机变，决断行。";
+            case "酉": return "鸡·金·西。精明守信，善理财。";
+            case "戌": return "狗·土·西北。忠诚可靠，守护家。";
+            case "亥": return "猪·水·西北。憨厚朴实，智慧深。";
             default: return zhi + "·未知地支";
         }
     }
@@ -794,18 +794,18 @@ public class DestinyCalculator {
         String zhiWuXing = getWuXing(zhi);
         
         StringBuilder sb = new StringBuilder();
-        sb.append("年柱代表祖上、家庭背景、早年运势。");
+        sb.append("年柱主祖上、早年。");
         
         if (ganWuXing.equals(zhiWuXing)) {
-            sb.append(" 年柱比和，祖上根基稳固，家庭和睦。");
+            sb.append("比和，根基稳，家和。");
         } else if (isSheng(zhiWuXing, ganWuXing)) {
-            sb.append(" 年支生年干，祖上福荫深厚，得长辈相助。");
+            sb.append("支生干，祖荫厚，得长辈助。");
         } else if (isSheng(ganWuXing, zhiWuXing)) {
-            sb.append(" 年干生年支，自身奋发向上，光耀门楣。");
+            sb.append("干生支，自发奋，光门楣。");
         } else if (isKe(zhiWuXing, ganWuXing)) {
-            sb.append(" 年支克年干，早年压力较大，需靠自己努力。");
+            sb.append("支克干，早年压，靠己力。");
         } else if (isKe(ganWuXing, zhiWuXing)) {
-            sb.append(" 年干克年支，自身能力强，可驾驭环境。");
+            sb.append("干克支，能力强，可驭境。");
         }
         
         return sb.toString();
@@ -816,18 +816,18 @@ public class DestinyCalculator {
         String zhiWuXing = getWuXing(zhi);
         
         StringBuilder sb = new StringBuilder();
-        sb.append("月柱代表事业、学业、中年运势。");
+        sb.append("月柱主事业、中年。");
         
         if (ganWuXing.equals(zhiWuXing)) {
-            sb.append(" 月柱比和，事业稳定，学业有成。");
+            sb.append("比和，事业稳，学业成。");
         } else if (isSheng(zhiWuXing, ganWuXing)) {
-            sb.append(" 月支生月干，事业得助，贵人扶持。");
+            sb.append("支生干，事业得助，贵扶。");
         } else if (isSheng(ganWuXing, zhiWuXing)) {
-            sb.append(" 月干生月支，乐于助人，人脉广。");
+            sb.append("干生支，乐助人，人脉广。");
         } else if (isKe(zhiWuXing, ganWuXing)) {
-            sb.append(" 月支克月干，事业压力大，竞争激烈。");
+            sb.append("支克干，业压大，竞争烈。");
         } else if (isKe(ganWuXing, zhiWuXing)) {
-            sb.append(" 月干克月支，能力出众，可克服困难。");
+            sb.append("干克支，能力出，克难关。");
         }
         
         return sb.toString();
@@ -838,18 +838,18 @@ public class DestinyCalculator {
         String zhiWuXing = getWuXing(zhi);
         
         StringBuilder sb = new StringBuilder();
-        sb.append("日柱代表自身、性格、婚姻家庭。");
+        sb.append("日柱主自身、婚姻。");
         
         if (ganWuXing.equals(zhiWuXing)) {
-            sb.append(" 日柱比和，性格坚韧，夫妻和睦。");
+            sb.append("比和，性坚韧，夫妻睦。");
         } else if (isSheng(zhiWuXing, ganWuXing)) {
-            sb.append(" 日支生日干，得配偶相助，家庭幸福。");
+            sb.append("支生日干，得配偶助，家和。");
         } else if (isSheng(ganWuXing, zhiWuXing)) {
-            sb.append(" 日干生日支，关爱家人，付出较多。");
+            sb.append("干生日支，关爱家，付较多。");
         } else if (isKe(zhiWuXing, ganWuXing)) {
-            sb.append(" 日支克日干，配偶强势，需相互包容。");
+            sb.append("支克日干，配偶强，需相涵。");
         } else if (isKe(ganWuXing, zhiWuXing)) {
-            sb.append(" 日干克日支，自身主导，掌控家庭。");
+            sb.append("干克日支，己主导，掌家庭。");
         }
         
         return sb.toString();
@@ -860,16 +860,16 @@ public class DestinyCalculator {
         String zhiWuXing = getWuXing(zhi);
         
         StringBuilder sb = new StringBuilder();
-        sb.append("时柱代表晚年运势、子女、部属。");
+        sb.append("时柱主晚年、子女。");
         
         if (ganWuXing.equals(zhiWuXing)) {
-            sb.append(" 时柱比和，晚年安逸，子女孝顺。");
+            sb.append("比和，晚安逸，子女孝。");
         } else if (isSheng(zhiWuXing, ganWuXing)) {
-            sb.append(" 时支生时干，子女得力，晚年享清福。");
+            sb.append("支生时干，子女得力，晚清福。");
         } else if (isSheng(ganWuXing, zhiWuXing)) {
-            sb.append(" 时干生时支，关爱子女，付出心血。");
+            sb.append("干生时支，关爱子，付心血。");
         } else if (isKe(zhiWuXing, ganWuXing)) {
-            sb.append(" 时支克时干，晚年操心，子女叛逆。");
+            sb.append("支克时干，晚年忧，子女逆。");
         } else if (isKe(ganWuXing, zhiWuXing)) {
             sb.append(" 时干克时支，管教严格，子女成才。");
         }
@@ -1466,67 +1466,67 @@ public class DestinyCalculator {
         // 格局解释
         switch (patternShen) {
             case "正官":
-                sb.append("正官格主贵气名声、重纪律。宜守法从政或入职大型机构，官星有力则仕途亨通。");
+                sb.append("正官格主贵气重纪。宜从政入职，官星有力则仕亨。");
                 if (isStrong && containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "正印"))
-                    sb.append("命带<font color='#3FA34D'><b>官印相生</b></font>，贵格也，德才兼备。");
-                if (isWeak) sb.append("身弱官旺则压力较大，需印星化解。");
+                    sb.append("命带<font color='#3FA34D'><b>官印相生</b></font>，贵格，德才兼备。");
+                if (isWeak) sb.append("身弱官旺，压力稍大，需印化解。");
                 break;
             case "七杀":
-                sb.append("七杀格主权威果断、善执行。宜军警管理创业；杀有制则化权，无制多波折。");
+                sb.append("七杀格主威权善行。宜军警管理；杀有制则化权。");
                 if (containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "食神"))
-                    sb.append("命带<font color='#3FA34D'><b>食神制杀</b></font>，以智勇取胜，成就非凡。");
-                if (isWeak) sb.append("身弱遇杀则挑战重重，需印化杀或食制杀。");
+                    sb.append("命带<font color='#3FA34D'><b>食神制杀</b></font>，智勇取胜，成就非凡。");
+                if (isWeak) sb.append("身弱遇杀，挑战重重，需印化或食制。");
                 break;
             case "正财":
-                sb.append("正财格主稳定财源、勤劳致富。宜金融、财务、实业经营，守正出奇则财运亨通。");
-                if (isStrong) sb.append("身强能担财，财富积累可期。");
-                if (isWeak) sb.append("身弱财旺反为财累，需谨慎理财。");
+                sb.append("正财格主稳财勤富。宜金融实业，守正出奇则财亨。");
+                if (isStrong) sb.append("身强能担财，积累可期。");
+                if (isWeak) sb.append("身弱财旺反为累，宜慎理财。");
                 break;
             case "偏财":
-                sb.append("偏财格主意外之财、善投资。商业嗅觉灵敏，宜经商投资贸易，然需防冒进。");
-                if (isStrong) sb.append("身强善用偏财，有富翁潜质，但要见好就收。");
-                if (isWeak) sb.append("身弱不宜投机，应以稳健为主，见财莫贪。");
+                sb.append("偏财格主意外财、善投。宜经商贸易，防冒进。");
+                if (isStrong) sb.append("身强善用偏财，有富翁质，见好收。");
+                if (isWeak) sb.append("身弱不宜投机，宜稳健，见财莫贪。");
                 break;
             case "正印":
-                sb.append("正印格主学识、贵人、仁慈。宜教育、文化、学术研究，印星有力则学问深厚。");
-                if (isStrong) sb.append("印旺身强则学问广博，有师者风范。");
-                if (isWeak) sb.append("印绶护身，贵人运佳，读书进学是最佳途径。");
+                sb.append("正印格主学识贵仁。宜教育学术，印有力则学深。");
+                if (isStrong) sb.append("印旺身强，学问广博，有师范。");
+                if (isWeak) sb.append("印绶护身，贵运佳，进学为径。");
                 break;
             case "偏印":
-                sb.append("偏印格主特殊才能、偏门学问。思维独特，宜科研、玄学、技术专精，不走寻常路。");
+                sb.append("偏印格主特才偏学。思维独，宜科研技术，不走常路。");
                 if (containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "食神"))
-                    sb.append("有<font color='#E0593B'>枭神夺食</font>之象，需注意心胸开阔，避免孤僻。");
+                    sb.append("有<font color='#E0593B'>枭神夺食</font>之象，宜开阔，避孤僻。");
                 break;
             case "食神":
-                sb.append("食神格主才华福气、尚享乐。多才多艺，宜艺术餐饮文创；心态乐观，福泽深厚。");
-                if (isStrong) sb.append("食神泄秀，才华横溢，是天然的艺术家。");
-                if (isWeak) sb.append("食神泄身太过则精力不足，需节制享乐。");
+                sb.append("食神格主才华福乐。多艺，宜艺术文创；心乐观，福厚。");
+                if (isStrong) sb.append("食神泄秀，才华横溢，天然艺者。");
+                if (isWeak) sb.append("食神泄身过，精力不足，节育乐。");
                 break;
             case "伤官":
-                sb.append("伤官格主聪明不羁、善创造。才华外露，宜创新行业，然锋芒易招是非。");
+                sb.append("伤官格主聪敏善创。才外露，宜创新，锋易招非。");
                 if (containsTenGod(new String[]{yearGan, monthGan, timeGan}, dayGan, "正印"))
-                    sb.append("命带<font color='#3FA34D'><b>伤官佩印</b></font>，才华与智慧并存，极为优秀。");
-                if (isWeak) sb.append("伤官泄身过重，需养精蓄锐，莫贪多求快。");
+                    sb.append("命带<font color='#3FA34D'><b>伤官佩印</b></font>，才慧并存，极为优。");
+                if (isWeak) sb.append("伤官泄身重，宜养精，莫贪快。");
                 break;
             case "比肩": case "劫财":
-                sb.append("建禄格主自强独立、重实干。靠自身打拼，宜自主创业或技术专精。");
-                if (isStrong) sb.append("比劫林立，竞争意识强，适合需要拼搏的领域。防刚愎自用。");
-                if (isWeak) sb.append("得月令之助，弱中转旺，合作共赢是最佳策略。");
+                sb.append("建禄格主自强重干。靠身打拼，宜创业专精。");
+                if (isStrong) sb.append("比劫林立，竞意强，适拼搏，防刚愎。");
+                if (isWeak) sb.append("得月令助，弱中转旺，合作乃策。");
                 break;
             default:
-                sb.append("格局清正，气场平和，宜顺势而为，发挥自身特长。");
+                sb.append("格局清正，气平和，宜顺势，展所长。");
         }
 
         // 是否破格提示
         sb.append("<br/><font color='#7C8C9C'>格局评语：</font>");
         if (isStrong && (patternShen.equals("正官") || patternShen.equals("七杀")))
-            sb.append("身强官杀旺，威权在手之象，格局有力。");
+            sb.append("身强官杀旺，威权在手，格局有力。");
         else if (isWeak && (patternShen.equals("正印") || patternShen.equals("偏印")))
-            sb.append("印绶护身，弱中有靠，格局有情可原。");
+            sb.append("印绶护身，弱中有靠，格局有情。");
         else if (isStrong && (patternShen.equals("食神") || patternShen.equals("伤官")))
             sb.append("身强食伤泄秀，才华得展，格局流通。");
         else
-            sb.append("格局自成体系，顺其自然即可发挥最大优势。");
+            sb.append("格局自成体系，顺其自然乃佳。");
 
         sb.append("<br/><br/>").append(getYongShenHint(getWuXing(dayGan), monthZhi, isStrong, isWeak));
         return sb.toString();
@@ -1682,7 +1682,7 @@ public class DestinyCalculator {
         }
 
         if (!hasRel) {
-            sb.append("<font color='#7C8C9C'>四支之间无明显的合冲刑害关系，气场独立平和。各柱各有轨迹，互不干扰，反而利于独立发展。</font>");
+            sb.append("<font color='#7C8C9C'>四支无合冲刑害，气场平和独立，各柱有序，利独进。</font>");
         }
 
         sb.append("<br/><font color='#7C8C9C'><i>※ 合则融洽助力，冲则动荡变化，刑则纠结烦恼。知晓关系，便能趋吉避凶</i></font>");
@@ -1761,10 +1761,10 @@ public class DestinyCalculator {
                 sb.append("<font color='#3FA34D'>四柱地支均未落空亡</font>，命局根基稳固，六亲缘分正常。<br/>");
             }
 
-            sb.append("<br/><font color='#7C8C9C'>空亡之解：</font>空亡并非坏事，表示该方面较为淡薄或独特。");
+            sb.append("<br/><font color='#7C8C9C'>空亡之解：</font>空亡非凶，表示该方淡薄或独特。");
             sb.append("落空亡之柱若逢填实（大运流年遇之）则可应事，平时以平常心待之即可。");
         } else {
-            sb.append("空亡推算需结合日柱与旬首，建议参考专业命理师判断。");
+            sb.append("空亡推算需合日柱旬首，建议参专业命理师。");
         }
 
         return sb.toString();
@@ -1995,7 +1995,7 @@ public class DestinyCalculator {
                 isStrong = false; // dummy
                 break;
             case "火":
-                sb.append("宜：传媒、演艺、餐饮、能源、互联网、美业、公关<br/>");
+                sb.append("宜：传媒、演艺、餐饮、能源、互网、美业、公关<br/>");
                 break;
             case "土":
                 sb.append("宜：建筑、地产、金融、仓储、农业、顾问、行政<br/>");
@@ -2008,11 +2008,11 @@ public class DestinyCalculator {
                 break;
         }
         if (isStrong) {
-            sb.append("<font color='#3FA34D'>宜创业或秉钧之任</font>，能独任一面，宜择有为之基。");
+            sb.append("<font color='#3FA34D'>宜创业或秉钧</font>，能独任一面。");
         } else if (isWeak) {
-            sb.append("<font color='#3E87C2'>宜专业或协作之职</font>，以一技之长取胜，良队胜良台。");
+            sb.append("<font color='#3E87C2'>宜专业或协作</font>，以技取胜。");
         } else {
-            sb.append("<font color='#D9A441'>仕途之宜广</font>，创与就俱可，要在择其所好。");
+            sb.append("<font color='#D9A441'>创就俱可</font>，在择所好。");
         }
         return sb.toString();
     }
@@ -2025,29 +2025,29 @@ public class DestinyCalculator {
         sb.append("<font color='#7C8C9C'>理财建议：</font><br/>");
         switch (wuXing) {
             case "木":
-                sb.append("理财之方：尚经略，重远势，不贪速获。<br/>");
-                if (isStrong) sb.append("宜：股权、生植之业、教化之投。");
-                else sb.append("宜：定投、储保、稳收之财。");
+                sb.append("理财：尚经略重远势，不贪速。<br/>");
+                if (isStrong) sb.append("宜：股权、生植、教投。");
+                else sb.append("宜：定投、储保、稳收。");
                 break;
             case "火":
-                sb.append("理财之方：任直觉，乘时而下注。<br/>");
-                if (isStrong) sb.append("宜：短线、新兴之业、品牌之盟。");
-                else sb.append("宜：分买毋追高，设止损之限。");
+                sb.append("理财：任直觉，乘时下注。<br/>");
+                if (isStrong) sb.append("宜：短线、新兴、品牌盟。");
+                else sb.append("宜：分买勿追高，设止损。");
                 break;
             case "土":
-                sb.append("理财之方：持重守成，好实产，不信浮利。<br/>");
+                sb.append("理财：持重守成，好实产。<br/>");
                 if (isStrong) sb.append("宜：田宅、黄白、长债、实业。");
-                else sb.append("宜：定储、逆回、固收之属。");
+                else sb.append("宜：定储、逆回、固收。");
                 break;
             case "金":
-                sb.append("理财之方：精于综理，风控为先。<br/>");
-                if (isStrong) sb.append("宜：衍生、量策、金类之业。");
-                else sb.append("宜：分散、货基、短期之财。");
+                sb.append("理财：精综理，风控先。<br/>");
+                if (isStrong) sb.append("宜：衍生、量策、金类。");
+                else sb.append("宜：分散、货基、短期。");
                 break;
             case "水":
-                sb.append("理财之方：变通灵敏，善察套利。<br/>");
-                if (isStrong) sb.append("宜：跨海贸、漕运、信息之创。");
-                else sb.append("宜：流动性强之财，务可随时变现。");
+                sb.append("理财：变通灵，善套利。<br/>");
+                if (isStrong) sb.append("宜：跨贸、漕运、信息创。");
+                else sb.append("宜：流动强，可随时变现。");
                 break;
         }
         return sb.toString();
@@ -2077,13 +2077,13 @@ public class DestinyCalculator {
             }
         }
         if (peachList.isEmpty()) {
-            sb.append("命局无子午卯酉四正桃花，情致内敛，桃花虽不显而情实挚。");
+            sb.append("命局无桃花，情致内敛，情实而挚。");
         } else {
             sb.append("命带桃花星：").append(String.join("；", peachList));
-            sb.append("。<br/>桃花较盛，异性缘佳，然当辨良缘与泛桃之异。");
+            sb.append("。<br/>桃花较盛，异性缘佳，当辨良缘与泛桃。");
             // 红鸾天喜简易提示
             String redLuan = getRedLuan(yearZhi);
-            if (!redLuan.isEmpty()) sb.append("<br/>红鸾星在").append(redLuan).append("，主正缘婚期，值之则姻好可成。");
+            if (!redLuan.isEmpty()) sb.append("<br/>红鸾在").append(redLuan).append("，主正缘婚期。");
         }
         return sb.toString();
     }
@@ -2158,7 +2158,7 @@ public class DestinyCalculator {
             }
         }
         if (!anyTransparent) {
-            sb.append("四柱藏干未直透天干，其潜蓄之力，待大运流年引动乃显。");
+            sb.append("四柱藏干未透干，潜蓄之力，待运年引动乃显。");
         }
         return sb.toString();
     }
@@ -2188,7 +2188,7 @@ public class DestinyCalculator {
         else if (isSheng(monthWuXing, wuXing)) sb.append("月令生扶日主，得时得令。");
         else if (isSheng(wuXing, monthWuXing)) sb.append("日主生月令，泄气宜补。");
         else sb.append("月令与日主各有所损益。");
-        sb.append("<br/><font color='#7C8C9C'><small>用神者，调候扶抑之枢也</small></font>");
+        sb.append("<br/><font color='#7C8C9C'><small>用神者，调候扶抑之枢</small></font>");
         return sb.toString();
     }
 
@@ -2231,10 +2231,10 @@ public class DestinyCalculator {
     public static String getHalfCombineAnalysis(String yearZhi, String monthZhi, String dayZhi, String timeZhi) {
         StringBuilder sb = new StringBuilder();
         String[][][] halfHe = {
-            {{"寅","午","寅午半合火局·火气渐旺"}}, {{"午","戌","午戌半合火局·火库待开"}},
-            {{"巳","酉","巳酉半合金局·金气凝练"}}, {{"酉","丑","酉丑半合金局·金库藏锋"}},
-            {{"申","子","申子半合水局·水势初成"}}, {{"子","辰","子辰半合水局·水库待启"}},
-            {{"亥","卯","亥卯半合木局·木气萌发"}}, {{"卯","未","卯未半合木局·木库充盈"}}
+            {{"寅","午","寅午半合火·火气渐旺"}}, {{"午","戌","午戌半合火·火库待开"}},
+            {{"巳","酉","巳酉半合金·金气凝练"}}, {{"酉","丑","酉丑半合金·金库藏锋"}},
+            {{"申","子","申子半合水·水势初成"}}, {{"子","辰","子辰半合水·水库待启"}},
+            {{"亥","卯","亥卯半合木·木气萌发"}}, {{"卯","未","卯未半合木·木库充盈"}}
         };
         String[] zhis = {yearZhi, monthZhi, dayZhi, timeZhi};
         String[] labels = {"年支", "月支", "日支", "时支"};
