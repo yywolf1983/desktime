@@ -1268,7 +1268,7 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getRiShiRelationship(String riGan, String shiGan) {
         if (riGan.equals(shiGan)) {
-            return "比和相助，事易成，主客协调";
+            return "比和相助，事易成，主客协和";
         }
         java.util.Map<String, String> shengMap = new java.util.HashMap<>();
         shengMap.put("木", "火"); shengMap.put("火", "土"); 
@@ -1286,13 +1286,13 @@ public class FullNinePalaceActivity extends Activity {
         
         if (riWuxing != null && shiWuxing != null) {
             if (shengMap.get(riWuxing).equals(shiWuxing)) {
-                return "日生时，我生事，须奋勉方成";
+                return "日生时，我生事，须奋勉乃成";
             }
             if (shengMap.get(shiWuxing).equals(riWuxing)) {
-                return "时生日，事生我，事半功倍易得助";
+                return "时生日，事生我，事半而功倍，易得外助";
             }
         }
-        return "日时比和，气数持平，循常而动";
+        return "日时比和，气数持平，循常以动";
     }
     
     private String getCareerAdvice(String door, String star) {
@@ -1477,7 +1477,7 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     private String getTimeFortune(String timeZhi, String zhiShiDoor, String zhiFuStar) {
-        if (timeZhi == null) return "时辰吉利，宜顺时而为";
+        if (timeZhi == null) return "时辰平吉，宜顺时以动";
         
         String timeInfo = "";
         switch (timeZhi) {
@@ -1638,11 +1638,11 @@ public class FullNinePalaceActivity extends Activity {
         }
 
         if (isLuckyStar && isLuckyDoor) {
-            sb.append("整体运势：大吉（值符值使皆吉），宜乘势进取\n");
+            sb.append("整体运势：大吉（值符值使皆吉），宜乘时进\n");
         } else if (isLuckyStar || isLuckyDoor) {
             sb.append("整体运势：小吉（值符值使一吉），宜稳步而行\n");
         } else {
-            sb.append("整体运势：平平（值符值使欠佳），宜谨慎守成\n");
+            sb.append("整体运势：平平（值符值使欠佳），宜慎守\n");
         }
 
         if (door != null) {
@@ -1664,11 +1664,11 @@ public class FullNinePalaceActivity extends Activity {
     private String getKongWangExplanation(String kongWang) {
         if (kongWang == null || kongWang.equals("--")) return "空亡主事体不实";
         String[] explanations = {
-            "主气虚散，情思浮荡，宜收摄充实",
-            "主金气衰，肺系易病，宜润燥固金",
-            "主火气衰，心系易扰，宜宁心镇火",
+            "主气虚散，情思浮荡，宜收摄",
+            "主金气衰，肺易病，宜润燥固金",
+            "主火气衰，心易扰，宜宁心镇火",
             "主土气衰，脾胃失运，宜培土健中",
-            "主木气衰，肝胆疏泄失司，宜柔肝条达",
+            "主木气衰，肝胆失疏，宜柔肝条达",
             "主水气衰，肾元不藏，宜温肾固本"
         };
         java.util.Map<String, String> map = new java.util.HashMap<>();
@@ -1684,13 +1684,13 @@ public class FullNinePalaceActivity extends Activity {
     private String getMaXingExplanation(String maXing) {
         if (maXing == null || maXing.equals("--")) return "马星主奔波变动";
         java.util.Map<String, String> map = new java.util.HashMap<>();
-        map.put("寅", "主动，利出行东方");
-        map.put("午", "主动，利出行南方");
-        map.put("申", "主动，利出行西方");
-        map.put("亥", "主动，利出行北方");
-        map.put("巳", "主动，利出行东南");
-        map.put("酉", "主动，利出行西北");
-        return map.getOrDefault(maXing, "马星主奔波变动");
+        map.put("寅", "主动，利趋东方");
+        map.put("午", "主动，利趋南方");
+        map.put("申", "主动，利趋西方");
+        map.put("亥", "主动，利趋北方");
+        map.put("巳", "主动，利趋东南");
+        map.put("酉", "主动，利趋西北");
+        return map.getOrDefault(maXing, "马星主动，奔波迁变");
     }
     
     private String getWangCuiDescription(String[] wangCui, int riGanPalace) {

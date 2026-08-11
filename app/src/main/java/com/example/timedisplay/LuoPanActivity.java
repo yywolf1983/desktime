@@ -251,58 +251,58 @@ public class LuoPanActivity extends android.app.Activity {
         String[] beasts = {"青龙", "朱雀", "白虎", "玄武", "青龙", "白虎", "玄武", "青龙"};
         
         String[][] shuiShaJiInfo = {
-            {"青龙高耸，主文昌、贵人，峰秀出文人", "东方木宜挺拔，长子出息"},
-            {"朱雀翔舞，主名声、事业，明堂开阔纳祥瑞", "南方火宜秀丽，中女有为"},
-            {"白虎驯服，主财源、家安，山柔聚财气", "西方金宜低伏，少女有福"},
-            {"玄武厚重，主根基、子孙，山环水绕福寿全", "北方水宜厚实，晚运亨通"},
-            {"巽峰高耸，主文星、贵人，溪流婉转财源广", "东南木宜秀丽，长女聪慧"},
-            {"坤砂端方，主家和、人丁，山圆土厚纳吉祥", "西南土宜平坦，老母康健"},
-            {"乾峰巍峨，主权威、事业，山环水抱财禄聚", "西北金宜雄伟，老父康健"},
-            {"艮砂敦厚，主家安、子孙，靠山稳固基业长", "东北土宜厚实，少男健壮"}
+            {"青龙高耸，主文昌贵人，峰秀出文人", "东方木宜挺拔，长子出息"},
+            {"朱雀翔舞，主名声事业，明堂纳祥", "南方火宜秀丽，中女有为"},
+            {"白虎驯服，主财源家安，山柔聚财", "西方金宜低伏，少女有福"},
+            {"玄武厚重，主根基子孙，山环水绕", "北方水宜厚实，晚运亨通"},
+            {"巽峰高耸，主文星贵人，溪婉财广", "东南木宜秀丽，长女聪慧"},
+            {"坤砂端方，主家和人丁，山圆土厚", "西南土宜平坦，老母康健"},
+            {"乾峰巍峨，主权威事业，山环水抱", "西北金宜雄伟，老父康健"},
+            {"艮砂敦厚，主家安子孙，靠山稳固", "东北土宜厚实，少男健壮"}
         };
         
         String[][] shuiShaXiongInfo = {
-            {"青龙破碎，主官非、家败，尖射损人丁", "东方忌破碎，尖角主官非"},
-            {"朱雀阴暗，主疾病、横祸，尖射血光灾", "南方忌冲射，阴暗主心病"},
-            {"白虎昂头，主争斗、凶灾，高大杀气重", "西方忌高昂，直冲损丁财"},
-            {"玄武空缺，主破财、根摇，水流直泄家业败", "北方忌空缺，低洼主肾病"},
-            {"巽位堵塞，主困顿、病灾，污秽招瘟疫", "东南忌堵塞，文运暗"},
-            {"坤砂陡峭，主灾祸、母殃，势斜根基危", "西南忌陡峭，主脾胃病"},
-            {"乾位低洼，主财散、贵人离，破碎招灾祸", "西北忌低洼，主肺疾"},
-            {"艮砂崩塌，主横祸、丁伤，直冲犯煞重", "东北忌崩塌，主手足疾"}
+            {"青龙破碎，主官非家败，尖射损丁", "东方忌破碎，尖角主官非"},
+            {"朱雀阴暗，主疾病横祸，尖射血光", "南方忌冲射，阴暗主心病"},
+            {"白虎昂头，主争斗凶灾，杀气重", "西方忌高昂，直冲损丁财"},
+            {"玄武空缺，主破财根摇，水泄家败", "北方忌空缺，低洼主肾病"},
+            {"巽位堵塞，主困顿病灾，污秽招疫", "东南忌堵塞，文运暗"},
+            {"坤砂陡峭，主灾祸母殃，势斜根危", "西南忌陡峭，主脾胃病"},
+            {"乾位低洼，主财散贵离，破碎招灾", "西北忌低洼，主肺疾"},
+            {"艮砂崩塌，主横祸丁伤，直冲犯煞", "东北忌崩塌，主手足疾"}
         };
         
         String[][] shuiShaPingInfo = {
-            {"山势平缓，主家道平顺，草木茂盛生机足", "东方木气平和，安稳度日"},
-            {"明堂开阔，主身心安康，阳光柔和无病灾", "南方火气平和，知足常乐"},
-            {"白虎伏卧，主家宅安宁，地势平坦人心定", "西方金气平和，和气生财"},
-            {"玄武平缓，主根基稳健，靠山适中享太平", "北方水气平和，细水长流"},
-            {"巽位舒展，主文运平稳，通风明亮福气来", "东南木气平和，稳步兴旺"},
-            {"坤砂圆润，主福寿安康，地势平坦享天年", "西南土气平和，家和万事兴"},
-            {"乾位平正，主贵人相助，山水平和财运亨", "西北金气平和，稳中有进"},
-            {"艮砂厚实，主家宅稳固，山势平缓无冲煞", "东北土气平和，根深叶茂"}
+            {"山势平缓，主家道平顺，草木茂盛", "东方木气平和，安稳度日"},
+            {"明堂开阔，主身心安康，阳光柔和无灾", "南方火气平和，知足常乐"},
+            {"白虎伏卧，主家宅安宁，地势平坦", "西方金气平和，和气生财"},
+            {"玄武平缓，主根基稳健，靠山适中", "北方水气平和，细水长流"},
+            {"巽位舒展，主文运平稳，通风明亮", "东南木气平和，稳步兴旺"},
+            {"坤砂圆润，主福寿安康，地势平坦", "西南土气平和，家和万事兴"},
+            {"乾位平正，主贵人相助，山水平财亨", "西北金气平和，稳中有进"},
+            {"艮砂厚实，主家宅稳固，山势平缓", "东北土气平和，根深叶茂"}
         };
         
         String[][] layoutJiInfo = {
-            {"宜开正门、设书房、栽花木", "门朝东利学业事业"},
-            {"宜开南门、设客厅、修明堂", "门朝南利名声远播"},
-            {"宜设厨房、建库房、修道路", "西方宜静利财运"},
-            {"宜建水池、设花园、修靠山", "北方有靠利晚年"},
-            {"宜开侧门、设书房、种花木", "巽位文昌利贵人"},
-            {"宜设主卧、建储藏、修平台", "坤位主母利长寿"},
-            {"宜设主位、建书房、修高台", "乾位天贵利官运"},
-            {"宜建大门、设祠堂、修厚墙", "艮位子孙利兴旺"}
+            {"宜开正门、书房、花木", "朝东利学业事业"},
+            {"宜开南门、客厅、明堂", "朝南利名声远播"},
+            {"宜设厨仓、修路", "西宜静利财运"},
+            {"宜水池、花园、靠山", "北有靠利晚年"},
+            {"宜侧门、书房、花木", "巽文昌利贵人"},
+            {"宜主卧、储藏、平台", "坤主母利长寿"},
+            {"宜主位、书房、高台", "乾天贵利官运"},
+            {"宜大门、祠堂、厚墙", "艮子孙利兴旺"}
         };
         
         String[][] layoutXiongInfo = {
-            {"忌开凶门、建厕所、堆杂物", "东方开门长子灾"},
-            {"忌阴暗、建厨房、污水冲", "南方阴暗主心病"},
-            {"忌高物挡、建厕所、喧噪声", "西方挡气主肺病"},
-            {"忌开门泄气、高楼挡、低洼", "北方开门财气泄"},
-            {"忌堵塞、堆杂物、污秽", "巽位堵塞文运暗"},
-            {"忌空旷无靠、建厕所、尖角", "坤位虚空老母病"},
-            {"忌低洼潮湿、建厨房、破碎", "乾位低洼老父病"},
-            {"忌道路直冲、建厕所、崩塌", "艮位冲射少男伤"}
+            {"忌凶门、厕、杂物", "东开门长子灾"},
+            {"忌阴暗、厨、污水", "南阴暗主心病"},
+            {"忌高物挡、厕、喧声", "西挡气主肺病"},
+            {"忌开门泄、楼挡、低洼", "北开门财气泄"},
+            {"忌堵、杂物、污秽", "巽堵塞文运暗"},
+            {"忌空旷无靠、厕、尖角", "坤虚空老母病"},
+            {"忌低洼潮、厨、破碎", "乾低洼老父病"},
+            {"忌道冲、厕、崩塌", "艮冲射少男伤"}
         };
         
         String[][] layoutPingInfo = {
@@ -406,21 +406,21 @@ public class LuoPanActivity extends android.app.Activity {
     private String getZhaoxiangDetail(String bagua, String wuxing, String beast, String jiXiong) {
         switch (bagua) {
             case "震":
-                return "震卦·木·青龙，主长子，主动，利进取";
+                return "震卦·木·青龙，主长男，主动，利进取";
             case "离":
                 return "离卦·火·朱雀，主中女，主明，利文采";
             case "兑":
-                return "兑卦·金·白虎，主少女，主悦，利口才";
+                return "兑卦·金·白虎，主少女，主悦，利辞令";
             case "坎":
-                return "坎卦·水·玄武，主中男，主险，利智慧";
+                return "坎卦·水·玄武，主中男，主险，利智虑";
             case "巽":
                 return "巽卦·木·青龙辅，主长女，主入，利学业贵人";
             case "坤":
-                return "坤卦·土·白虎辅，主老母，主顺，利包容";
+                return "坤卦·土·白虎辅，主老母，主顺，利含弘";
             case "乾":
-                return "乾卦·金·玄武辅，主老父，主健，利权威";
+                return "乾卦·金·玄武辅，主老父，主健，利威权";
             case "艮":
-                return "艮卦·土·青龙辅，主少男，主止，利稳固";
+                return "艮卦·土·青龙辅，主少男，主止，利安固";
             default:
                 return "";
         }
@@ -430,15 +430,15 @@ public class LuoPanActivity extends android.app.Activity {
         String mountainDirection = getMountainDirection(mountain);
         String chaoXiangDirection = getChaoXiangDirection(chaoXiang);
         if (mountainDirection.equals(direction)) {
-            return "坐山" + mountain + "：宜有靠，主根基稳、有贵人";
+            return "坐山" + mountain + "：宜有倚托，主根基固、得贵人";
         } else if (chaoXiangDirection.equals(direction)) {
-            return "朝向" + chaoXiang + "：宜开阔有水，主财运好、前程明";
+            return "朝向" + chaoXiang + "：宜开阔临水，主财源茂、前程朗";
         } else if (relation.equals("为青龙方")) {
-            return "青龙位：宜高耸，主长子兴、贵人来";
+            return "青龙位：宜轩昂，主长男兴、贵人来";
         } else if (relation.equals("为白虎方")) {
             return "白虎位：宜低伏，主少女安、财运稳";
         }
-        return "辅弼位：宜平整，主辅助有力、福禄绵长";
+        return "辅弼位：宜平正，主佐助有方、福禄绵长";
     }
 
     private String getDirectionRelation(String mountain, String chaoXiang, String direction) {
@@ -575,14 +575,14 @@ public class LuoPanActivity extends android.app.Activity {
         String[] bazhaiNames = {"伏位", "生气", "延年", "天医", "祸害", "六煞", "五鬼", "绝命"};
         String[] bazhaiLuck = {"平", "吉", "吉", "吉", "凶", "凶", "凶", "凶"};
         String[] bazhaiMeaning = {
-            "平稳守成，宜静不宜动",
-            "旺丁旺财，生机勃勃",
-            "健康长寿，夫妻和睦",
-            "疾病痊愈，贵人相助",
-            "口舌是非，家宅不安",
-            "桃花纠纷，感情困扰",
-            "官非灾祸，破财伤身",
-            "大凶之位，百事不宜"
+            "平守敦安，宜静不宜动",
+            "丁财俱旺，生气方隆",
+            "康宁攸永，琴瑟和鸣",
+            "疴疾得瘳，贵人相携",
+            "口舌纷然，家室不宁",
+            "桃夭致讼，情好见困",
+            "官灾频仍，破财伤身",
+            "至凶之方，百事俱忌"
         };
         
         StringBuilder sb = new StringBuilder();
@@ -623,7 +623,7 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append("「").append(bagua).append("」宅属<b>").append(group).append("</b>（")
           .append(groupGua).append("），同组卦气相通、游年顺飞而定八方吉凶。<br/><br/>");
         sb.append(BAZHAI_KOUJUE);
-        sb.append("<br/><font color='#D6BE86'>要诀：</font>吉方布卧室厅门，凶方布厕储，趋吉避凶。");
+        sb.append("<br/><font color='#D6BE86'>要诀：</font>吉方布寝堂门户，凶方布溷湢储畜，趋吉而避凶。");
 
         return sb.toString();
     }
@@ -646,15 +646,15 @@ public class LuoPanActivity extends android.app.Activity {
         String[] jiuxingWuxing = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
         String[] jiuxingLuck = {"吉", "凶", "凶", "吉", "凶", "吉", "凶", "吉", "吉"};
         String[] jiuxingMeaning = {
-            "官贵显达，文昌学业",
-            "病符缠身，健康不利",
-            "口舌是非，争斗不和",
-            "文昌智慧，学业有成",
-            "大凶之位，灾祸连连",
-            "财权双收，贵人相助",
+            "官贵显达，文昌利学",
+            "病符缠身，摄生不宜",
+            "口舌纷纭，争竞不和",
+            "文昌启慧，学业有成",
+            "至凶之方，灾眚频仍",
+            "财权并至，贵人相携",
             "盗贼破财，是非口角",
-            "财运亨通，田产丰隆",
-            "喜庆吉祥，婚姻美满"
+            "财源畅茂，田宅丰盈",
+            "喜气骈集，婚好谐睦"
         };
         
         int[] luoShuOrder = {0, 7, 3, 4, 5, 2, 6, 1, 8};
@@ -697,31 +697,31 @@ public class LuoPanActivity extends android.app.Activity {
         // 根据入中星给出本局基调解释
         switch (baguaNumber) {
             case 1:
-                sb.append("一白水入中，主智流通，利学业远行，气场温润，宜进修谋划。");
+                sb.append("一白水入中，智用流通，利修学远行，宜进修谋画。");
                 break;
             case 2:
-                sb.append("二黑土入中，土主病符，气场沉闷易病，护脾胃，宜静养忌动土。");
+                sb.append("二黑土入中，病符沉滞易疴，护脾胃，宜静忌动土。");
                 break;
             case 3:
-                sb.append("三碧木入中，木主争斗，易口舌是非，防小人，忌动怒，宜绿植。");
+                sb.append("三碧木入中，主争竞口舌，防小人，戒怒，宜植青木。");
                 break;
             case 4:
-                sb.append("四绿木入中，木主文昌，利读书创作、签约，宜学宜谈。");
+                sb.append("四绿木入中，主文昌，利读习缔约，宜学宜谈。");
                 break;
             case 5:
-                sb.append("五黄土入中，大凶煞，灾病破财，宜静忌动土，用铜器化解。");
+                sb.append("五黄土入中，至凶，灾病破财，宜静忌动土，铜器化之。");
                 break;
             case 6:
-                sb.append("六白金入中，金主权势，利升职求职，贵人助，宜进取。");
+                sb.append("六白金入中，主权势，利迁擢求职，得贵助，宜进取。");
                 break;
             case 7:
-                sb.append("七赤金入中，金主肃杀，易破财招盗，防小人官非，宜守忌投机。");
+                sb.append("七赤金入中，主肃杀，易破财招盗，防官非，宜守忌投机。");
                 break;
             case 8:
-                sb.append("八白土入中，旺财星，利置业投资求财，宜积累。");
+                sb.append("八白土入中，旺财之曜，利置业求财，宜积累。");
                 break;
             case 9:
-                sb.append("九紫火入中，火主喜庆，利婚嫁添丁，宜办喜事谈合作。");
+                sb.append("九紫火入中，主喜庆，利婚嫁添丁，宜嘉礼图合作。");
                 break;
         }
         sb.append("<br/><br/>");
@@ -843,28 +843,28 @@ public class LuoPanActivity extends android.app.Activity {
         String[] beastNames = {"青龙（左）", "朱雀（前）", "白虎（右）", "玄武（后）"};
         String[] beastWuxings = {"木", "火", "金", "水"};
         String[] yangzhaiJi = {
-            "高耸秀丽，主贵人提携",
-            "开阔明亮，主名声远播",
-            "低伏驯服，主财源广进",
-            "厚实稳重，主根基深厚"
+            "高耸端丽，主贵人提携",
+            "开阔朗明，主声名远播",
+            "低伏驯顺，主财源广进",
+            "厚实凝重，主根基深厚"
         };
         String[] yangzhaiXiong = {
             "低陷破碎，主小人暗算",
-            "阴暗闭塞，主口舌是非",
-            "高大雄健，主争斗凶灾",
-            "空虚塌陷，主根基动摇"
+            "阴暗壅塞，主口舌是非",
+            "高亢雄肆，主争斗凶灾",
+            "空虚坍陷，主根基动摇"
         };
         String[] yinzhaiJi = {
             "宜高耸环抱，主出文贵",
-            "宜端正开阔，主有名望",
-            "宜低伏驯服，主多财富",
+            "宜端正方阔，主有声望",
+            "宜低伏驯顺，主多财富",
             "宜厚重稳固，主多福寿"
         };
         String[] yinzhaiXiong = {
             "忌高昂反背，主争斗官非",
             "忌尖射逼压，主口舌是非",
             "忌雄健昂头，主凶灾败财",
-            "忌空缺塌陷，主根基动摇"
+            "忌空缺坍陷，主根基动摇"
         };
 
         for (int i = 0; i < 4; i++) {
@@ -904,9 +904,9 @@ public class LuoPanActivity extends android.app.Activity {
         String mountainDir = getMountainDirection(mountain);
         String chaoXiangDir = getChaoXiangDirection(chaoXiang);
 
-        sb.append("坐").append(mountain).append("向").append(chaoXiang).append("，背山面水为上格。<br/>");
-        sb.append("　坐山宜有高山，玄武垂头人丁旺<br/>");
-        sb.append("　朝向宜有流水，朱雀翔舞财源广<br/>");
+        sb.append("坐").append(mountain).append("向").append(chaoXiang).append("，背山面水乃上格。<br/>");
+        sb.append("　坐山宜有崇冈，玄武垂头则人丁旺<br/>");
+        sb.append("　朝向宜有流水，朱雀翔舞则财源广<br/>");
 
         // 判断山水格局类型
         String pattern = getShanshuiPattern(mountain, wuxing);
@@ -930,13 +930,13 @@ public class LuoPanActivity extends android.app.Activity {
         if (relation.equals("【比和】")) {
             return "山命比和，根基深厚";
         } else if (relation.equals("【生我】")) {
-            return "山生我命，贵人扶持";
+            return "山生我命，得贵人扶";
         } else if (relation.equals("【我生】")) {
-            return "我命生山，先苦后甜";
+            return "我命生山，先劳后逸";
         } else if (relation.equals("【克我】")) {
-            return "山克我命，压力较大";
+            return "山克我命，所承压重";
         } else {
-            return "我命克山，驾驭有方";
+            return "我命克山，御之有方";
         }
     }
     
@@ -991,11 +991,11 @@ public class LuoPanActivity extends android.app.Activity {
 
         // 水口详解
         sb.append("<b>【水口关拦】</b><br/>");
-        sb.append("水口为财库门户。<br/>");
+        sb.append("水口者，财库之门户也。<br/>");
         sb.append("<font color='#3FA34D'>【吉】</font>紧锁有关拦，财气不散<br/>");
         sb.append("<font color='#E0593B'>【凶】</font>直泄无遮拦，财去人散<br/>");
-        sb.append("　水口方位：").append(getShuikouDirection(mountain)).append("方，宜有山峦洲渚关拦<br/>");
-        sb.append("　天门开：来水之方宜开阔，水有源则财无尽<br/>");
+        sb.append("　水口方位：").append(getShuikouDirection(mountain)).append("方，宜有山峦洲渚以关拦<br/>");
+        sb.append("　天门开：来水之方宜开阔，水有源则财用不竭<br/>");
         sb.append("　地户闭：去水之方宜紧闭，水有拦则财常聚<br/><br/>");
 
         // 明堂
@@ -1029,13 +1029,13 @@ public class LuoPanActivity extends android.app.Activity {
 
     private String getMingTangDetail(String mountain, String chaoXiang) {
         StringBuilder sb = new StringBuilder();
-        sb.append("明堂：穴前水聚之处。<br/>");
-        sb.append("　内明堂：宜平整，主初兴<br/>");
-        sb.append("　中明堂：宜明亮，主发福<br/>");
+        sb.append("明堂：穴前水聚之所。<br/>");
+        sb.append("　内明堂：宜平正，主初兴<br/>");
+        sb.append("　中明堂：宜朗明，主发福<br/>");
         sb.append("　外明堂：宜广阔，主荣昌<br/>");
-        sb.append("　<font color='#3FA34D'>【吉】</font>四周高中间低，水聚天心，富贵双全<br/>");
-        sb.append("　<font color='#E0593B'>【凶】</font>水去直泄无遮拦，财散人离，家道败落<br/>");
-        sb.append("　").append(chaoXiang).append("向之明堂：宜开阔平整有朝山，案山近则速发，朝山远则福长");
+        sb.append("　<font color='#3FA34D'>【吉】</font>四围高而中洼，水聚天心，富贵兼全<br/>");
+        sb.append("　<font color='#E0593B'>【凶】</font>水去直泄无遮拦，财散人离，家道中落<br/>");
+        sb.append("　").append(chaoXiang).append("向之明堂：宜开阔平正有朝山，案山近则速发，朝山远则福长");
 
         return sb.toString();
     }
@@ -1069,13 +1069,13 @@ public class LuoPanActivity extends android.app.Activity {
         if (relation.equals("【比和】")) {
             return "<font color='#E6C46A'><b>山命同气</b></font> — 坐山与命比和，阴阳调和，上吉之格";
         } else if (relation.equals("【生我】")) {
-            return "<font color='#3FA34D'><b>山生命主</b></font> — 坐山生我，先灵安后人福，大吉，子孙昌盛";
+            return "<font color='#3FA34D'><b>山生命主</b></font> — 坐山生我，先灵安而后人福，大吉，子孙蕃昌";
         } else if (relation.equals("【我生】")) {
-            return "<font color='#E6C46A'><b>命主生山</b></font> — 我生山，泄秀，后代出文人";
+            return "<font color='#E6C46A'><b>命主生山</b></font> — 我生山，泄秀，后代多出文人";
         } else if (relation.equals("【克我】")) {
-            return "<font color='#E0593B'><b>山克命主</b></font> — 山克我，需择吉安葬化凶";
+            return "<font color='#E0593B'><b>山克命主</b></font> — 山克我，宜择吉而葬以化其凶";
         } else {
-            return "<font color='#E0593B'><b>命主克山</b></font> — 我克山，占之不吉，宜另择吉地";
+            return "<font color='#E0593B'><b>命主克山</b></font> — 我克山，占之不吉，宜别择吉壤";
         }
     }
     

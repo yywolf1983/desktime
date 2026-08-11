@@ -744,31 +744,31 @@ public class MainActivity extends Activity {
     private String[] getZhiFuPhrases(String star) {
         if (star == null) return new String[]{"星位不明", "需结合全盘分析"};
         switch (star) {
-            case "天辅": return new String[]{"文星主事", "利学业签约、文化教育"};
-            case "天心": return new String[]{"医星临身", "利求医决策、智慧判断"};
-            case "天禽": return new String[]{"贵人得位", "利合作谈判、求财办事"};
-            case "天任": return new String[]{"土德厚实", "利守成积累、房产置业"};
-            case "天蓬": return new String[]{"水势涌动", "宜防范风险、谨慎投资"};
-            case "天冲": return new String[]{"雷厉风行", "利变革突破、出行远行"};
-            case "天芮": return new String[]{"病符主事", "宜关注健康、修身养性"};
-            case "天柱": return new String[]{"金气肃杀", "宜防小人、稳守为上"};
-            case "天英": return new String[]{"火性炎上", "利宣传展示、名声远播"};
-            default: return new String[]{"星辰待辨", "需结合全盘分析"};
+            case "天辅": return new String[]{"文星", "利修文进学"};
+            case "天心": return new String[]{"医星", "利决疑疗疾"};
+            case "天禽": return new String[]{"贵星", "利交协作事"};
+            case "天任": return new String[]{"厚土", "利守成置业"};
+            case "天蓬": return new String[]{"暗流", "宜慎防险陷"};
+            case "天冲": return new String[]{"奋发", "利革故鼎新"};
+            case "天芮": return new String[]{"病符", "宜摄养慎疾"};
+            case "天柱": return new String[]{"肃杀", "宜防谗守稳"};
+            case "天英": return new String[]{"炎上", "利扬名显声"};
+            default: return new String[]{"星位不明", "合盘参看"};
         }
     }
     
     private String[] getZhiShiPhrases(String door) {
         if (door == null) return new String[]{"门位不清", "需结合全盘分析"};
         switch (door) {
-            case "开": return new String[]{"开门通达", "宜开业求职、签约合作"};
-            case "休": return new String[]{"休门安宁", "宜休养调理、会友社交"};
-            case "生": return new String[]{"生门得位", "宜投资理财、经商置业"};
-            case "伤": return new String[]{"伤门临位", "忌签约出行、防损失争端"};
-            case "杜": return new String[]{"杜门闭塞", "宜守静隐藏、不宜冒进"};
-            case "景": return new String[]{"景门秀丽", "宜策划考试、展示宣传"};
-            case "死": return new String[]{"死门当值", "百事不宜、静待时机"};
-            case "惊": return new String[]{"惊门不安", "忌诉讼争论、防口舌是非"};
-            default: return new String[]{"门气不稳", "需谨慎行事"};
+            case "开": return new String[]{"开门", "宜启业缔约"};
+            case "休": return new String[]{"休门", "宜养静会友"};
+            case "生": return new String[]{"生门", "宜经商置业"};
+            case "伤": return new String[]{"伤门", "忌行防损"};
+            case "杜": return new String[]{"杜门", "宜守静潜藏"};
+            case "景": return new String[]{"景门", "宜谋成显扬"};
+            case "死": return new String[]{"死门", "百事俱忌"};
+            case "惊": return new String[]{"惊门", "忌讼防非"};
+            default: return new String[]{"门气不稳", "宜慎行"};
         }
     }
     
@@ -813,40 +813,40 @@ public class MainActivity extends Activity {
         boolean isGoodDoor = isGoodDoor(door);
         
         if (isGoodStar && isGoodDoor) {
-            return new String[]{"气场旺盛", "万事通达", "宜积极进取"};
+            return new String[]{"气旺", "诸事亨", "宜进取"};
         } else if (isGoodStar && !isGoodDoor) {
-            return new String[]{"星吉门平", "宜守待时", "择机而动"};
+            return new String[]{"星吉门平", "宜待时", "择机动"};
         } else if (!isGoodStar && isGoodDoor) {
-            return new String[]{"门吉星平", "借力而为", "稳步推进"};
+            return new String[]{"门吉星平", "宜借力", "稳推行"};
         } else {
-            return new String[]{"气场偏弱", "宜静不宜动", "谨慎行事"};
+            return new String[]{"气弱", "宜静守", "慎行事"};
         }
     }
     
     private String getStarDescription(String star) {
         if (star == null) return "";
-        if (star.equals("天辅")) return "文曲·利学业";
-        if (star.equals("天心")) return "医星·利决策";
-        if (star.equals("天禽")) return "贵人·利合作";
-        if (star.equals("天任")) return "稳重·利守成";
-        if (star.equals("天冲")) return "行动·利变革";
-        if (star.equals("天英")) return "光明·利名声";
-        if (star.equals("天蓬")) return "暗涌·防风险";
-        if (star.equals("天芮")) return "病符·注意健康";
-        if (star.equals("天柱")) return "阻滞·防小人";
+        if (star.equals("天辅")) return "文星·利修文进学";
+        if (star.equals("天心")) return "医星·利决疑疾";
+        if (star.equals("天禽")) return "贵星·利交协作事";
+        if (star.equals("天任")) return "厚土·利守成安土";
+        if (star.equals("天冲")) return "奋发·利革故鼎新";
+        if (star.equals("天英")) return "炎上·利扬名显声";
+        if (star.equals("天蓬")) return "暗流·宜慎防险陷";
+        if (star.equals("天芮")) return "病符·宜摄养慎疾";
+        if (star.equals("天柱")) return "肃杀·宜防谗守稳";
         return "";
     }
     
     private String getDoorDescription(String door) {
         if (door == null) return "";
-        if (door.equals("开")) return "开门·万事通";
-        if (door.equals("休")) return "休门·宜调养";
-        if (door.equals("生")) return "生门·财运旺";
-        if (door.equals("伤")) return "伤门·防损耗";
-        if (door.equals("杜")) return "杜门·宜守静";
-        if (door.equals("景")) return "景门·利策划";
-        if (door.equals("死")) return "死门·百事忌";
-        if (door.equals("惊")) return "惊门·防口舌";
+        if (door.equals("开")) return "开门·诸事亨通";
+        if (door.equals("休")) return "休门·宜养静蓄锐";
+        if (door.equals("生")) return "生门·财源畅茂";
+        if (door.equals("伤")) return "伤门·宜防损耗";
+        if (door.equals("杜")) return "杜门·宜静守无言";
+        if (door.equals("景")) return "景门·宜谋成显扬";
+        if (door.equals("死")) return "死门·百事俱忌";
+        if (door.equals("惊")) return "惊门·宜防口舌非";
         return "";
     }
     
@@ -858,25 +858,25 @@ public class MainActivity extends Activity {
         boolean isGoodDoor = isGoodDoor(door);
         
         String starDesc = "";
-        if (star.equals("天辅")) starDesc = "文星主事，利学业文书";
-        else if (star.equals("天心")) starDesc = "医星高照，利决策判断";
-        else if (star.equals("天禽")) starDesc = "贵人星临，利合作求财";
-        else if (star.equals("天任")) starDesc = "稳重踏实，利守成积累";
-        else if (star.equals("天冲")) starDesc = "行动力强，利变革突破";
-        else if (star.equals("天英")) starDesc = "光明磊落，利名声展示";
-        else if (star.equals("天蓬")) starDesc = "暗藏风险，宜谨慎防范";
-        else if (star.equals("天芮")) starDesc = "病符临位，宜关注健康";
-        else if (star.equals("天柱")) starDesc = "阻力较大，宜稳不宜进";
+        if (star.equals("天辅")) starDesc = "文星，利修文进学";
+        else if (star.equals("天心")) starDesc = "医星，利决疑疾";
+        else if (star.equals("天禽")) starDesc = "贵星，利交协作事";
+        else if (star.equals("天任")) starDesc = "厚土，利守成安土";
+        else if (star.equals("天冲")) starDesc = "奋发，利革故鼎新";
+        else if (star.equals("天英")) starDesc = "炎上，利扬名显声";
+        else if (star.equals("天蓬")) starDesc = "暗流，宜慎防险陷";
+        else if (star.equals("天芮")) starDesc = "病符，宜摄养慎疾";
+        else if (star.equals("天柱")) starDesc = "肃杀，宜防谗守稳";
         
         String doorDesc = "";
-        if (door.equals("开")) doorDesc = "开门通达，诸事可成";
-        else if (door.equals("休")) doorDesc = "休门安宁，宜养精蓄锐";
-        else if (door.equals("生")) doorDesc = "生门得位，财运亨通";
-        else if (door.equals("伤")) doorDesc = "伤门临位，防损失争端";
-        else if (door.equals("杜")) doorDesc = "杜门闭塞，宜守不宜攻";
-        else if (door.equals("景")) doorDesc = "景门秀丽，适合策划";
-        else if (door.equals("死")) doorDesc = "死门当值，百事不宜";
-        else if (door.equals("惊")) doorDesc = "惊门不安，谨防口舌";
+        if (door.equals("开")) doorDesc = "开门，诸事亨通";
+        else if (door.equals("休")) doorDesc = "休门，宜养静蓄锐";
+        else if (door.equals("生")) doorDesc = "生门，财源畅茂";
+        else if (door.equals("伤")) doorDesc = "伤门，防损耗争端";
+        else if (door.equals("杜")) doorDesc = "杜门，宜静守无言";
+        else if (door.equals("景")) doorDesc = "景门，宜谋成显扬";
+        else if (door.equals("死")) doorDesc = "死门，百事俱忌";
+        else if (door.equals("惊")) doorDesc = "惊门，宜防口舌非";
         
         if (isGoodStar && isGoodDoor) {
             return starDesc + "，" + doorDesc;
@@ -906,48 +906,48 @@ public class MainActivity extends Activity {
 
     private String getLuckAdvice(int score) {
         if (score >= 5) {
-            return "星门俱佳，时机成熟，可全力推进重要事务";
+            return "星门俱吉，可倾力举事";
         } else if (score >= 3) {
-            return "吉星照临，门位得力，适合启动新计划";
+            return "吉星照临，宜启新猷";
         } else if (score >= 1) {
-            return "星门尚可，有小幅助力，宜循序渐进";
+            return "星门尚可，宜循序进";
         } else if (score >= -1) {
-            return "星门平淡，无大碍亦无大利，保持现状即可";
+            return "星门夷平，守常毋妄动";
         } else if (score >= -3) {
-            return "星门偏弱，外部阻力较大，宜暂缓行动";
+            return "星门渐衰，宜缓行观变";
         } else if (score >= -5) {
-            return "星门不利，不宜冒进，韬光养晦为上策";
+            return "星门乖违，宜韬光守晦";
         } else {
-            return "星门俱凶，万事皆忌，务必静守待变";
+            return "星门俱凶，宜静守俟时";
         }
     }
     
     private String getSimpleMeaning(String star, String door) {
         String starMean = "";
         if (star != null) {
-            if (star.equals("天辅")) starMean = "文星主事，利学业文书";
-            else if (star.equals("天心")) starMean = "医星高照，利决策判断";
-            else if (star.equals("天禽")) starMean = "贵人星临，利合作求财";
-            else if (star.equals("天任")) starMean = "稳重踏实，利守成积累";
-            else if (star.equals("天冲")) starMean = "行动力强，利变革突破";
-            else if (star.equals("天英")) starMean = "光明磊落，利名声展示";
-            else if (star.equals("天蓬")) starMean = "暗藏风险，宜谨慎防范";
-            else if (star.equals("天芮")) starMean = "病符临位，宜关注健康";
-            else if (star.equals("天柱")) starMean = "阻力较大，宜稳不宜进";
-            else starMean = "星位平和";
+            if (star.equals("天辅")) starMean = "文星，利修文进学";
+            else if (star.equals("天心")) starMean = "医星，利决疑疾";
+            else if (star.equals("天禽")) starMean = "贵星，利交协作事";
+            else if (star.equals("天任")) starMean = "厚土，利守成安土";
+            else if (star.equals("天冲")) starMean = "奋发，利革故鼎新";
+            else if (star.equals("天英")) starMean = "炎上，利扬名显声";
+            else if (star.equals("天蓬")) starMean = "暗流，宜慎防险陷";
+            else if (star.equals("天芮")) starMean = "病符，宜摄养慎疾";
+            else if (star.equals("天柱")) starMean = "肃杀，宜防谗守稳";
+            else starMean = "星位夷平";
         }
         
         String doorMean = "";
         if (door != null) {
-            if (door.equals("开")) doorMean = "开门通达，诸事可成";
-            else if (door.equals("生")) doorMean = "生门得位，财运亨通";
-            else if (door.equals("休")) doorMean = "休门安宁，宜养精蓄锐";
-            else if (door.equals("景")) doorMean = "景门秀丽，适合策划展示";
-            else if (door.equals("杜")) doorMean = "杜门闭塞，宜守不宜攻";
-            else if (door.equals("惊")) doorMean = "惊门不安，谨防口舌是非";
-            else if (door.equals("伤")) doorMean = "伤门临位，防损失争端";
-            else if (door.equals("死")) doorMean = "死门当值，百事不宜";
-            else doorMean = "门位平和";
+            if (door.equals("开")) doorMean = "开门，诸事亨通";
+            else if (door.equals("生")) doorMean = "生门，财源畅茂";
+            else if (door.equals("休")) doorMean = "休门，宜养静蓄锐";
+            else if (door.equals("景")) doorMean = "景门，宜谋成显扬";
+            else if (door.equals("杜")) doorMean = "杜门，宜静守无言";
+            else if (door.equals("惊")) doorMean = "惊门，宜防口舌非";
+            else if (door.equals("伤")) doorMean = "伤门，防损耗争端";
+            else if (door.equals("死")) doorMean = "死门，百事俱忌";
+            else doorMean = "门位夷平";
         }
         
         return starMean + "｜" + doorMean;
@@ -955,19 +955,19 @@ public class MainActivity extends Activity {
     
     private String getSimpleAdvice(int score) {
         if (score >= 5) {
-            return "天时地利，宜大胆进取";
+            return "天时地利兼得，宜奋迅以进";
         } else if (score >= 3) {
-            return "运势良好，宜推进计划";
+            return "运数方隆，宜推展宏图";
         } else if (score >= 1) {
-            return "小有助力，宜稳步前行";
+            return "小有匡助，宜稳步前行";
         } else if (score >= -1) {
-            return "运势平平，宜守不宜攻";
+            return "运数夷平，宜守不宜攻";
         } else if (score >= -3) {
-            return "阻力渐显，宜谨慎观望";
+            return "阻力渐彰，宜慎守观望";
         } else if (score >= -5) {
             return "时运不济，宜以静制动";
         } else {
-            return "诸事不宜，静待时机转变";
+            return "诸事宜戒，静俟时移";
         }
     }
     
@@ -1048,21 +1048,21 @@ public class MainActivity extends Activity {
     }
     
     private String getTimeFortune(String timeZhi) {
-        if (timeZhi == null) return "时辰吉利";
+        if (timeZhi == null) return "时辰平吉";
         switch (timeZhi) {
-            case "子": return "子时(23-01) 胆经当令 · 宜安睡养阳，忌熬夜";
-            case "丑": return "丑时(01-03) 肝经当令 · 宜深睡排毒，忌饮酒";
-            case "寅": return "寅时(03-05) 肺经当令 · 宜熟睡养肺，忌剧烈";
-            case "卯": return "卯时(05-07) 大肠经当令 · 宜起床排便，饮温水";
-            case "辰": return "辰时(07-09) 胃经当令 · 宜吃早餐，营养吸收最佳";
-            case "巳": return "巳时(09-11) 脾经当令 · 宜工作学习，精力最旺";
-            case "午": return "午时(11-13) 心经当令 · 宜小憩养心，忌过劳";
-            case "未": return "未时(13-15) 小肠经当令 · 宜午休后放松";
-            case "申": return "申时(15-17) 膀胱经当令 · 宜运动饮水，排毒佳期";
-            case "酉": return "酉时(17-19) 肾经当令 · 宜静养收藏，忌过劳";
-            case "戌": return "戌时(19-21) 心包经当令 · 宜愉悦休闲，忌忧愁";
-            case "亥": return "亥时(21-23) 三焦经当令 · 宜泡脚安眠，百脉通";
-            default: return "时辰吉利";
+            case "子": return "子时(二三至一) 胆经司令 · 宜安卧养阳，戒夜不寐";
+            case "丑": return "丑时(一至三) 肝经司令 · 宜沉眠排毒，戒饮酒浆";
+            case "寅": return "寅时(三至五) 肺经司令 · 宜酣眠润肺，戒妄作劳";
+            case "卯": return "卯时(五至七) 大肠司令 · 宜晨起更衣，温汤徐饮";
+            case "辰": return "辰时(七至九) 胃经司令 · 宜进朝膳，纳谷最良";
+            case "巳": return "巳时(九至十一) 脾经司令 · 宜勤事研习，神气最旺";
+            case "午": return "午时(十一至十三) 心经司令 · 宜小憩养心，戒过劳形";
+            case "未": return "未时(十三至十五) 小肠司令 · 宜午憩稍安，舒体养元";
+            case "申": return "申时(十五至十七) 膀胱司令 · 宜运动饮水，排毒良机";
+            case "酉": return "酉时(十七至十九) 肾经司令 · 宜静养藏精，戒过劳损";
+            case "戌": return "戌时(十九至廿一) 心包司令 · 宜怡情悦性，戒忧思结";
+            case "亥": return "亥时(廿一至廿三) 三焦司令 · 宜濯足安眠，百脉乃通";
+            default: return "时辰平吉";
         }
     }
 

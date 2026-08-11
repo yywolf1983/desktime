@@ -41,42 +41,52 @@
                 android:background="@drawable/gold_separator"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- 顶部日期时间文字：国际标准格式，各部分单独可点击 -->
+            <!-- 顶部日期时间文字：国际标准格式，各部分单独可点击；年月日/时分分行显示 -->
             <LinearLayout
                 android:id="@+id/summaryRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="56dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="12dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="10dp"
                 android:layout_marginBottom="4dp">
 
-                <TextView android:id="@+id/sumYear" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textColor="@color/time_gold" android:textSize="24sp" android:textStyle="bold" android:clickable="true"
-                    android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:background="@drawable/card_background"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
-                    android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:layout_marginStart="2dp"/>
-                <TextView android:id="@+id/sumMonth" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textColor="@color/time_gold" android:textSize="24sp" android:textStyle="bold" android:clickable="true"
-                    android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:background="@drawable/card_background"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
-                    android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:layout_marginStart="2dp"/>
-                <TextView android:id="@+id/sumDay" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textColor="@color/time_gold" android:textSize="24sp" android:textStyle="bold" android:clickable="true"
-                    android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:background="@drawable/card_background"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <TextView android:id="@+id/sumYear" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
+                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
+                        android:textColor="@color/gold_faint" android:textSize="20sp" android:textStyle="bold" android:layout_marginStart="1dp"/>
+                    <TextView android:id="@+id/sumMonth" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
+                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
+                        android:textColor="@color/gold_faint" android:textSize="20sp" android:textStyle="bold" android:layout_marginStart="1dp"/>
+                    <TextView android:id="@+id/sumDay" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
+                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                </LinearLayout>
 
-                <View android:layout_width="1dp" android:layout_height="28dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="12dp"/>
-
-                <TextView android:id="@+id/sumHour" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textColor="@color/time_gold" android:textSize="24sp" android:textStyle="bold" android:clickable="true"
-                    android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:background="@drawable/card_background"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":"
-                    android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:layout_marginStart="2dp"/>
-                <TextView android:id="@+id/sumMinute" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textColor="@color/time_gold" android:textSize="24sp" android:textStyle="bold" android:clickable="true"
-                    android:paddingHorizontal="8dp" android:paddingVertical="4dp" android:background="@drawable/card_background"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp">
+                    <TextView android:id="@+id/sumHour" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
+                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":"
+                        android:textColor="@color/gold_faint" android:textSize="20sp" android:textStyle="bold" android:layout_marginStart="1dp"/>
+                    <TextView android:id="@+id/sumMinute" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
+                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                </LinearLayout>
             </LinearLayout>
 
             <!-- 选择面板：年/月/日/时/分各自独立点击展开 -->

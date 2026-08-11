@@ -270,15 +270,15 @@ public class DestinyActivity extends android.app.Activity {
         if (isStrong) {
             strengthStr = "身强";
             strengthColor = Color.parseColor("#E0593B");
-            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜泄耗";
+            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜泄其有余";
         } else if (isWeak) {
             strengthStr = "身弱";
             strengthColor = Color.parseColor("#3E87C2");
-            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜生扶";
+            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 宜生其不足";
         } else {
             strengthStr = "中和";
             strengthColor = Color.parseColor("#E6C46A");
-            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 均衡";
+            strengthHintStr = "生扶" + (shengCount + biCount) + "·克泄" + keCount + " → 燥湿得宜";
         }
         setHtmlText(strengthTag, colorSpan(strengthStr, strengthColor));
         setText(strengthHint, strengthHintStr);
@@ -436,6 +436,7 @@ public class DestinyActivity extends android.app.Activity {
         if (isStrong) sb.append(coloredText("→ 身强", "#E0593B"));
         else if (isWeak) sb.append(coloredText("→ 身弱", "#3E87C2"));
         else sb.append(coloredText("→ 中和", "#E6C46A"));
+        sb.append("<br/><font color='#7C8C9C'><small>扶抑之道，强则损之，弱则补之</small></font>");
 
         setHtmlText(wuxingPowerText, sb.toString());
 
