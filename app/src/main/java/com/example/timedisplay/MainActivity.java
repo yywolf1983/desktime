@@ -1,6 +1,7 @@
 package com.example.timedisplay;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Message;
@@ -34,7 +35,9 @@ public class MainActivity extends Activity {
     public TextView fourPillarsTextView;
     public TextView timeFortuneTextView;
     public TextView panExplanation;
+    public TextView panStarTextView;
     public NinePalacePanel ninePalacePanel;
+    private android.widget.TextView ninePalaceChevron;
     private android.view.ViewGroup mainLayout;
     private LinearLayout timeContainer;
     private android.os.Handler handler;
@@ -79,7 +82,9 @@ public class MainActivity extends Activity {
         copyButton = findViewById(R.id.copyButton);
         timeFortuneTextView = findViewById(R.id.timeFortuneTextView);
         panExplanation = findViewById(R.id.panExplanation);
+        panStarTextView = findViewById(R.id.panStarTextView);
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
+        ninePalaceChevron = (android.widget.TextView) findViewById(R.id.ninePalaceChevron);
         mainLayout = findViewById(R.id.mainLayout);
 
         // 背景/亮度只需初始化时设置一次，避免每秒触发九宫格整屏重绘
@@ -132,7 +137,7 @@ public class MainActivity extends Activity {
         });
 
         // 为九宫格添加点击事件监听器，点击时显示详细解读
-        ninePalacePanel.setOnClickListener(v -> {
+        View.OnClickListener openFullNinePalace = v -> {
             try {
                 Intent intent = new Intent(MainActivity.this, FullNinePalaceActivity.class);
                 if (isCustomTime && customCalendar != null) {
@@ -146,7 +151,9 @@ public class MainActivity extends Activity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        };
+        ninePalacePanel.setOnClickListener(openFullNinePalace);
+        ninePalaceChevron.setOnClickListener(openFullNinePalace);
 
         // 点击吉凶解释跳转到罗盘页面
         if (panExplanation != null) {
@@ -196,7 +203,7 @@ public class MainActivity extends Activity {
             jieqiTextView.setOnClickListener(v -> {
                 try {
                     Intent intent = new Intent(MainActivity.this, JieqiActivity.class);
-                    String jieqi = jieqiTextView.getText().toString().replace("·", "").trim();
+                    String jieqi = jieqiTextView.getText().toString().replace("·", "").replace("›", "").trim();
                     intent.putExtra("jieqi", jieqi);
                     startActivity(intent);
                 } catch (Exception e) {
@@ -304,8 +311,12 @@ public class MainActivity extends Activity {
         SimpleDateFormat weekdayFormat = new SimpleDateFormat("EEEE", Locale.CHINA);
         String dateString = dateFormat.format(displayDate);
         String weekdayString = weekdayFormat.format(displayDate);
+        int dateColor;
         if (isCustomTime) {
-            dateString = "✎ " + dateString;
+            // 自定义时间：仅以高亮橙金色区分，去掉前缀文字，避免突兀
+            dateColor = Color.parseColor("#FFC55A");
+        } else {
+            dateColor = getResources().getColor(R.color.date_blue);
         }
 
         boolean minuteChanged = (lastMinute1 != currentMinute1) || (lastMinute2 != currentMinute2);
@@ -331,14 +342,16 @@ public class MainActivity extends Activity {
         }
 
         dateTextView.setText(dateString);
+        dateTextView.setTextColor(dateColor);
         if (weekdayTextView != null) {
             weekdayTextView.setText(weekdayString);
+            weekdayTextView.setTextColor(dateColor);
         }
 
         // 更新节气显示
         String jieqi = JieqiData.getCurrentJieqi(displayCalendar);
         if (jieqiTextView != null) {
-            jieqiTextView.setText(jieqi);
+            jieqiTextView.setText(withChevron(jieqi));
         }
 
         // 四柱排盘：使用自定义时间（如有）或当前时间
@@ -503,11 +516,11 @@ public class MainActivity extends Activity {
         
         // 格式化四柱显示
         String fourPillars = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
-        fourPillarsTextView.setText(fourPillars);
+        fourPillarsTextView.setText(withChevron(fourPillars));
 
         // 更新时辰运势
         String timeZhi = timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
-        timeFortuneTextView.setText(getTimeFortune(timeZhi));
+        timeFortuneTextView.setText(withChevron(getTimeFortune(timeZhi)));
 
         // 获取当前节气
         // 统一使用 JieqiData 计算节气，与界面显示的节气保持一致
@@ -652,31 +665,25 @@ public class MainActivity extends Activity {
     // 计算日柱
     private String calculateDayPillar(int year, int month, int day) {
         try {
-            // 创建目标日期
-            java.util.Calendar targetCalendar = java.util.Calendar.getInstance();
-            targetCalendar.set(year, month - 1, day);
-            
-            // 创建基准日期（1900年1月1日为甲戌日）
-            java.util.Calendar baseCalendar = java.util.Calendar.getInstance();
-            baseCalendar.set(1900, 0, 1);
-            
-            // 计算与基准日期的天数差
-            long targetTime = targetCalendar.getTimeInMillis();
-            long baseTime = baseCalendar.getTimeInMillis();
-            long daysDiff = (targetTime - baseTime) / (1000 * 60 * 60 * 24);
-            
-            // 计算干支索引（1900年1月1日为甲戌日，索引为10）
-            int baseGanzhiIndex = 10;
-            int ganzhiIndex = (baseGanzhiIndex + (int)daysDiff) % 60;
+            // 采用整数儒略日算法求两日期之间的纯日历天数差，避免毫秒差在夏令时
+            // 切换日（1986-1991 中国曾实行夏时制）产生 ±1 天的误差，确保日柱准确。
+            int daysDiff = julianDay(year, month, day) - julianDay(1900, 1, 1);
+            int baseGanzhiIndex = 10; // 1900年1月1日为甲戌日
+            int ganzhiIndex = (baseGanzhiIndex + daysDiff) % 60;
             if (ganzhiIndex < 0) ganzhiIndex += 60;
-            
-            // 直接从60甲子数组中取
             return LIUJIAZI[ganzhiIndex];
-            
         } catch (Exception e) {
             e.printStackTrace();
             return "甲午"; // 默认值
         }
+    }
+
+    // 儒略日数（整数部分，用于求两日期之间的整数天数差）
+    private static int julianDay(int y, int m, int d) {
+        if (m <= 2) { y -= 1; m += 12; }
+        int a = y / 100;
+        int b = 2 - a + a / 4;
+        return (int) (365.25 * (y + 4716)) + (int) (30.6001 * (m + 1)) + d + b - 1524;
     }
 
     // 计算时柱（带日柱天干）
@@ -765,27 +772,38 @@ public class MainActivity extends Activity {
         }
     }
     
+    // 给可点击进入子页的文本末尾追加一个较小的引导箭头“›”，字号约为正文的 0.7 倍、半透明
+    private CharSequence withChevron(CharSequence text) {
+        if (text == null || text.length() == 0) return text;
+        android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(text);
+        int start = sb.length();
+        sb.append(" ›"); // 引导小箭头
+        sb.setSpan(new android.text.style.RelativeSizeSpan(0.7f), start, sb.length(),
+                android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        sb.setSpan(new android.text.style.ForegroundColorSpan(0x88FFFFFF), start, sb.length(),
+                android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return sb;
+    }
+
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
-        if (panExplanation != null && ninePalacePanel != null) {
+        if (panExplanation != null && panStarTextView != null && ninePalacePanel != null) {
             String zhiFu = ninePalacePanel.getCopyZhiFu();
             String zhiShi = ninePalacePanel.getCopyZhiShi();
-            
-                        // 与九宫配色同源：取值符所在宫的吉凶等级
+
             String luckLabel = ninePalacePanel.getZhiFuPalaceLuck();
             String simpleMeaning = getSimpleMeaning(zhiFu, zhiShi);
             String simpleAdvice = getSimpleAdviceByLabel(luckLabel);
 
-            android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
-            
-            sb.append(simpleMeaning);
-            sb.setSpan(new android.text.style.ForegroundColorSpan(getResources().getColor(R.color.explanation_gray)), 0, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            
-            sb.append(" · ");
-            
-            sb.append(simpleAdvice);
-            sb.setSpan(new android.text.style.ForegroundColorSpan(getResources().getColor(R.color.jieqi_orange)), sb.length() - simpleAdvice.length(), sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            
+            // 第二行：值符星义（灰色）
+            panStarTextView.setText(simpleMeaning);
+
+            // 第三行：门义/建议（橙色）+ 引导箭头，点击进入罗盘解析
+            android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(simpleAdvice);
+            int chevronStart = sb.length();
+            sb.append(" ›");
+            sb.setSpan(new android.text.style.RelativeSizeSpan(0.7f), chevronStart, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(0x88FFFFFF), chevronStart, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             panExplanation.setText(sb);
         }
     }

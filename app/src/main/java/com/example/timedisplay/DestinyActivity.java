@@ -242,10 +242,9 @@ public class DestinyActivity extends android.app.Activity {
     // ──── populateCore 拆分（8 个子方法）────
 
     private void populateDayMaster() {
-        String wxEmoji = getWuXingEmoji(dayGanWuXing);
         setText(dayMasterLabel, dayGan);
         setText(dayMasterWuXingLabel, dayGan + " · " + dayGanWuXing);
-        if (dayMasterIcon != null) dayMasterIcon.setText(wxEmoji);
+        if (dayMasterIcon != null) dayMasterIcon.setText(dayGanWuXing + "行");
     }
 
     private void populateDayBranch() {
@@ -314,7 +313,7 @@ public class DestinyActivity extends android.app.Activity {
         // 日柱纳音详细解读（不复述 nayinDayLabel 已显示的纳音名，直接给含义+象征）
         String nDay = nayinArr[2];
         String nayinExpl = DestinyCalculator.getNayinExplanation(nDay);
-        setHtmlText(nayinText, "日柱纳音解读：<br/>" + (nayinExpl.isEmpty() ? nDay : nayinExpl));
+        setHtmlText(nayinText, nayinExpl.isEmpty() ? nDay : nayinExpl);
         setText(nayinLabelL, nDay);
 
         // 五行小结（横屏用，身强弱判据已多处展示，此处仅留五行+纳音）
@@ -394,14 +393,13 @@ public class DestinyActivity extends android.app.Activity {
 
     private void populateTenGods() {
         StringBuilder sb = new StringBuilder();
-        sb.append("<font color='#9AA7B8'><small>十神＝日主与其他干支的十种关系，通俗讲就是「你与外界（亲人、事业、钱财）的互动模式」。</small></font><br/><br/>");
-        sb.append("年干 ").append(yearGan).append("：").append(coloredText(yGanShen, "#3FA34D")).append("　");
-        sb.append(DestinyCalculator.getTenGodExplanation(yGanShen)).append("<br/>");
-        sb.append("月干 ").append(monthGan).append("：").append(coloredText(mGanShen, "#3FA34D")).append("　");
-        sb.append(DestinyCalculator.getTenGodExplanation(mGanShen)).append("<br/>");
+        sb.append("年干 ").append(yearGan).append("：").append(coloredText(yGanShen, "#3FA34D")).append("　")
+          .append(DestinyCalculator.getTenGodExplanation(yGanShen)).append("<br/>");
+        sb.append("月干 ").append(monthGan).append("：").append(coloredText(mGanShen, "#3FA34D")).append("　")
+          .append(DestinyCalculator.getTenGodExplanation(mGanShen)).append("<br/>");
         sb.append("日干 ").append(dayGan).append("：").append(coloredText("日元", "#E6C46A")).append("　命主自身<br/>");
-        sb.append("时干 ").append(timeGan).append("：").append(coloredText(tGanShen, "#3FA34D")).append("　");
-        sb.append(DestinyCalculator.getTenGodExplanation(tGanShen)).append("<br/><br/>");
+        sb.append("时干 ").append(timeGan).append("：").append(coloredText(tGanShen, "#3FA34D")).append("　")
+          .append(DestinyCalculator.getTenGodExplanation(tGanShen)).append("<br/><br/>");
         sb.append(DestinyCalculator.getTenGodComboAnalysis(dayGan, yearGan, monthGan, timeGan));
         setHtmlText(tenGodsText, sb.toString());
     }
@@ -425,7 +423,7 @@ public class DestinyActivity extends android.app.Activity {
         for (int c : counts) if (c > maxCount) maxCount = c;
 
         for (int i = 0; i < 5; i++) {
-            sb.append(getWuXingEmoji(names[i])).append(" <font color='").append(getWuXingColor(names[i]))
+            sb.append("<font color='").append(getWuXingColor(names[i]))
               .append("'><b>").append(names[i]).append("</b></font>  ");
             int bars = (int)((float)counts[i] / maxCount * 10);
             for (int j = 0; j < bars; j++) sb.append("█");
@@ -438,7 +436,6 @@ public class DestinyActivity extends android.app.Activity {
         if (isStrong) sb.append(coloredText("→ 身强", "#E0593B"));
         else if (isWeak) sb.append(coloredText("→ 身弱", "#3E87C2"));
         else sb.append(coloredText("→ 中和", "#E6C46A"));
-        sb.append("<br/><font color='#9AA7B8'><small>通俗说：身强＝自身能量足，宜克泄耗；身弱＝底气不足，宜生扶比助；中和＝顺其自然最好。</small></font>");
 
         setHtmlText(wuxingPowerText, sb.toString());
 

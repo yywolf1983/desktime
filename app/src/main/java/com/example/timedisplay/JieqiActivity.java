@@ -100,6 +100,8 @@ public class JieqiActivity extends Activity {
         if (jieqi == null || jieqi.isEmpty()) {
             return JieqiData.getCurrentJieqi(cal);
         }
+        // 去除首页传入文本中可能携带的引导箭头“›”或分隔符“·”，确保节气名可匹配
+        jieqi = jieqi.replace("›", "").replace("·", "").trim();
         return jieqi;
     }
 
@@ -278,7 +280,7 @@ public class JieqiActivity extends Activity {
         TextView boxName = jieqiBoxNames[index];
         TextView boxDate = jieqiBoxDates[index];
 
-        boxName.setText(isCurrent ? "" : JieqiData.SOLAR_TERMS[index]);
+        boxName.setText(JieqiData.SOLAR_TERMS[index]);
         boxName.setTypeface(null, (isCurrent || isSeason)
             ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
         box.setBackgroundColor(Color.parseColor(isCurrent ? "#502a2a4e" : "#301a1a2e"));

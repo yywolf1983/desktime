@@ -39,4 +39,16 @@
         <item name="android:editable">false</item>
         <item name="android:inputType">none</item>
     </style>
+
+    <!-- 命理页2列卡片 -->
+    <style name="DestinyCard2Col">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@drawable/card_background</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

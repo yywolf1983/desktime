@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="14dp"
+            android:padding="9dp"
             android:background="@drawable/card_background">
 
             <LinearLayout
@@ -43,7 +43,7 @@
                     android:id="@+id/wuyunJieqi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="@color/jieqi_orange"
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="12dp"
@@ -60,7 +60,7 @@
                     android:id="@+id/wuyunMonthDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-light"
                     tools:text="丙子月·乙未日" />
@@ -69,7 +69,7 @@
                     android:id="@+id/wuyunShichen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="@color/fortune_green"
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="12dp"
@@ -109,8 +109,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="14dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
                     <TextView
                         android:layout_width="match_parent"
@@ -126,14 +126,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="综合总评"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
@@ -148,7 +148,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="甲辰年木运太过，风气偏盛，宜疏肝理气，春季养生为主"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold"
                         android:lineSpacingExtra="3dp" />
@@ -158,15 +158,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="当下时辰养生"
                         android:textColor="@color/gold"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:layout_marginBottom="6dp"/>
@@ -174,13 +174,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@drawable/gold_separator"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_marginBottom="10dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="把当年的五运六气，叠加到此刻的时辰，给出起居饮食的宜忌。"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/text_annotation"
                         android:layout_marginBottom="8dp"/>
 
@@ -188,7 +188,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="当前时辰"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -197,15 +197,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_marginBottom="10dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="养生宜忌"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -214,15 +214,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_marginBottom="10dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="五运详解"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -230,7 +230,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="五运＝木火土金水每五年一轮的气候能量，分「太过的年」和「不及的年」。"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/text_annotation"
                         android:layout_marginBottom="6dp"/>
                     <TextView
@@ -238,15 +238,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_marginBottom="10dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="六气详解"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -254,7 +254,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="六气＝风、寒、暑、湿、燥、火六种年度气候；分「主气」（固定）与「客气」（当年变化）。"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/text_annotation"
                         android:layout_marginBottom="6dp"/>
                     <TextView
@@ -262,15 +262,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="运气与时辰关联"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -279,7 +279,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
 
@@ -287,8 +287,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="14dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
                     <TextView
                         android:layout_width="match_parent"
@@ -304,8 +304,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
 
                     <TextView
@@ -313,7 +313,7 @@
                         android:layout_height="wrap_content"
                         android:text="年度运势综合研判"
                         android:textColor="@color/gold"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:layout_marginBottom="6dp" />
@@ -328,7 +328,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
 
@@ -336,8 +336,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
 
                     <TextView
@@ -345,7 +345,7 @@
                         android:layout_height="wrap_content"
                         android:text="五运六气理论基础"
                         android:textColor="@color/gold"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:layout_marginBottom="6dp" />
@@ -360,7 +360,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
 
@@ -368,8 +368,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                        android:layout_marginBottom="12dp"
+                    android:padding="9dp"
+                        android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
 
                     <TextView
@@ -377,7 +377,7 @@
                         android:layout_height="wrap_content"
                         android:text="六气致病与防治"
                         android:textColor="@color/gold"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:layout_marginBottom="6dp" />
@@ -392,7 +392,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>
 

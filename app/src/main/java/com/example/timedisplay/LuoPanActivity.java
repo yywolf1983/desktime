@@ -604,35 +604,26 @@ public class LuoPanActivity extends android.app.Activity {
             }
         }
 
-        // 通俗原因解读
-        sb.append("<br/><font color='#D6BE86'><b>通俗解读：</b></font><br/>");
+        // 原因解读
+        sb.append("<br/><font color='#D6BE86'><b>解读：</b></font><br/>");
         sb.append(getBazhaiPlainExplanation(bagua));
         bazhaiDesc.setText(Html.fromHtml(sb.toString()));
     }
 
     /**
-     * 八宅风水的通俗解读：让普通人也能看懂为什么这样判断
+     * 八宅风水解读：说明卦气归属与吉凶方位之理
      */
     private String getBazhaiPlainExplanation(String bagua) {
         // 判断东四宅/西四宅
         boolean isEast = bagua.equals("坎") || bagua.equals("离") || bagua.equals("震") || bagua.equals("巽");
         String group = isEast ? "东四宅" : "西四宅";
-        String groupGua = isEast ? "坎、离、震、巽" : "乾、坤、艮、兑";
-        String groupElement = isEast ? "水、火、木、木" : "金、土、土、金";
-        String groupFeature = isEast ? "木火相生、水木相润，主生发向上、朝气蓬勃"
-                                       : "金土相生、厚土载物，主稳固厚重、藏风聚气";
+        String groupGua = isEast ? "坎离震巽" : "乾坤艮兑";
 
         StringBuilder sb = new StringBuilder();
-        sb.append("为何这样排？简单说就是「<b>物以类聚</b>」的道理。<br/>");
-        sb.append("「").append(bagua).append("」属").append(group).append("（")
-          .append(groupGua).append("，五行").append(groupElement).append("），");
-        sb.append("其特点是").append(groupFeature).append("。<br/><br/>");
-
+        sb.append("「").append(bagua).append("」宅属<b>").append(group).append("</b>（")
+          .append(groupGua).append("），同组卦气相通、游年顺飞而定八方吉凶。<br/><br/>");
         sb.append(BAZHAI_KOUJUE);
-
-        sb.append("<font color='#D6BE86'>一句话总结：</font>");
-        sb.append("吉方布卧室厅门，凶方布厕储，");
-        sb.append("即「<b>趋吉避凶</b>」，乃八宅核心之道。");
+        sb.append("<br/><font color='#D6BE86'>要诀：</font>吉方布卧室厅门，凶方布厕储，趋吉避凶。");
 
         return sb.toString();
     }
@@ -685,14 +676,14 @@ public class LuoPanActivity extends android.app.Activity {
             }
         }
 
-        // 通俗原因解读
-        sb.append("<br/><font color='#D6BE86'><b>通俗解读：</b></font><br/>");
+        // 原因解读
+        sb.append("<br/><font color='#D6BE86'><b>解读：</b></font><br/>");
         sb.append(getJiuxingPlainExplanation(bagua, baguaNumber));
         jiuxingDesc.setText(Html.fromHtml(sb.toString()));
     }
 
     /**
-     * 九星飞宫的通俗解读：让普通人也能看懂为什么这样判断
+     * 九星飞宫解读：说明当值星气场基调与吉凶方之理
      */
     private String getJiuxingPlainExplanation(String bagua, int baguaNumber) {
         String[] starNames = {"一白贪狼", "二黑巨门", "三碧禄存", "四绿文曲", "五黄廉贞",
@@ -700,49 +691,44 @@ public class LuoPanActivity extends android.app.Activity {
         String inCenterStar = starNames[baguaNumber - 1];
 
         StringBuilder sb = new StringBuilder();
-        sb.append("九星飞宫，即九星按洛书顺序轮流入中当值，<br/>");
-        sb.append("中宫之星为「<b>当值星</b>」，定全局气场基调。<br/><br/>");
-
-        sb.append("当前坐山<b>").append(bagua).append("</b>卦入中，当值星为「<b>")
-          .append(inCenterStar).append("</b>」，其影响如下：<br/>");
+        sb.append("坐山<b>").append(bagua).append("</b>卦入中，当值星为「<b>")
+          .append(inCenterStar).append("</b>」，定全局气场基调：<br/>");
 
         // 根据入中星给出本局基调解释
         switch (baguaNumber) {
             case 1:
-                sb.append("一白（水）入中，水主智流通，利学业远行，气场温润，宜进修谋划。");
+                sb.append("一白水入中，主智流通，利学业远行，气场温润，宜进修谋划。");
                 break;
             case 2:
-                sb.append("二黑（土）入中，土主病符，气场沉闷易病，护脾胃，宜静养忌动土。");
+                sb.append("二黑土入中，土主病符，气场沉闷易病，护脾胃，宜静养忌动土。");
                 break;
             case 3:
-                sb.append("三碧（木）入中，木主争斗，易口舌是非，防小人，忌动怒，宜绿植。");
+                sb.append("三碧木入中，木主争斗，易口舌是非，防小人，忌动怒，宜绿植。");
                 break;
             case 4:
-                sb.append("四绿（木）入中，木主文昌，利读书创作、签约，宜学宜谈。");
+                sb.append("四绿木入中，木主文昌，利读书创作、签约，宜学宜谈。");
                 break;
             case 5:
-                sb.append("五黄（土）入中，大凶煞，灾病破财，宜静忌动土，用铜器化解。");
+                sb.append("五黄土入中，大凶煞，灾病破财，宜静忌动土，用铜器化解。");
                 break;
             case 6:
-                sb.append("六白（金）入中，金主权势，利升职求职，贵人助，宜进取。");
+                sb.append("六白金入中，金主权势，利升职求职，贵人助，宜进取。");
                 break;
             case 7:
-                sb.append("七赤（金）入中，金主肃杀，易破财招盗，防小人官非，宜守忌投机。");
+                sb.append("七赤金入中，金主肃杀，易破财招盗，防小人官非，宜守忌投机。");
                 break;
             case 8:
-                sb.append("八白（土）入中，旺财星，利置业投资求财，宜积累。");
+                sb.append("八白土入中，旺财星，利置业投资求财，宜积累。");
                 break;
             case 9:
-                sb.append("九紫（火）入中，火主喜庆，利婚嫁添丁，宜办喜事谈合作。");
+                sb.append("九紫火入中，火主喜庆，利婚嫁添丁，宜办喜事谈合作。");
                 break;
         }
         sb.append("<br/><br/>");
 
         sb.append(JIUXING_KOUJUE);
 
-        sb.append("<font color='#D6BE86'>一句话总结：</font>");
-        sb.append("吉星方宜活动办公，凶星方宜摆金属绿植化解，");
-        sb.append("即「<b>星随宫转，吉凶有方</b>」。");
+        sb.append("<br/><font color='#D6BE86'>要诀：</font>吉星方宜活动办公，凶星方以金属绿植化解，星随宫转、吉凶有方。");
 
         return sb.toString();
     }
@@ -789,33 +775,24 @@ public class LuoPanActivity extends android.app.Activity {
             sb.append(" ").append(bamenMeaning[i]).append("<br/>");
         }
 
-        // 通俗原因解读
-        sb.append("<br/><font color='#D6BE86'><b>通俗解读：</b></font><br/>");
+        // 原因解读
+        sb.append("<br/><font color='#D6BE86'><b>解读：</b></font><br/>");
         sb.append(getBamenPlainExplanation(bagua, baguaNumber));
         bamenDesc.setText(Html.fromHtml(sb.toString()));
     }
 
     /**
-     * 八门遁法的通俗解读：让普通人也能看懂为什么这样判断
+     * 八门遁法解读：说明门气吉凶与行事择门之理
      */
     private String getBamenPlainExplanation(String bagua, int baguaNumber) {
         StringBuilder sb = new StringBuilder();
-        sb.append("八门，可以理解为「<b>八扇运势之门</b>」，每扇门后面藏着不同的能量。<br/>");
-        sb.append("古人行军打仗、出行办事，都要看走哪扇门「<b>吉凶不同</b>」。<br/><br/>");
-
-        sb.append("以坐山卦为起点，八门按序排入八方。<br/>");
-        sb.append("当前坐山为<b>").append(bagua).append("</b>卦，自此起休门顺排。<br/><br/>");
-
+        sb.append("坐山<b>").append(bagua).append("</b>卦起休门顺排八方，门各有气：<br/><br/>");
         sb.append(BAMEN_KOUJUE);
 
         // 根据当前坐山卦，给出实战建议
-        sb.append("<font color='#D6BE86'>生活应用建议：</font><br/>");
+        sb.append("<br/><font color='#D6BE86'>应用：</font><br/>");
         sb.append(getBamenLifeAdvice(baguaNumber));
-        sb.append("<br/>");
-
-        sb.append("<font color='#D6BE86'>一句话总结：</font>");
-        sb.append("办事谈合作，先看吉门凶门方位，");
-        sb.append("吉门顺、凶门波折，即「<b>择门而行</b>」。");
+        sb.append("<br/><br/><font color='#D6BE86'>要诀：</font>办事择吉门（休生开）而行，凶门（死惊伤）波折，择门定吉凶。");
 
         return sb.toString();
     }
@@ -849,12 +826,9 @@ public class LuoPanActivity extends android.app.Activity {
         sb.append("<br/>");
 
         // 水法详解
-        sb.append("<b>【水法详解】</b><br/>");
-        sb.append("水为财源，山为人根；天门宜开，地户宜闭。<br/>");
-        sb.append("<font color='#3FA34D'>【吉水】</font>环抱水·九曲水·朝海水<br/>");
-        sb.append("<font color='#E0593B'>【凶水】</font>直冲水·反弓水·割脚水<br/>");
-        sb.append("　水口：").append(getShuikouDirection(mountain)).append("方，宜有关拦<br/>");
-        sb.append("　来水：").append(getLaishuiDirection(mountain)).append("方，宜开阔<br/>");
+        sb.append("<b>【水法】</b><br/>");
+        sb.append("<font color='#3FA34D'>吉水</font>：环抱·九曲·朝海　<font color='#E0593B'>凶水</font>：直冲·反弓·割脚<br/>");
+        sb.append("水口：").append(getShuikouDirection(mountain)).append("方宜关拦　来水：").append(getLaishuiDirection(mountain)).append("方宜开阔<br/>");
 
         // 坐山向水吉凶
         sb.append("<br/><b>【坐山向水】</b><br/>");

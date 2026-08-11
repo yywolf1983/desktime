@@ -1216,180 +1216,135 @@ function renderAnalysisGrid(palaceData) {
     // 生成各宫详细分析
     const palaceAnalysis = generatePalaceAnalysis(palaceData, gongwei);
 
-    // 生成整体分析报告
+    // 生成整体分析报告（简洁高密度版）
+    const fuStar = zhifu.replace('星', '');
+    const shiDoor = zhishi.replace('门', '');
     let analysisHtml = `
-        <div class="analysis-summary">
-            <h4>📅 当前排盘</h4>
-            <div class="summary-row">
-                <span>排盘时间：</span><strong>${paiPanTime}</strong>
-            </div>
-            <div class="summary-row">
-                <span>节气：</span><strong>${jieqi}</strong>
-                <span class="sub-info">(${getJieqiAdvice(jieqi)})</span>
-            </div>
-            <div class="summary-row">
-                <span>遁局：</span><strong>${dun}${ju}</strong>
-                <span class="sub-info">(${getDunJuGuide(dun, ju)})</span>
-            </div>
-            <div class="summary-row">
-                <span>四柱：</span><strong>${sizhu}</strong>
+        <div class="analysis-summary compact">
+            <h4>当前排盘</h4>
+            <div class="summary-grid">
+                <div class="summary-cell"><span>排盘时间</span><strong>${paiPanTime}</strong></div>
+                <div class="summary-cell"><span>节气</span><strong>${jieqi}</strong><em>${getJieqiAdvice(jieqi)}</em></div>
+                <div class="summary-cell"><span>遁局</span><strong>${dun}${ju}</strong><em>${getDunJuGuide(dun, ju)}</em></div>
+                <div class="summary-cell"><span>四柱</span><strong>${sizhu}</strong></div>
+                <div class="summary-cell"><span>空亡</span><strong style="color:var(--red)">${kongwang}</strong><em>${getKongWangAdvice(kongwang)}</em></div>
+                <div class="summary-cell"><span>马星</span><strong style="color:var(--blue)">${maxing}</strong><em>${getMaXingAdvice(maxing)}</em></div>
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>🎯 核心要素详解</h4>
-            <div class="detail-section">
-                <h5>🌟 值符：${zhifu}</h5>
-                <p><strong>落宫：</strong>${zhifuPalace}</p>
-                <p><strong>含义：</strong>${getStarMeaning(zhifu.replace('星', ''))}</p>
-                <p><strong>详细解释：</strong>${getStarDetail(zhifu.replace('星', ''))}</p>
-                <p><strong>当前启示：</strong>${getZhifuAdvice(zhifu)}</p>
-            </div>
-            <div class="detail-section">
-                <h5>🚪 值使：${zhishi}</h5>
-                <p><strong>落宫：</strong>${zhishiPalace}</p>
-                <p><strong>含义：</strong>${getDoorMeaning(zhishi.replace('门', ''))}</p>
-                <p><strong>详细解释：</strong>${getDoorDetail(zhishi.replace('门', ''))}</p>
-                <p><strong>当前启示：</strong>${getZhishiAdvice(zhishi)}</p>
-            </div>
-            <div class="detail-section">
-                <h5>📅 旬首：${xunshou}</h5>
-                <p><strong>含义：</strong>${getXunshouInfo(xunshou)}</p>
-                <p><strong>空亡：</strong><span style="color: var(--red);">${kongwang}</span> - ${getKongWangAdvice(kongwang)}</p>
-                <p><strong>马星：</strong><span style="color: var(--blue);">${maxing}</span> - ${getMaXingAdvice(maxing)}</p>
+        <div class="analysis-summary compact">
+            <h4>核心要素</h4>
+            <div class="core-grid">
+                <div class="core-card">
+                    <div class="core-head">值符 <strong>${zhifu}</strong> <em>落${zhifuPalace}</em></div>
+                    <div class="core-line">${getStarMeaning(fuStar)}</div>
+                    <div class="core-rev">▸ ${getZhifuAdvice(zhifu)}</div>
+                </div>
+                <div class="core-card">
+                    <div class="core-head">值使 <strong>${zhishi}</strong> <em>落${zhishiPalace}</em></div>
+                    <div class="core-line">${getDoorMeaning(shiDoor)}</div>
+                    <div class="core-rev">▸ ${getZhishiAdvice(zhishi)}</div>
+                </div>
+                <div class="core-card">
+                    <div class="core-head">旬首 <strong>${xunshou}</strong></div>
+                    <div class="core-line">${getXunshouInfo(xunshou)}</div>
+                    <div class="core-rev">▸ 空亡${kongwang} · 马星${maxing}</div>
+                </div>
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>👤 日干与时干分析</h4>
-            <div class="detail-section">
-                <h5>🌞 日干：${riGan}</h5>
-                <p><strong>落宫：</strong>${riGanPalace}</p>
-                <p><strong>含义：</strong>日干代表求测人自身，落宫状态反映自身处境。</p>
-                <p><strong>当前启示：</strong>${getRiGanAdvice(riGan[0], palaceData)}</p>
-            </div>
-            <div class="detail-section">
-                <h5>🌙 时干：${shiGan}</h5>
-                <p><strong>落宫：</strong>${shiGanPalace}</p>
-                <p><strong>含义：</strong>时干代表所求之事或他人，落宫状态反映事情发展。</p>
-                <p><strong>当前启示：</strong>${getShiGanAdvice(shiGan[0], palaceData)}</p>
-            </div>
-            <div class="detail-section">
-                <h5>🔗 日时关系</h5>
-                <p>${getRiShiRelationship(riGan[0], shiGan[0], riGanPalace, shiGanPalace)}</p>
+        <div class="analysis-summary compact">
+            <h4>日干 · 时干</h4>
+            <div class="core-grid">
+                <div class="core-card">
+                    <div class="core-head">日干 <strong>${riGan}</strong> <em>落${riGanPalace}（自身）</em></div>
+                    <div class="core-rev">▸ ${getRiGanAdvice(riGan[0], palaceData)}</div>
+                </div>
+                <div class="core-card">
+                    <div class="core-head">时干 <strong>${shiGan}</strong> <em>落${shiGanPalace}（所谋之事）</em></div>
+                    <div class="core-rev">▸ ${getShiGanAdvice(shiGan[0], palaceData)}</div>
+                </div>
+                <div class="core-card">
+                    <div class="core-head">日时关系</div>
+                    <div class="core-line">${getRiShiRelationship(riGan[0], shiGan[0], riGanPalace, shiGanPalace)}</div>
+                </div>
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>🗺️ 各宫详细分析</h4>
+        <div class="analysis-summary compact">
+            <h4>九宫速览</h4>
             <div class="palace-analysis-grid">
                 ${palaceAnalysis}
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>🌟 当前运势指导</h4>
-            <div class="daily-guide">
-                <div class="guide-section">
-                    <h5>💼 事业与工作</h5>
-                    <p>${dailyGuide.career}</p>
-                </div>
-                <div class="guide-section">
-                    <h5>💰 财运与理财</h5>
-                    <p>${dailyGuide.wealth}</p>
-                </div>
-                <div class="guide-section">
-                    <h5>💕 感情与人际</h5>
-                    <p>${dailyGuide.relationships}</p>
-                </div>
-                <div class="guide-section">
-                    <h5>💪 健康与养生</h5>
-                    <p>${dailyGuide.health}</p>
-                </div>
-                <div class="guide-section">
-                    <h5>🚗 出行与办事</h5>
-                    <p>${dailyGuide.travel}</p>
-                </div>
-                <div class="guide-section">
-                    <h5>📚 学习与提升</h5>
-                    <p>${dailyGuide.study}</p>
-                </div>
+        <div class="analysis-summary compact">
+            <h4>当前运势指导</h4>
+            <div class="daily-guide compact">
+                <div class="guide-section"><h5>事业</h5><p>${dailyGuide.career}</p></div>
+                <div class="guide-section"><h5>财运</h5><p>${dailyGuide.wealth}</p></div>
+                <div class="guide-section"><h5>感情</h5><p>${dailyGuide.relationships}</p></div>
+                <div class="guide-section"><h5>健康</h5><p>${dailyGuide.health}</p></div>
+                <div class="guide-section"><h5>出行</h5><p>${dailyGuide.travel}</p></div>
+                <div class="guide-section"><h5>学习</h5><p>${dailyGuide.study}</p></div>
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>📊 吉凶方位指南</h4>
+        <div class="analysis-summary compact">
+            <h4>吉凶方位</h4>
             <div class="direction-guide">
                 <div class="direction-group">
-                    <h5>✅ 吉方（宜往）</h5>
-                    <p>${luckyDirections.length > 0 ? luckyDirections.join('、') : '当前无明显吉方'}</p>
-                    <p class="guide-tip">吉方适合开展重要事务、洽谈合作、求财祈福</p>
+                    <h5>吉方（宜往）</h5>
+                    <p class="dir-list">${luckyDirections.length > 0 ? luckyDirections.join('、') : '当前无明显吉方'}</p>
                 </div>
                 <div class="direction-group caution">
-                    <h5>❌ 凶方（慎往）</h5>
-                    <p>${unluckyDirections.length > 0 ? unluckyDirections.join('、') : '当前无明显凶方'}</p>
-                    <p class="guide-tip">凶方应避免重要决策、签约谈判、出行办事</p>
+                    <h5>凶方（慎往）</h5>
+                    <p class="dir-list">${unluckyDirections.length > 0 ? unluckyDirections.join('、') : '当前无明显凶方'}</p>
                 </div>
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>📝 今日宜忌</h4>
-            <div class="daily-guide">
-                <div class="guide-section">
-                    <h5>✅ 今日宜</h5>
-                    <p>${generateYi(zhishi.replace('门', ''), dun)}</p>
-                </div>
-                <div class="guide-section">
-                    <h5>❌ 今日忌</h5>
-                    <p>${generateJi(zhishi.replace('门', ''), dun)}</p>
-                </div>
+        <div class="analysis-summary compact">
+            <h4>今日宜忌</h4>
+            <div class="daily-guide compact two-col">
+                <div class="guide-section yi"><h5>宜</h5><p>${generateYi(shiDoor, dun)}</p></div>
+                <div class="guide-section ji"><h5>忌</h5><p>${generateJi(shiDoor, dun)}</p></div>
             </div>
         </div>
 
-        <div class="analysis-summary">
-            <h4>💡 当前寄语</h4>
-            <div class="daily-message">
-                <p>${dailyGuide.message}</p>
-            </div>
+        <div class="analysis-summary compact">
+            <h4>当前寄语</h4>
+            <div class="daily-message"><p>${dailyGuide.message}</p></div>
         </div>
     `;
 
     grid.innerHTML = analysisHtml;
 }
 
-// 生成各宫详细分析
+// 生成各宫详细分析（紧凑版：要素标签行 + 一句旺衰启示）
 function generatePalaceAnalysis(palaceData, gongwei) {
     let html = '';
     const displayOrder = [5, 0, 7, 2, 4, 6, 1, 8, 3];
-    
+
     displayOrder.forEach((index) => {
         const data = palaceData[index];
         const gongName = gongwei[index];
-        const luckColor = data.luck === '吉' ? 'color: var(--green)' : data.luck === '凶' ? 'color: var(--red)' : 'color: var(--gold)';
-        
+        const luckColor = data.luck === '吉' ? 'var(--green)' : data.luck === '凶' ? 'var(--red)' : 'var(--gold)';
+        const wangColor = data.wangCui === '旺' || data.wangCui === '相' ? 'var(--green)'
+                        : data.wangCui === '囚' || data.wangCui === '死' ? 'var(--red)' : 'var(--gold)';
+
         html += `
             <div class="palace-analysis-card">
                 <div class="palace-analysis-header">
                     <span class="palace-analysis-name">${gongName}</span>
-                    <span class="palace-analysis-luck" style="${luckColor}">${data.luck}</span>
+                    <span class="palace-analysis-luck" style="color:${luckColor}">${data.luck}</span>
                 </div>
-                <div class="palace-analysis-body">
-                    <div class="palace-analysis-row">
-                        <span>八神：</span><strong>${data.god || '—'}</strong>
-                    </div>
-                    <div class="palace-analysis-row">
-                        <span>九星：</span><strong>${data.star}</strong>
-                    </div>
-                    <div class="palace-analysis-row">
-                        <span>八门：</span><strong>${data.door || '—'}门</strong>
-                    </div>
-                    <div class="palace-analysis-row">
-                        <span>天干：</span><strong>${data.tianGan}/${data.diGan}</strong>
-                    </div>
-                    <div class="palace-analysis-row">
-                        <span>旺衰：</span><strong>${data.wangCui}</strong>
-                    </div>
+                <div class="palace-tags">
+                    <span class="ptag"><i>神</i>${data.god || '—'}</span>
+                    <span class="ptag"><i>星</i>${data.star}</span>
+                    <span class="ptag"><i>门</i>${data.door || '—'}</span>
+                    <span class="ptag"><i>干</i>${data.tianGan}/${data.diGan}</span>
+                    <span class="ptag" style="color:${wangColor}"><i>旺</i>${data.wangCui}</span>
                 </div>
                 <div class="palace-analysis-footer">
                     ${getPalaceAdvice(data)}
@@ -1397,35 +1352,35 @@ function generatePalaceAnalysis(palaceData, gongwei) {
             </div>
         `;
     });
-    
+
     return html;
 }
 
-// 获取宫位建议
+// 获取宫位建议（一句精简）
 function getPalaceAdvice(data) {
     const advice = [];
-    
+
     if (data.luck === '吉') {
-        advice.push('此宫吉庆，诸事顺遂');
+        advice.push('吉庆顺遂');
     } else if (data.luck === '凶') {
-        advice.push('此宫凶险，宜谨慎行事');
+        advice.push('凶险谨慎');
     } else {
-        advice.push('此宫平平，稳守为宜');
+        advice.push('平稳守成');
     }
-    
+
     if (data.wangCui === '旺') {
-        advice.push('得令而旺，气势充足');
+        advice.push('得令而旺，气势充盈');
     } else if (data.wangCui === '相') {
         advice.push('得生而相，有助益');
     } else if (data.wangCui === '休') {
-        advice.push('休养生息，不宜强求');
+        advice.push('气退休废，宜潜养');
     } else if (data.wangCui === '囚') {
-        advice.push('被囚受制，事多阻碍');
+        advice.push('受制被囚，多有滞碍');
     } else if (data.wangCui === '死') {
-        advice.push('处死地，事难有成');
+        advice.push('气临死地，事多不成');
     }
-    
-    return `<p>${advice.join('。')}</p>`;
+
+    return `<p>${advice.join(' · ')}</p>`;
 }
 
 // 获取空亡建议

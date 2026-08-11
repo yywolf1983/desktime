@@ -26,9 +26,6 @@ public class FullNinePalaceActivity extends Activity {
     private TextView expGan;
     private TextView expSummary;
     private DetailedNinePalacePanel expTianDiPan;
-    private DetailedNinePalacePanel expNineStars;
-    private DetailedNinePalacePanel expEightDoors;
-    private DetailedNinePalacePanel expGods;
     private TextView expDirection;
     private TextView expYiJi;
     private TextView expLife;
@@ -37,9 +34,6 @@ public class FullNinePalaceActivity extends Activity {
     private TextView expOverall;
 
     private TextView expTianDiPanDesc;
-    private TextView expNineStarsDesc;
-    private TextView expEightDoorsDesc;
-    private TextView expGodsDesc;
     private TextView expPalacesDesc;
     private TextView expPaipanYiju;
 
@@ -120,9 +114,6 @@ public class FullNinePalaceActivity extends Activity {
         expGan = (TextView) findViewById(R.id.expGan);
         expSummary = (TextView) findViewById(R.id.expSummary);
         expTianDiPan = (DetailedNinePalacePanel) findViewById(R.id.expTianDiPan);
-        expNineStars = (DetailedNinePalacePanel) findViewById(R.id.expNineStars);
-        expEightDoors = (DetailedNinePalacePanel) findViewById(R.id.expEightDoors);
-        expGods = (DetailedNinePalacePanel) findViewById(R.id.expGods);
         expDirection = (TextView) findViewById(R.id.expDirection);
         expYiJi = (TextView) findViewById(R.id.expYiJi);
         expLife = (TextView) findViewById(R.id.expLife);
@@ -130,9 +121,6 @@ public class FullNinePalaceActivity extends Activity {
         expTime = (TextView) findViewById(R.id.expTime);
         expOverall = (TextView) findViewById(R.id.expOverall);
         expTianDiPanDesc = (TextView) findViewById(R.id.expTianDiPanDesc);
-        expNineStarsDesc = (TextView) findViewById(R.id.expNineStarsDesc);
-        expEightDoorsDesc = (TextView) findViewById(R.id.expEightDoorsDesc);
-        expGodsDesc = (TextView) findViewById(R.id.expGodsDesc);
         expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
         expPaipanYiju = (TextView) findViewById(R.id.expPaipanYiju);
         
@@ -449,10 +437,11 @@ public class FullNinePalaceActivity extends Activity {
             String diGan = diPanTianGan[i];
             String luck = getLuckSymbol(star, door, god, wangCui[i]);
 
-            palaceData[i][0] = PALACE_NAMES[i] + " " + DIRECTION_SYMBOLS[i] + " " + DIRECTIONS[i];
-            palaceData[i][1] = god + " " + star;
-            palaceData[i][2] = (door != null && !door.isEmpty() ? door : " ") + " " + tianGan + "/" + diGan;
-            palaceData[i][3] = luck + " " + wangCui[i];
+            // 宫内四行：宫名+干支 / 九星 / 八门 / 八神+旺衰，九星八门八神均置于九宫之内
+            palaceData[i][0] = PALACE_NAMES[i] + " " + tianGan + "/" + diGan;
+            palaceData[i][1] = star + "星";
+            palaceData[i][2] = (door != null && !door.isEmpty() ? door : " ") + "门";
+            palaceData[i][3] = god + " " + wangCui[i];
             
             luckData[i] = luck;
         }
@@ -1021,37 +1010,20 @@ public class FullNinePalaceActivity extends Activity {
         expGan.setText(android.text.Html.fromHtml(sbGan.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         String[][] tianDiPanData = new String[9][2];
-        String[][] nineStarsData = new String[9][2];
-        String[][] eightDoorsData = new String[9][2];
-        String[][] godsData = new String[9][2];
         String[] luckData = new String[9];
         
         for (int i = 0; i < 9; i++) {
             tianDiPanData[i][0] = PALACE_NAMES[i];
             tianDiPanData[i][1] = tianPan[i] + "/" + diPanTianGan[i];
             
-            nineStarsData[i][0] = PALACE_NAMES[i];
-            nineStarsData[i][1] = nineStars[i] + "星";
-            
             String door = eightDoors[i] != null && !eightDoors[i].isEmpty() ? eightDoors[i] : "";
-            eightDoorsData[i][0] = PALACE_NAMES[i];
-            eightDoorsData[i][1] = door + "门";
-            
             String god = eightGods[i] != null && !eightGods[i].isEmpty() ? eightGods[i] : "";
-            godsData[i][0] = PALACE_NAMES[i];
-            godsData[i][1] = god;
             
             luckData[i] = getLuckSymbol(nineStars[i], door, god, wangCui[i]);
         }
         
         expTianDiPan.setPalaceData(tianDiPanData);
         expTianDiPan.setLuckData(luckData);
-        expNineStars.setPalaceData(nineStarsData);
-        expNineStars.setLuckData(luckData);
-        expEightDoors.setPalaceData(eightDoorsData);
-        expEightDoors.setLuckData(luckData);
-        expGods.setPalaceData(godsData);
-        expGods.setLuckData(luckData);
         
         StringBuilder sbDirection = new StringBuilder();
         StringBuilder luckyDirections = new StringBuilder();
@@ -1106,9 +1078,9 @@ public class FullNinePalaceActivity extends Activity {
         // 紧凑汇总形式，省去5行解释
         if (wangPositions.length() > 0) sbDirection.append("<font color='#3FA34D'>旺</font>：").append(wangPositions).append("（得时·百事顺）<br/>");
         if (xiangPositions.length() > 0) sbDirection.append("<font color='#3FA34D'>相</font>：").append(xiangPositions).append("（得生·次吉）<br/>");
-        if (xiuPositions.length() > 0) sbDirection.append("😌 <font color='#E6C46A'>休</font>：").append(xiuPositions).append("（休息·宜静）<br/>");
+        if (xiuPositions.length() > 0) sbDirection.append("<font color='#E6C46A'>休</font>：").append(xiuPositions).append("（退藏·静养）<br/>");
         if (qiuPositions.length() > 0) sbDirection.append("<font color='#F3BA66'>囚</font>：").append(qiuPositions).append("（受克·不利）<br/>");
-        if (siPositions.length() > 0) sbDirection.append("💀 <font color='#E0593B'>死</font>：").append(siPositions).append("（处死·衰败）</font>");
+        if (siPositions.length() > 0) sbDirection.append("<font color='#E0593B'>死</font>：").append(siPositions).append("（处死·衰败）</font>");
         expDirection.setText(android.text.Html.fromHtml(sbDirection.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbYiJi = new StringBuilder();
@@ -1135,12 +1107,10 @@ public class FullNinePalaceActivity extends Activity {
         String shiGanLuck = shiGanPalace >= 0 ? luckData[shiGanPalace] : "未知";
         
         StringBuilder sbLife = new StringBuilder();
-        sbLife.append("<font color='#CCB866'><b>事业学业</b></font>：").append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getStudyAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("<font color='#CCB866'><b>财运</b></font>：").append(getWealthAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("<font color='#CCB866'><b>健康饮食</b></font>：").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getDietAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("<font color='#CCB866'><b>感情人际</b></font>：").append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append(" ").append(getSocialAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("🚗 <font color='#CCB866'><b>出行</b></font>：").append(getTravelAdvice(zhiShiDoor, zhiFuStar)).append("<br/>");
-        sbLife.append("🧘 <font color='#CCB866'><b>心态</b></font>：").append(getMindAdvice(zhiShiDoor, zhiFuStar));
+        sbLife.append("今日以").append(getMindAdvice(zhiShiDoor, zhiFuStar)).append("；事业学业")
+              .append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append("，财运").append(getWealthAdvice(zhiShiDoor, zhiFuStar))
+              .append("，健康饮食").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append("，感情人际")
+              .append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append("，出行").append(getTravelAdvice(zhiShiDoor, zhiFuStar)).append("。");
         expLife.setText(android.text.Html.fromHtml(sbLife.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         String[][] palacesData = new String[9][3];
@@ -1168,9 +1138,6 @@ public class FullNinePalaceActivity extends Activity {
         expOverall.setText(getOverallAdviceSimple(isYangDun, ju, zhiFuStar, zhiShiDoor));
         
         if (expTianDiPanDesc != null) expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, nineStars, PALACE_NAMES), android.text.Html.FROM_HTML_MODE_LEGACY));
-        if (expNineStarsDesc != null) expNineStarsDesc.setText(android.text.Html.fromHtml(getNineStarsDesc(nineStars), android.text.Html.FROM_HTML_MODE_LEGACY));
-        if (expEightDoorsDesc != null) expEightDoorsDesc.setText(android.text.Html.fromHtml(getEightDoorsDesc(eightDoors), android.text.Html.FROM_HTML_MODE_LEGACY));
-        if (expGodsDesc != null) expGodsDesc.setText(android.text.Html.fromHtml(getEightGodsDesc(eightGods), android.text.Html.FROM_HTML_MODE_LEGACY));
         if (expPalacesDesc != null) expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         if (expPaipanYiju != null) {
@@ -1180,7 +1147,6 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getTianDiPanDesc(String[] palaces, String[] nineStars, String[] palaceNames) {
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#7C8C9C'>天盘主天时，地盘主地利，天地交合定吉凶。</font><br/><br/>");
 
         String[] directions = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
 
@@ -1218,129 +1184,61 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     private String getNineStarsDesc(String[] stars) {
-        StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#7C8C9C'>九星主天时吉凶</font><br/><br/>");
-
         String[][] starInfo = {
-            {"天蓬", "吉星", "#3FA34D", "水星·智谋，利投资；忌破财"},
-            {"天任", "吉星", "#98FB98", "土星·诚信，利置业；忌阻滞"},
-            {"天冲", "凶星", "#E0593B", "木星·勇猛，利进取；忌冲动"},
-            {"天辅", "吉星", "#ADFF2F", "木星·文昌，利考试；忌桃花"},
-            {"天英", "平星", "#E6C46A", "火星·名声，利求名；忌急躁"},
-            {"天芮", "凶星", "#DC143C", "土星·疾病，利学习；忌久病"},
-            {"天柱", "平星", "#F3BA66", "金星·变革，利改革；忌争斗"},
-            {"天心", "吉星", "#3FA34D", "金星·谋略，利策划；忌药石"},
-            {"天禽", "吉星", "#98FB98", "土星·中正，利协调；忌优柔"}
+            {"天蓬", "#DC143C", "水·凶星，险陷，利智谋慎涉险"},
+            {"天任", "#98FB98", "土·诚信，利置业"},
+            {"天冲", "#E0593B", "木·勇猛，忌冲动"},
+            {"天辅", "#ADFF2F", "木·文昌，利科考"},
+            {"天英", "#E6C46A", "火·名声，忌急躁"},
+            {"天芮", "#DC143C", "土·凶星，主疾病，宜静养避病"},
+            {"天柱", "#DC143C", "金·凶星，破毁，忌争斗"},
+            {"天心", "#3FA34D", "金·谋略，利策划"},
+            {"天禽", "#98FB98", "土·中正，利协调"}
         };
-
-        desc.append("<font color='#E6C46A'><b>吉星</b></font><br/>");
+        StringBuilder desc = new StringBuilder();
         for (String[] info : starInfo) {
-            if (info[1].equals("吉星")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
+            desc.append("<font color='").append(info[1]).append("'>").append(info[0]).append("</font>")
+                .append("<font color='#98D8F0'> ").append(info[2]).append("</font>　");
         }
-
-        desc.append("<br/><font color='#E6C46A'><b>平星</b></font><br/>");
-        for (String[] info : starInfo) {
-            if (info[1].equals("平星")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
-        }
-
-        desc.append("<br/><font color='#E0593B'><b>凶星</b></font><br/>");
-        for (String[] info : starInfo) {
-            if (info[1].equals("凶星")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("星</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
-        }
-
-        return desc.toString();
+        return desc.toString().trim();
     }
     
     private String getEightDoorsDesc(String[] doors) {
-        StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#7C8C9C'>八门主人事吉凶</font><br/><br/>");
-
         String[][] doorInfo = {
-            {"休", "吉门", "#3FA34D", "水门·休养，百事皆宜"},
-            {"生", "吉门", "#98FB98", "土门·求财，谋事得利"},
-            {"伤", "凶门", "#E0593B", "木门·损伤，出行不利"},
-            {"杜", "平门", "#E6C46A", "木门·闭塞，宜守不宜攻"},
-            {"景", "平门", "#F3BA66", "火门·名声，利考试求名"},
-            {"死", "凶门", "#DC143C", "土门·衰败，百事不宜"},
-            {"惊", "凶门", "#E0593B", "金门·惊恐，官非诉讼"},
-            {"开", "吉门", "#ADFF2F", "金门·通达，贵人相助"}
+            {"休", "#3FA34D", "水·休养，百事宜"},
+            {"生", "#98FB98", "土·求财，谋事得"},
+            {"伤", "#E0593B", "木·损伤，出行忌"},
+            {"杜", "#E6C46A", "木·闭塞，宜守"},
+            {"景", "#F3BA66", "火·名声，利求名"},
+            {"死", "#DC143C", "土·衰败，百事忌"},
+            {"惊", "#E0593B", "金·惊恐，官非"},
+            {"开", "#ADFF2D", "金·通达，得贵助"}
         };
-
-        desc.append("<font color='#E6C46A'><b>吉门</b></font><br/>");
+        StringBuilder desc = new StringBuilder();
         for (String[] info : doorInfo) {
-            if (info[1].equals("吉门")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
+            desc.append("<font color='").append(info[1]).append("'>").append(info[0]).append("门</font>")
+                .append("<font color='#98D8F0'> ").append(info[2]).append("</font>　");
         }
-
-        desc.append("<br/><font color='#E6C46A'><b>平门</b></font><br/>");
-        for (String[] info : doorInfo) {
-            if (info[1].equals("平门")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
-        }
-
-        desc.append("<br/><font color='#E0593B'><b>凶门</b></font><br/>");
-        for (String[] info : doorInfo) {
-            if (info[1].equals("凶门")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("门</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
-        }
-
-        return desc.toString();
+        return desc.toString().trim();
     }
     
     private String getEightGodsDesc(String[] gods) {
-        StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#7C8C9C'>八神主外部影响</font><br/><br/>");
-
         String[][] godInfo = {
-            {"值符", "吉神", "#3FA34D", "尊贵权力，贵人相助"},
-            {"螣蛇", "凶神", "#E0593B", "怪异缠绕，虚惊恐慌"},
-            {"太阴", "吉神", "#98FB98", "暗中助力，贵人庇佑"},
-            {"六合", "吉神", "#ADFF2F", "合作婚姻，交易和谈"},
-            {"白虎", "凶神", "#DC143C", "血光灾祸，疾病争斗"},
-            {"玄武", "凶神", "#E0593B", "偷盗欺骗，暧昧小人"},
-            {"九地", "平神", "#E6C46A", "沉稳蓄势，保守守成"},
-            {"九天", "吉神", "#3FA34D", "飞黄腾达，进取远行"}
+            {"值符", "#3FA34D", "尊贵，得贵助"},
+            {"螣蛇", "#E0593B", "怪异，虚惊"},
+            {"太阴", "#98FB98", "暗助，得庇佑"},
+            {"六合", "#ADFF2D", "合作，利婚谈"},
+            {"白虎", "#DC143C", "血光，争疾"},
+            {"玄武", "#E0593B", "偷欺，小人"},
+            {"九地", "#E6C46A", "沉稳，宜守成"},
+            {"九天", "#3FA34D", "腾达，利远行"}
         };
-
-        desc.append("<font color='#E6C46A'><b>吉神</b></font><br/>");
+        StringBuilder desc = new StringBuilder();
         for (String[] info : godInfo) {
-            if (info[1].equals("吉神")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
+            desc.append("<font color='").append(info[1]).append("'>").append(info[0]).append("</font>")
+                .append("<font color='#98D8F0'> ").append(info[2]).append("</font>　");
         }
-
-        desc.append("<br/><font color='#E6C46A'><b>平神</b></font><br/>");
-        for (String[] info : godInfo) {
-            if (info[1].equals("平神")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
-        }
-
-        desc.append("<br/><font color='#E0593B'><b>凶神</b></font><br/>");
-        for (String[] info : godInfo) {
-            if (info[1].equals("凶神")) {
-                desc.append("<font color='").append(info[2]).append("'>").append(info[0]).append("</font> ");
-                desc.append("<font color='#98D8F0'>").append(info[3]).append("</font><br/>");
-            }
-        }
-        return desc.toString();
+        return desc.toString().trim();
     }
     
     private String getPalacesDesc(String[] palaces, String[] stars, String[] doors, String[] gods, String[] lucks) {
@@ -1394,140 +1292,140 @@ public class FullNinePalaceActivity extends Activity {
                 return "时生日，事生我，事半功倍易得助";
             }
         }
-        return "日时平平，宜勉力，顺其自然";
+        return "日时比和，气数持平，循常而动";
     }
     
     private String getCareerAdvice(String door, String star) {
         if (door == null) return "谨慎行事";
         switch (door) {
-            case "开": return "宜主动出击，把握良机";
-            case "生": return "宜把握机遇，积极进取";
-            case "休": return "宜休息调整，学习进修";
-            case "景": return "宜展示才华，积极表现";
-            case "伤": return "宜稳守待时，防小人";
-            case "杜": return "宜静守待变，加强沟通";
-            case "死": return "防受挫失机，宜守不宜攻";
-            case "惊": return "宜慎言慎行，低调处事";
-            default: return "宜按部就班";
+            case "开": return "主动出击，乘势进取";
+            case "生": return "把握机遇，积极进取";
+            case "休": return "休整蓄力，学习进修";
+            case "景": return "展示才华，积极表现";
+            case "伤": return "稳守待时，防小人侵";
+            case "杜": return "静守待变，加强沟通";
+            case "死": return "守不宜攻，防失机";
+            case "惊": return "慎言慎行，低调处事";
+            default: return "按部就班";
         }
     }
-    
+
     private String getWealthAdvice(String door, String star) {
         if (door == null) return "谨慎理财";
         switch (door) {
-            case "生": return "宜积极求财，投资理财";
-            case "开": return "宜大胆尝试，创造财富";
-            case "休": return "宜稳健理财，储蓄守财";
-            case "景": return "宜量力而行，见好就收";
+            case "生": return "积极求财，宜投资理财";
+            case "开": return "大胆尝试，广开财源";
+            case "休": return "稳健理财，储蓄守财";
+            case "景": return "量力而行，见好就收";
             case "伤": return "不宜投资，守财为主";
-            case "杜": return "宜静观其变，等待时机";
-            case "死": return "守财为主，防破财";
+            case "杜": return "静观其变，待时而动";
+            case "死": return "守财为主，防破财耗";
             case "惊": return "不宜借贷，谨慎理财";
-            default: return "宜稳健理财";
+            default: return "稳健理财";
         }
     }
-    
+
     private String getRelationshipAdvice(String door, String star) {
         if (door == null) return "谨慎交往";
         switch (door) {
-            case "休": return "宜主动沟通，增进感情";
-            case "生": return "适合表白求婚";
-            case "开": return "宜拓展人脉，结识贵人";
-            case "景": return "宜展示魅力，积极社交";
+            case "休": return "主动沟通，增进感情";
+            case "生": return "利于表白求婚";
+            case "开": return "拓展人脉，结交贵人";
+            case "景": return "展示魅力，积极社交";
             case "惊": return "防感情风波，冷静沟通";
-            case "伤": return "宜克制情绪";
-            case "死": return "宜反思修复";
-            case "杜": return "宜主动沟通，消除误会";
-            default: return "宜顺其自然";
+            case "伤": return "克制情绪，避免冲突";
+            case "死": return "反思修复，不宜强求";
+            case "杜": return "主动沟通，消除误会";
+            default: return "顺其自然";
         }
     }
-    
+
     private String getHealthAdvice(String door, String star) {
         if (door == null) return "注意保养";
         switch (door) {
-            case "休": return "宜养生休息，劳逸结合";
-            case "生": return "宜适度运动，增强体质";
-            case "开": return "宜户外活动，保持活力";
-            case "死": return "防身体不适，定期检查";
+            case "休": return "养生休息，劳逸结合";
+            case "生": return "适度运动，增强体质";
+            case "开": return "户外活动，保持活力";
+            case "死": return "防身不适，定期检查";
             case "伤": return "防意外伤害，注意安全";
-            case "景": return "宜清淡饮食，避免熬夜";
+            case "景": return "清淡饮食，避免熬夜";
             case "杜": return "防情绪郁结，放松心情";
             case "惊": return "防精神紧张，静心安神";
-            default: return "宜保持良好习惯";
+            default: return "保持良好习惯";
         }
     }
-    
+
     private String getStudyAdvice(String door, String star) {
         if (door == null) return "勤奋学习";
         switch (door) {
-            case "景": return "宜刻苦钻研，把握良机";
-            case "开": return "宜拓展知识，提高效率";
-            case "生": return "适合备考复习，技能提升";
-            case "休": return "宜静心学习，温故知新";
-            case "杜": return "宜多思考实践，克服困难";
-            case "伤": return "需坚持，防半途而废";
-            case "死": return "宜调整心态，寻找方法";
-            case "惊": return "宜放松心态，沉着应对";
-            default: return "宜循序渐进";
+            case "景": return "刻苦钻研，把握良机";
+            case "开": return "拓展知识，提高效率";
+            case "生": return "备考复习，技能提升";
+            case "休": return "静心学习，温故知新";
+            case "杜": return "多思多践，克服困难";
+            case "伤": return "贵在坚持，防半途废";
+            case "死": return "调整心态，另觅方法";
+            case "惊": return "放松心态，沉着应对";
+            default: return "循序渐进";
         }
     }
-    
+
     private String getTravelAdvice(String door, String star) {
         if (door == null) return "谨慎出行";
         switch (door) {
-            case "开": return "出行顺利，适合出差旅游";
-            case "休": return "宜休闲出行，度假放松";
-            case "生": return "出行吉利，适合远足求财";
-            case "景": return "宜观光游览，文化体验";
+            case "开": return "出行顺利，宜出差游历";
+            case "休": return "休闲出行，度假放松";
+            case "生": return "出行吉利，远足求财";
+            case "景": return "观光游览，文化体验";
             case "惊": return "防交通延误，谨慎出行";
             case "伤": return "防出行意外，注意安全";
-            case "死": return "不宜远行，在家为宜";
+            case "死": return "不宜远行，宜居家";
             case "杜": return "出行受阻，谨慎安排";
             default: return "出行平稳，注意安全";
         }
     }
-    
+
     private String getDietAdvice(String door, String star) {
         if (door == null) return "饮食清淡";
         switch (door) {
-            case "生": return "宜进补养生，营养均衡";
-            case "休": return "宜清淡饮食，素食调理";
-            case "开": return "宜社交聚餐，朋友聚会";
-            case "景": return "宜清热降火，清淡饮食";
-            case "死": return "饮食需谨慎，注意卫生";
-            case "伤": return "节制饮食，不暴饮暴食";
+            case "生": return "进补养生，营养均衡";
+            case "休": return "清淡素食，调理脾胃";
+            case "开": return "社交聚餐，会友欢叙";
+            case "景": return "清热降火，清淡饮食";
+            case "死": return "饮食谨慎，注意卫生";
+            case "伤": return "节制饮食，忌暴饮";
             case "惊": return "保持规律饮食";
-            case "杜": return "宜简单饮食，家常便饭";
-            default: return "饮食宜规律，营养均衡";
+            case "杜": return "简单饮食，家常便饭";
+            default: return "饮食规律，营养均衡";
         }
     }
-    
+
     private String getSocialAdvice(String door, String star) {
         if (door == null) return "谨慎交友";
         switch (door) {
-            case "开": return "宜积极社交，广结善缘";
-            case "休": return "适合维系旧友，家庭聚会";
-            case "生": return "宜合作共赢，团队协作";
-            case "景": return "宜展示自我，参加活动";
+            case "开": return "积极社交，广结善缘";
+            case "休": return "维系旧友，家庭聚会";
+            case "生": return "合作共赢，团队协作";
+            case "景": return "展示自我，参与活动";
             case "惊": return "防口舌是非，少言多行";
             case "伤": return "人际紧张，宜低调";
-            case "死": return "宜减少社交，不宜聚会";
-            case "杜": return "社交受阻，宜主动沟通";
+            case "死": return "减少社交，不宜聚会";
+            case "杜": return "社交受阻，主动沟通";
             default: return "社交平稳，顺其自然";
         }
     }
-    
+
     private String getMindAdvice(String door, String star) {
         if (door == null) return "保持平和";
         switch (door) {
-            case "休": return "宜修身养性，保持平和";
+            case "休": return "修身养性，保持平和";
             case "生": return "心态积极，保持乐观";
-            case "开": return "宜开拓视野，突破自我";
-            case "景": return "宜保持热情，积极探索";
-            case "死": return "宜调整心态，寻找转机";
-            case "伤": return "宜保持冷静，克制冲动";
-            case "惊": return "宜减少焦虑，放松心情";
-            case "杜": return "宜保持耐心，静待时机";
+            case "开": return "开拓视野，突破自我";
+            case "景": return "保持热情，积极探索";
+            case "死": return "调整心态，寻找转机";
+            case "伤": return "保持冷静，克制冲动";
+            case "惊": return "减少焦虑，放松心情";
+            case "杜": return "保持耐心，静待时机";
             default: return "保持平常心，顺其自然";
         }
     }
@@ -1579,28 +1477,24 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     private String getTimeFortune(String timeZhi, String zhiShiDoor, String zhiFuStar) {
-        if (timeZhi == null) return "时辰吉利";
+        if (timeZhi == null) return "时辰吉利，宜顺时而为";
         
         String timeInfo = "";
         switch (timeZhi) {
-            case "子": timeInfo = "子时(23-1点): 阴气最重"; break;
-            case "丑": timeInfo = "丑时(1-3点): 肝经当令"; break;
-            case "寅": timeInfo = "寅时(3-5点): 肺经当令"; break;
-            case "卯": timeInfo = "卯时(5-7点): 大肠经当令"; break;
-            case "辰": timeInfo = "辰时(7-9点): 胃经当令"; break;
-            case "巳": timeInfo = "巳时(9-11点): 脾经当令"; break;
-            case "午": timeInfo = "午时(11-13点): 心经当令"; break;
-            case "未": timeInfo = "未时(13-15点): 小肠经当令"; break;
-            case "申": timeInfo = "申时(15-17点): 膀胱经当令"; break;
-            case "酉": timeInfo = "酉时(17-19点): 肾经当令"; break;
-            case "戌": timeInfo = "戌时(19-21点): 心包经当令"; break;
-            case "亥": timeInfo = "亥时(21-23点): 三焦经当令"; break;
+            case "子": timeInfo = "子(23-1) 胆经当令"; break;
+            case "丑": timeInfo = "丑(1-3) 肝经当令"; break;
+            case "寅": timeInfo = "寅(3-5) 肺经当令"; break;
+            case "卯": timeInfo = "卯(5-7) 大肠经当令"; break;
+            case "辰": timeInfo = "辰(7-9) 胃经当令"; break;
+            case "巳": timeInfo = "巳(9-11) 脾经当令"; break;
+            case "午": timeInfo = "午(11-13) 心经当令"; break;
+            case "未": timeInfo = "未(13-15) 小肠经当令"; break;
+            case "申": timeInfo = "申(15-17) 膀胱经当令"; break;
+            case "酉": timeInfo = "酉(17-19) 肾经当令"; break;
+            case "戌": timeInfo = "戌(19-21) 心包经当令"; break;
+            case "亥": timeInfo = "亥(21-23) 三焦经当令"; break;
             default: timeInfo = "时辰";
         }
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append(timeInfo);
-        sb.append("\n");
 
         String[] luckyDoors = {"开", "休", "生"};
         boolean isLuckyDoor = false;
@@ -1610,14 +1504,12 @@ public class FullNinePalaceActivity extends Activity {
                 break;
             }
         }
-        
+
         if (isLuckyDoor) {
-            sb.append("吉门当值，运势佳，宜积极行动");
+            return timeInfo + " · 吉门当值，宜进取";
         } else {
-            sb.append("平门/凶门当值，宜稳守待时");
+            return timeInfo + " · 凶门当值，宜静守";
         }
-        
-        return sb.toString();
     }
     
     private String[] getYiActivitiesDetailed(String star, String door) {
@@ -1734,8 +1626,6 @@ public class FullNinePalaceActivity extends Activity {
     private String getOverallAdviceSimple(boolean isYangDun, int ju, String star, String door) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("📊 综合建议\n\n");
-
         String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
         String[] luckyDoors = {"开", "休", "生"};
 
@@ -1747,27 +1637,24 @@ public class FullNinePalaceActivity extends Activity {
             for (String d : luckyDoors) if (d.equals(door)) isLuckyDoor = true;
         }
 
-        sb.append("📈 整体运势\n");
         if (isLuckyStar && isLuckyDoor) {
-            sb.append("🏆 ★★★ 大吉 · 值符值使皆吉，运势极佳\n");
+            sb.append("整体运势：大吉（值符值使皆吉），宜乘势进取\n");
         } else if (isLuckyStar || isLuckyDoor) {
-            sb.append("👍 ★★ 小吉 - 值符值使一吉，运势平稳\n");
+            sb.append("整体运势：小吉（值符值使一吉），宜稳步而行\n");
         } else {
-            sb.append("★ 平平 - 值符值使欠佳，宜谨慎行事\n");
+            sb.append("整体运势：平平（值符值使欠佳），宜谨慎守成\n");
         }
-        sb.append("\n");
 
-        sb.append("行事准则\n");
         if (door != null) {
             switch (door) {
-                case "开": sb.append("🚀 大胆开创，把握良机\n"); break;
-                case "生": sb.append("🌱 稳扎稳打，注重积累\n"); break;
-                case "休": sb.append("😌 劳逸结合，养精蓄锐\n"); break;
-                case "景": sb.append("展示才华，言出必行\n"); break;
-                case "杜": sb.append("静守待时，蓄力待发\n"); break;
-                case "伤": sb.append("谨慎行事，防损破财\n"); break;
-                case "死": sb.append("保守谨慎，清理整顿\n"); break;
-                case "惊": sb.append("🔔 镇定自若，防口舌是非\n"); break;
+                case "开": sb.append("行事：开门主开创，宜决策拓局"); break;
+                case "生": sb.append("行事：生门主生发，宜积累蓄势"); break;
+                case "休": sb.append("行事：休门主养息，宜蓄锐待机"); break;
+                case "景": sb.append("行事：景门主显扬，宜宣示立信"); break;
+                case "杜": sb.append("行事：杜门主闭塞，宜潜藏守密"); break;
+                case "伤": sb.append("行事：伤门主损耗，宜防损避争"); break;
+                case "死": sb.append("行事：死门主收敛，宜清整止戈"); break;
+                case "惊": sb.append("行事：惊门主破扰，宜镇定慎言"); break;
             }
         }
 
@@ -1777,12 +1664,12 @@ public class FullNinePalaceActivity extends Activity {
     private String getKongWangExplanation(String kongWang) {
         if (kongWang == null || kongWang.equals("--")) return "空亡主事体不实";
         String[] explanations = {
-            "主空虚，防情感，宜充实",
-            "主金弱，防肺疾，宜润肺",
-            "主火弱，防心疾，宜静心",
-            "主土弱，防脾胃，宜健脾",
-            "主木弱，防肝胆，宜疏肝",
-            "主水弱，防肾虚，宜补肾"
+            "主气虚散，情思浮荡，宜收摄充实",
+            "主金气衰，肺系易病，宜润燥固金",
+            "主火气衰，心系易扰，宜宁心镇火",
+            "主土气衰，脾胃失运，宜培土健中",
+            "主木气衰，肝胆疏泄失司，宜柔肝条达",
+            "主水气衰，肾元不藏，宜温肾固本"
         };
         java.util.Map<String, String> map = new java.util.HashMap<>();
         map.put("戌亥", explanations[0]);
@@ -1812,12 +1699,12 @@ public class FullNinePalaceActivity extends Activity {
         }
         String status = wangCui[riGanPalace];
         switch (status) {
-            case "旺": return "气势最旺，诸事顺遂";
-            case "相": return "次吉，多助，事易成";
-            case "休": return "平和安宁，不宜强求";
-            case "囚": return "困顿受阻，事多不利";
-            case "死": return "衰败不利，宜守不宜攻";
-            default: return "旺衰状态不明";
+            case "旺": return "得令而旺，气盛事通";
+            case "相": return "得生而相，有助易成";
+            case "休": return "气退休废，静养为宜";
+            case "囚": return "受制被囚，滞碍难行";
+            case "死": return "气临死地，守固勿攻";
+            default: return "旺衰未明";
         }
     }
     
@@ -1871,55 +1758,49 @@ public class FullNinePalaceActivity extends Activity {
         String shunNi = isYangDun ? "顺" : "逆";
         
         StringBuilder sb = new StringBuilder();
-        String tip = "<br/>　<font color='#7C8C9C'>▸ ";
-        String tipEnd = "</font>";
-        
+
         // 1. 四柱
         sb.append(getTitleColor).append("<b>【四柱】</b> ").append(getClose)
           .append(yearPillar).append(" ").append(monthPillar).append(" ").append(dayPillar).append(" ").append(timePillar)
-          .append(tip).append("日柱为立极之本").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 2. 局法
         sb.append(getTitleColor).append("<b>【局法】</b> ").append(getClose)
           .append(jieqi).append("　").append(dunType).append(ju).append("局").append(shunNi).append("行")
-          .append(tip).append("冬至阳遁 · 夏至阴遁 · 拆补法定局").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 3. 值符值使
         sb.append(getTitleColor).append("<b>【值符值使】</b> ").append(getClose)
           .append("时柱定旬首 ").append(xunShou).append("<br/>");
-        sb.append("　<font color='#7C8C9C'>旬首→值符星·值使门</font><br/>");
-        sb.append("　甲子天蓬/休　甲戌天芮/生　甲申天冲/伤<br/>");
-        sb.append("　甲午天辅/杜　甲辰天禽/景　甲寅天心/死<br/>");
         sb.append("　值符 ").append(getFireColor).append(zhiFuStar).append(getClose).append("落").append(PALACE_NAMES[zhiFuPalace])
           .append("　值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose).append("落").append(PALACE_NAMES[zhiShiPalace])
-          .append(tip).append("值符随时干 · 值使随时支").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 4. 三奇六仪
         sb.append(getTitleColor).append("<b>【三奇六仪】</b> ").append(getClose)
           .append("三奇 ").append(getFireColor).append("乙丙丁").append(getClose)
           .append("　六仪 ").append(getEarthColor).append("戊己庚辛壬癸").append(getClose)
-          .append(tip).append("地盘六仪顺布、三奇逆插；天盘随时干转动").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 5. 九星
         sb.append(getTitleColor).append("<b>【九星】</b> ").append(getClose)
           .append("值符 ").append(getFireColor).append(zhiFuStar).append(getClose).append("自").append(PALACE_NAMES[zhiFuPalace]).append(shunNi).append("飞：蓬芮冲辅禽心柱任英")
-          .append(tip).append("星随符转 · 天禽居中五").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 6. 八门
         sb.append(getTitleColor).append("<b>【八门】</b> ").append(getClose)
           .append("值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose).append("自").append(PALACE_NAMES[zhiShiPalace]).append(shunNi).append("飞：休生伤杜景死惊开")
-          .append(tip).append("门随使转 · 中宫无门").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 7. 八神
         sb.append(getTitleColor).append("<b>【八神】</b> ").append(getClose)
           .append("自").append(PALACE_NAMES[zhiFuPalace]).append(shunNi).append("布：符蛇阴合白玄地天")
-          .append(tip).append("神随符走 · 中宫空 · 阴阳遁序异").append(tipEnd).append("<br/><br/>");
-        
+          .append("<br/><br/>");
+
         // 8. 关键
         sb.append(getTitleColor).append("<b>【关键】</b> ").append(getClose)
-          .append(dunType).append(shunNi).append("行　值符星随时干　值使门随时支")
-          .append(tip).append("天盘主动地盘静 · 星门神仪合参").append(tipEnd);
-        
+          .append(dunType).append(shunNi).append("行　值符星随时干　值使门随时支");
+
         return sb.toString();
     }
     

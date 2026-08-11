@@ -2483,19 +2483,25 @@ public class DestinyCalculator {
     }
 
     // 计算日柱（1900年1月1日为甲戌日，索引10）
+    // 采用整数儒略日算法求两日期之间的纯日历天数差，避免毫秒差在夏令时切换日
+    // （1986-1991 中国曾实行夏时制）产生 ±1 天的误差，确保日柱准确。
     public static String getDayPillar(int year, int month, int day) {
         try {
-            java.util.Calendar target = java.util.Calendar.getInstance();
-            target.set(year, month - 1, day);
-            java.util.Calendar base = java.util.Calendar.getInstance();
-            base.set(1900, 0, 1);
-            long daysDiff = (target.getTimeInMillis() - base.getTimeInMillis()) / (1000L * 60 * 60 * 24);
-            int idx = (10 + (int) daysDiff) % 60;
+            int daysDiff = julianDay(year, month, day) - julianDay(1900, 1, 1);
+            int idx = (10 + daysDiff) % 60;
             if (idx < 0) idx += 60;
             return LIUJIAZI_ARR[idx];
         } catch (Exception e) {
             return "甲午";
         }
+    }
+
+    // 儒略日数（整数部分，正午为基准，此处取当日整数即可用于求差）
+    private static int julianDay(int y, int m, int d) {
+        if (m <= 2) { y -= 1; m += 12; }
+        int a = y / 100;
+        int b = 2 - a + a / 4;
+        return (int) (365.25 * (y + 4716)) + (int) (30.6001 * (m + 1)) + d + b - 1524;
     }
 
     public static String getTimePillar(int hour, int minute, String dayGan) {

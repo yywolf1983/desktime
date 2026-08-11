@@ -50,7 +50,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.4"
                     android:orientation="vertical"
                     android:gravity="center">
                     <TextView
@@ -60,13 +60,55 @@
                         android:textColor="@color/gold_faint"
                         android:textSize="14sp"
                         android:layout_marginBottom="6dp"/>
-                    <NumberPicker
-                        android:id="@+id/yearPicker"
-                        android:layout_width="80dp"
-                        android:layout_height="200dp"
-                        android:theme="@style/PickerTextStyle"
-                        android:inputType="none"
-                        android:descendantFocusability="blocksDescendants"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <TextView
+                            android:id="@+id/yearMinus"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:text="–"
+                            android:textColor="@color/gold_faint"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:background="@drawable/card_background"/>
+                        <EditText
+                            android:id="@+id/yearEdit"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:textColor="#CCB866"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:background="@drawable/card_background"
+                            android:digits="0123456789"/>
+                        <TextView
+                            android:id="@+id/yearPlus"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:text="+"
+                            android:textColor="@color/gold_faint"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:background="@drawable/card_background"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="可点击输入年份"
+                        android:textColor="@color/gold_faint"
+                        android:textSize="10sp"
+                        android:layout_marginTop="6dp"
+                        android:alpha="0.6"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -189,6 +231,17 @@
                     android:textSize="13sp"
                     android:lineSpacingExtra="4dp"
                     android:text="加载中..."/>
+
+                <TextView
+                    android:id="@+id/tvDateGap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/gold_faint"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="4dp"
+                    android:gravity="center"
+                    android:text="与今日：—"/>
             </LinearLayout>
 
             <View

@@ -8,6 +8,7 @@ import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -15,9 +16,12 @@ import java.util.Calendar;
 
 public class CustomDateTimePickerDialog extends Dialog {
 
-    private NumberPicker yearPicker, monthPicker, dayPicker, hourPicker, minutePicker;
+    private EditText yearEdit;
+    private TextView yearMinus, yearPlus;
+    private NumberPicker monthPicker, dayPicker, hourPicker, minutePicker;
     private TextView cancelButton, confirmButton;
     private TextView tvYiJi;
+    private TextView tvDateGap;
     private OnDateTimeSetListener listener;
 
     public interface OnDateTimeSetListener {
@@ -45,26 +49,80 @@ public class CustomDateTimePickerDialog extends Dialog {
 
     private void setupYiJi() {
         tvYiJi = findViewById(R.id.tvYiJi);
+        tvDateGap = findViewById(R.id.tvDateGap);
         if (tvYiJi != null) {
             updateYiJi();
         }
+        updateDateGap();
 
-        // 年/月变化时同时更新日期范围和宜忌
+        // 年/月/日变化时同时更新日期范围、宜忌及与今日差距
         NumberPicker.OnValueChangeListener dayAndYiJiUpdater = (picker, oldVal, newVal) -> {
             updateDayRange();
             updateYiJi();
+            updateDateGap();
         };
-        yearPicker.setOnValueChangedListener(dayAndYiJiUpdater);
         monthPicker.setOnValueChangedListener(dayAndYiJiUpdater);
 
-        // 日变化时更新宜忌
-        dayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> updateYiJi());
+        // 日变化时更新宜忌及差距
+        dayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+            updateYiJi();
+            updateDateGap();
+        });
+    }
+
+    private void updateDateGap() {
+        if (tvDateGap == null) return;
+        try {
+            int y = getYearValue();
+            int m = monthPicker.getValue();
+            int d = dayPicker.getValue();
+
+            Calendar now = Calendar.getInstance();
+            now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            now.set(Calendar.MILLISECOND, 0);
+
+            Calendar target = Calendar.getInstance();
+            target.set(y, m - 1, d, 0, 0, 0);
+            target.set(Calendar.MILLISECOND, 0);
+
+            long diffDays = (target.getTimeInMillis() - now.getTimeInMillis()) / (1000L * 60 * 60 * 24);
+
+            if (diffDays == 0) {
+                tvDateGap.setText("与今日：即今日（0天）");
+                return;
+            }
+
+            boolean future = diffDays > 0;
+            int sign = future ? 1 : -1;
+
+            int yDiff = y - now.get(Calendar.YEAR);
+            int mDiff = m - (now.get(Calendar.MONTH) + 1);
+            int dDiff = d - now.get(Calendar.DAY_OF_MONTH);
+
+            // 日借位
+            if (dDiff * sign < 0) {
+                mDiff -= sign;
+                Calendar prev = (Calendar) target.clone();
+                prev.add(Calendar.DATE, -sign);
+                dDiff += sign * prev.getActualMaximum(Calendar.DAY_OF_MONTH);
+            }
+            // 月借位
+            if (mDiff * sign < 0) {
+                yDiff -= sign;
+                mDiff += sign * 12;
+            }
+
+            String prefix = future ? "还需" : "已过去";
+            tvDateGap.setText("与今日：" + prefix + " " + yDiff + "年" + mDiff + "个月" + dDiff + "天（" + (future ? "+" : "") + diffDays + "天）");
+        } catch (Exception e) {
+            tvDateGap.setText("与今日：—");
+        }
     }
 
     private void updateYiJi() {
         if (tvYiJi == null) return;
         try {
-            int year = yearPicker.getValue();
+            int year = getYearValue();
             int month = monthPicker.getValue();
             int day = dayPicker.getValue();
             String html = DestinyCalculator.getDailyYiJi(year, month, day);
@@ -75,7 +133,9 @@ public class CustomDateTimePickerDialog extends Dialog {
     }
 
     private void initPickers(Calendar calendar) {
-        yearPicker = findViewById(R.id.yearPicker);
+        yearEdit = findViewById(R.id.yearEdit);
+        yearMinus = findViewById(R.id.yearMinus);
+        yearPlus = findViewById(R.id.yearPlus);
         monthPicker = findViewById(R.id.monthPicker);
         dayPicker = findViewById(R.id.dayPicker);
         hourPicker = findViewById(R.id.hourPicker);
@@ -83,11 +143,25 @@ public class CustomDateTimePickerDialog extends Dialog {
 
         int currentYear = calendar.get(Calendar.YEAR);
 
-        // Year: 当前年份±60年，缩小范围方便快速选择
-        yearPicker.setMinValue(currentYear - 60);
-        yearPicker.setMaxValue(currentYear + 60);
-        yearPicker.setValue(currentYear);
-        yearPicker.setWrapSelectorWheel(false);
+        // Year: 可点击输入 + 加减按钮，避免滚轮滚动上百年的麻烦
+        yearEdit.setText(String.valueOf(currentYear));
+        yearMinus.setOnClickListener(v -> adjustYear(-1));
+        yearPlus.setOnClickListener(v -> adjustYear(1));
+        yearEdit.setOnEditorActionListener((v, actionId, event) -> {
+            syncYearFromInput();
+            yearEdit.clearFocus();
+            return true;
+        });
+        yearEdit.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) syncYearFromInput();
+        });
+        yearEdit.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int st, int b, int c) {}
+            @Override public void onTextChanged(CharSequence s, int st, int b, int c) {
+                updateDateGap();
+            }
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
 
         // Month: 1-12，显示为 "01月" 格式
         monthPicker.setMinValue(1);
@@ -112,21 +186,41 @@ public class CustomDateTimePickerDialog extends Dialog {
         minutePicker.setValue(calendar.get(Calendar.MINUTE));
         minutePicker.setFormatter(i -> String.format("%02d分", i));
 
-        // Update day when month/year changes
+        // Update day when month changes
         NumberPicker.OnValueChangeListener dayUpdater = (picker, oldVal, newVal) -> updateDayRange();
-        yearPicker.setOnValueChangedListener(dayUpdater);
         monthPicker.setOnValueChangedListener(dayUpdater);
 
         // Style the pickers
-        styleNumberPicker(yearPicker);
         styleNumberPicker(monthPicker);
         styleNumberPicker(dayPicker);
         styleNumberPicker(hourPicker);
         styleNumberPicker(minutePicker);
     }
 
+    private int getYearValue() {
+        try {
+            String s = yearEdit.getText().toString().trim();
+            if (s.isEmpty()) return Calendar.getInstance().get(Calendar.YEAR);
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return Calendar.getInstance().get(Calendar.YEAR);
+        }
+    }
+
+    private void syncYearFromInput() {
+        int y = getYearValue();
+        yearEdit.setText(String.valueOf(y));
+        updateDayRange();
+    }
+
+    private void adjustYear(int delta) {
+        int y = getYearValue() + delta;
+        yearEdit.setText(String.valueOf(y));
+        updateDayRange();
+    }
+
     private void updateDayRange() {
-        int year = yearPicker.getValue();
+        int year = getYearValue();
         int month = monthPicker.getValue();
         int maxDay = getMaxDayOfMonth(year, month);
         dayPicker.setMinValue(1);
@@ -198,7 +292,7 @@ public class CustomDateTimePickerDialog extends Dialog {
         confirmButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDateTimeSet(
-                    yearPicker.getValue(),
+                    getYearValue(),
                     monthPicker.getValue(),
                     dayPicker.getValue(),
                     hourPicker.getValue(),

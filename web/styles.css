@@ -984,7 +984,143 @@ body::before {
 .palace-analysis-footer p {
     color: var(--text-secondary);
     font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ===== 紧凑版解读样式 ===== */
+.analysis-summary.compact {
+    padding: 16px 18px;
+    gap: 0;
+}
+.analysis-summary.compact h4 {
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+}
+
+/* 当前排盘：网格 */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 8px 18px;
+}
+.summary-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 0;
+    border-bottom: 0.5px dashed var(--border-color);
+}
+.summary-cell span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+.summary-cell strong {
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+.summary-cell em {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-style: normal;
+}
+
+/* 核心要素 / 日时：卡片网格 */
+.core-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+}
+.core-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+.core-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+.core-head strong {
+    color: var(--gold);
+    font-size: 1.05rem;
+}
+.core-head em {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-style: normal;
+}
+.core-line {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+.core-rev {
+    color: var(--text-primary);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* 九宫速览：要素标签 */
+.palace-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 6px;
+    margin-bottom: 8px;
+}
+.ptag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(191, 160, 85, 0.08);
+    border: 0.5px solid rgba(191, 160, 85, 0.2);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+}
+.ptag i {
+    font-style: normal;
+    color: var(--gold);
+    font-size: 0.7rem;
+    opacity: 0.85;
+}
+
+/* 运势指导紧凑网格 */
+.daily-guide.compact {
+    gap: 10px;
+}
+.daily-guide.compact .guide-section {
+    padding: 12px 14px;
+}
+.daily-guide.compact .guide-section h5 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+.daily-guide.compact .guide-section p {
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+.daily-guide.two-col {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.guide-section.yi { border-color: rgba(122, 154, 96, 0.3); }
+.guide-section.yi h5 { color: var(--green); }
+.guide-section.ji { border-color: rgba(196, 123, 94, 0.3); }
+.guide-section.ji h5 { color: var(--red); }
+
+/* 方位列表（去大段文字） */
+.direction-group .dir-list {
+    font-size: 0.95rem;
     line-height: 1.6;
+    color: var(--text-primary);
     margin: 0;
 }
 
