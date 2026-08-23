@@ -94,3 +94,6 @@ Desktop.ini
 # Linux
 *~
 .fuse_hidden*
+
+.stfolder/
+.stignore

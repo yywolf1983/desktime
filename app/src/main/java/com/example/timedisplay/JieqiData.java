@@ -226,57 +226,83 @@ public class JieqiData {
 
     // 带 hour 的重载：节气采用公历日取整（寿星公式固有精度），这里以正午 12:00 为界细化“当日临界”归属，
     // 将原来“整日 ±1 天”的误差收敛为以正午为界的近似，使节气名/倒计时在临界日更贴合真实时刻。
+    //
+    // 注意：小寒、大寒在每年1月，在节气年顺序中位于冬至之后、立春之前，跨日历年。
+    // getJieqiDate(year, 22/23) 返回的是 year+1 年1月的日期（下一节气年的小寒、大寒），
+    // 因此当年1月的小寒、大寒需用 getJieqiDate(year-1, 22/23) 获取。
+    // 旧实现“早于立春直接返回大寒”忽略了1月初的小寒期，且 i=23 循环用当年立春作为下一节气，
+    // 导致1月初到立春前这段日期返回的节气错误。这里改为先单独判断1月、2月初边界，再循环立春到冬至。
     public static String getJieqi(int year, int month, int day, int hour) {
-        int[] lichunDate = getJieqiDate(year, 0);
-        if (month < lichunDate[1] || (month == lichunDate[1] && (day < lichunDate[2] || (day == lichunDate[2] && hour < 12)))) {
+        long now = toMillis(year, month, day, hour);
+
+        // 当年1月的小寒、大寒：用 getJieqiDate(year-1, 22/23) 获取
+        int[] xiaohan = getJieqiDate(year - 1, 22);   // [year, 1, ...]
+        int[] dahan = getJieqiDate(year - 1, 23);     // [year, 1, ...]
+        int[] lichun = getJieqiDate(year, 0);         // [year, 2, ...]
+
+        // 在小寒之前，实际属于上一年的冬至期
+        if (now < toMillis(xiaohan[0], xiaohan[1], xiaohan[2], 12)) {
+            return "冬至";
+        }
+        // 小寒 <= now < 大寒
+        if (now < toMillis(dahan[0], dahan[1], dahan[2], 12)) {
+            return "小寒";
+        }
+        // 大寒 <= now < 立春
+        if (now < toMillis(lichun[0], lichun[1], lichun[2], 12)) {
             return "大寒";
         }
-        
-        for (int i = 0; i < SOLAR_TERMS.length; i++) {
+
+        // 立春及以后：从立春(i=0)到冬至(i=21)循环
+        for (int i = 0; i <= 21; i++) {
             int[] jieqiDate = getJieqiDate(year, i);
-            int jYear = jieqiDate[0];
-            int jMonth = jieqiDate[1];
-            int jDay = jieqiDate[2];
-            
-            int nextIndex = (i + 1) % SOLAR_TERMS.length;
-            int[] nextJieqiDate = getJieqiDate(year, nextIndex);
-            int nextYear = nextJieqiDate[0];
-            int nextMonth = nextJieqiDate[1];
-            int nextDay = nextJieqiDate[2];
-
-            boolean afterJieqi = false;
-            if (year > jYear) {
-                afterJieqi = true;
-            } else if (year == jYear) {
-                if (month > jMonth) {
-                    afterJieqi = true;
-                } else if (month == jMonth && (day > jDay || (day == jDay && hour >= 12))) {
-                    afterJieqi = true;
-                }
+            int[] nextJieqiDate;
+            if (i < 21) {
+                nextJieqiDate = getJieqiDate(year, i + 1);
+            } else {
+                // 冬至(i=21)之后的下一个节气是下一年的小寒
+                nextJieqiDate = getJieqiDate(year, 22);   // [year+1, 1, ...]
             }
-            
-            boolean beforeNextJieqi = false;
-            if (year < nextYear) {
-                beforeNextJieqi = true;
-            } else if (year == nextYear) {
-                if (month < nextMonth) {
-                    beforeNextJieqi = true;
-                } else if (month == nextMonth && (day < nextDay || (day == nextDay && hour < 12))) {
-                    beforeNextJieqi = true;
-                }
-            }
-
-            if (afterJieqi && beforeNextJieqi) {
+            long jieqiTime = toMillis(jieqiDate[0], jieqiDate[1], jieqiDate[2], 12);
+            long nextJieqiTime = toMillis(nextJieqiDate[0], nextJieqiDate[1], nextJieqiDate[2], 12);
+            if (now >= jieqiTime && now < nextJieqiTime) {
                 return SOLAR_TERMS[i];
             }
         }
-        return "立春";
+        return "冬至";
+    }
+
+    // 将(year, month, day, hour)转换成毫秒时间戳，用于节气日期比较
+    private static long toMillis(int year, int month, int day, int hour) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month - 1, day, hour, 0, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTimeInMillis();
+    }
+
+    // 根据日历日期上下文，获取小寒、大寒在日历年中的具体日期。
+    // 小寒、大寒在1月：若当前在立春之前(1月、2月初)，取当年1月日期；否则取下一年1月日期。
+    // 用于 calculateDaysToNextJieqi、JieqiActivity 中需要“按当前日期上下文”获取节气日期的场景。
+    public static int[] getJieqiDateByContext(int year, int month, int day, int jieqiIndex) {
+        if (jieqiIndex == 22 || jieqiIndex == 23) {
+            int[] lichun = getJieqiDate(year, 0);
+            boolean beforeLichun = (month < lichun[1]) || (month == lichun[1] && day < lichun[2]);
+            if (beforeLichun) {
+                // 当前在立春之前，小寒、大寒是当年1月(即 getJieqiDate(year-1, idx))
+                return getJieqiDate(year - 1, jieqiIndex);
+            } else {
+                // 当前在立春及之后，小寒、大寒是下一年1月(即 getJieqiDate(year, idx))
+                return getJieqiDate(year, jieqiIndex);
+            }
+        }
+        return getJieqiDate(year, jieqiIndex);
     }
 
     public static int[] getJieqiDate(int year, int jieqiIndex) {
+        // 寿星公式节气常数(year20=20世纪, year21=21世纪);立秋常数原误为28.35,实际为8.35
         double[] year20 = {4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.88,
                            6.318, 21.86, 6.5, 22.2, 7.28, 23.65,
-                           28.35, 23.95, 8.44, 23.822, 9.098, 24.218,
+                           8.35, 23.95, 8.44, 23.822, 9.098, 24.218,
                            8.218, 23.08, 7.9, 22.6, 6.11, 20.84};
         
         double[] year21 = {3.87, 18.73, 5.63, 20.646, 4.81, 20.1,
@@ -294,15 +320,9 @@ public class JieqiData {
 
         int ydNum = calcYear % 100;
         double D = 0.2422;
-        
-        double[] solarTerms;
-        if (calcYear >= 2100) {
-            solarTerms = year21;
-        } else if (calcYear >= 2000) {
-            solarTerms = year20;
-        } else {
-            solarTerms = year20;
-        }
+
+        // 2000年及之后用21世纪常数(year21),2000年之前用20世纪常数(year20),与 web/app.js 一致
+        double[] solarTerms = (calcYear >= 2000) ? year21 : year20;
         
         int day = (int) (ydNum * D + solarTerms[jieqiIndex]) - (int) ((ydNum - 1) / 4);
         
@@ -327,31 +347,37 @@ public class JieqiData {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
         String currentJieqi = getCurrentJieqi(calendar);
         int currentIndex = getJieqiIndex(currentJieqi);
         int nextIndex = (currentIndex + 1) % 24;
 
-        int[] nextJieqiDate = getJieqiDate(year, nextIndex);
-        int targetYear = nextJieqiDate[0];
-        int nextMonth = nextJieqiDate[1];
-        int nextDay = nextJieqiDate[2];
+        // 根据当前日期上下文获取下一个节气的日期(处理小寒、大寒的跨年)
+        // 旧实现直接用 getJieqiDate(year, nextIndex),对 nextIndex=22/23(小寒/大寒)
+        // 会取 year+1 年1月的日期,在1月初(实际下个节气是当年1月的大寒)时算出跨年错误的天数。
+        int[] nextJieqiDate = getJieqiDateByContext(year, month, day, nextIndex);
+        long nextJieqiTime = toMillis(nextJieqiDate[0], nextJieqiDate[1], nextJieqiDate[2], 12);
+        long now = toMillis(year, month, day, hour);
 
-        Calendar nextCalendar = Calendar.getInstance();
-        nextCalendar.set(targetYear, nextMonth - 1, nextDay);
-        
-        long currentMillis = calendar.getTimeInMillis();
-        long nextMillis = nextCalendar.getTimeInMillis();
-        
-        long diff = nextMillis - currentMillis;
-        int days = (int) (diff / (1000 * 60 * 60 * 24));
-        
+        long diff = nextJieqiTime - now;
+        int days = (int) (diff / (1000L * 60 * 60 * 24));
+
+        // 兜底:若仍为负(理论上不应发生),根据节气索引调整年份重算
         if (days < 0) {
-            nextCalendar.set(targetYear + 1, nextMonth - 1, nextDay);
-            diff = nextCalendar.getTimeInMillis() - currentMillis;
-            days = (int) (diff / (1000 * 60 * 60 * 24));
+            int[] alt;
+            if (nextIndex == 22 || nextIndex == 23) {
+                int[] lichun = getJieqiDate(year, 0);
+                boolean beforeLichun = (month < lichun[1]) || (month == lichun[1] && day < lichun[2]);
+                alt = beforeLichun ? getJieqiDate(year, nextIndex) : getJieqiDate(year - 1, nextIndex);
+            } else {
+                alt = getJieqiDate(year + 1, nextIndex);
+            }
+            nextJieqiTime = toMillis(alt[0], alt[1], alt[2], 12);
+            diff = nextJieqiTime - now;
+            days = (int) (diff / (1000L * 60 * 60 * 24));
         }
-        
+
         return days;
     }
 }

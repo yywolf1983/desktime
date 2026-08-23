@@ -135,7 +135,9 @@ public class JieqiActivity extends Activity {
         prevJieqi.setText(JieqiData.getPrevJieqi(jieqi));
         nextJieqi.setText(JieqiData.getNextJieqi(jieqi));
 
-        int[] date = JieqiData.getJieqiDate(cal.get(Calendar.YEAR), index);
+        // 小寒、大寒在1月,需按当前日期上下文决定显示当年1月还是下一年1月(与列表视图一致)
+        int[] date = JieqiData.getJieqiDateByContext(
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), index);
         jieqiDate.setText(date[0] + "年" + date[1] + "月" + date[2] + "日");
 
         int days = JieqiData.calculateDaysToNextJieqi(cal);
@@ -161,7 +163,8 @@ public class JieqiActivity extends Activity {
         int currentDay = cal.get(Calendar.DAY_OF_MONTH);
 
         int index = JieqiData.getJieqiIndex(currentJieqi);
-        int[] date = JieqiData.getJieqiDate(currentYear, index);
+        // 小寒、大寒跨年:1月、2月初时取当年1月日期,否则取下一年1月日期
+        int[] date = JieqiData.getJieqiDateByContext(currentYear, currentMonth, currentDay, index);
         int jieqiYear = date[0], jieqiMonth = date[1], jieqiDay = date[2];
 
         if (compareJieqiDate(jieqiYear, jieqiMonth, jieqiDay, currentYear, currentMonth, currentDay) > 0) {
@@ -211,11 +214,12 @@ public class JieqiActivity extends Activity {
 
         if (jieqiBoxes[0] == null) {
             for (int row = 0; row < ROWS; row++) {
-                jieqiListLayout.addView(buildJieqiRow(row, currentYear));
+                jieqiListLayout.addView(buildJieqiRow(row, currentYear, currentMonth, currentDay));
             }
         }
         for (int index = 0; index < JieqiData.SOLAR_TERMS.length; index++) {
-            int[] date = JieqiData.getJieqiDate(currentYear, index);
+            // 小寒、大寒跨年:按当前日期上下文决定年份,使“已过去/未来”判断与显示一致
+            int[] date = JieqiData.getJieqiDateByContext(currentYear, currentMonth, currentDay, index);
             boolean isPast = isJieqiPast(date[0], date[1], date[2], currentYear, currentMonth, currentDay);
             applyJieqiBoxState(index,
                 JieqiData.SOLAR_TERMS[index].equals(currentJieqi),
@@ -224,7 +228,7 @@ public class JieqiActivity extends Activity {
         }
     }
 
-    private LinearLayout buildJieqiRow(int rowIndex, int currentYear) {
+    private LinearLayout buildJieqiRow(int rowIndex, int currentYear, int currentMonth, int currentDay) {
         LinearLayout rowLayout = new LinearLayout(this);
         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
         rowLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -234,7 +238,7 @@ public class JieqiActivity extends Activity {
             int index = rowIndex * COLS + col;
             if (index >= JieqiData.SOLAR_TERMS.length) break;
             String jieqi = JieqiData.SOLAR_TERMS[index];
-            int[] date = JieqiData.getJieqiDate(currentYear, index);
+            int[] date = JieqiData.getJieqiDateByContext(currentYear, currentMonth, currentDay, index);
             rowLayout.addView(createJieqiBox(index, jieqi, date[1] + "/" + date[2]));
         }
         return rowLayout;

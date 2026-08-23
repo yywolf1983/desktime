@@ -332,7 +332,8 @@ function updateTimeDisplay() {
 
 // 获取节气日期
 function getJieqiDate(year, jieqiIndex) {
-    const year20 = [4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.88, 6.318, 21.86, 6.5, 22.2, 7.28, 23.65, 28.35, 23.95, 8.44, 23.822, 9.098, 24.218, 8.218, 23.08, 7.9, 22.6, 6.11, 20.84];
+    // 寿星公式20世纪节气常数;立秋常数原误为28.35,实际为8.35
+    const year20 = [4.6295, 19.4599, 6.3826, 21.4155, 5.59, 20.88, 6.318, 21.86, 6.5, 22.2, 7.28, 23.65, 8.35, 23.95, 8.44, 23.822, 9.098, 24.218, 8.218, 23.08, 7.9, 22.6, 6.11, 20.84];
     const year21 = [3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94, 5.4055, 20.12];
     const months = [2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 1, 1];
 
@@ -361,49 +362,68 @@ function getJieqiDate(year, jieqiIndex) {
     return { year: calcYear, month, day };
 }
 
+// 将(year, month, day, hour)转换为时间戳,用于节气日期比较
+function toJieqiMillis(year, month, day, hour) {
+    return new Date(year, month - 1, day, hour, 0, 0, 0).getTime();
+}
+
+// 根据日历日期上下文,获取小寒、大寒在日历年中的具体日期。
+// 小寒、大寒在1月:若当前在立春之前(1月、2月初),取当年1月日期;否则取下一年1月日期。
+function getJieqiDateByContext(year, month, day, jieqiIndex) {
+    if (jieqiIndex === 22 || jieqiIndex === 23) {
+        const lichun = getJieqiDate(year, 0);
+        const beforeLichun = (month < lichun.month) || (month === lichun.month && day < lichun.day);
+        if (beforeLichun) {
+            return getJieqiDate(year - 1, jieqiIndex);
+        } else {
+            return getJieqiDate(year, jieqiIndex);
+        }
+    }
+    return getJieqiDate(year, jieqiIndex);
+}
+
 // 获取当前节气
+// 注意:小寒、大寒在每年1月,跨日历年。getJieqiDate(year, 22/23) 返回 year+1 年1月的日期,
+// 因此当年1月的小寒、大寒需用 getJieqiDate(year-1, 22/23) 获取。
+// 旧实现“早于立春直接返回大寒”忽略了1月初的小寒期,且 i=23 循环用当年立春作为下一节气,
+// 导致1月初到立春前这段日期返回的节气错误。
 function getCurrentJieqi(date) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
+    const hour = date.getHours();
 
-    const lichunDate = getJieqiDate(year, 0);
-    if (month < lichunDate.month || (month === lichunDate.month && day < lichunDate.day)) {
+    const now = toJieqiMillis(year, month, day, hour);
+
+    // 当年1月的小寒、大寒:用 getJieqiDate(year-1, 22/23) 获取
+    const xiaohan = getJieqiDate(year - 1, 22);
+    const dahan = getJieqiDate(year - 1, 23);
+    const lichun = getJieqiDate(year, 0);
+
+    // 在小寒之前,实际属于上一年的冬至期
+    if (now < toJieqiMillis(xiaohan.year, xiaohan.month, xiaohan.day, 12)) {
+        return '冬至';
+    }
+    // 小寒 <= now < 大寒
+    if (now < toJieqiMillis(dahan.year, dahan.month, dahan.day, 12)) {
+        return '小寒';
+    }
+    // 大寒 <= now < 立春
+    if (now < toJieqiMillis(lichun.year, lichun.month, lichun.day, 12)) {
         return '大寒';
     }
 
-    for (let i = 0; i < SOLAR_TERMS.length; i++) {
+    // 立春及以后:从立春(i=0)到冬至(i=21)循环
+    for (let i = 0; i <= 21; i++) {
         const jieqiDate = getJieqiDate(year, i);
-        const nextIndex = (i + 1) % SOLAR_TERMS.length;
-        const nextJieqiDate = getJieqiDate(year, nextIndex);
-
-        let afterJieqi = false;
-        if (year > jieqiDate.year) {
-            afterJieqi = true;
-        } else if (year === jieqiDate.year) {
-            if (month > jieqiDate.month) {
-                afterJieqi = true;
-            } else if (month === jieqiDate.month && day >= jieqiDate.day) {
-                afterJieqi = true;
-            }
-        }
-
-        let beforeNextJieqi = false;
-        if (year < nextJieqiDate.year) {
-            beforeNextJieqi = true;
-        } else if (year === nextJieqiDate.year) {
-            if (month < nextJieqiDate.month) {
-                beforeNextJieqi = true;
-            } else if (month === nextJieqiDate.month && day < nextJieqiDate.day) {
-                beforeNextJieqi = true;
-            }
-        }
-
-        if (afterJieqi && beforeNextJieqi) {
+        const nextJieqiDate = (i < 21) ? getJieqiDate(year, i + 1) : getJieqiDate(year, 22);
+        const jieqiTime = toJieqiMillis(jieqiDate.year, jieqiDate.month, jieqiDate.day, 12);
+        const nextJieqiTime = toJieqiMillis(nextJieqiDate.year, nextJieqiDate.month, nextJieqiDate.day, 12);
+        if (now >= jieqiTime && now < nextJieqiTime) {
             return SOLAR_TERMS[i];
         }
     }
-    return '立春';
+    return '冬至';
 }
 
 // 计算年柱
