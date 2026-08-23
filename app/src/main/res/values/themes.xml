@@ -25,7 +25,7 @@
         <item name="android:windowLightNavigationBar">false</item>
     </style>
 
-    <style name="PickerTextStyle" parent="android:Theme.DeviceDefault.Light.NoActionBar.Fullscreen">
+    <style name="PickerTextStyle" parent="android:Theme.DeviceDefault.NoActionBar.Fullscreen">
         <item name="android:textColor">@color/gold</item>
         <item name="android:textColorPrimary">@color/gold</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>

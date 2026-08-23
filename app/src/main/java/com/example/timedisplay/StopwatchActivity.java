@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -80,7 +81,9 @@ public class StopwatchActivity extends Activity {
     private int cdHour = 0;
     private int cdMinute = 5;
     private int cdSecond = 0;
-    private TextView cdTimeText;
+    private TextView cdHourText;
+    private TextView cdMinuteText;
+    private TextView cdSecondText;
     private TextView cdStartButton;
     private TextView cdResetButton;
     private TextView cdSavePresetButton;
@@ -92,6 +95,7 @@ public class StopwatchActivity extends Activity {
     private boolean cdRunning = false;
     private Ringtone cdRingtone;
     private Vibrator cdVibrator;
+    private AudioManager cdAudioManager;
 
     private static final String CD_PREFS = "CountdownPrefs";
     private static final String KEY_PRESETS = "presets";
@@ -414,6 +418,7 @@ public class StopwatchActivity extends Activity {
 
     private void initCountdown() {
         cdVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        cdAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // 读取上次设置
         SharedPreferences cd = getSharedPreferences(CD_PREFS, MODE_PRIVATE);
@@ -426,19 +431,28 @@ public class StopwatchActivity extends Activity {
         cdMinute = m;
         cdSecond = s;
 
-        // 大号倒计时显示（点击设置时间）
-        cdTimeText = new TextView(this);
-        cdTimeText.setTextSize(48);
-        cdTimeText.setTextColor(getResources().getColor(R.color.time_gold));
-        cdTimeText.setGravity(android.view.Gravity.CENTER);
-        cdTimeText.setPadding(16, 18, 16, 18);
-        cdTimeText.setBackgroundResource(R.drawable.card_background);
-        cdTimeText.setTypeface(android.graphics.Typeface.MONOSPACE);
-        cdTimeText.setClickable(true);
+        // 倒计时显示：一行等宽金色 HH:MM:SS，时/分/秒 各自可单独点击
+        LinearLayout timeRow = new LinearLayout(this);
+        timeRow.setOrientation(LinearLayout.HORIZONTAL);
+        timeRow.setGravity(android.view.Gravity.CENTER);
         LinearLayout.LayoutParams timeLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         timeLp.setMargins(0, 14, 0, 0);
-        cdTimeText.setLayoutParams(timeLp);
+        timeRow.setLayoutParams(timeLp);
+        timeRow.setPadding(4, 4, 4, 4);
+
+        cdHourText = makeTimeSeg("时");
+        cdMinuteText = makeTimeSeg("分");
+        cdSecondText = makeTimeSeg("秒");
+
+        TextView c1 = makeColon();
+        TextView c2 = makeColon();
+
+        timeRow.addView(cdHourText);
+        timeRow.addView(c1);
+        timeRow.addView(cdMinuteText);
+        timeRow.addView(c2);
+        timeRow.addView(cdSecondText);
 
         // 控制按钮行
         cdStartButton = makeCtrlButton("开始", R.color.gold);
@@ -496,7 +510,7 @@ public class StopwatchActivity extends Activity {
             leftCol.setOrientation(LinearLayout.VERTICAL);
             leftCol.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
             leftCol.setPadding(10, 4, 10, 4);
-            leftCol.addView(cdTimeText);
+            leftCol.addView(timeRow);
             leftCol.addView(ctrlRow);
 
             // 右侧：预设列表
@@ -516,7 +530,7 @@ public class StopwatchActivity extends Activity {
             row.addView(rightCol);
             countdownPanel.addView(row);
         } else {
-            countdownPanel.addView(cdTimeText);
+            countdownPanel.addView(timeRow);
             countdownPanel.addView(ctrlRow);
             countdownPanel.addView(presetTitle);
             countdownPanel.addView(cdPresetContainer);
@@ -527,8 +541,7 @@ public class StopwatchActivity extends Activity {
         cdResetButton.setOnClickListener(v -> onCdResetClick());
         cdSavePresetButton.setOnClickListener(v -> onCdSavePreset());
 
-        // 点击时间显示：弹出时间选择器
-        cdTimeText.setOnClickListener(v -> showTimePickerDialog());
+        // 时 / 分 / 秒 各段卡片已绑定单独点击（见 makeTimeSeg）
 
         // 初始状态
         cdRemainingMs = getPickerMs();
@@ -570,16 +583,46 @@ public class StopwatchActivity extends Activity {
                 .apply();
     }
 
-    /** 点击时间显示：时/分/秒 各自独立点击、单独设置（同一弹窗内完成） */
-    private void showTimePickerDialog() {
-        final int[] selH = {cdHour};
-        final int[] selM = {cdMinute};
-        final int[] selS = {cdSecond};
-        final int[] active = {0}; // 0=时 1=分 2=秒
+    /** 构建倒计时大显示里的一段（时/分/秒）：等宽金色数字，各自可单独点击 */
+    private TextView makeTimeSeg(String name) {
+        TextView num = new TextView(this);
+        num.setTextSize(46);
+        num.setTypeface(android.graphics.Typeface.MONOSPACE);
+        num.setTextColor(getResources().getColor(R.color.time_gold));
+        num.setGravity(android.view.Gravity.CENTER);
+        num.setPadding(10, 2, 10, 2);
+        num.setClickable(true);
+        num.setContentDescription("设置" + name);
+        num.setOnClickListener(v -> {
+            int unit = name.equals("时") ? 0 : (name.equals("分") ? 1 : 2);
+            showUnitPicker(unit);
+        });
+        return num;
+    }
+
+    /** 倒计时显示中的冒号分隔符 */
+    private TextView makeColon() {
+        TextView c = new TextView(this);
+        c.setText(":");
+        c.setTextSize(40);
+        c.setTypeface(android.graphics.Typeface.MONOSPACE);
+        c.setTextColor(getResources().getColor(R.color.text_primary));
+        c.setGravity(android.view.Gravity.CENTER);
+        return c;
+    }
+
+    /** 点击某个时间单位（0=时 1=分 2=秒）单独弹出数字选择，无标题、只有确定/取消 */
+    private void showUnitPicker(int unit) {
+        if (cdRunning) return;
         int gold = getResources().getColor(R.color.gold);
-        int goldFaint = getResources().getColor(R.color.gold_faint);
         int dark = getResources().getColor(R.color.bg_dark);
-        int textPrimary = getResources().getColor(R.color.text_primary);
+        int textPri = getResources().getColor(R.color.text_primary);
+        int cardLight = getResources().getColor(R.color.bg_card_light);
+        final int[] maxArr = {23, 59, 59};
+        final int[] colsArr = {4, 5, 5};
+        int max = maxArr[unit];
+        int cols = colsArr[unit];
+        final int[] sel = {unit == 0 ? cdHour : (unit == 1 ? cdMinute : cdSecond)};
 
         android.graphics.drawable.GradientDrawable selBg =
                 new android.graphics.drawable.GradientDrawable();
@@ -587,160 +630,143 @@ public class StopwatchActivity extends Activity {
         selBg.setCornerRadius(16f);
         android.graphics.drawable.GradientDrawable cellBg =
                 new android.graphics.drawable.GradientDrawable();
-        cellBg.setColor(0x14FFFFFF);
+        cellBg.setColor(cardLight);
         cellBg.setCornerRadius(16f);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(20, 22, 20, 14);
         root.setBackgroundColor(dark);
 
-        // 顶部：时 : 分 : 秒 三个独立可点按钮
-        LinearLayout head = new LinearLayout(this);
-        head.setOrientation(LinearLayout.HORIZONTAL);
-        head.setGravity(android.view.Gravity.CENTER);
-
-        final TextView[] segBtns = new TextView[3];
-        final int[][] segs = {selH, selM, selS};
-        final int[] segMax = {23, 59, 59};
-        final int[] segCols = {4, 5, 5};
-
-        // 下方：三个预建网格，按当前段切换可见性（避免重建导致异常）
-        final ScrollView sv = new ScrollView(this);
-        sv.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 300));
-        sv.setScrollBarStyle(ScrollView.SCROLLBARS_INSIDE_OVERLAY);
-
-        // ScrollView 只能有一个直接子 View，用容器装三块网格
-        LinearLayout gridHolder = new LinearLayout(this);
-        gridHolder.setLayoutParams(new LinearLayout.LayoutParams(
+        // 顶部紧凑栏：左侧单位提示 + 右侧小而紧凑的确定/取消
+        LinearLayout topBar = new LinearLayout(this);
+        topBar.setOrientation(LinearLayout.HORIZONTAL);
+        topBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        topBar.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        gridHolder.setOrientation(LinearLayout.VERTICAL);
+        topBar.setPadding(18, 12, 12, 12);
 
-        final GridLayout[] grids = new GridLayout[3];
-        for (int idx = 0; idx < 3; idx++) {
-            final int u = idx;
-            int max = segMax[idx];
-            int cols = segCols[idx];
-            final int[] sel = segs[idx];
-            GridLayout g = new GridLayout(this);
-            g.setColumnCount(cols);
-            g.setRowCount((int) Math.ceil((max + 1) / (float) cols));
-            g.setPadding(4, 4, 4, 4);
-            final TextView[] cells = new TextView[max + 1];
-            for (int i = 0; i <= max; i++) {
-                final int val = i;
-                TextView cell = new TextView(this);
-                cell.setText(String.format("%02d", i));
-                cell.setTextSize(18);
-                cell.setGravity(android.view.Gravity.CENTER);
-                GridLayout.LayoutParams gp = new GridLayout.LayoutParams();
-                gp.width = 0;
-                gp.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                gp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-                gp.setMargins(5, 5, 5, 5);
-                cell.setLayoutParams(gp);
-                cell.setPadding(8, 13, 8, 13);
-                cell.setBackgroundDrawable(cellBg.getConstantState().newDrawable());
-                cell.setTextColor(goldFaint);
-                cell.setClickable(true);
-                cell.setOnClickListener(v -> {
-                    sel[0] = val;
-                    for (TextView c : cells) {
-                        if (c != null) {
-                            c.setBackgroundDrawable(cellBg.getConstantState().newDrawable());
-                            c.setTextColor(goldFaint);
-                        }
+        String unitName = unit == 0 ? "设置小时" : (unit == 1 ? "设置分钟" : "设置秒");
+        TextView title = new TextView(this);
+        title.setText(unitName);
+        title.setTextSize(16);
+        title.setTypeface(android.graphics.Typeface.MONOSPACE);
+        title.setTextColor(textPri);
+        LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+        title.setLayoutParams(titleLp);
+        topBar.addView(title);
+
+        android.widget.Button neg = new android.widget.Button(this);
+        neg.setText("取消");
+        neg.setTextSize(14);
+        neg.setTypeface(android.graphics.Typeface.MONOSPACE);
+        neg.setTextColor(textPri);
+        neg.setBackgroundResource(R.drawable.btn_dialog_negative);
+        neg.setPadding(22, 8, 22, 8);
+        neg.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        topBar.addView(neg);
+
+        android.widget.Button pos = new android.widget.Button(this);
+        pos.setText("确定");
+        pos.setTextSize(14);
+        pos.setTypeface(android.graphics.Typeface.MONOSPACE);
+        pos.setTextColor(gold);
+        pos.setBackgroundResource(R.drawable.btn_dialog_positive);
+        pos.setPadding(22, 8, 22, 8);
+        LinearLayout.LayoutParams posLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        posLp.setMarginStart(10);
+        pos.setLayoutParams(posLp);
+        topBar.addView(pos);
+
+        root.addView(topBar);
+
+        // 网格区：尽量撑满剩余空间
+        ScrollView sv = new ScrollView(this);
+        sv.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
+        sv.setScrollBarStyle(ScrollView.SCROLLBARS_INSIDE_INSET);
+        sv.setFillViewport(false);
+
+        GridLayout g = new GridLayout(this);
+        g.setColumnCount(cols);
+        g.setRowCount((int) Math.ceil((max + 1) / (float) cols));
+        g.setPadding(10, 10, 10, 10);
+        g.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        final TextView[] cells = new TextView[max + 1];
+        for (int i = 0; i <= max; i++) {
+            final int val = i;
+            TextView cell = new TextView(this);
+            cell.setText(String.format("%02d", i));
+            cell.setTextSize(26);
+            cell.setGravity(android.view.Gravity.CENTER);
+            GridLayout.LayoutParams gp = new GridLayout.LayoutParams();
+            gp.width = 0;
+            gp.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            gp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            gp.setMargins(8, 8, 8, 8);
+            cell.setLayoutParams(gp);
+            cell.setPadding(8, 18, 8, 18);
+            cell.setBackgroundDrawable(cellBg.getConstantState().newDrawable());
+            cell.setTextColor(textPri);
+            cell.setClickable(true);
+            cell.setOnClickListener(v -> {
+                sel[0] = val;
+                for (TextView c : cells) {
+                    if (c != null) {
+                        c.setBackgroundDrawable(cellBg.getConstantState().newDrawable());
+                        c.setTextColor(textPri);
                     }
-                    cell.setBackgroundDrawable(selBg.getConstantState().newDrawable());
-                    cell.setTextColor(dark);
-                    segBtns[u].setText(String.format("%02d", val));
-                });
-                cells[i] = cell;
-                g.addView(cell);
-            }
-            TextView cur = cells[sel[0]];
-            if (cur != null) {
-                cur.setBackgroundDrawable(selBg.getConstantState().newDrawable());
-                cur.setTextColor(dark);
-            }
-            g.setVisibility(u == active[0] ? android.view.View.VISIBLE : android.view.View.GONE);
-            grids[u] = g;
-            gridHolder.addView(g);
-        }
-        sv.addView(gridHolder);
-
-        // 高亮当前编辑的段按钮
-        final Runnable highlight = () -> {
-            for (int j = 0; j < 3; j++) {
-                if (j == active[0]) {
-                    segBtns[j].setBackgroundDrawable(selBg.getConstantState().newDrawable());
-                    segBtns[j].setTextColor(dark);
-                } else {
-                    segBtns[j].setBackgroundDrawable(cellBg.getConstantState().newDrawable());
-                    segBtns[j].setTextColor(goldFaint);
                 }
-                grids[j].setVisibility(j == active[0] ? android.view.View.VISIBLE
-                        : android.view.View.GONE);
-            }
-        };
-
-        // 构建顶部三个可点段按钮
-        for (int i = 0; i < 3; i++) {
-            final int idx = i;
-            TextView btn = new TextView(this);
-            btn.setText(String.format("%02d", segs[idx][0]));
-            btn.setTextSize(40);
-            btn.setTypeface(android.graphics.Typeface.MONOSPACE);
-            btn.setTextColor(goldFaint);
-            btn.setGravity(android.view.Gravity.CENTER);
-            btn.setPadding(20, 8, 20, 8);
-            btn.setClickable(true);
-            btn.setOnClickListener(v -> {
-                active[0] = idx;
-                highlight.run();
+                cell.setBackgroundDrawable(selBg.getConstantState().newDrawable());
+                cell.setTextColor(dark);
             });
-            segBtns[i] = btn;
-            head.addView(btn);
-            if (i < 2) {
-                TextView colon = new TextView(this);
-                colon.setText(" : ");
-                colon.setTextSize(34);
-                colon.setTextColor(textPrimary);
-                head.addView(colon);
-            }
+            cells[i] = cell;
+            g.addView(cell);
         }
-
-        TextView hint = new TextView(this);
-        hint.setText("点击 时 / 分 / 秒 单独设置（高亮项即当前编辑）");
-        hint.setTextSize(13);
-        hint.setTextColor(textPrimary);
-        hint.setAlpha(0.7f);
-        hint.setGravity(android.view.Gravity.CENTER);
-        hint.setPadding(0, 10, 0, 8);
-
-        root.addView(head);
-        root.addView(hint);
+        // 默认高亮当前值
+        TextView cur = cells[sel[0]];
+        if (cur != null) {
+            cur.setBackgroundDrawable(selBg.getConstantState().newDrawable());
+            cur.setTextColor(dark);
+        }
+        sv.addView(g);
         root.addView(sv);
 
-        // 初始高亮「时」
-        highlight.run();
+        final android.app.Dialog dialog = new android.app.Dialog(this, R.style.PickerTextStyle);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.setContentView(root);
+        dialog.setOnShowListener(d -> {
+            android.view.Window w = dialog.getWindow();
+            if (w != null) {
+                w.setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                w.getDecorView().setBackgroundColor(dark);
+                w.getDecorView().setSystemUiVisibility(
+                        android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            }
+        });
 
-        new android.app.AlertDialog.Builder(this)
-                .setTitle("设置倒计时时长")
-                .setView(root)
-                .setPositiveButton("确定", (dialog, which) -> {
-                    if (cdRunning) return;
-                    cdHour = selH[0];
-                    cdMinute = selM[0];
-                    cdSecond = selS[0];
-                    cdRemainingMs = getPickerMs();
-                    cdTotalMs = cdRemainingMs;
-                    saveLastSetting();
-                    updateCdDisplay();
-                })
-                .setNegativeButton("取消", null)
-                .show();
+        pos.setOnClickListener(v -> {
+            if (cdRunning) {
+                dialog.dismiss();
+                return;
+            }
+            if (unit == 0) cdHour = sel[0];
+            else if (unit == 1) cdMinute = sel[0];
+            else cdSecond = sel[0];
+            cdRemainingMs = getPickerMs();
+            cdTotalMs = cdRemainingMs;
+            saveLastSetting();
+            updateCdDisplay();
+            dialog.dismiss();
+        });
+        neg.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private void onCdStartClick() {
@@ -795,12 +821,14 @@ public class StopwatchActivity extends Activity {
     }
 
     private void updateCdDisplay() {
-        if (cdTimeText == null) return;
+        if (cdHourText == null) return;
         long ms = Math.max(0, cdRemainingMs);
         int h = (int) (ms / 3600000);
         int m = (int) ((ms % 3600000) / 60000);
         int s = (int) ((ms % 60000) / 1000);
-        cdTimeText.setText(String.format("%02d:%02d:%02d", h, m, s));
+        cdHourText.setText(String.format("%02d", h));
+        cdMinuteText.setText(String.format("%02d", m));
+        cdSecondText.setText(String.format("%02d", s));
     }
 
     private void updateCdButtons() {
@@ -818,6 +846,18 @@ public class StopwatchActivity extends Activity {
     }
 
     private void onCountdownFinish() {
+        // 临时把闹钟音量调到最大，让提示音更响亮
+        int prevVolume = -1;
+        int maxVolume = 0;
+        if (cdAudioManager != null) {
+            try {
+                maxVolume = cdAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+                prevVolume = cdAudioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+                cdAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume,
+                        AudioManager.FLAG_PLAY_SOUND);
+            } catch (Exception ignored) {
+            }
+        }
         // 响闹钟音 + 振动
         try {
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -834,12 +874,23 @@ public class StopwatchActivity extends Activity {
         }
         if (cdVibrator != null) {
             try {
-                cdVibrator.vibrate(new long[]{0, 500, 300, 500, 300, 500}, -1);
+                // 更强的振动节奏
+                cdVibrator.vibrate(new long[]{0, 600, 200, 600, 200, 600, 200, 600}, -1);
             } catch (Exception ignored) {
             }
         }
-        // 自动在数秒后停止声音
-        cdHandler.postDelayed(this::stopCdRingtone, 4000);
+        final int savedPrev = prevVolume;
+        final int savedMax = maxVolume;
+        // 更长时间后停止声音，并恢复原先的闹钟音量
+        cdHandler.postDelayed(() -> {
+            stopCdRingtone();
+            if (cdAudioManager != null && savedPrev >= 0) {
+                try {
+                    cdAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedPrev, 0);
+                } catch (Exception ignored) {
+                }
+            }
+        }, 8000);
     }
 
     private void stopCdRingtone() {
