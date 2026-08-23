@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Surface;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
@@ -44,6 +45,12 @@ public class MainActivity extends Activity {
     private Runnable timeRunnable;
     private TextView copyButton;
     private TextView rotationLockButton;
+
+    // 电池电量显示（纯代码动态创建，不依赖任何 XML 资源，避免资源合并冲突）
+    private LinearLayout batteryContainer;
+    private View batteryIcon;
+    private TextView batteryPercentTextView;
+    private android.content.BroadcastReceiver batteryReceiver;
 
     // 自定义时间状态（用于排盘）
     private boolean isCustomTime = false;
@@ -86,6 +93,10 @@ public class MainActivity extends Activity {
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
         ninePalaceChevron = (android.widget.TextView) findViewById(R.id.ninePalaceChevron);
         mainLayout = findViewById(R.id.mainLayout);
+
+        // 电池电量显示（动态创建，不新增 XML 资源）
+        initBatteryView();
+        initBatteryMonitor();
 
         // 背景/亮度只需初始化时设置一次，避免每秒触发九宫格整屏重绘
         updateBackground();
@@ -1045,7 +1056,187 @@ public class MainActivity extends Activity {
         super.onDestroy();
         // 应用销毁时，清理资源
         handler.removeCallbacksAndMessages(null);
+        if (batteryReceiver != null) {
+            try {
+                unregisterReceiver(batteryReceiver);
+            } catch (Exception ignored) {
+            }
+            batteryReceiver = null;
+        }
     }
+
+    // 动态创建电池电量视图（右上角、锁按钮左侧），不引用任何 XML/drawable 资源
+    private void initBatteryView() {
+        batteryContainer = new LinearLayout(this);
+        batteryContainer.setOrientation(LinearLayout.HORIZONTAL);
+        batteryContainer.setGravity(android.view.Gravity.CENTER_VERTICAL);
+
+        // 圆角半透明胶囊背景（用 GradientDrawable 画，避免依赖资源文件）
+        android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+        bg.setColor(0x26FFFFFF);              // 白色半透明
+        bg.setCornerRadius(dpToPx(16));
+        batteryContainer.setBackgroundDrawable(bg);
+        batteryContainer.setElevation(dpToPx(8));
+
+        batteryContainer.setPadding(dpToPx(10), dpToPx(6), dpToPx(12), dpToPx(6));
+
+        // 左上角定位（位于时间内容上方留白区，不覆盖时间）
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
+        lp.topMargin = dpToPx(8);
+        lp.leftMargin = dpToPx(10);
+        batteryContainer.setLayoutParams(lp);
+        batteryContainer.setVisibility(View.GONE);
+
+        // 把时间等主体内容整体下移，给左上角的电池留出空间，避免覆盖
+        View content = findViewById(R.id.contentLayout);
+        if (content != null) {
+            int pl = content.getPaddingLeft();
+            int pt = content.getPaddingTop();
+            int pr = content.getPaddingRight();
+            int pb = content.getPaddingBottom();
+            content.setPadding(pl, pt + dpToPx(34), pr, pb);
+        }
+
+        batteryIcon = new BatteryView(this);
+        LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(
+                dpToPx(22), dpToPx(11));
+        iconLp.rightMargin = dpToPx(5);
+        batteryIcon.setLayoutParams(iconLp);
+
+        batteryPercentTextView = new TextView(this);
+        batteryPercentTextView.setText("--%");
+        batteryPercentTextView.setTextSize(12);
+        batteryPercentTextView.setTextColor(0xFFFFD27F);   // 金色调，与首页整体风格一致
+        batteryPercentTextView.setIncludeFontPadding(false);
+        batteryPercentTextView.setTypeface(android.graphics.Typeface.create("sans-serif-light", android.graphics.Typeface.NORMAL));
+
+        batteryContainer.addView(batteryIcon);
+        batteryContainer.addView(batteryPercentTextView);
+        mainLayout.addView(batteryContainer);
+    }
+
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
+    }
+
+    // 电池电量监控：用粘性广播获取实时电量，并按电量/充电状态美化为图标与配色
+    private void initBatteryMonitor() {
+        batteryReceiver = new android.content.BroadcastReceiver() {
+            @Override
+            public void onReceive(android.content.Context context, android.content.Intent intent) {
+                updateBattery(intent);
+            }
+        };
+        // 注册后立即用当前粘性广播刷新一次
+        android.content.Intent current = registerReceiver(
+                batteryReceiver,
+                new android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED));
+        updateBattery(current);
+    }
+
+    private void updateBattery(android.content.Intent intent) {
+        if (intent == null || batteryContainer == null) return;
+        int level = intent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1);
+        int scale = intent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1);
+        int status = intent.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1);
+        if (level < 0 || scale <= 0) {
+            batteryContainer.setVisibility(View.GONE);
+            return;
+        }
+        int percent = (int) Math.round(100.0 * level / scale);
+        boolean charging = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING
+                || status == android.os.BatteryManager.BATTERY_STATUS_FULL;
+
+        batteryContainer.setVisibility(View.VISIBLE);
+        batteryPercentTextView.setText(percent + "%");
+
+        // 颜色与首页整体一致（金色），仅充电时图标显示闪电
+        int gold = 0xFFFFD27F;
+        batteryPercentTextView.setTextColor(gold);
+        if (batteryIcon instanceof BatteryView) {
+            ((BatteryView) batteryIcon).setLevel(percent, charging, gold);
+        }
+    }
+
+    // 纯代码绘制的电池图标（外壳 + 正极头 + 内部电量填充 + 充电闪电），零资源依赖
+    private static class BatteryView extends View {
+        private int level = 0;
+        private boolean charging = false;
+        private int color = 0xFF3DDC84;
+        private final android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+
+        public BatteryView(android.content.Context context) {
+            super(context);
+        }
+
+        void setLevel(int level, boolean charging, int color) {
+            this.level = level;
+            this.charging = charging;
+            this.color = color;
+            invalidate();
+        }
+
+        @Override
+        protected void onDraw(android.graphics.Canvas canvas) {
+            super.onDraw(canvas);
+            float w = getWidth();
+            float h = getHeight();
+            if (w <= 0 || h <= 0) return;
+
+            float capW = w * 0.12f;             // 正极头宽度
+            float bodyW = w - capW;
+            float stroke = Math.max(1.5f, h * 0.10f);
+            float radius = h * 0.18f;
+
+            // 外壳
+            android.graphics.RectF body = new android.graphics.RectF(0, 0, bodyW, h);
+            paint.setStyle(android.graphics.Paint.Style.STROKE);
+            paint.setColor(0xCCFFFFFF);
+            paint.setStrokeWidth(stroke);
+            canvas.drawRoundRect(body, radius, radius, paint);
+
+            // 正极头
+            float capH = h * 0.45f;
+            float capTop = (h - capH) / 2;
+            android.graphics.RectF cap = new android.graphics.RectF(bodyW - stroke * 0.5f, capTop, w, capTop + capH);
+            paint.setStyle(android.graphics.Paint.Style.FILL);
+            paint.setColor(0xCCFFFFFF);
+            canvas.drawRoundRect(cap, stroke, stroke, paint);
+
+            // 内部电量填充
+            float pad = stroke * 1.6f;
+            float fillH = h - pad * 2;
+            float fillMaxW = bodyW - pad * 2;
+            float fillW = fillMaxW * Math.max(0, Math.min(100, level)) / 100f;
+            if (fillW > 0) {
+                android.graphics.RectF fill = new android.graphics.RectF(pad, pad, pad + fillW, pad + fillH);
+                paint.setColor(color);
+                canvas.drawRoundRect(fill, radius * 0.6f, radius * 0.6f, paint);
+            }
+
+            // 充电闪电
+            if (charging) {
+                paint.setColor(0xFFFFFFFF);
+                paint.setStyle(android.graphics.Paint.Style.FILL);
+                float cx = bodyW / 2;
+                float cy = h / 2;
+                float s = h * 0.32f;
+                android.graphics.Path bolt = new android.graphics.Path();
+                bolt.moveTo(cx - s * 0.15f, cy - s);
+                bolt.lineTo(cx - s * 0.55f, cy + s * 0.15f);
+                bolt.lineTo(cx - s * 0.05f, cy + s * 0.15f);
+                bolt.lineTo(cx + s * 0.15f, cy + s);
+                bolt.lineTo(cx + s * 0.55f, cy - s * 0.15f);
+                bolt.lineTo(cx + s * 0.05f, cy - s * 0.15f);
+                bolt.close();
+                canvas.drawPath(bolt, paint);
+            }
+        }
+    }
+
     
     private String getTimeFortune(String timeZhi) {
         if (timeZhi == null) return "时辰平吉";

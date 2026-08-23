@@ -181,8 +181,14 @@ D8="$BUILD_TOOLS_DIR/d8"
 CLASS_FILES=$(find "$OUT_DIR/classes" -name "*.class")
 
 # 打包dex
+# 开启 desugaring：注册库(com.reggate.lib)以 compileSdk 33 + Java8 编译，
+# 其类引用了 API31+ 才存在的 android.app.Application$ActivityLifecycleCallbacks$-CC
+# companion 类。用 --min-api 21 + --lib 让 D8 在打包期将该类重写进 dex，
+# 使 Android <12 的设备也能正常运行（不修改注册库任何代码）。
 "$D8" \
     --classpath "$PLATFORM_DIR/android.jar" \
+    --lib "$PLATFORM_DIR/android.jar" \
+    --min-api 21 \
     $CLASS_FILES \
     "$REG_LIB_JAR" \
     "$REG_LIB_DIR/jetified-security-crypto-1.1.0-alpha06-runtime.jar" \
