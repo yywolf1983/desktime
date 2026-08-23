@@ -529,9 +529,13 @@ public class MainActivity extends Activity {
         String fourPillars = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
         fourPillarsTextView.setText(withChevron(fourPillars));
 
-        // 更新时辰运势
+        // 更新时辰运势：上行：时辰+当令，下行：宜xxx（两行分别显示，避免低分辨率挤在一行）
         String timeZhi = timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
-        timeFortuneTextView.setText(withChevron(getTimeFortune(timeZhi)));
+        String fortune = getTimeFortune(timeZhi);
+        if (fortune != null) {
+            fortune = fortune.replace(" · ", "\n");
+        }
+        timeFortuneTextView.setText(withChevron(fortune));
 
         // 获取当前节气
         // 统一使用 JieqiData 计算节气，与界面显示的节气保持一致

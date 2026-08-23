@@ -28,6 +28,7 @@ public class CustomDateTimePickerDialog extends Dialog {
     private TextView cancelButton, confirmButton;
     private TextView sumYear, sumMonth, sumDay, sumHour, sumMinute;
     private OnDateTimeSetListener listener;
+    private View infoBlock;
 
     private int selYear, selMonth, selDay, selHour, selMinute;
     private int yearPageBase;
@@ -64,14 +65,26 @@ public class CustomDateTimePickerDialog extends Dialog {
     }
 
     private void initViews() {
+        // 外层 ScrollView:关闭垂直滚动条与 overScroll(android:verticalScrollBarEnabled 不是合法 XML 属性,只能代码设置)
+        View outer = findViewById(R.id.dateTimeScrollView);
+        if (outer != null) {
+            outer.setVerticalScrollBarEnabled(false);
+            outer.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        }
         yearGrid = findViewById(R.id.yearGrid);
         monthGrid = findViewById(R.id.monthGrid);
         dayGrid = findViewById(R.id.dayGrid);
         hourGrid = findViewById(R.id.hourGrid);
         minuteGrid = findViewById(R.id.minuteGrid);
+        // 5 个 GridView:关闭垂直滚动条(android:verticalScrollBarEnabled 非合法 XML 属性)
+        for (GridView gv : new GridView[]{yearGrid, monthGrid, dayGrid, hourGrid, minuteGrid}) {
+            gv.setVerticalScrollBarEnabled(false);
+            gv.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        }
         ymTitle = findViewById(R.id.dayTitle);
         tvYiJi = findViewById(R.id.tvYiJi);
         tvDateGap = findViewById(R.id.tvDateGap);
+        infoBlock = findViewById(R.id.infoBlock);
         cancelButton = findViewById(R.id.cancelButton);
         confirmButton = findViewById(R.id.confirmButton);
         sumYear = findViewById(R.id.sumYear);
@@ -94,10 +107,7 @@ public class CustomDateTimePickerDialog extends Dialog {
             refreshSummary();
             updateYiJi();
             updateDateGap();
-            View panel = findViewById(R.id.dayPanel);
-            panel.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.dayChevron)).setText("›");
-            currentPanel = null;
+            closePanelAfterPick(R.id.dayPanel, R.id.dayChevron);
         });
 
         // 月：网格点选
@@ -107,10 +117,7 @@ public class CustomDateTimePickerDialog extends Dialog {
             refreshSummary();
             updateYiJi();
             updateDateGap();
-            View panel = findViewById(R.id.monthPanel);
-            panel.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.monthChevron)).setText("›");
-            currentPanel = null;
+            closePanelAfterPick(R.id.monthPanel, R.id.monthChevron);
         });
 
         // 年份翻页
@@ -130,10 +137,7 @@ public class CustomDateTimePickerDialog extends Dialog {
             highlightOnly(hourGrid, position);
             refreshRows();
             refreshSummary();
-            View panel = findViewById(R.id.hourPanel);
-            panel.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.hourChevron)).setText("›");
-            currentPanel = null;
+            closePanelAfterPick(R.id.hourPanel, R.id.hourChevron);
         });
 
         // 分：以5分段 00,05,...,55
@@ -145,10 +149,7 @@ public class CustomDateTimePickerDialog extends Dialog {
             highlightOnly(minuteGrid, position);
             refreshRows();
             refreshSummary();
-            View panel = findViewById(R.id.minutePanel);
-            panel.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.minuteChevron)).setText("›");
-            currentPanel = null;
+            closePanelAfterPick(R.id.minutePanel, R.id.minuteChevron);
         });
 
         // 五个独立项绑定已移至上方 bindPart 调用
@@ -176,12 +177,25 @@ public class CustomDateTimePickerDialog extends Dialog {
             panel.setVisibility(open ? View.VISIBLE : View.GONE);
             chevron.setText(open ? "∨" : "›");
             if (open) {
+                // 打开选择面板:临时收起底部宜忌/日期差距块,给低分辨率屏幕腾出显示空间
+                if (infoBlock != null) infoBlock.setVisibility(View.GONE);
                 currentPanel = panel;
                 onOpen.run();
             } else {
+                // 关闭面板:恢复底部信息块
+                if (infoBlock != null) infoBlock.setVisibility(View.VISIBLE);
                 currentPanel = null;
             }
         });
+    }
+
+    // 面板选中项后统一收尾:收起面板、复位箭头、恢复底部宜忌信息块显示
+    private void closePanelAfterPick(int panelId, int chevronId) {
+        View panel = findViewById(panelId);
+        panel.setVisibility(View.GONE);
+        ((TextView) findViewById(chevronId)).setText("›");
+        currentPanel = null;
+        if (infoBlock != null) infoBlock.setVisibility(View.VISIBLE);
     }
 
     private void resetChevron(View panel) {
@@ -206,11 +220,8 @@ public class CustomDateTimePickerDialog extends Dialog {
             refreshSummary();
             updateYiJi();
             updateDateGap();
-            // 选中后收起年面板
-            View panel = findViewById(R.id.yearPanel);
-            panel.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.yearChevron)).setText("›");
-            currentPanel = null;
+            // 选中后收起年面板,并恢复底部宜忌信息块显示
+            closePanelAfterPick(R.id.yearPanel, R.id.yearChevron);
         });
         TextView page = findViewById(R.id.yearPage);
         if (page != null) page.setText(String.format("%d – %d", yearPageBase, yearPageBase + 19));
@@ -262,19 +273,50 @@ public class CustomDateTimePickerDialog extends Dialog {
     }
 
     private ArrayAdapter<String> makeAdapter(List<String> items, int selected) {
+        final int widthDp = getContext().getResources().getConfiguration().screenWidthDp;
+        // 低分辨率(<360dp)整体缩小一格,避免年选择折行;极窄屏(<320dp)进一步压缩
+        final int textSizeSp;
+        final int padDp;
+        if (widthDp < 320) {
+            textSizeSp = 12;
+            padDp = 2;
+        } else if (widthDp < 360) {
+            textSizeSp = 14;
+            padDp = 3;
+        } else {
+            textSizeSp = 16;
+            padDp = 4;
+        }
+        final float density = getContext().getResources().getDisplayMetrics().density;
+        final int padPx = (int) (padDp * density + 0.5f);
+        final int minHeightPx = (int) (36 * density + 0.5f);
+
         return new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, items) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView tv = (TextView) super.getView(position, convertView, parent);
                 tv.setGravity(Gravity.CENTER);
-                tv.setTextSize(16);
+                // 强制单行 + 不横向滚动:彻底解决年选择4位数字在窄屏上折行的问题
+                tv.setSingleLine(true);
+                tv.setMaxLines(1);
+                tv.setHorizontallyScrolling(false);
+                tv.setEllipsize(null);
+                tv.setTextSize(textSizeSp);
                 tv.setTypeface(null, Typeface.BOLD);
+                tv.setPadding(padPx, padPx, padPx, padPx);
+                tv.setMinHeight(minHeightPx);
                 if (position == selected) {
                     tv.setTextColor(Color.parseColor("#CCB866"));
                     tv.setBackgroundResource(R.drawable.card_background);
                 } else {
                     tv.setTextColor(Color.parseColor("#E8DFC8"));
                     tv.setBackgroundColor(Color.TRANSPARENT);
+                }
+                // API 26+:启用自动按宽度缩放字号,窄屏字号自动再收一档
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    tv.setAutoSizeTextTypeUniformWithConfiguration(
+                            Math.max(10, textSizeSp - 4), textSizeSp, 1,
+                            android.util.TypedValue.COMPLEX_UNIT_SP);
                 }
                 return tv;
             }

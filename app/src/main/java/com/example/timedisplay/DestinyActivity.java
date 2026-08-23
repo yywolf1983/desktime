@@ -22,10 +22,6 @@ public class DestinyActivity extends android.app.Activity {
     private TextView yearWuXing, monthWuXing, dayWuXing, timeWuXing;
     private TextView hiddenStemsText, patternText, sixRelText, branchRelText, levelText;
 
-    // 横屏
-    private TextView fourPillarsLabelL, dayMasterLabelL, dayDescTextL, strengthTagL;
-    private TextView zodiacLabelL, nayinLabelL, dayZhiLabelL, changshengLabelL, wuxingSumL;
-
     private String yearPillar, monthPillar, dayPillar, timePillar;
     private String yearGan, yearZhi, monthGan, monthZhi, dayGan, dayZhi, timeGan, timeZhi;
     private String dayGanWuXing;
@@ -170,17 +166,6 @@ public class DestinyActivity extends android.app.Activity {
         sixRelText = findViewById(R.id.sixRelText);
         branchRelText = findViewById(R.id.branchRelText);
         levelText = findViewById(R.id.levelText);
-
-        // 横屏视图
-        fourPillarsLabelL = findViewById(R.id.fourPillarsLabel);
-        dayMasterLabelL = findViewById(R.id.dayMasterLabelL);
-        dayDescTextL = findViewById(R.id.dayDescTextL);
-        strengthTagL = findViewById(R.id.strengthTagL);
-        zodiacLabelL = findViewById(R.id.zodiacLabelL);
-        nayinLabelL = findViewById(R.id.nayinLabelL);
-        dayZhiLabelL = findViewById(R.id.dayZhiLabelL);
-        changshengLabelL = findViewById(R.id.changshengLabelL);
-        wuxingSumL = findViewById(R.id.wuxingSumL);
     }
 
     private void populateAll() {
@@ -222,10 +207,6 @@ public class DestinyActivity extends android.app.Activity {
         setText(dayPillarView, dayPillar);
         setText(timePillarView, timePillar);
 
-        if (fourPillarsLabelL != null) {
-            fourPillarsLabelL.setText(yearPillar + "　" + monthPillar + "　" + dayPillar + "　" + timePillar);
-        }
-
         // 五行标签
         setText(yearWuXing, getGanZhiWuXing(yearGan, yearZhi));
         setText(monthWuXing, getGanZhiWuXing(monthGan, monthZhi));
@@ -252,7 +233,6 @@ public class DestinyActivity extends android.app.Activity {
         setHtmlText(dayBranchLabel, "<font color='#E6C46A'><b>" + dayZhi + "</b></font>");
         setText(dayBranchZodiac, dayZodiac);
         if (dayBranchIcon != null) dayBranchIcon.setText(dayZodiacEmoji);
-        setText(dayZhiLabelL, dayZhi + "（" + dayZodiac + "）");
     }
 
     private void populateZodiac() {
@@ -260,7 +240,6 @@ public class DestinyActivity extends android.app.Activity {
         setText(zodiacLabel, zodiac);
         setText(zodiacYearLabel, "年支 " + yearZhi);
         if (zodiacIcon != null) zodiacIcon.setText(zodiacEmoji);
-        setText(zodiacLabelL, zodiac);
     }
 
     private void populateStrength() {
@@ -282,7 +261,6 @@ public class DestinyActivity extends android.app.Activity {
         }
         setHtmlText(strengthTag, colorSpan(strengthStr, strengthColor));
         setText(strengthHint, strengthHintStr);
-        setHtmlText(strengthTagL, colorSpan(strengthStr, strengthColor));
     }
 
     private void populateDayDesc() {
@@ -292,7 +270,6 @@ public class DestinyActivity extends android.app.Activity {
         String wxEmoji = getWuXingEmoji(dayGanWuXing);
         setHtmlText(dayDescText, "<font color='#E6C46A'><b>" + wxEmoji + " " + dayGan + "日主 · " + ganDesc + "</b></font><br/>"
                 + "<font color='#7C8C9C'>" + ganDetail + "</font>");
-        setText(dayDescTextL, ganDesc);
     }
 
     private void populateNayin() {
@@ -314,10 +291,6 @@ public class DestinyActivity extends android.app.Activity {
         String nDay = nayinArr[2];
         String nayinExpl = DestinyCalculator.getNayinExplanation(nDay);
         setHtmlText(nayinText, nayinExpl.isEmpty() ? nDay : nayinExpl);
-        setText(nayinLabelL, nDay);
-
-        // 五行小结（横屏用，身强弱判据已多处展示，此处仅留五行+纳音）
-        setText(wuxingSumL, dayGanWuXing + " · " + nDay);
     }
 
     private void populateMingGong() {
@@ -354,7 +327,6 @@ public class DestinyActivity extends android.app.Activity {
               .append(DestinyCalculator.getTwelveStageExplanation(csStages[i])).append("</font>");
         }
         setHtmlText(changshengText, sb.toString());
-        setText(changshengLabelL, stageDay);
     }
 
     // ──── 五行 emoji/颜色映射（静态统一）────

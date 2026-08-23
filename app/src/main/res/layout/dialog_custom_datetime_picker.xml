@@ -7,11 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ScrollView
+    <ScrollView android:id="@+id/dateTimeScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,39 +54,54 @@
                 android:layout_marginBottom="4dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-                    <TextView android:id="@+id/sumYear" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
-                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
-                        android:textColor="@color/gold_faint" android:textSize="20sp" android:textStyle="bold" android:layout_marginStart="1dp"/>
-                    <TextView android:id="@+id/sumMonth" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
-                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
-                        android:textColor="@color/gold_faint" android:textSize="20sp" android:textStyle="bold" android:layout_marginStart="1dp"/>
-                    <TextView android:id="@+id/sumDay" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
-                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
+                    android:baselineAligned="false">
+                    <TextView android:id="@+id/sumYear" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2"
+                        android:maxWidth="84dp" android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="5dp" android:paddingVertical="3dp"
+                        android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
+                        android:textColor="@color/gold_faint" android:textSize="18sp" android:textStyle="bold"
+                        android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
+                    <TextView android:id="@+id/sumMonth" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="5dp" android:paddingVertical="3dp"
+                        android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
+                        android:textColor="@color/gold_faint" android:textSize="18sp" android:textStyle="bold"
+                        android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
+                    <TextView android:id="@+id/sumDay" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="5dp" android:paddingVertical="3dp"
+                        android:background="@drawable/card_background"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:baselineAligned="false"
                     android:layout_marginTop="6dp">
-                    <TextView android:id="@+id/sumHour" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
-                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                    <TextView android:id="@+id/sumHour" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="5dp" android:paddingVertical="3dp"
+                        android:background="@drawable/card_background"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":"
-                        android:textColor="@color/gold_faint" android:textSize="20sp" android:textStyle="bold" android:layout_marginStart="1dp"/>
-                    <TextView android:id="@+id/sumMinute" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold" android:clickable="true"
-                        android:paddingHorizontal="7dp" android:paddingVertical="3dp" android:background="@drawable/card_background"/>
+                        android:textColor="@color/gold_faint" android:textSize="18sp" android:textStyle="bold"
+                        android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
+                    <TextView android:id="@+id/sumMinute" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="20sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="5dp" android:paddingVertical="3dp"
+                        android:background="@drawable/card_background"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -110,13 +126,15 @@
                             android:textColor="@color/gold_faint" android:textSize="24sp" android:textStyle="bold" android:gravity="center"
                             android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
                         <TextView android:id="@+id/yearPage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                            android:textColor="@color/gold_faint" android:textSize="16sp" android:gravity="center"/>
+                            android:textColor="@color/gold_faint" android:textSize="16sp" android:gravity="center"
+                            android:singleLine="true" android:ellipsize="none"/>
                         <TextView android:id="@+id/yearNext" android:layout_width="40dp" android:layout_height="40dp" android:text="›"
                             android:textColor="@color/gold_faint" android:textSize="24sp" android:textStyle="bold" android:gravity="center"
                             android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
                     </LinearLayout>
                     <GridView android:id="@+id/yearGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:numColumns="5" android:verticalSpacing="6dp" android:horizontalSpacing="6dp" android:paddingHorizontal="8dp"/>
+                        android:numColumns="5" android:verticalSpacing="6dp" android:horizontalSpacing="4dp" android:paddingHorizontal="4dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
                 </LinearLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="16dp"/>
 
@@ -128,7 +146,8 @@
                 <LinearLayout android:id="@+id/monthPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
                     <GridView android:id="@+id/monthGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:numColumns="3" android:verticalSpacing="6dp" android:horizontalSpacing="6dp" android:paddingHorizontal="8dp"/>
+                        android:numColumns="3" android:verticalSpacing="6dp" android:horizontalSpacing="4dp" android:paddingHorizontal="8dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
                 </LinearLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="16dp"/>
 
@@ -145,18 +164,20 @@
                             android:textColor="@color/gold_faint" android:textSize="24sp" android:textStyle="bold" android:gravity="center"
                             android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
                         <TextView android:id="@+id/dayTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                            android:textColor="@color/gold_faint" android:textSize="18sp" android:textStyle="bold" android:gravity="center"/>
+                            android:textColor="@color/gold_faint" android:textSize="18sp" android:textStyle="bold" android:gravity="center"
+                            android:singleLine="true" android:ellipsize="none"/>
                         <TextView android:id="@+id/dayNext" android:layout_width="40dp" android:layout_height="40dp" android:text="›"
                             android:textColor="@color/gold_faint" android:textSize="24sp" android:textStyle="bold" android:gravity="center"
                             android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
                     </LinearLayout>
                     <GridView android:id="@+id/dayGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:numColumns="7" android:verticalSpacing="6dp" android:horizontalSpacing="6dp"
-                        android:paddingHorizontal="8dp" android:layout_marginTop="4dp"/>
+                        android:numColumns="7" android:verticalSpacing="6dp" android:horizontalSpacing="4dp"
+                        android:paddingHorizontal="4dp" android:layout_marginTop="4dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
                 </LinearLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="16dp"/>
 
-                <!-- 时（上午/下午 + 12小时） -->
+                <!-- 时 -->
                 <LinearLayout android:id="@+id/hourRow" android:layout_width="match_parent" android:layout_height="0dp"
                     android:visibility="gone" android:orientation="horizontal">
                     <TextView android:id="@+id/hourChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
@@ -164,7 +185,8 @@
                 <LinearLayout android:id="@+id/hourPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
                     <GridView android:id="@+id/hourGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:numColumns="4" android:verticalSpacing="6dp" android:horizontalSpacing="6dp" android:paddingHorizontal="8dp"/>
+                        android:numColumns="4" android:verticalSpacing="6dp" android:horizontalSpacing="4dp" android:paddingHorizontal="8dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
                 </LinearLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="16dp"/>
 
@@ -176,26 +198,31 @@
                 <LinearLayout android:id="@+id/minutePanel" android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
                     <GridView android:id="@+id/minuteGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:numColumns="6" android:verticalSpacing="6dp" android:horizontalSpacing="6dp" android:paddingHorizontal="8dp"/>
+                        android:numColumns="6" android:verticalSpacing="6dp" android:horizontalSpacing="4dp" android:paddingHorizontal="4dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
-                android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
+            <!-- 宜忌 + 相差天数信息块:面板展开时隐藏节省低分辨率屏幕空间;选择完成后自动恢复 -->
+            <LinearLayout android:id="@+id/infoBlock" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
+                    android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
-                android:paddingHorizontal="16dp" android:layout_marginBottom="4dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="当日宜忌"
-                    android:textColor="@color/gold_faint" android:textSize="15sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
-                <TextView android:id="@+id/tvYiJi" android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp" android:text="加载中..."/>
-                <TextView android:id="@+id/tvDateGap" android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp" android:textColor="@color/gold_faint" android:textSize="13sp"
-                    android:lineSpacingExtra="4dp" android:gravity="center" android:text="与今日：—"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+                    android:paddingHorizontal="16dp" android:layout_marginBottom="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="当日宜忌"
+                        android:textColor="@color/gold_faint" android:textSize="15sp" android:textStyle="bold" android:layout_marginBottom="6dp"/>
+                    <TextView android:id="@+id/tvYiJi" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="4dp" android:text="加载中..."/>
+                    <TextView android:id="@+id/tvDateGap" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp" android:textColor="@color/gold_faint" android:textSize="13sp"
+                        android:lineSpacingExtra="4dp" android:gravity="center" android:text="与今日：—"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="12dp"/>
             </LinearLayout>
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
-                android:layout_marginTop="8dp" android:layout_marginBottom="12dp"/>
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"
                 android:gravity="center">

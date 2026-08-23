@@ -206,17 +206,14 @@
                 android:id="@+id/timeFortuneTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="11sp"
-                android:autoSizeMaxTextSize="14sp"
-                android:autoSizeStepGranularity="1sp"
-                android:textSize="14sp"
+                android:maxLines="2"
+                android:textSize="15sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:letterSpacing="0.06"
-                tools:text="辰(7-9) 胃经当令 · 宜晨养脾胃" />
+                android:lineSpacingExtra="4dp"
+                android:letterSpacing="0.03"
+                tools:text="辰(7-9) 胃经当令&#10;宜进朝膳，纳谷最良" />
 
             <TextView
                 android:id="@+id/panStarTextView"

@@ -196,17 +196,20 @@
 
                 </LinearLayout>
 
-                <!-- 第3行: 时辰运势 -->
+                <!-- 第3行: 时辰运势（上行：时辰+当令，下行：宜xxx） -->
                 <TextView
                     android:id="@+id/timeFortuneTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="@color/text_primary"
+                    android:maxLines="2"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:letterSpacing="0.03"
                     android:layout_marginTop="4dp"
-                    tools:text="辰(7-9) 胃经当令 · 宜晨养脾胃" />
+                    tools:text="辰(7-9) 胃经当令&#10;宜进朝膳，纳谷最良" />
 
                 <!-- 第4行: 九星值符义 -->
                 <TextView
