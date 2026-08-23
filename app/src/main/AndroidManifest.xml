@@ -93,6 +93,10 @@
             android:name=".StopwatchService"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
+        <service
+            android:name=".CountdownService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
     </application>
 
 </manifest>

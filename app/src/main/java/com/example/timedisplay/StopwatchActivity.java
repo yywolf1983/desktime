@@ -8,13 +8,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.media.AudioManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -67,6 +62,16 @@ public class StopwatchActivity extends Activity {
                 updateDisplay(elapsedTime);
                 updateButtonStates();
                 refreshLapList();
+            } else if (CountdownService.ACTION_CD_UPDATE.equals(intent.getAction())) {
+                cdRemainingMs = intent.getLongExtra(CountdownService.EXTRA_REMAINING, 0L);
+                cdTotalMs = intent.getLongExtra(CountdownService.EXTRA_TOTAL, 0L);
+                cdRunning = intent.getBooleanExtra(CountdownService.EXTRA_RUNNING, false);
+                boolean finished = intent.getBooleanExtra(CountdownService.EXTRA_FINISHED, false);
+                if (finished) {
+                    cdRunning = false;
+                }
+                updateCdDisplay();
+                updateCdButtons();
             }
         }
     };
@@ -89,37 +94,15 @@ public class StopwatchActivity extends Activity {
     private TextView cdSavePresetButton;
     private LinearLayout cdPresetContainer;
 
-    private Handler cdHandler = new Handler();
     private long cdRemainingMs = 0L;       // 剩余毫秒
     private long cdTotalMs = 0L;           // 总时长（用于显示进度）
     private boolean cdRunning = false;
-    private Ringtone cdRingtone;
-    private Vibrator cdVibrator;
-    private AudioManager cdAudioManager;
 
     private static final String CD_PREFS = "CountdownPrefs";
     private static final String KEY_PRESETS = "presets";
     private static final String KEY_LAST_H = "lastH";
     private static final String KEY_LAST_M = "lastM";
     private static final String KEY_LAST_S = "lastS";
-
-    private final Runnable cdTick = new Runnable() {
-        @Override
-        public void run() {
-            if (!cdRunning) return;
-            cdRemainingMs -= 100;
-            if (cdRemainingMs <= 0) {
-                cdRemainingMs = 0;
-                cdRunning = false;
-                updateCdDisplay();
-                updateCdButtons();
-                onCountdownFinish();
-                return;
-            }
-            updateCdDisplay();
-            cdHandler.postDelayed(this, 100);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +127,7 @@ public class StopwatchActivity extends Activity {
     protected void onResume() {
         super.onResume();
         IntentFilter filter = new IntentFilter(StopwatchService.ACTION_UPDATE);
+        filter.addAction(CountdownService.ACTION_CD_UPDATE);
         registerReceiver(updateReceiver, filter);
 
         Intent intent = new Intent(this, StopwatchService.class);
@@ -164,8 +148,6 @@ public class StopwatchActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cdHandler.removeCallbacks(cdTick);
-        stopCdRingtone();
         if (!isRunning) {
             stopService(new Intent(this, StopwatchService.class));
         }
@@ -417,9 +399,6 @@ public class StopwatchActivity extends Activity {
     // ===================== 倒计时实现 =====================
 
     private void initCountdown() {
-        cdVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        cdAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
         // 读取上次设置
         SharedPreferences cd = getSharedPreferences(CD_PREFS, MODE_PRIVATE);
         int h = cd.getInt(KEY_LAST_H, 0);
@@ -772,33 +751,41 @@ public class StopwatchActivity extends Activity {
     private void onCdStartClick() {
         if (cdRunning) {
             // 暂停
-            cdRunning = false;
-            cdHandler.removeCallbacks(cdTick);
-            cdStartButton.setText("继续");
-            cdStartButton.setTextColor(getResources().getColor(R.color.gold));
+            sendCdCommand(CountdownService.ACTION_CD_PAUSE, 0L);
+        } else if (cdTotalMs > 0 && cdRemainingMs > 0 && cdRemainingMs < cdTotalMs) {
+            // 暂停后继续（沿用剩余时长）
+            sendCdCommand(CountdownService.ACTION_CD_RESUME, 0L);
         } else {
-            if (cdRemainingMs <= 0) {
-                cdRemainingMs = getPickerMs();
-                cdTotalMs = cdRemainingMs;
-            }
-            if (cdRemainingMs <= 0) return; // 未设置时长
+            // 全新开始
+            long dur = getPickerMs();
+            if (dur <= 0) return; // 未设置时长
+            cdRemainingMs = dur;
+            cdTotalMs = dur;
             saveLastSetting();
-            cdRunning = true;
-            cdStartButton.setText("暂停");
-            cdStartButton.setTextColor(getResources().getColor(R.color.danger));
-            cdHandler.postDelayed(cdTick, 100);
+            sendCdCommand(CountdownService.ACTION_CD_START, dur);
         }
-        updateCdButtons();
     }
 
     private void onCdResetClick() {
-        cdRunning = false;
-        cdHandler.removeCallbacks(cdTick);
-        stopCdRingtone();
+        sendCdCommand(CountdownService.ACTION_CD_RESET, 0L);
         cdRemainingMs = getPickerMs();
         cdTotalMs = cdRemainingMs;
         updateCdDisplay();
         updateCdButtons();
+    }
+
+    private void sendCdCommand(String action, long duration) {
+        Intent intent = new Intent(this, CountdownService.class);
+        intent.setAction(action);
+        if (action.equals(CountdownService.ACTION_CD_START)) {
+            intent.putExtra(CountdownService.EXTRA_DURATION, duration);
+        }
+        // 确保服务已启动（前台）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
     }
 
     private void onCdSavePreset() {
@@ -842,63 +829,6 @@ public class StopwatchActivity extends Activity {
         } else {
             cdStartButton.setText("开始");
             cdStartButton.setTextColor(getResources().getColor(R.color.gold));
-        }
-    }
-
-    private void onCountdownFinish() {
-        // 临时把闹钟音量调到最大，让提示音更响亮
-        int prevVolume = -1;
-        int maxVolume = 0;
-        if (cdAudioManager != null) {
-            try {
-                maxVolume = cdAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-                prevVolume = cdAudioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-                cdAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume,
-                        AudioManager.FLAG_PLAY_SOUND);
-            } catch (Exception ignored) {
-            }
-        }
-        // 响闹钟音 + 振动
-        try {
-            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            if (alarmUri == null) {
-                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            }
-            if (cdRingtone == null) {
-                cdRingtone = RingtoneManager.getRingtone(this, alarmUri);
-            }
-            if (cdRingtone != null && !cdRingtone.isPlaying()) {
-                cdRingtone.play();
-            }
-        } catch (Exception ignored) {
-        }
-        if (cdVibrator != null) {
-            try {
-                // 更强的振动节奏
-                cdVibrator.vibrate(new long[]{0, 600, 200, 600, 200, 600, 200, 600}, -1);
-            } catch (Exception ignored) {
-            }
-        }
-        final int savedPrev = prevVolume;
-        final int savedMax = maxVolume;
-        // 更长时间后停止声音，并恢复原先的闹钟音量
-        cdHandler.postDelayed(() -> {
-            stopCdRingtone();
-            if (cdAudioManager != null && savedPrev >= 0) {
-                try {
-                    cdAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedPrev, 0);
-                } catch (Exception ignored) {
-                }
-            }
-        }, 8000);
-    }
-
-    private void stopCdRingtone() {
-        if (cdRingtone != null && cdRingtone.isPlaying()) {
-            try {
-                cdRingtone.stop();
-            } catch (Exception ignored) {
-            }
         }
     }
 
@@ -1008,22 +938,14 @@ public class StopwatchActivity extends Activity {
     }
 
     private void startPreset(Preset p) {
-        stopCdRingtone();
-        cdRunning = false;
-        cdHandler.removeCallbacks(cdTick);
         cdHour = p.h;
         cdMinute = p.m;
         cdSecond = p.s;
-        cdRemainingMs = getPickerMs();
-        cdTotalMs = cdRemainingMs;
         saveLastSetting();
         updateCdDisplay();
-        // 自动开始
-        cdRunning = true;
-        cdStartButton.setText("暂停");
-        cdStartButton.setTextColor(getResources().getColor(R.color.danger));
-        updateCdButtons();
-        cdHandler.postDelayed(cdTick, 100);
+        // 自动开始：先重置再通知服务以该预设时长启动
+        sendCdCommand(CountdownService.ACTION_CD_RESET, 0L);
+        sendCdCommand(CountdownService.ACTION_CD_START, getPickerMs());
     }
 
     private void confirmDeletePreset(Preset p) {
