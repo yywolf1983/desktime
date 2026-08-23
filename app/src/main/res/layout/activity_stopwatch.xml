@@ -8,45 +8,64 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:padding="16dp">
 
+        <!-- Tab 切换：秒表 / 倒计时 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="14dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/card_background">
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+
             <TextView
-                android:id="@+id/backButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:text="←"
-                android:textSize="24sp"
-                android:textColor="@color/gold"
-                android:gravity="center"
-                android:clickable="true"
-                android:background="@android:color/transparent"/>
-            <TextView
+                android:id="@+id/tabStopwatch"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_weight="1"
                 android:text="秒表"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="@color/gold"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:letterSpacing="0.08"/>
+                android:background="@drawable/btn_round_transparent"
+                android:clickable="true" />
+
             <View
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="10dp"
+                android:layout_height="36dp" />
+
+            <TextView
+                android:id="@+id/tabCountdown"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="倒计时"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:background="@drawable/btn_round_transparent"
+                android:clickable="true" />
+
         </LinearLayout>
+
+        <!-- 秒表面板 -->
+        <LinearLayout
+            android:id="@+id/stopwatchPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
         <LinearLayout
         android:layout_width="wrap_content"
@@ -195,8 +214,10 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="200dp">
+                android:layout_height="260dp"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="insideOverlay"
+                android:fadeScrollbars="true">
 
                 <LinearLayout
                     android:id="@+id/lapListContainer"
@@ -206,8 +227,22 @@
                     android:gravity="center_horizontal" />
 
             </ScrollView>
+
         </LinearLayout>
 
+        </LinearLayout><!-- /stopwatchPanel -->
+
+        <!-- 倒计时面板（默认隐藏，由 Tab 切换显示） -->
+        <LinearLayout
+            android:id="@+id/countdownPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone" />
+
     </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
