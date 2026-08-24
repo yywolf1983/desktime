@@ -98,17 +98,33 @@ public class CountdownService extends Service {
     private Runnable tickRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!running) return;
+            if (!running && !finished) return;
+            if (finished) {
+                // 结束阶段：持续广播，直到 10 秒后自动停止响铃并复位
+                if (SystemClock.elapsedRealtime() >= finishedAtMs + 10000) {
+                    stopRinging();
+                    finished = false;
+                    persistState();
+                    sendUpdate();
+                    stopForeground(true);
+                    handler.removeCallbacks(this);
+                    return;
+                }
+                sendUpdate();
+                handler.postDelayed(this, 200);
+                return;
+            }
             remainingMs = endTime - SystemClock.elapsedRealtime();
             if (remainingMs <= 0) {
                 remainingMs = 0;
                 running = false;
                 finished = true;
+                finishedAtMs = SystemClock.elapsedRealtime();
                 persistState();
                 sendUpdate();
                 updateNotification();
                 onFinish();
-                // 保持前台通知，等待用户点击“停止”结束响铃（不自动停止）
+                handler.postDelayed(this, 200);
                 return;
             }
             sendUpdate();
@@ -150,15 +166,17 @@ public class CountdownService extends Service {
                 startTicking();
             }
         } else if (wasFinished) {
-            // 进程被杀时正在响铃：恢复前台并继续响铃，等待用户点击停止
+            // 进程被杀时正在响铃：恢复前台并继续响铃，10 秒后自动复位
             running = false;
             finished = true;
             remainingMs = 0L;
             endTime = 0L;
+            finishedAtMs = SystemClock.elapsedRealtime();
             sendUpdate();
             startForegroundSafe();
             updateNotification();
             onFinish();
+            startTicking();
         }
     }
 

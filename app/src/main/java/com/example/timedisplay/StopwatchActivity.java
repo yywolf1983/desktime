@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -102,7 +103,8 @@ public class StopwatchActivity extends Activity {
     private long cdTotalMs = 0L;           // 总时长（用于显示进度）
     private boolean cdRunning = false;
     private boolean cdFinished = false;    // 是否已结束（响铃/闪烁中）
-
+    private boolean cdAutoStopScheduled = false; // 10 秒自动停止是否已排程
+    private Handler cdFinishHandler = new Handler();
     private static final String CD_PREFS = "CountdownPrefs";
     private static final String KEY_PRESETS = "presets";
     private static final String KEY_LAST_H = "lastH";
@@ -655,19 +657,6 @@ public class StopwatchActivity extends Activity {
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         topBar.addView(neg);
 
-        android.widget.Button pos = new android.widget.Button(this);
-        pos.setText("确定");
-        pos.setTextSize(14);
-        pos.setTypeface(android.graphics.Typeface.MONOSPACE);
-        pos.setTextColor(gold);
-        pos.setBackgroundResource(R.drawable.btn_dialog_positive);
-        pos.setPadding(22, 8, 22, 8);
-        LinearLayout.LayoutParams posLp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        posLp.setMarginStart(10);
-        pos.setLayoutParams(posLp);
-        topBar.addView(pos);
-
         root.addView(topBar);
 
         // 网格区：尽量撑满剩余空间
@@ -685,6 +674,8 @@ public class StopwatchActivity extends Activity {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         final TextView[] cells = new TextView[max + 1];
+        // 点击单元格即直接选中并生效（无需再点确定）
+        final Runnable[] apply = new Runnable[1];
         for (int i = 0; i <= max; i++) {
             final int val = i;
             TextView cell = new TextView(this);
@@ -711,6 +702,7 @@ public class StopwatchActivity extends Activity {
                 }
                 cell.setBackgroundDrawable(selBg.getConstantState().newDrawable());
                 cell.setTextColor(dark);
+                if (apply[0] != null) apply[0].run();
             });
             cells[i] = cell;
             g.addView(cell);
@@ -739,7 +731,8 @@ public class StopwatchActivity extends Activity {
             }
         });
 
-        pos.setOnClickListener(v -> {
+        // 选中即生效：点击单元格直接写回并关闭
+        apply[0] = () -> {
             if (cdRunning) {
                 dialog.dismiss();
                 return;
@@ -752,7 +745,7 @@ public class StopwatchActivity extends Activity {
             saveLastSetting();
             updateCdDisplay();
             dialog.dismiss();
-        });
+        };
         neg.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
@@ -760,7 +753,7 @@ public class StopwatchActivity extends Activity {
     private void onCdStartClick() {
         if (cdFinished) {
             // 倒计时结束：点击立即停止响铃/闪烁（否则 10 秒后自动停止）
-            sendCdCommand(CountdownService.ACTION_CD_STOP_RING, 0L);
+            stopCdFinish();
         } else if (cdRunning) {
             // 暂停
             sendCdCommand(CountdownService.ACTION_CD_PAUSE, 0L);
@@ -824,6 +817,15 @@ public class StopwatchActivity extends Activity {
         refreshPresetList();
     }
 
+    /** 生成文字闪烁动画（仅改变文字透明度，不影响背景） */
+    private AlphaAnimation makeBlink() {
+        AlphaAnimation blink = new AlphaAnimation(1.0f, 0.2f);
+        blink.setDuration(500);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(Animation.INFINITE);
+        return blink;
+    }
+
     private void updateCdDisplay() {
         if (cdHourText == null) return;
         long ms = Math.max(0, cdRemainingMs);
@@ -834,55 +836,62 @@ public class StopwatchActivity extends Activity {
         cdMinuteText.setText(String.format("%02d", m));
         cdSecondText.setText(String.format("%02d", s));
         if (cdFinished) {
-            // 结束：红色并持续闪烁，提醒用户点击停止
+            // 结束：红字闪烁提醒用户，10 秒后自动恢复（仅文字闪烁，背景不闪）
             int warn = getResources().getColor(R.color.danger);
             cdHourText.setTextColor(warn);
             cdMinuteText.setTextColor(warn);
             cdSecondText.setTextColor(warn);
-            startCdFinishBlink();
+            if (cdHourText.getAnimation() == null) {
+                cdHourText.startAnimation(makeBlink());
+                cdMinuteText.startAnimation(makeBlink());
+                cdSecondText.startAnimation(makeBlink());
+            }
+            if (!cdAutoStopScheduled) {
+                cdAutoStopScheduled = true;
+                scheduleCdAutoStop();
+            }
         } else {
+            // 清除可能残留的闪烁动画，复位文字
+            cdHourText.clearAnimation();
+            cdMinuteText.clearAnimation();
+            cdSecondText.clearAnimation();
+            cdHourText.setAlpha(1.0f);
+            cdMinuteText.setAlpha(1.0f);
+            cdSecondText.setAlpha(1.0f);
             int gold = getResources().getColor(R.color.time_gold);
             cdHourText.setTextColor(gold);
             cdMinuteText.setTextColor(gold);
             cdSecondText.setTextColor(gold);
-            stopCdFinishBlink();
+            cdAutoStopScheduled = false;
+            cancelCdAutoStop();
         }
     }
 
-    /** 结束状态：时/分/秒数字循环闪烁 */
-    private void startCdFinishBlink() {
-        startBlink(cdHourText);
-        startBlink(cdMinuteText);
-        startBlink(cdSecondText);
+    /** 停止响铃/振动并结束闪烁状态，回到空闲（用户点击或 10 秒自动触发） */
+    private void stopCdFinish() {
+        sendCdCommand(CountdownService.ACTION_CD_STOP_RING, 0L);
+        cdFinished = false;
+        cancelCdAutoStop();
+        updateCdDisplay();
+        updateCdButtons();
     }
 
-    private void startBlink(TextView tv) {
-        if (tv == null) return;
-        if (tv.getAnimation() != null
-                && tv.getAnimation() instanceof AlphaAnimation
-                && tv.getAnimation().getRepeatCount() == Animation.INFINITE) {
-            return; // 已在闪烁
+    /** 结束后 10 秒无操作也自动停止闪烁（响铃由服务同步停止） */
+    private void scheduleCdAutoStop() {
+        cdFinishHandler.removeCallbacks(autoStopCdFinishRunnable);
+        cdFinishHandler.postDelayed(autoStopCdFinishRunnable, 10000);
+    }
+
+    private void cancelCdAutoStop() {
+        cdFinishHandler.removeCallbacks(autoStopCdFinishRunnable);
+    }
+
+    private final Runnable autoStopCdFinishRunnable = new Runnable() {
+        @Override
+        public void run() {
+            stopCdFinish();
         }
-        AlphaAnimation blink = new AlphaAnimation(1.0f, 0.15f);
-        blink.setDuration(450);
-        blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(Animation.INFINITE);
-        tv.startAnimation(blink);
-    }
-
-    private void stopCdFinishBlink() {
-        clearBlink(cdHourText);
-        clearBlink(cdMinuteText);
-        clearBlink(cdSecondText);
-    }
-
-    private void clearBlink(TextView tv) {
-        if (tv == null) return;
-        if (tv.getAnimation() != null) {
-            tv.clearAnimation();
-            tv.setAlpha(1.0f);
-        }
-    }
+    };
 
     private void updateCdButtons() {
         if (cdStartButton == null) return;

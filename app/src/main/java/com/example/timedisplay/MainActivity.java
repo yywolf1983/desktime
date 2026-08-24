@@ -68,7 +68,6 @@ public class MainActivity extends Activity {
     private boolean cdFinished = false;
     private long cdRemainingMs = 0L;
     private long cdTotalMs = 0L;
-    private Animation cdFlashAnimation;
 
     // 自定义时间状态（用于排盘）
     private boolean isCustomTime = false;
@@ -1315,25 +1314,6 @@ public class MainActivity extends Activity {
 
         mainLayout.addView(countdownEntryContainer);
 
-        // 闪烁动画：倒计时结束后持续循环闪烁（红色），直到用户点击“停止”
-        AlphaAnimation blink = new AlphaAnimation(1.0f, 0.0f);
-        blink.setDuration(500);
-        blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(Animation.INFINITE);
-        blink.setAnimationListener(new Animation.AnimationListener() {
-            @Override public void onAnimationStart(Animation animation) {}
-            @Override public void onAnimationRepeat(Animation animation) {}
-            @Override public void onAnimationEnd(Animation animation) {
-                // INFINITE 循环不会回调 onAnimationEnd，此处仅兜底
-                if (countdownEntryContainer != null) {
-                    countdownEntryContainer.clearAnimation();
-                    countdownEntryContainer.setAlpha(1.0f);
-                    updateCountdownEntryUi(cdTotalMs, cdTotalMs, false, false);
-                }
-            }
-        });
-        cdFlashAnimation = blink;
-
         // 注册接收 CountdownService 更新
         countdownReceiver = new CountdownReceiver();
         IntentFilter filter = new IntentFilter(CountdownService.ACTION_CD_UPDATE);
@@ -1390,11 +1370,9 @@ public class MainActivity extends Activity {
         cdFinished = finished;
         cdActive = total > 0 || running || finished || remaining > 0;
 
-        // 停止之前可能存在的闪烁动画
-        if (cdFlashAnimation != null && countdownEntryContainer.getAnimation() == cdFlashAnimation) {
-            countdownEntryContainer.clearAnimation();
-            countdownEntryContainer.setAlpha(1.0f);
-        }
+        // 状态切换时先复位文字动画，避免残留闪烁
+        countdownEntryText.clearAnimation();
+        countdownEntryText.setAlpha(1.0f);
 
         int eyeCatching = 0xFF00E5FF;   // 醒目青色，深底高对比
         int gold = 0xFFFFD27F;
@@ -1402,14 +1380,16 @@ public class MainActivity extends Activity {
         int dim = 0xFFB8B8B8;
 
         if (finished) {
-            // 已结束：闪烁红色 "倒计时结束"
+            // 已结束：仅文字闪烁红色（背景容器不闪），便于点击停止
             countdownEntryContainer.setVisibility(View.VISIBLE);
             countdownEntryText.setText("倒计时结束");
             countdownEntryText.setTextSize(12);
             countdownEntryText.setTextColor(warn);
-            if (cdFlashAnimation != null && countdownEntryContainer.getAnimation() != cdFlashAnimation) {
-                countdownEntryContainer.startAnimation(cdFlashAnimation);
-            }
+            AlphaAnimation blink = new AlphaAnimation(1.0f, 0.2f);
+            blink.setDuration(500);
+            blink.setRepeatMode(Animation.REVERSE);
+            blink.setRepeatCount(Animation.INFINITE);
+            countdownEntryText.startAnimation(blink);
         } else if (running) {
             long ms = Math.max(0, remaining);
             int h = (int) (ms / 3600000);
