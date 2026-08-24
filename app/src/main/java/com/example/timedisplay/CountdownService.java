@@ -33,6 +33,7 @@ public class CountdownService extends Service {
     public static final String ACTION_CD_PAUSE = "com.example.timedisplay.CD_PAUSE";
     public static final String ACTION_CD_RESET = "com.example.timedisplay.CD_RESET";
     public static final String ACTION_CD_RESUME = "com.example.timedisplay.CD_RESUME";
+    public static final String ACTION_CD_STOP_RING = "com.example.timedisplay.CD_STOP_RING";
     public static final String ACTION_CD_UPDATE = "com.example.timedisplay.CD_UPDATE";
 
     public static final String EXTRA_DURATION = "duration";
@@ -45,6 +46,10 @@ public class CountdownService extends Service {
     private static final String KEY_END = "endTime";
     private static final String KEY_TOTAL = "total";
     private static final String KEY_RUNNING = "running";
+    private static final String KEY_FINISHED = "finished";
+
+    // 倒计时结束后的最长响铃/闪烁时长：用户未点击时 10 秒后自动停止
+    private static final long MAX_RING_MS = 10_000L;
 
     private Handler handler;
     private long endTime = 0L;      // elapsedRealtime() 基准下的结束时刻
@@ -52,6 +57,7 @@ public class CountdownService extends Service {
     private long remainingMs = 0L;
     private boolean running = false;
     private boolean finished = false;
+    private long finishedAtMs = 0L;      // 结束时刻（elapsedRealtime），用于 10 秒后自动停止响铃
 
     private Ringtone ringtone;
     private Vibrator vibrator;
@@ -82,6 +88,9 @@ public class CountdownService extends Service {
                 case ACTION_CD_RESUME:
                     resumeCountdown();
                     break;
+                case ACTION_CD_STOP_RING:
+                    stopRingingCommand();
+                    break;
             }
         }
     };
@@ -99,7 +108,7 @@ public class CountdownService extends Service {
                 sendUpdate();
                 updateNotification();
                 onFinish();
-                stopForeground(true);
+                // 保持前台通知，等待用户点击“停止”结束响铃（不自动停止）
                 return;
             }
             sendUpdate();
@@ -119,11 +128,13 @@ public class CountdownService extends Service {
         filter.addAction(ACTION_CD_START);
         filter.addAction(ACTION_CD_PAUSE);
         filter.addAction(ACTION_CD_RESET);
+        filter.addAction(ACTION_CD_STOP_RING);
         registerReceiver(commandReceiver, filter);
 
         // 进程被杀后重建时，从持久化恢复状态
         SharedPreferences sp = getSharedPreferences(CD_SPREFS, MODE_PRIVATE);
         boolean wasRunning = sp.getBoolean(KEY_RUNNING, false);
+        boolean wasFinished = sp.getBoolean(KEY_FINISHED, false);
         long end = sp.getLong(KEY_END, 0L);
         totalMs = sp.getLong(KEY_TOTAL, 0L);
         if (wasRunning && end > 0) {
@@ -138,6 +149,16 @@ public class CountdownService extends Service {
             } else {
                 startTicking();
             }
+        } else if (wasFinished) {
+            // 进程被杀时正在响铃：恢复前台并继续响铃，等待用户点击停止
+            running = false;
+            finished = true;
+            remainingMs = 0L;
+            endTime = 0L;
+            sendUpdate();
+            startForegroundSafe();
+            updateNotification();
+            onFinish();
         }
     }
 
@@ -158,6 +179,9 @@ public class CountdownService extends Service {
                     break;
                 case ACTION_CD_RESUME:
                     resumeCountdown();
+                    break;
+                case ACTION_CD_STOP_RING:
+                    stopRingingCommand();
                     break;
             }
         }
@@ -183,6 +207,12 @@ public class CountdownService extends Service {
             }
             beepThread = null;
         }
+        if (vibrator != null) {
+            try {
+                vibrator.cancel();
+            } catch (Exception ignored) {
+            }
+        }
         unregisterReceiver(commandReceiver);
     }
 
@@ -196,6 +226,23 @@ public class CountdownService extends Service {
             // 全新开始
             totalMs = durationMs;
             remainingMs = durationMs;
+            // 若正处于结束响铃中，先停止旧响铃/震动
+            if (finished) {
+                stopBeep();
+                stopRingtone();
+                if (vibrator != null) {
+                    try {
+                        vibrator.cancel();
+                    } catch (Exception ignored) {
+                    }
+                }
+                if (audioManager != null && savedAlarmVolume >= 0) {
+                    try {
+                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedAlarmVolume, 0);
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
         }
         endTime = SystemClock.elapsedRealtime() + remainingMs;
         finished = false;
@@ -221,13 +268,28 @@ public class CountdownService extends Service {
     private void resetCountdown() {
         running = false;
         finished = false;
+        finishedAtMs = 0L;
         remainingMs = 0L;
         totalMs = 0L;
         endTime = 0L;
         persistState();
+        handler.removeCallbacks(autoStopRingRunnable);
         handler.removeCallbacks(tickRunnable);
         stopForeground(true);
+        stopBeep();
         stopRingtone();
+        if (vibrator != null) {
+            try {
+                vibrator.cancel();
+            } catch (Exception ignored) {
+            }
+        }
+        if (audioManager != null && savedAlarmVolume >= 0) {
+            try {
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedAlarmVolume, 0);
+            } catch (Exception ignored) {
+            }
+        }
         sendUpdate();
     }
 
@@ -253,6 +315,7 @@ public class CountdownService extends Service {
                 .putLong(KEY_END, endTime)
                 .putLong(KEY_TOTAL, totalMs)
                 .putBoolean(KEY_RUNNING, running)
+                .putBoolean(KEY_FINISHED, finished)
                 .apply();
     }
 
@@ -266,34 +329,26 @@ public class CountdownService extends Service {
     }
 
     private void onFinish() {
-        // 主方案：播放柔和的 C 大调三声提示音（AudioTrack 正弦波）
+        persistState();
+
+        // 主方案：循环播放提示音（AudioTrack 正弦波），直到用户点击停止
         // 若 AudioTrack 异常，内部 catch 会自动回退到系统铃声
         playBeepSequence();
 
-        // 震动：短序列，更清晰
+        // 震动：循环震动，直到用户点击停止
         if (vibrator != null) {
             try {
-                long[] pattern = new long[]{0, 250, 150, 250, 150, 400};
+                long[] pattern = new long[]{0, 300, 200, 300, 200, 500};
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
+                    vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0));
                 } else {
-                    vibrator.vibrate(pattern, -1);
+                    vibrator.vibrate(pattern, 0);
                 }
             } catch (Exception ignored) {
             }
         }
 
-        // 结束后恢复音量（12 秒）
-        new Handler().postDelayed(() -> {
-            stopBeep();
-            stopRingtone();
-            if (audioManager != null && savedAlarmVolume >= 0) {
-                try {
-                    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedAlarmVolume, 0);
-                } catch (Exception ignored) {
-                }
-            }
-        }, 12000);
+        // 不自动停止：保持前台通知，等待用户点击“停止”（stopRinging）
     }
 
     private void tryPlayRingtone() {
@@ -329,7 +384,7 @@ public class CountdownService extends Service {
                         AudioTrack.getMinBufferSize(sampleRate,
                                 AudioFormat.CHANNEL_OUT_MONO,
                                 AudioFormat.ENCODING_PCM_16BIT),
-                        sampleRate / 20);
+                        sampleRate / 20) * 4;
 
                 AudioAttributes attrs = new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
@@ -342,38 +397,33 @@ public class CountdownService extends Service {
                                 .setSampleRate(sampleRate)
                                 .setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build())
                         .setBufferSizeInBytes(bufSize)
-                        .setTransferMode(AudioTrack.MODE_STATIC)
+                        .setTransferMode(AudioTrack.MODE_STREAM)
                         .build();
 
-                // 三段音（C大调：C5, E5, G5），每段 ~300ms，间隔 ~180ms
+                // 三段音（C大调：C5, E5, G5），每段 ~320ms，间隔 ~180ms，循环播放直到用户停止
                 int[] freqs = {523, 659, 784};
                 int beepMs = 320;
                 int gapMs = 180;
 
                 track.play();
-                for (int i = 0; i < freqs.length && beepRunning; i++) {
-                    writeSine(track, sampleRate, freqs[i], beepMs);
-                    if (i < freqs.length - 1 && beepRunning) {
-                        Thread.sleep(gapMs);
-                    }
-                }
-                // 循环两遍
-                for (int loop = 1; loop < 2 && beepRunning; loop++) {
+                while (beepRunning) {
                     for (int i = 0; i < freqs.length && beepRunning; i++) {
                         writeSine(track, sampleRate, freqs[i], beepMs);
                         if (i < freqs.length - 1 && beepRunning) {
                             Thread.sleep(gapMs);
                         }
                     }
+                    if (beepRunning) {
+                        Thread.sleep(400);
+                    }
                 }
-                // 长响尾音
-                if (beepRunning) {
-                    writeSine(track, sampleRate, 1046, 400);
+                try {
+                    track.stop();
+                } catch (Exception ignored) {
                 }
-                track.stop();
                 track.release();
             } catch (Exception e) {
-                // 回退到铃声
+                // 回退到系统铃声（持续播放，直到用户停止）
                 if (beepRunning) tryPlayRingtone();
             } finally {
                 beepRunning = false;
@@ -385,6 +435,51 @@ public class CountdownService extends Service {
         });
         beepThread.setDaemon(true);
         beepThread.start();
+    }
+
+    /** 停止响铃命令入口：点击即立即取消响铃 */
+    private void stopRingingCommand() {
+        if (!finished) return;
+        stopRinging();
+    }
+
+    /** 用户未点击时，10 秒后自动停止响铃 */
+    private final Runnable autoStopRingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (finished) {
+                stopRinging();
+            }
+        }
+    };
+
+    /** 真正停止响铃/震动/闪烁，回到空闲态 */
+    private void stopRinging() {
+        stopBeep();
+        stopRingtone();
+        if (vibrator != null) {
+            try {
+                vibrator.cancel();
+            } catch (Exception ignored) {
+            }
+        }
+        if (audioManager != null && savedAlarmVolume >= 0) {
+            try {
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, savedAlarmVolume, 0);
+            } catch (Exception ignored) {
+            }
+        }
+        // 清除结束状态，回到空闲
+        finished = false;
+        finishedAtMs = 0L;
+        remainingMs = 0L;
+        totalMs = 0L;
+        endTime = 0L;
+        persistState();
+        handler.removeCallbacks(autoStopRingRunnable);
+        stopForeground(true);
+        sendUpdate();
+        stopSelf();
     }
 
     private static void writeSine(AudioTrack track, int sampleRate, int freq, int durationMs) {
@@ -455,9 +550,11 @@ public class CountdownService extends Service {
         } else {
             builder = new Notification.Builder(this);
         }
+        String title = finished ? "倒计时结束" : "倒计时运行中";
+        String text = finished ? "响铃中，点击停止" : formatTime(remainingMs);
         return builder
-                .setContentTitle("倒计时运行中")
-                .setContentText(formatTime(remainingMs))
+                .setContentTitle(title)
+                .setContentText(text)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_LOW)

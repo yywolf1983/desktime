@@ -1295,9 +1295,14 @@ public class MainActivity extends Activity {
         // 始终作为入口显示（而非无倒计时时隐藏）
         countdownEntryContainer.setVisibility(View.VISIBLE);
 
-        // 点击跳转到倒计时页
+        // 点击：倒计时结束响铃中点击可停止；其他情况跳转到倒计时页
         countdownEntryContainer.setOnClickListener(v -> {
             try {
+                if (cdFinished) {
+                    // 结束响铃中：点击立即停止（否则 10 秒后自动停止）
+                    sendBroadcast(new Intent(CountdownService.ACTION_CD_STOP_RING));
+                    return;
+                }
                 Intent intent = new Intent(MainActivity.this, StopwatchActivity.class);
                 intent.putExtra(StopwatchActivity.EXTRA_OPEN_COUNTDOWN, true);
                 startActivity(intent);
@@ -1310,19 +1315,19 @@ public class MainActivity extends Activity {
 
         mainLayout.addView(countdownEntryContainer);
 
-        // 闪烁动画：完成时闪烁3秒提醒（每周期1秒，共3次）
+        // 闪烁动画：倒计时结束后持续循环闪烁（红色），直到用户点击“停止”
         AlphaAnimation blink = new AlphaAnimation(1.0f, 0.0f);
         blink.setDuration(500);
         blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(2);  // 1次播放 + 2次重复 = 3个周期 ≈ 3秒
+        blink.setRepeatCount(Animation.INFINITE);
         blink.setAnimationListener(new Animation.AnimationListener() {
             @Override public void onAnimationStart(Animation animation) {}
             @Override public void onAnimationRepeat(Animation animation) {}
             @Override public void onAnimationEnd(Animation animation) {
+                // INFINITE 循环不会回调 onAnimationEnd，此处仅兜底
                 if (countdownEntryContainer != null) {
                     countdownEntryContainer.clearAnimation();
                     countdownEntryContainer.setAlpha(1.0f);
-                    // 闪烁结束后恢复为空闲态（显示总时长图标或入口图标）
                     updateCountdownEntryUi(cdTotalMs, cdTotalMs, false, false);
                 }
             }
