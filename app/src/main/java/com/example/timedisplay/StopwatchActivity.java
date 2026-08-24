@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StopwatchActivity extends Activity {
+    public static final String EXTRA_OPEN_COUNTDOWN = "open_countdown";
+
     private SevenSegmentDisplay stopwatchHour1;
     private SevenSegmentDisplay stopwatchHour2;
     private SevenSegmentDisplay stopwatchMinute1;
@@ -119,6 +121,17 @@ public class StopwatchActivity extends Activity {
         initViews();
         initButtonListeners();
         initCountdown();
+
+        // 根据启动参数决定初始显示倒计时还是秒表
+        if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_OPEN_COUNTDOWN, false)) {
+            showingCountdown = true;
+        }
+        if (showingCountdown) {
+            showCountdown();
+        } else {
+            showStopwatch();
+        }
+
         updateDisplay(0);
         updateButtonStates();
     }
@@ -528,13 +541,6 @@ public class StopwatchActivity extends Activity {
         updateCdDisplay();
         updateCdButtons();
         refreshPresetList();
-
-        // 默认显示秒表面板（旋转重建时由 showingCountdown 决定真正面板）
-        if (showingCountdown) {
-            showCountdown();
-        } else {
-            showStopwatch();
-        }
     }
 
     private TextView makeCtrlButton(String text, int colorRes) {

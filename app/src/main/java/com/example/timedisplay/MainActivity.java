@@ -7,12 +7,19 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.view.Surface;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -50,7 +57,18 @@ public class MainActivity extends Activity {
     private LinearLayout batteryContainer;
     private View batteryIcon;
     private TextView batteryPercentTextView;
-    private android.content.BroadcastReceiver batteryReceiver;
+    private BroadcastReceiver batteryReceiver;
+
+    // 倒计时入口（电量右侧）
+    private LinearLayout countdownEntryContainer;
+    private TextView countdownEntryText;
+    private CountdownReceiver countdownReceiver;
+    private boolean cdActive = false;
+    private boolean cdRunning = false;
+    private boolean cdFinished = false;
+    private long cdRemainingMs = 0L;
+    private long cdTotalMs = 0L;
+    private Animation cdFlashAnimation;
 
     // 自定义时间状态（用于排盘）
     private boolean isCustomTime = false;
@@ -97,6 +115,9 @@ public class MainActivity extends Activity {
         // 电池电量显示（动态创建，不新增 XML 资源）
         initBatteryView();
         initBatteryMonitor();
+
+        // 倒计时入口（电量右侧）
+        initCountdownEntry();
 
         // 背景/亮度只需初始化时设置一次，避免每秒触发九宫格整屏重绘
         updateBackground();
@@ -1067,6 +1088,7 @@ public class MainActivity extends Activity {
             }
             batteryReceiver = null;
         }
+        unregisterCountdownReceiver();
     }
 
     // 动态创建电池电量视图（右上角、锁按钮左侧），不引用任何 XML/drawable 资源
@@ -1239,6 +1261,227 @@ public class MainActivity extends Activity {
                 canvas.drawPath(bolt, paint);
             }
         }
+    }
+
+    // ===== 倒计时入口（电量右侧，动态创建，零资源依赖） =====
+    private void initCountdownEntry() {
+        countdownEntryContainer = new LinearLayout(this);
+        countdownEntryContainer.setOrientation(LinearLayout.HORIZONTAL);
+        countdownEntryContainer.setGravity(android.view.Gravity.CENTER_VERTICAL);
+
+        android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+        bg.setColor(0x26FFFFFF);
+        bg.setCornerRadius(dpToPx(16));
+        countdownEntryContainer.setBackgroundDrawable(bg);
+        countdownEntryContainer.setElevation(dpToPx(8));
+        countdownEntryContainer.setPadding(dpToPx(8), dpToPx(6), dpToPx(10), dpToPx(6));
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
+        lp.topMargin = dpToPx(8);
+        lp.leftMargin = dpToPx(10);
+        countdownEntryContainer.setLayoutParams(lp);
+
+        countdownEntryText = new TextView(this);
+        countdownEntryText.setTextSize(12);
+        countdownEntryText.setTextColor(0xFFFFD27F);
+        countdownEntryText.setIncludeFontPadding(false);
+        countdownEntryText.setTypeface(android.graphics.Typeface.create("sans-serif-light", android.graphics.Typeface.NORMAL));
+
+        countdownEntryContainer.addView(countdownEntryText);
+
+        // 始终作为入口显示（而非无倒计时时隐藏）
+        countdownEntryContainer.setVisibility(View.VISIBLE);
+
+        // 点击跳转到倒计时页
+        countdownEntryContainer.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, StopwatchActivity.class);
+                intent.putExtra(StopwatchActivity.EXTRA_OPEN_COUNTDOWN, true);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        countdownEntryContainer.setClickable(true);
+        countdownEntryContainer.setFocusable(true);
+
+        mainLayout.addView(countdownEntryContainer);
+
+        // 闪烁动画：完成时闪烁3秒提醒（每周期1秒，共3次）
+        AlphaAnimation blink = new AlphaAnimation(1.0f, 0.0f);
+        blink.setDuration(500);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(2);  // 1次播放 + 2次重复 = 3个周期 ≈ 3秒
+        blink.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationRepeat(Animation animation) {}
+            @Override public void onAnimationEnd(Animation animation) {
+                if (countdownEntryContainer != null) {
+                    countdownEntryContainer.clearAnimation();
+                    countdownEntryContainer.setAlpha(1.0f);
+                    // 闪烁结束后恢复为空闲态（显示总时长图标或入口图标）
+                    updateCountdownEntryUi(cdTotalMs, cdTotalMs, false, false);
+                }
+            }
+        });
+        cdFlashAnimation = blink;
+
+        // 注册接收 CountdownService 更新
+        countdownReceiver = new CountdownReceiver();
+        IntentFilter filter = new IntentFilter(CountdownService.ACTION_CD_UPDATE);
+        registerReceiver(countdownReceiver, filter);
+
+        // 首次打开时主动请求一次状态
+        requestCountdownState();
+
+        // 电量视图渲染完成后，动态将入口贴到电量右侧
+        countdownEntryContainer.post(() -> {
+            if (batteryContainer == null) return;
+            // 监听电量容器宽度变化（包括从 GONE 变为 VISIBLE 的首次渲染）
+            batteryContainer.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                if (batteryContainer.getWidth() > 0) {
+                    layoutCountdownAfterBattery();
+                }
+            });
+            // 如果电量已布局好，立即定位
+            if (batteryContainer.getWidth() > 0) {
+                layoutCountdownAfterBattery();
+            }
+        });
+    }
+
+    private void requestCountdownState() {
+        try {
+            android.content.SharedPreferences sp = getSharedPreferences("CountdownServicePrefs", MODE_PRIVATE);
+            boolean wasRunning = sp.getBoolean("running", false);
+            long total = sp.getLong("total", 0L);
+            long end = sp.getLong("endTime", 0L);
+            long remain = 0L;
+            boolean finished = false;
+            if (wasRunning && end > 0) {
+                remain = Math.max(0L, end - android.os.SystemClock.elapsedRealtime());
+                if (remain <= 0) {
+                    remain = 0L;
+                    finished = true;
+                    wasRunning = false;
+                }
+            } else if (end > 0 && total > 0) {
+                remain = total;
+            }
+            updateCountdownEntryUi(remain, total, wasRunning, finished);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void updateCountdownEntryUi(long remaining, long total, boolean running, boolean finished) {
+        if (countdownEntryContainer == null || countdownEntryText == null) return;
+
+        cdRemainingMs = remaining;
+        cdTotalMs = total;
+        cdRunning = running;
+        cdFinished = finished;
+        cdActive = total > 0 || running || finished || remaining > 0;
+
+        // 停止之前可能存在的闪烁动画
+        if (cdFlashAnimation != null && countdownEntryContainer.getAnimation() == cdFlashAnimation) {
+            countdownEntryContainer.clearAnimation();
+            countdownEntryContainer.setAlpha(1.0f);
+        }
+
+        int eyeCatching = 0xFF00E5FF;   // 醒目青色，深底高对比
+        int gold = 0xFFFFD27F;
+        int warn = 0xFFFF6B6B;
+        int dim = 0xFFB8B8B8;
+
+        if (finished) {
+            // 已结束：闪烁红色 "倒计时结束"
+            countdownEntryContainer.setVisibility(View.VISIBLE);
+            countdownEntryText.setText("倒计时结束");
+            countdownEntryText.setTextSize(12);
+            countdownEntryText.setTextColor(warn);
+            if (cdFlashAnimation != null && countdownEntryContainer.getAnimation() != cdFlashAnimation) {
+                countdownEntryContainer.startAnimation(cdFlashAnimation);
+            }
+        } else if (running) {
+            long ms = Math.max(0, remaining);
+            int h = (int) (ms / 3600000);
+            int m = (int) ((ms % 3600000) / 60000);
+            int s = (int) ((ms % 60000) / 1000);
+            String text;
+            if (h > 0) {
+                text = String.format("%d:%02d:%02d", h, m, s);
+            } else {
+                text = String.format("%02d:%02d", m, s);
+            }
+            countdownEntryContainer.setVisibility(View.VISIBLE);
+            countdownEntryText.setText(text);
+            countdownEntryText.setTextSize(14);
+            countdownEntryText.setTextColor(eyeCatching);
+        } else if (total > 0) {
+            // 有历史但未运行：显示总时长图标
+            long ms = Math.max(0, total);
+            int h = (int) (ms / 3600000);
+            int m = (int) ((ms % 3600000) / 60000);
+            int s = (int) ((ms % 60000) / 1000);
+            String text;
+            if (h > 0) {
+                text = String.format("⏱ %d:%02d:%02d", h, m, s);
+            } else {
+                text = String.format("⏱ %02d:%02d", m, s);
+            }
+            countdownEntryContainer.setVisibility(View.VISIBLE);
+            countdownEntryText.setText(text);
+            countdownEntryText.setTextSize(12);
+            countdownEntryText.setTextColor(dim);
+        } else {
+            // 完全无倒计时：显示入口图标（点击可设置）
+            countdownEntryContainer.setVisibility(View.VISIBLE);
+            countdownEntryText.setText("⏱");
+            countdownEntryText.setTextSize(12);
+            countdownEntryText.setTextColor(dim);
+        }
+    }
+
+    private class CountdownReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null) return;
+            String action = intent.getAction();
+            if (CountdownService.ACTION_CD_UPDATE.equals(action)) {
+                long remaining = intent.getLongExtra(CountdownService.EXTRA_REMAINING, 0L);
+                long total = intent.getLongExtra(CountdownService.EXTRA_TOTAL, 0L);
+                boolean running = intent.getBooleanExtra(CountdownService.EXTRA_RUNNING, false);
+                boolean finished = intent.getBooleanExtra(CountdownService.EXTRA_FINISHED, false);
+                updateCountdownEntryUi(remaining, total, running, finished);
+            }
+        }
+    }
+
+    private void unregisterCountdownReceiver() {
+        if (countdownReceiver != null) {
+            try {
+                unregisterReceiver(countdownReceiver);
+            } catch (Exception ignored) {
+            }
+            countdownReceiver = null;
+        }
+    }
+
+    private void layoutCountdownAfterBattery() {
+        if (batteryContainer == null || countdownEntryContainer == null) return;
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) countdownEntryContainer.getLayoutParams();
+        if (lp == null) return;
+        int bw = batteryContainer.getWidth();
+        int topMargin = lp.topMargin;
+        if (topMargin <= 0) topMargin = dpToPx(8);
+        int leftMargin = dpToPx(10) + bw + dpToPx(6);
+        lp.leftMargin = leftMargin;
+        lp.topMargin = topMargin;
+        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
+        countdownEntryContainer.setLayoutParams(lp);
     }
 
     
