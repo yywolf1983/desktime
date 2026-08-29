@@ -266,13 +266,6 @@
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：震卦·木·青龙【吉】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
-                        <TextView
                             android:id="@+id/eastZhaoxiang"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -312,13 +305,6 @@
                         android:orientation="vertical"
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：离卦·火·朱雀【吉】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
                         <TextView
                             android:id="@+id/southZhaoxiang"
                             android:layout_width="match_parent"
@@ -360,13 +346,6 @@
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：兑卦·金·白虎【平】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
-                        <TextView
                             android:id="@+id/westZhaoxiang"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -406,13 +385,6 @@
                         android:orientation="vertical"
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：坎卦·水·玄武【凶】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
                         <TextView
                             android:id="@+id/northZhaoxiang"
                             android:layout_width="match_parent"
@@ -454,13 +426,6 @@
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：巽卦·木·青龙【吉】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
-                        <TextView
                             android:id="@+id/southeastZhaoxiang"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -500,13 +465,6 @@
                         android:orientation="vertical"
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：坤卦·土·白虎【平】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
                         <TextView
                             android:id="@+id/southwestZhaoxiang"
                             android:layout_width="match_parent"
@@ -548,13 +506,6 @@
                         android:paddingLeft="12dp"
                         android:layout_marginBottom="10dp">
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：乾卦·金·玄武【平】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
-                        <TextView
                             android:id="@+id/northwestZhaoxiang"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -593,13 +544,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:paddingLeft="12dp">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="格局：艮卦·土·青龙【吉】"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_primary"
-                            android:lineSpacingExtra="1dp"/>
                         <TextView
                             android:id="@+id/northeastZhaoxiang"
                             android:layout_width="match_parent"
@@ -679,6 +623,15 @@
                             android:text="▶"
                             android:textSize="16sp"
                             android:textColor="@color/text_accent"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="阴宅风水"
+                            android:textSize="13sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05"
+                            android:layout_marginLeft="8dp"/>
                     </LinearLayout>
                     <View
                         android:layout_width="match_parent"

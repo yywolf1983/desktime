@@ -1,6 +1,7 @@
 package com.example.timedisplay;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -85,31 +86,50 @@ public class LuoPanView extends View {
 
     public LuoPanView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        resolveMaxSize(context, attrs);
         init();
     }
 
     public LuoPanView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        resolveMaxSize(context, attrs);
         init();
     }
 
     private float scale = 1f;
+    private int maxSizePx = 0;   // 布局声明的 maxWidth/maxHeight（dp 已转 px），0 表示不限
+
+    /** 读取布局中声明的 android:maxWidth / android:maxHeight（单位已转为 px） */
+    private void resolveMaxSize(Context context, AttributeSet attrs) {
+        if (attrs == null) return;
+        try {
+            TypedArray a = context.obtainStyledAttributes(
+                    attrs, new int[]{android.R.attr.maxWidth, android.R.attr.maxHeight});
+            int maxW = a.getDimensionPixelSize(0, Integer.MAX_VALUE);
+            int maxH = a.getDimensionPixelSize(1, Integer.MAX_VALUE);
+            a.recycle();
+            int maxPx = Math.min(maxW, maxH);
+            maxSizePx = (maxPx > 0 && maxPx != Integer.MAX_VALUE) ? maxPx : 0;
+        } catch (Exception ignored) {
+            maxSizePx = 0;
+        }
+    }
 
     private void init() {
         outerCirclePaint = new Paint();
-        outerCirclePaint.setColor(0xFFFFD700);
+        outerCirclePaint.setColor(0xFFE6C46A);   // 主题鎏金
         outerCirclePaint.setStyle(Paint.Style.STROKE);
         outerCirclePaint.setStrokeWidth(4);
         outerCirclePaint.setAntiAlias(true);
         
         circlePaint = new Paint();
-        circlePaint.setColor(Color.CYAN);
+        circlePaint.setColor(0x59E6C46A);        // 淡金同心圆
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeWidth(2);
         circlePaint.setAntiAlias(true);
 
         textPaint = new Paint();
-        textPaint.setColor(Color.CYAN);
+        textPaint.setColor(0xFFBFE0EA);          // 淡青（text_accent）
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextSize(36);
         textPaint.setTextAlign(Paint.Align.CENTER);
@@ -117,29 +137,29 @@ public class LuoPanView extends View {
         textPaint.setFakeBoldText(true);
 
         centerPaint = new Paint();
-        centerPaint.setColor(Color.rgb(44, 199, 194));
+        centerPaint.setColor(0xFFC99A3E);        // 暗金
         centerPaint.setStyle(Paint.Style.FILL);
         centerPaint.setAntiAlias(true);
         
         linePaint = new Paint();
-        linePaint.setColor(Color.argb(120, 255, 215, 0));
+        linePaint.setColor(0x5AE6C46A);          // 淡金放射线
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(1.2f);
         linePaint.setAntiAlias(true);
         
         arrowPaint = new Paint();
-        arrowPaint.setColor(Color.argb(225, 255, 59, 48));
+        arrowPaint.setColor(0xE6FF6347);         // 主题 danger 红
         arrowPaint.setStyle(Paint.Style.FILL);
         arrowPaint.setAntiAlias(true);
 
         borderPaint = new Paint();
-        borderPaint.setColor(0xFFFFD700);
+        borderPaint.setColor(0xFFE6C46A);        // 鎏金描边
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setStrokeWidth(2.5f);
         borderPaint.setAntiAlias(true);
         
         bgPaint = new Paint();
-        bgPaint.setColor(Color.argb(40, 135, 206, 235));
+        bgPaint.setColor(0x24181226);            // 暗底（与卡片同色系）
         bgPaint.setStyle(Paint.Style.FILL);
         bgPaint.setAntiAlias(true);
         
@@ -156,6 +176,16 @@ public class LuoPanView extends View {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int size = Math.min(width, height);
+        // 尊重父容器约束与布局声明的 maxWidth/maxHeight，避免横屏下过大被裁剪
+        if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST) {
+            size = Math.min(size, width);
+        }
+        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
+            size = Math.min(size, height);
+        }
+        if (maxSizePx > 0) {
+            size = Math.min(size, maxSizePx);
+        }
         setMeasuredDimension(size, size);
     }
 
@@ -168,7 +198,8 @@ public class LuoPanView extends View {
         scale = Math.min(width, height) / 400f; // 基准尺寸400px
         int centerX = width / 2;
         int centerY = height / 2;
-        float radius = Math.min(width, height) / 2 - 10;
+        // 预留边距：指针尖端为 1.03r、"北"字在 1.12r，需保证 1.12r <= min(w,h)/2
+        float radius = Math.min(width, height) * 0.43f;
 
         canvas.drawCircle(centerX, centerY, radius, bgPaint);
 
@@ -216,7 +247,7 @@ public class LuoPanView extends View {
         
         // 外圈每5度刻度标记（以北为准）
         Paint tickPaint = new Paint();
-        tickPaint.setColor(0xFFFFD700);
+        tickPaint.setColor(0xFFE6C46A);
         tickPaint.setStrokeWidth(2);
         tickPaint.setAntiAlias(true);
         
@@ -269,12 +300,13 @@ public class LuoPanView extends View {
             canvas.save();
             canvas.rotate(i * 15 + 345, x, y);
             
+            // 天元/人元/地元三元配色（金·青·暖灰，与主题协调）
             if (i % 3 == 0) {
-                textPaint.setColor(Color.YELLOW);
+                textPaint.setColor(0xFFE6C46A);
             } else if (i % 3 == 1) {
-                textPaint.setColor(Color.GREEN);
+                textPaint.setColor(0xFFBFE0EA);
             } else {
-                textPaint.setColor(Color.CYAN);
+                textPaint.setColor(0xFF9AA7B8);
             }
             
             textPaint.setTextSize(r * 0.09f);
@@ -297,7 +329,7 @@ public class LuoPanView extends View {
             canvas.rotate(zhiAngles[i], x, y);
             
             textPaint.setTextSize(r * 0.085f);
-            textPaint.setColor(Color.rgb(255, 182, 193));
+            textPaint.setColor(0xFFBFE0EA);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
             drawTextO(canvas, TWELVE_ZHI[i], x, centerY, textPaint);
@@ -316,13 +348,13 @@ public class LuoPanView extends View {
             canvas.rotate(i * 45, x, y);
             
             textPaint.setTextSize(r * 0.12f);
-            textPaint.setColor(Color.rgb(74, 144, 217));
+            textPaint.setColor(0xFF8AA6E4);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
             drawTextO(canvas, EIGHT_TRIGRAMS[i], x - r * 0.05f, centerY, textPaint);
             
             textPaint.setTextSize(r * 0.08f);
-            textPaint.setColor(Color.rgb(191, 160, 85));
+            textPaint.setColor(0xFFC99A3E);
             fm = textPaint.getFontMetrics();
             centerY = y - (fm.ascent + fm.descent) / 2;
             drawTextO(canvas, EIGHT_TRIGRAMS_NAMES[i], x + r * 0.05f, centerY, textPaint);
@@ -344,7 +376,7 @@ public class LuoPanView extends View {
             canvas.rotate(ganAngles[i], x, y);
             
             textPaint.setTextSize(r * 0.075f);
-            textPaint.setColor(Color.rgb(173, 255, 47));
+            textPaint.setColor(0xFF9CCB9C);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
             drawTextO(canvas, TEN_GAN[i], x, centerY, textPaint);
@@ -363,7 +395,7 @@ public class LuoPanView extends View {
             canvas.rotate(i * 45, x, y);
             
             textPaint.setTextSize(r * 0.085f);
-            textPaint.setColor(Color.WHITE);
+            textPaint.setColor(0xFFE0FFFF);
             textPaint.setFakeBoldText(true);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
@@ -379,7 +411,7 @@ public class LuoPanView extends View {
         for (int i = 0; i < 9; i++) {
             if (i == 4) {
                 textPaint.setTextSize(r * 0.07f);
-                textPaint.setColor(Color.rgb(255, 165, 0));
+                textPaint.setColor(0xFFF3BA66);
                 textPaint.setFakeBoldText(true);
                 Paint.FontMetrics fm = textPaint.getFontMetrics();
                 float centerY = cy - (fm.ascent + fm.descent) / 2;
@@ -395,7 +427,7 @@ public class LuoPanView extends View {
             canvas.rotate(starAngles[i], x, y);
             
             textPaint.setTextSize(r * 0.07f);
-            textPaint.setColor(Color.rgb(255, 165, 0));
+            textPaint.setColor(0xFFF3BA66);
             textPaint.setFakeBoldText(true);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
@@ -415,7 +447,7 @@ public class LuoPanView extends View {
             canvas.rotate(i * 45, x, y);
             
             textPaint.setTextSize(r * 0.06f);
-            textPaint.setColor(Color.rgb(255, 215, 0));
+            textPaint.setColor(0xFFE6C46A);
             textPaint.setFakeBoldText(true);
             Paint.FontMetrics fm = textPaint.getFontMetrics();
             float centerY = y - (fm.ascent + fm.descent) / 2;
@@ -465,7 +497,7 @@ public class LuoPanView extends View {
         canvas.drawCircle(cx, cy + tr / 2, tr / 6, taijiPaint);
         // 金色外圈
         taijiPaint.setStyle(Paint.Style.STROKE);
-        taijiPaint.setColor(0xFFD4AF37);
+        taijiPaint.setColor(0xFFE6C46A);
         taijiPaint.setStrokeWidth(tr * 0.10f);
         canvas.drawCircle(cx, cy, tr, taijiPaint);
         taijiPaint.setStyle(Paint.Style.FILL);
@@ -501,11 +533,11 @@ public class LuoPanView extends View {
 
         // 指针根部金色圆点
         taijiPaint.setStyle(Paint.Style.FILL);
-        taijiPaint.setColor(0xFFFFD700);
+        taijiPaint.setColor(0xFFE6C46A);
         canvas.drawCircle(cx, cy + r * 0.965f, r * 0.013f, taijiPaint);
 
         textPaint.setTextSize(r * 0.04f);
-        textPaint.setColor(Color.RED);
+        textPaint.setColor(0xFFFF6347);
         textPaint.setFakeBoldText(true);
         float textY = cy - r * 1.12f;
         drawTextO(canvas, "北", cx, textY, textPaint);
