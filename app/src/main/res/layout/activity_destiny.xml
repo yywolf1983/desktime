@@ -14,6 +14,7 @@
         android:background="@android:color/transparent">
 
         <LinearLayout
+            android:id="@+id/destinyContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -542,6 +543,7 @@
 
             <!-- 分组：格局与十神 -->
             <LinearLayout
+                android:id="@+id/patternGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -558,7 +560,7 @@
                     android:layout_height="wrap_content"
                     android:text="格局与十神"
                     android:textColor="@color/gold"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.12" />
                 <View
@@ -633,7 +635,7 @@
                     android:layout_height="wrap_content"
                     android:text="性格与人生"
                     android:textColor="@color/gold"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.12" />
                 <View
@@ -645,14 +647,19 @@
                     android:background="@drawable/gold_separator" />
             </LinearLayout>
 
-            <!-- 5-10. 性格/事业/财富/感情/健康/人际（单列堆叠） -->
+            <!-- 5-10. 性格/事业/财富/感情/健康/人际（单列全宽） -->
             <LinearLayout
-                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout style="@style/DestinyCard2Col"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical" android:layout_marginBottom="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="性格特点" android:textColor="@color/gold" android:textSize="12sp"
                         android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="4dp"/>
@@ -661,9 +668,13 @@
                         android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
-                <LinearLayout style="@style/DestinyCard2Col"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical" android:layout_marginBottom="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="事业运势" android:textColor="@color/gold" android:textSize="12sp"
                         android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="4dp"/>
@@ -672,9 +683,13 @@
                         android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
-                <LinearLayout style="@style/DestinyCard2Col"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical" android:layout_marginBottom="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="财富运势" android:textColor="@color/gold" android:textSize="12sp"
                         android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="4dp"/>
@@ -683,9 +698,13 @@
                         android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
-                <LinearLayout style="@style/DestinyCard2Col"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical" android:layout_marginBottom="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="感情婚姻" android:textColor="@color/gold" android:textSize="12sp"
                         android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="4dp"/>
@@ -694,9 +713,13 @@
                         android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
-                <LinearLayout style="@style/DestinyCard2Col"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical" android:layout_marginBottom="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="健康建议" android:textColor="@color/gold" android:textSize="12sp"
                         android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="4dp"/>
@@ -705,9 +728,13 @@
                         android:textColor="@color/text_primary" android:textSize="12sp" android:lineSpacingExtra="3dp"/>
                 </LinearLayout>
 
-                <LinearLayout style="@style/DestinyCard2Col"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/card_background">
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="人际关系" android:textColor="@color/gold" android:textSize="12sp"
                         android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="4dp"/>
@@ -735,7 +762,7 @@
                     android:layout_height="wrap_content"
                     android:text="进阶参考"
                     android:textColor="@color/gold"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.12" />
                 <View
@@ -783,7 +810,7 @@
                 android:orientation="vertical" android:padding="8dp"
                 android:layout_marginBottom="8dp" android:background="@drawable/card_background">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="六亲浅析" android:textColor="@color/gold" android:textSize="12sp"
+                    android:text="六亲分析" android:textColor="@color/gold" android:textSize="12sp"
                     android:textStyle="bold" android:letterSpacing="0.05" android:layout_marginBottom="6dp"/>
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="@drawable/gold_separator" android:layout_marginBottom="8dp"/>
@@ -840,7 +867,7 @@
                     android:layout_height="wrap_content"
                     android:text="人生建议"
                     android:textColor="@color/gold"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.12" />
                 <View

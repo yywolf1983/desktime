@@ -63,24 +63,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="通俗解读"
-                    android:textSize="16sp"
-                    android:textColor="@color/gold"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="9dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/card_background">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="综合总评"
+                    android:text="综合研判"
                     android:textSize="13sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
@@ -121,7 +104,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="时空分析"
+                    android:text="时空格局"
                     android:textColor="@color/gold"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -194,7 +177,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="今日指引"
+                    android:text="用事要诀"
                     android:textColor="@color/gold"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -209,7 +192,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="今日宜忌"
+                    android:text="日辰宜忌"
                     android:textSize="13sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
@@ -243,7 +226,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="生活提示"
+                    android:text="日用提示"
                     android:textSize="13sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
@@ -260,7 +243,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="综合建议"
+                    android:text="综合建言"
                     android:textSize="13sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
@@ -284,11 +267,50 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="专业参考"
+                    android:text="专业精解"
                     android:textSize="16sp"
                     android:textColor="@color/gold"
                     android:textStyle="bold"
                     android:letterSpacing="0.1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="9dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/card_background">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="排盘依据"
+                    android:textColor="@color/gold"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"
+                    android:paddingBottom="6dp"
+                    android:letterSpacing="0.05"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/gold_separator"
+                    android:layout_marginBottom="10dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="说明本盘所用的历法、奇门局数（阳遁／阴遁几局）与起局规则，便于核对。"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_annotation"
+                    android:layout_marginBottom="6dp"/>
+                <TextView
+                    android:id="@+id/expPaipanYiju"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:lineSpacingExtra="5dp"
+                    android:lineSpacingMultiplier="1.05"/>
             </LinearLayout>
 
             <LinearLayout
@@ -486,45 +508,6 @@
                     android:layout_width="240dp"
                     android:layout_height="240dp"
                     android:layout_gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="9dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/card_background">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="排盘依据"
-                    android:textColor="@color/gold"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp"
-                    android:paddingBottom="6dp"
-                    android:letterSpacing="0.05"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@drawable/gold_separator"
-                    android:layout_marginBottom="10dp"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="说明本盘所用的历法、奇门局数（阳遁／阴遁几局）与起局规则，便于核对。"
-                    android:textSize="15sp"
-                    android:textColor="@color/text_annotation"
-                    android:layout_marginBottom="6dp"/>
-                <TextView
-                    android:id="@+id/expPaipanYiju"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="@color/text_primary"
-                    android:lineSpacingExtra="5dp"
-                    android:lineSpacingMultiplier="1.05"/>
             </LinearLayout>
 
         </LinearLayout>

@@ -29,9 +29,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import android.widget.ImageView;
+
 public class MainActivity extends Activity {
 
     private static final int REQUEST_PERMISSIONS_CODE = 1001;
+    private static final int REQUEST_AUSPICIOUS = 1002;
 
     public SevenSegmentDisplay hour1TextView;
     public SevenSegmentDisplay hour2TextView;
@@ -62,6 +65,7 @@ public class MainActivity extends Activity {
     // 倒计时入口（电量右侧）
     private LinearLayout countdownEntryContainer;
     private TextView countdownEntryText;
+    private ImageView countdownEntryIcon;
     private CountdownReceiver countdownReceiver;
     private boolean cdActive = false;
     private boolean cdRunning = false;
@@ -73,6 +77,7 @@ public class MainActivity extends Activity {
     private boolean isCustomTime = false;
     private Calendar customCalendar = null;
     private TextView resetTimeButton;
+    private TextView auspiciousButton;
 
     // 横竖屏锁定状态
     private boolean isRotationLocked = false;
@@ -102,6 +107,7 @@ public class MainActivity extends Activity {
         weekdayTextView = findViewById(R.id.weekdayTextView);
         jieqiTextView = findViewById(R.id.jieqiTextView);
         resetTimeButton = findViewById(R.id.resetTimeButton);
+        auspiciousButton = findViewById(R.id.auspiciousButton);
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
         copyButton = findViewById(R.id.copyButton);
         timeFortuneTextView = findViewById(R.id.timeFortuneTextView);
@@ -118,6 +124,9 @@ public class MainActivity extends Activity {
         // 倒计时入口（电量右侧）
         initCountdownEntry();
 
+        // 功能入口（与电池/倒计时同行的紧凑胶囊按钮）
+        initFeatureEntries();
+
         // 背景/亮度只需初始化时设置一次，避免每秒触发九宫格整屏重绘
         updateBackground();
         timeContainer = findViewById(R.id.timeContainer);
@@ -127,25 +136,7 @@ public class MainActivity extends Activity {
 
         rotationLockButton.setOnClickListener(v -> toggleRotationLock());
 
-        // 点击四柱跳转到命理解读页面
-        fourPillarsTextView.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(MainActivity.this, DestinyActivity.class);
-                String fourPillars = fourPillarsTextView.getText().toString();
-                String[] pillars = fourPillars.split("\\s+");
-                if (pillars.length >= 4) {
-                    intent.putExtra("yearPillar", pillars[0]);
-                    intent.putExtra("monthPillar", pillars[1]);
-                    intent.putExtra("dayPillar", pillars[2]);
-                    intent.putExtra("timePillar", pillars[3]);
-                }
-                startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        fourPillarsTextView.setClickable(true);
-        fourPillarsTextView.setFocusable(true);
+        // 命理解读改由首页顶部入口胶囊按钮进入，此处不再绑定点击
 
         // 点击日期弹出日期时间选择器
         if (dateTextView != null) {
@@ -155,6 +146,11 @@ public class MainActivity extends Activity {
         // 点击返回按钮恢复当前时间
         if (resetTimeButton != null) {
             resetTimeButton.setOnClickListener(v -> resetToCurrentTime());
+        }
+
+        // 点击"择"按钮进入吉日查询页
+        if (auspiciousButton != null) {
+            auspiciousButton.setOnClickListener(v -> openAuspiciousDay());
         }
 
         // 点击时间容器跳转到秒表页面
@@ -186,62 +182,10 @@ public class MainActivity extends Activity {
         ninePalacePanel.setOnClickListener(openFullNinePalace);
         ninePalaceChevron.setOnClickListener(openFullNinePalace);
 
-        // 点击吉凶解释跳转到罗盘页面
-        if (panExplanation != null) {
-            panExplanation.setClickable(true);
-            panExplanation.setFocusable(true);
-            panExplanation.setOnClickListener(v -> {
-                try {
-                    Intent intent = new Intent(MainActivity.this, LuoPanActivity.class);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        
-        // 为时辰运势添加点击事件监听器，点击时显示五运六气
-        timeFortuneTextView.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(MainActivity.this, WuyunLiuqiActivity.class);
-                String fourPillars = fourPillarsTextView.getText().toString();
-                String[] pillars = fourPillars.split("\\s+");
-                if (pillars.length >= 4) {
-                    intent.putExtra("year_pillar", pillars[0]);
-                    intent.putExtra("month_pillar", pillars[1]);
-                    intent.putExtra("day_pillar", pillars[2]);
-                    intent.putExtra("time_pillar", pillars[3]);
-                }
-                if (isCustomTime && customCalendar != null) {
-                    intent.putExtra("custom_year", customCalendar.get(Calendar.YEAR));
-                    intent.putExtra("custom_month", customCalendar.get(Calendar.MONTH) + 1);
-                    intent.putExtra("custom_day", customCalendar.get(Calendar.DAY_OF_MONTH));
-                    intent.putExtra("custom_hour", customCalendar.get(Calendar.HOUR_OF_DAY));
-                    intent.putExtra("custom_minute", customCalendar.get(Calendar.MINUTE));
-                }
-                startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        
-        // 设置时辰运势TextView可点击
-        timeFortuneTextView.setClickable(true);
-        timeFortuneTextView.setFocusable(true);
+        // 罗盘解释点击改由首页顶部入口胶囊按钮进入
 
-        // 为节气TextView添加点击事件监听器，点击时跳转到节气详情页面
-        if (jieqiTextView != null) {
-            jieqiTextView.setOnClickListener(v -> {
-                try {
-                    Intent intent = new Intent(MainActivity.this, JieqiActivity.class);
-                    String jieqi = jieqiTextView.getText().toString().replace("·", "").replace("›", "").trim();
-                    intent.putExtra("jieqi", jieqi);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+        // 五运六气改由首页顶部入口胶囊按钮进入
+        // 节气详情改由首页顶部入口胶囊按钮进入
 
         // 点击复制按钮复制排盘信息
         if (copyButton != null) {
@@ -382,7 +326,7 @@ public class MainActivity extends Activity {
         // 更新节气显示
         String jieqi = JieqiData.getCurrentJieqi(displayCalendar);
         if (jieqiTextView != null) {
-            jieqiTextView.setText(withChevron(jieqi));
+            jieqiTextView.setText(jieqi);
         }
 
         // 四柱排盘：使用自定义时间（如有）或当前时间
@@ -432,6 +376,196 @@ public class MainActivity extends Activity {
         // 立即更新四柱和排盘
         updateFourPillars(new Date());
         updateDateTime();
+    }
+
+    // 进入吉日查询页（以当前显示日期为基准，向后推 180 天）
+    private void openAuspiciousDay() {
+        try {
+            Intent intent = new Intent(MainActivity.this, AuspiciousDayActivity.class);
+            Calendar base = (isCustomTime && customCalendar != null) ? customCalendar : Calendar.getInstance();
+            intent.putExtra("base_year", base.get(Calendar.YEAR));
+            intent.putExtra("base_month", base.get(Calendar.MONTH) + 1);
+            intent.putExtra("base_day", base.get(Calendar.DAY_OF_MONTH));
+            startActivityForResult(intent, REQUEST_AUSPICIOUS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ===== 首页功能入口（与电池/倒计时同一行的紧凑胶囊按钮，动态创建） =====
+    private LinearLayout featureEntryBar;
+
+    private void initFeatureEntries() {
+        featureEntryBar = new LinearLayout(this);
+        featureEntryBar.setOrientation(LinearLayout.HORIZONTAL);
+        featureEntryBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
+
+        android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+        bg.setColor(0x26FFFFFF);
+        bg.setCornerRadius(dpToPx(16));
+        featureEntryBar.setBackgroundDrawable(bg);
+        featureEntryBar.setElevation(dpToPx(8));
+        featureEntryBar.setPadding(dpToPx(6), 0, dpToPx(6), 0);
+
+        addFeatureButton(R.drawable.ic_jieqi, "节气", v -> openJieqi());
+        addFeatureDivider();
+        addFeatureButton(R.drawable.ic_wuyun, "五运六气", v -> openWuyun());
+        addFeatureDivider();
+        addFeatureButton(R.drawable.ic_destiny, "命理", v -> openDestiny());
+        addFeatureDivider();
+        addFeatureButton(R.drawable.ic_luopan, "罗盘", v -> {
+            try {
+                startActivity(new Intent(MainActivity.this, LuoPanActivity.class));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
+        lp.topMargin = dpToPx(8);
+        lp.leftMargin = dpToPx(10);
+        featureEntryBar.setLayoutParams(lp);
+        mainLayout.addView(featureEntryBar);
+
+        // 定位到倒计时入口右侧，与电池同一行
+        featureEntryBar.post(() -> {
+            if (countdownEntryContainer != null) {
+                countdownEntryContainer.addOnLayoutChangeListener(
+                        (v, l, t, r, b, ol, ot, or, ob) -> layoutFeatureAfterCountdown());
+                if (countdownEntryContainer.getWidth() > 0) layoutFeatureAfterCountdown();
+                syncIconSizes();
+            }
+            if (batteryContainer != null) {
+                batteryContainer.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+                    if (batteryContainer.getWidth() > 0) layoutFeatureAfterCountdown();
+                });
+            }
+        });
+    }
+
+    private void addFeatureButton(int iconRes, String desc, android.view.View.OnClickListener listener) {
+        ImageView btn = new ImageView(this);
+        btn.setContentDescription(desc);
+        btn.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        btn.setClickable(true);
+        btn.setFocusable(true);
+        btn.setPadding(dpToPx(3), dpToPx(3), dpToPx(3), dpToPx(3));
+        android.util.TypedValue out = new android.util.TypedValue();
+        getTheme().resolveAttribute(android.R.attr.selectableItemBackground, out, true);
+        if (out.resourceId != 0) btn.setBackgroundResource(out.resourceId);
+        try {
+            android.graphics.drawable.Drawable d = getResources().getDrawable(iconRes, getTheme());
+            if (d != null) {
+                d = d.mutate();
+                d.setTint(0xFFFFD27F);
+                btn.setImageDrawable(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        btn.setOnClickListener(listener);
+        featureEntryBar.addView(btn, new LinearLayout.LayoutParams(dpToPx(28), dpToPx(28)));
+    }
+
+    private void addFeatureDivider() {
+        View d = new View(this);
+        LinearLayout.LayoutParams dl = new LinearLayout.LayoutParams(dpToPx(6), dpToPx(14));
+        dl.gravity = android.view.Gravity.CENTER_VERTICAL;
+        d.setLayoutParams(dl);
+        d.setBackgroundColor(0x00000000);
+        featureEntryBar.addView(d);
+    }
+
+    private void layoutFeatureAfterCountdown() {
+        if (countdownEntryContainer == null || featureEntryBar == null) return;
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) featureEntryBar.getLayoutParams();
+        if (lp == null) return;
+        int cdLeft = countdownEntryContainer.getLeft();
+        int cdW = countdownEntryContainer.getWidth();
+        if (cdW <= 0) cdLeft = dpToPx(10);
+        lp.leftMargin = cdLeft + cdW + dpToPx(6);
+        lp.topMargin = dpToPx(8);
+        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
+        featureEntryBar.setLayoutParams(lp);
+    }
+
+    // 所有入口图标统一为电池显示的高度，保证视觉一致
+    private void syncIconSizes() {
+        if (batteryContainer == null) return;
+        int h = batteryContainer.getHeight();
+        if (h <= 0) return;
+        if (featureEntryBar != null) {
+            for (int i = 0; i < featureEntryBar.getChildCount(); i++) {
+                View c = featureEntryBar.getChildAt(i);
+                if (c instanceof ImageView) {
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(h, h);
+                    lp.gravity = android.view.Gravity.CENTER_VERTICAL;
+                    c.setLayoutParams(lp);
+                    c.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
+                }
+            }
+        }
+        if (countdownEntryIcon != null) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(h, h);
+            lp.gravity = android.view.Gravity.CENTER_VERTICAL;
+            countdownEntryIcon.setLayoutParams(lp);
+            countdownEntryIcon.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
+        }
+    }
+
+    private void openJieqi() {
+        try {
+            Intent intent = new Intent(MainActivity.this, JieqiActivity.class);
+            String jieqi = jieqiTextView.getText().toString().replace("·", "").replace("›", "").trim();
+            intent.putExtra("jieqi", jieqi);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openDestiny() {
+        try {
+            Intent intent = new Intent(MainActivity.this, DestinyActivity.class);
+            String fourPillars = fourPillarsTextView.getText().toString();
+            String[] pillars = fourPillars.split("\\s+");
+            if (pillars.length >= 4) {
+                intent.putExtra("yearPillar", pillars[0]);
+                intent.putExtra("monthPillar", pillars[1]);
+                intent.putExtra("dayPillar", pillars[2]);
+                intent.putExtra("timePillar", pillars[3]);
+            }
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openWuyun() {
+        try {
+            Intent intent = new Intent(MainActivity.this, WuyunLiuqiActivity.class);
+            String fourPillars = fourPillarsTextView.getText().toString();
+            String[] pillars = fourPillars.split("\\s+");
+            if (pillars.length >= 4) {
+                intent.putExtra("year_pillar", pillars[0]);
+                intent.putExtra("month_pillar", pillars[1]);
+                intent.putExtra("day_pillar", pillars[2]);
+                intent.putExtra("time_pillar", pillars[3]);
+            }
+            if (isCustomTime && customCalendar != null) {
+                intent.putExtra("custom_year", customCalendar.get(Calendar.YEAR));
+                intent.putExtra("custom_month", customCalendar.get(Calendar.MONTH) + 1);
+                intent.putExtra("custom_day", customCalendar.get(Calendar.DAY_OF_MONTH));
+                intent.putExtra("custom_hour", customCalendar.get(Calendar.HOUR_OF_DAY));
+                intent.putExtra("custom_minute", customCalendar.get(Calendar.MINUTE));
+            }
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 复制排盘信息到剪贴板 - 标准排盘文本格式
@@ -547,7 +681,7 @@ public class MainActivity extends Activity {
         
         // 格式化四柱显示
         String fourPillars = yearPillar + " " + monthPillar + " " + dayPillar + " " + timePillar;
-        fourPillarsTextView.setText(withChevron(fourPillars));
+        fourPillarsTextView.setText(fourPillars);
 
         // 更新时辰运势：上行：时辰+当令，下行：宜xxx（两行分别显示，避免低分辨率挤在一行）
         String timeZhi = timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
@@ -555,7 +689,7 @@ public class MainActivity extends Activity {
         if (fortune != null) {
             fortune = fortune.replace(" · ", "\n");
         }
-        timeFortuneTextView.setText(withChevron(fortune));
+        timeFortuneTextView.setText(fortune);
 
         // 获取当前节气
         // 统一使用 JieqiData 计算节气，与界面显示的节气保持一致
@@ -807,19 +941,6 @@ public class MainActivity extends Activity {
         }
     }
     
-    // 给可点击进入子页的文本末尾追加一个较小的引导箭头“›”，字号约为正文的 0.7 倍、半透明
-    private CharSequence withChevron(CharSequence text) {
-        if (text == null || text.length() == 0) return text;
-        android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(text);
-        int start = sb.length();
-        sb.append(" ›"); // 引导小箭头
-        sb.setSpan(new android.text.style.RelativeSizeSpan(0.7f), start, sb.length(),
-                android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        sb.setSpan(new android.text.style.ForegroundColorSpan(0x88FFFFFF), start, sb.length(),
-                android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        return sb;
-    }
-
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
         if (panExplanation != null && panStarTextView != null && ninePalacePanel != null) {
@@ -833,13 +954,8 @@ public class MainActivity extends Activity {
             // 第二行：值符星义（灰色）
             panStarTextView.setText(simpleMeaning);
 
-            // 第三行：门义/建议（橙色）+ 引导箭头，点击进入罗盘解析
-            android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(simpleAdvice);
-            int chevronStart = sb.length();
-            sb.append(" ›");
-            sb.setSpan(new android.text.style.RelativeSizeSpan(0.7f), chevronStart, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            sb.setSpan(new android.text.style.ForegroundColorSpan(0x88FFFFFF), chevronStart, sb.length(), android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            panExplanation.setText(sb);
+            // 第三行：门义/建议（橙色），由首页图标按钮进入罗盘解析
+            panExplanation.setText(simpleAdvice);
         }
     }
     
@@ -1076,6 +1192,30 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_AUSPICIOUS && resultCode == RESULT_OK && data != null) {
+            int y = data.getIntExtra("sel_year", -1);
+            int m = data.getIntExtra("sel_month", -1);
+            int d = data.getIntExtra("sel_day", -1);
+            if (y > 0 && m > 0 && d > 0) {
+                customCalendar = Calendar.getInstance();
+                customCalendar.set(y, m - 1, d, 12, 0, 0);
+                customCalendar.set(Calendar.MILLISECOND, 0);
+                isCustomTime = true;
+                if (resetTimeButton != null) {
+                    resetTimeButton.setVisibility(View.VISIBLE);
+                }
+                updateFourPillars(customCalendar.getTime());
+                updateDateTime();
+                android.widget.Toast.makeText(this,
+                        "已切换至 " + y + "年" + m + "月" + d + "日",
+                        android.widget.Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         // 应用销毁时，清理资源
@@ -1122,7 +1262,7 @@ public class MainActivity extends Activity {
             int pt = content.getPaddingTop();
             int pr = content.getPaddingRight();
             int pb = content.getPaddingBottom();
-            content.setPadding(pl, pt + dpToPx(34), pr, pb);
+            content.setPadding(pl, pt + dpToPx(40), pr, pb);
         }
 
         batteryIcon = new BatteryView(this);
@@ -1273,7 +1413,7 @@ public class MainActivity extends Activity {
         bg.setCornerRadius(dpToPx(16));
         countdownEntryContainer.setBackgroundDrawable(bg);
         countdownEntryContainer.setElevation(dpToPx(8));
-        countdownEntryContainer.setPadding(dpToPx(8), dpToPx(6), dpToPx(10), dpToPx(6));
+        countdownEntryContainer.setPadding(dpToPx(8), 0, dpToPx(10), 0);
 
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -1289,6 +1429,25 @@ public class MainActivity extends Activity {
         countdownEntryText.setIncludeFontPadding(false);
         countdownEntryText.setTypeface(android.graphics.Typeface.create("sans-serif-light", android.graphics.Typeface.NORMAL));
 
+        // 倒计时图标（小号矢量图标，与功能入口风格统一、尺寸更小）
+        countdownEntryIcon = new ImageView(this);
+        countdownEntryIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        countdownEntryIcon.setPadding(0, 0, dpToPx(4), 0);
+        try {
+            android.graphics.drawable.Drawable cd = getResources().getDrawable(R.drawable.ic_countdown, getTheme());
+            if (cd != null) {
+                cd = cd.mutate();
+                cd.setTint(0xFFFFD27F);
+                countdownEntryIcon.setImageDrawable(cd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LinearLayout.LayoutParams cdilp = new LinearLayout.LayoutParams(dpToPx(18), dpToPx(18));
+        cdilp.gravity = android.view.Gravity.CENTER_VERTICAL;
+        countdownEntryIcon.setLayoutParams(cdilp);
+
+        countdownEntryContainer.addView(countdownEntryIcon);
         countdownEntryContainer.addView(countdownEntryText);
 
         // 始终作为入口显示（而非无倒计时时隐藏）
@@ -1413,9 +1572,9 @@ public class MainActivity extends Activity {
             int s = (int) ((ms % 60000) / 1000);
             String text;
             if (h > 0) {
-                text = String.format("⏱ %d:%02d:%02d", h, m, s);
+                text = String.format("%d:%02d:%02d", h, m, s);
             } else {
-                text = String.format("⏱ %02d:%02d", m, s);
+                text = String.format("%02d:%02d", m, s);
             }
             countdownEntryContainer.setVisibility(View.VISIBLE);
             countdownEntryText.setText(text);
@@ -1424,7 +1583,7 @@ public class MainActivity extends Activity {
         } else {
             // 完全无倒计时：显示入口图标（点击可设置）
             countdownEntryContainer.setVisibility(View.VISIBLE);
-            countdownEntryText.setText("⏱");
+            countdownEntryText.setText("");
             countdownEntryText.setTextSize(12);
             countdownEntryText.setTextColor(dim);
         }
@@ -1467,6 +1626,10 @@ public class MainActivity extends Activity {
         lp.topMargin = topMargin;
         lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
         countdownEntryContainer.setLayoutParams(lp);
+        // 入口按钮与倒计时同行，倒计时位置变化时同步
+        layoutFeatureAfterCountdown();
+        // 所有图标尺寸与电池显示高度保持一致
+        syncIconSizes();
     }
 
     

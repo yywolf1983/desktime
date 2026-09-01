@@ -32,23 +32,36 @@ public class LuoPanActivity extends android.app.Activity {
     private boolean yinzhaiExpanded = false;
 
     private final String[] baguaNames = {"坎", "艮", "震", "巽", "中", "乾", "兑", "坤", "离"};
+    // 按方位角排序的后天八卦（0°北起，每 45° 一宫）：用于由方位角查坐山卦
+    private static final String[] BAGUA_BY_DIRECTION = {"坎", "艮", "震", "巽", "离", "坤", "兑", "乾"};
     private final String[] mountainNames = {"子", "癸", "丑", "艮", "寅", "甲", "卯", "乙", "辰",
             "巽", "巳", "丙", "午", "丁", "未", "坤", "申", "庚", "酉", "辛", "戌", "乾", "亥", "壬"};
-    private final String[] tianganNames = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
-    private final String[] wuxingNames = {"水", "土", "木", "木", "土", "木", "木", "土", "火", "火",
-            "土", "火", "火", "土", "金", "金", "土", "金", "金", "土", "水", "土", "水", "水"};
-    private final String[] nayinMap = {
-            "桑柘木", "桑柘木", "壁上土", "壁上土", "松柏木", "松柏木",
-            "炉中火", "炉中火", "大林木", "大林木", "白蜡金", "白蜡金",
-            "杨柳木", "杨柳木", "泉中水", "泉中水", "屋上土", "屋上土",
-            "霹雳火", "霹雳火", "松柏木", "松柏木", "长流水", "长流水"
+    // 二十四山中带天干者（八干）；其余为十二地支山或乾坤艮巽四维山，不带天干
+    private static final String[] MOUNTAIN_TIANGAN = {
+        "",   "癸", "",   "",   "",   "甲", "",   "乙", "",   "",   "",   "丙",
+        "",   "丁", "",   "",   "",   "庚", "",   "辛", "",   "",   "",   "壬"
     };
-    private final String[] shenshaMap = {
-            "天德", "玉堂", "天牢", "玄武", "司命", "青龙",
-            "明堂", "金匮", "天德", "玉堂", "天牢", "玄武",
-            "司命", "青龙", "明堂", "金匮", "天德", "玉堂",
-            "天牢", "玄武", "司命", "青龙", "明堂", "金匮"
+    // 二十四山中为地支者（十二支）
+    private static final String[] MOUNTAIN_DIZHI = {
+        "子", "",   "丑", "",   "寅", "",   "卯", "",   "辰", "",   "巳", "",
+        "午", "",   "未", "",   "申", "",   "酉", "",   "戌", "",   "亥", ""
     };
+    // 二十四山正五行（与 mountainNames 一一对应：子癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥壬）
+    private final String[] wuxingNames = {"水", "水", "土", "土", "木", "木", "木", "木", "土", "木",
+            "火", "火", "火", "火", "土", "土", "金", "金", "金", "金", "土", "金", "水", "水"};
+    // 六十甲子纳音（每两组干支共一纳音，索引为干支在六十甲子中的序号 0..59）
+    private static final String[] NAYIN_60 = {
+            "海中金", "海中金", "炉中火", "炉中火", "大林木", "大林木", "路旁土", "路旁土", "剑锋金", "剑锋金",
+            "山头火", "山头火", "涧下水", "涧下水", "城头土", "城头土", "白蜡金", "白蜡金", "杨柳木", "杨柳木",
+            "泉中水", "泉中水", "屋上土", "屋上土", "霹雳火", "霹雳火", "松柏木", "松柏木", "长流水", "长流水",
+            "沙中金", "沙中金", "山下火", "山下火", "平地木", "平地木", "壁上土", "壁上土", "金箔金", "金箔金",
+            "覆灯火", "覆灯火", "天河水", "天河水", "大驿土", "大驿土", "钗钏金", "钗钏金", "桑柘木", "桑柘木",
+            "大溪水", "大溪水", "沙中土", "沙中土", "天上火", "天上火", "石榴木", "石榴木", "大海水", "大海水"
+    };
+    // 建除十二神（自月建之支起「建」，顺行十二神）
+    private static final String[] JIANCHU_12 = {"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"};
+    // 地支序号表
+    private static final String[] DIZHI = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
 
     // 八门生活应用建议：{卦名, baguaNumber, 休门位, 生门位, 开门位, 求财方位, 求职方位, 谈判方位, 忌走方位}
     private static final String[][] BAMEN_LIFE_ADVICE = {
@@ -202,27 +215,32 @@ public class LuoPanActivity extends android.app.Activity {
     private void updateInfo() {
         float normalizedAzimuth = ((-azimuth % 360) + 360) % 360;
         int mountainIndex = (int) (normalizedAzimuth / 15);
-        int baguaIndex = (int) (normalizedAzimuth / 45);
+        // 坐山卦按方位角查后天八卦（baguaNames 是洛书数序，不可用于方位索引）
+        int baguaDirIndex = (int) (normalizedAzimuth / 45) % 8;
 
         String mountain = mountainNames[mountainIndex];
-        String bagua = baguaNames[baguaIndex];
+        String bagua = BAGUA_BY_DIRECTION[baguaDirIndex];
         String wuxing = wuxingNames[mountainIndex];
-        String nayin = nayinMap[mountainIndex];
-        String shensha = shenshaMap[mountainIndex];
 
         String chaoXiang = mountainNames[(mountainIndex + 12) % 24];
-        int tianganIndex = mountainIndex % 10;
-        String tiangan = tianganNames[tianganIndex];
+        // 二十四山中仅八干山带天干、十二支山为地支，其余为空
+        String tiangan = MOUNTAIN_TIANGAN[mountainIndex];
+        String dizhi = MOUNTAIN_DIZHI[mountainIndex];
 
         if (directionInfo != null) directionInfo.setText(bagua + "(" + getDirectionString(normalizedAzimuth) + ")");
         if (mountainInfo != null) mountainInfo.setText("坐山: " + mountain);
         if (wuxingInfo != null) wuxingInfo.setText("五行: " + wuxing);
-        if (shierZhixingInfo != null) shierZhixingInfo.setText("地支: " + getDizhiForMountain(mountain));
-        if (tianganInfo != null) tianganInfo.setText("天干: " + tiangan);
+        if (shierZhixingInfo != null) {
+            shierZhixingInfo.setText(dizhi.isEmpty() ? "地支: —" : "地支: " + dizhi);
+        }
+        if (tianganInfo != null) {
+            tianganInfo.setText(tiangan.isEmpty() ? "天干: —" : "天干: " + tiangan);
+        }
         if (baguaInfo != null) baguaInfo.setText("八卦: " + bagua);
         if (chaoXiangInfo != null) chaoXiangInfo.setText("朝向: " + chaoXiang);
-        if (nayinInfo != null) nayinInfo.setText("纳音: " + nayin);
-        if (shenshaInfo != null) shenshaInfo.setText("神煞: " + shensha);
+        // 纳音依六十甲子（随日柱），神煞依建除十二神（随月建与日支），均非按坐山固定
+        if (nayinInfo != null) nayinInfo.setText("纳音: " + getDayNayin());
+        if (shenshaInfo != null) shenshaInfo.setText("神煞: " + getJianChuShen());
         if (jixiongInfo != null) jixiongInfo.setText("吉凶: " + getJiXiong(mountain, wuxing));
         if (diguiInfo != null) diguiInfo.setText("归藏: " + getGuiZang(wuxing));
 
@@ -369,6 +387,13 @@ public class LuoPanActivity extends android.app.Activity {
         return "平";
     }
 
+    /**
+     * 五行生克关系（以 mainWuxing 为「我」）
+     * 生我：other 生 main（得生扶）→ 吉
+     * 我生：main 生 other（泄气）  → 平
+     * 克我：other 克 main（受制）  → 凶
+     * 我克：main 克 other（耗力）  → 平
+     */
     private String getWuxingRelation(String mainWuxing, String otherWuxing) {
         if (mainWuxing.equals(otherWuxing)) return "【比和】";
         if ((mainWuxing.equals("木") && otherWuxing.equals("火")) ||
@@ -376,14 +401,14 @@ public class LuoPanActivity extends android.app.Activity {
             (mainWuxing.equals("土") && otherWuxing.equals("金")) ||
             (mainWuxing.equals("金") && otherWuxing.equals("水")) ||
             (mainWuxing.equals("水") && otherWuxing.equals("木"))) {
-            return "【生我】";
+            return "【我生】";
         }
         if ((mainWuxing.equals("火") && otherWuxing.equals("木")) ||
             (mainWuxing.equals("土") && otherWuxing.equals("火")) ||
             (mainWuxing.equals("金") && otherWuxing.equals("土")) ||
             (mainWuxing.equals("水") && otherWuxing.equals("金")) ||
             (mainWuxing.equals("木") && otherWuxing.equals("水"))) {
-            return "【我生】";
+            return "【生我】";
         }
         if ((mainWuxing.equals("木") && otherWuxing.equals("金")) ||
             (mainWuxing.equals("火") && otherWuxing.equals("水")) ||
@@ -497,17 +522,57 @@ public class LuoPanActivity extends android.app.Activity {
         return diff >= 5 && diff <= 7;
     }
 
-    private String getDizhiForMountain(String mountain) {
-        String[] dizhiMap = {"子", "癸", "丑", "艮", "寅", "甲", "卯", "乙", "辰",
-                "巽", "巳", "丙", "午", "丁", "未", "坤", "申", "庚", "酉", "辛", "戌", "乾", "亥", "壬"};
-        String[] dizhiOnly = {"子", "", "丑", "", "寅", "", "卯", "", "辰", "", "巳", "",
-                "午", "", "未", "", "申", "", "酉", "", "戌", "", "亥", ""};
-        for (int i = 0; i < dizhiMap.length; i++) {
-            if (dizhiMap[i].equals(mountain)) {
-                return dizhiOnly[i].isEmpty() ? mountain : dizhiOnly[i];
-            }
+    /** 当前日柱在六十甲子中的序号（0..59），以 1900-01-01 甲戌日为基准 */
+    private int getDayGanzhiIndex() {
+        try {
+            java.util.Calendar now = java.util.Calendar.getInstance();
+            java.util.Calendar base = java.util.Calendar.getInstance();
+            base.clear();
+            base.set(1900, 0, 1);
+            java.util.Calendar cur = java.util.Calendar.getInstance();
+            cur.clear();
+            cur.set(now.get(java.util.Calendar.YEAR),
+                    now.get(java.util.Calendar.MONTH),
+                    now.get(java.util.Calendar.DAY_OF_MONTH));
+            long days = (cur.getTimeInMillis() - base.getTimeInMillis()) / (1000L * 60 * 60 * 24);
+            return ((10 + (int) days) % 60 + 60) % 60;
+        } catch (Exception e) {
+            return 0;
         }
-        return mountain;
+    }
+
+    /** 当日纳音：依六十甲子纳音（随日柱变化，非按坐山固定） */
+    private String getDayNayin() {
+        int idx = getDayGanzhiIndex();
+        return NAYIN_60[idx];
+    }
+
+    /** 月建地支序号：由当前节气所属节气月定（立春起寅月） */
+    private int getMonthZhiIndex() {
+        String jieqi = JieqiData.getCurrentJieqi(java.util.Calendar.getInstance());
+        if (jieqi == null) return 2;
+        switch (jieqi) {
+            case "立春": case "雨水": return 2;   // 寅
+            case "惊蛰": case "春分": return 3;   // 卯
+            case "清明": case "谷雨": return 4;   // 辰
+            case "立夏": case "小满": return 5;   // 巳
+            case "芒种": case "夏至": return 6;   // 午
+            case "小暑": case "大暑": return 7;   // 未
+            case "立秋": case "处暑": return 8;   // 申
+            case "白露": case "秋分": return 9;   // 酉
+            case "寒露": case "霜降": return 10;  // 戌
+            case "立冬": case "小雪": return 11;  // 亥
+            case "大雪": case "冬至": return 0;   // 子
+            case "小寒": case "大寒": return 1;   // 丑
+            default: return 2;
+        }
+    }
+
+    /** 当日建除十二神：自月建之支起「建」，按日支顺推 */
+    private String getJianChuShen() {
+        int dayZhiIndex = (getDayGanzhiIndex() % 12 + 12) % 12; // 干支序号个位即日支序（子=0）
+        int idx = (dayZhiIndex - getMonthZhiIndex() + 12) % 12;
+        return JIANCHU_12[idx];
     }
 
     private String getJiXiong(String mountain, String wuxing) {
@@ -561,15 +626,20 @@ public class LuoPanActivity extends android.app.Activity {
             }
         }
         
+        // 八宅大游年（行序同 baguaList：坎艮震巽中乾兑坤离；列序：坎艮震巽乾兑坤离）
+        // 值含义同 bazhaiNames：0伏位 1生气 2延年 3天医 4祸害 5六煞 6五鬼 7绝命
+        // 依大游年歌：坎五天生延绝祸六 / 艮六绝祸生延天五 / 震延生祸绝五天六 / 巽天五六祸生绝延
+        //             离六五绝延祸生天 / 坤天延绝生祸五六 / 兑生祸延绝六五天 / 乾六天五祸绝延生
         int[][] bazhaiFlying = {
-            {6,3,1,2,5,4,7,0},
-            {5,7,4,1,2,3,6,0},
-            {2,1,4,7,6,3,5,0},
-            {3,6,5,4,1,7,2,0},
-            {5,6,7,2,4,1,3,0},
-            {3,2,7,1,4,6,5,0},
-            {1,4,2,7,5,6,3,0},
-            {5,3,6,4,7,2,1,0}
+            {0,6,3,1,5,4,7,2},  // 坎宅：坎伏 艮五鬼 震天医 巽生气 乾六煞 兑祸害 坤绝命 离延年
+            {6,0,5,7,3,2,1,4},  // 艮宅：坎五鬼 艮伏 震六煞 巽绝命 乾天医 兑延年 坤生气 离祸害
+            {3,5,0,2,6,7,4,1},  // 震宅：坎天医 艮六煞 震伏 巽延年 乾五鬼 兑绝命 坤祸害 离生气
+            {1,7,2,0,4,5,6,3},  // 巽宅：坎生气 艮绝命 震延年 巽伏 乾祸害 兑六煞 坤五鬼 离天医
+            {0,0,0,0,0,0,0,0},  // 中宫：八宅不论中宫，占位
+            {5,3,6,4,0,1,2,7},  // 乾宅：坎六煞 艮天医 震五鬼 巽祸害 乾伏 兑生气 坤延年 离绝命
+            {4,2,7,5,1,0,3,6},  // 兑宅：坎祸害 艮延年 震绝命 巽六煞 乾生气 兑伏 坤天医 离五鬼
+            {7,1,4,6,2,3,0,5},  // 坤宅：坎绝命 艮生气 震祸害 巽五鬼 乾延年 兑天医 坤伏 离六煞
+            {2,4,1,3,7,6,5,0}   // 离宅：坎延年 艮祸害 震生气 巽天医 乾绝命 兑五鬼 坤六煞 离伏
         };
         
         String[] bazhaiNames = {"伏位", "生气", "延年", "天医", "祸害", "六煞", "五鬼", "绝命"};
@@ -588,7 +658,8 @@ public class LuoPanActivity extends android.app.Activity {
         StringBuilder sb = new StringBuilder();
         sb.append("<b>八宅（").append(bagua).append("宅）：</b><br/>");
 
-        if (baguaIndex >= 0 && baguaIndex <= 7) {
+        // baguaIndex 取自 baguaList（含中宫索引4），故上界为 9；坐山卦不会是中宫
+        if (baguaIndex >= 0 && baguaIndex < 9 && baguaIndex != 4) {
             int[] flying = bazhaiFlying[baguaIndex];
             for (int i = 0; i < 8; i++) {
                 int starIndex = flying[i];
@@ -657,23 +728,35 @@ public class LuoPanActivity extends android.app.Activity {
             "喜气骈集，婚好谐睦"
         };
         
-        int[] luoShuOrder = {0, 7, 3, 4, 5, 2, 6, 1, 8};
+        // 洛书飞星轨迹（宫索引序）：中→坎→坤→震→巽→乾→兑→艮→离
+        int[] FLY_PATH = {4, 0, 1, 2, 3, 5, 6, 7, 8};
+        // 九星阴阳（索引0-8 对应一白..九紫）：阳顺飞、阴逆飞
+        boolean[] STAR_YIN = {false, true, false, true, false, false, true, true, false};
+
+        String sbTitle = new StringBuilder().append("<b>九星飞宫（")
+                .append(bagua).append("卦入中·").append(jiuxingNames[baguaNumber - 1])
+                .append(STAR_YIN[baguaNumber - 1] ? "星·逆飞）：</b>" : "星·顺飞）：</b>").toString();
+
         StringBuilder sb = new StringBuilder();
-        sb.append("<b>九星飞宫（").append(bagua).append("卦入中·").append(jiuxingNames[baguaNumber - 1]).append("星）：</b><br/>");
-        
-        for (int i = 0; i < 9; i++) {
-            int starNum = (baguaNumber + luoShuOrder[i]) % 9;
-            if (starNum == 0) starNum = 9;
-            int starIndex = starNum - 1;
-            
-            if (i != 4) {
-                String luckColor = jiuxingLuck[starIndex].equals("吉") ? "#3FA34D" : 
-                                   jiuxingLuck[starIndex].equals("凶") ? "#E0593B" : "#E6C46A";
-                sb.append(jiuxingNames[starIndex]);
-                sb.append("<font color='").append(luckColor).append("'>【").append(jiuxingLuck[starIndex]).append("】</font>");
-                sb.append(directions[i]).append("·").append(baguaList[i]).append("卦·").append(jiuxingWuxing[starIndex]);
-                sb.append(" ").append(jiuxingMeaning[starIndex]).append("<br/>");
+        sb.append(sbTitle).append("<br/>");
+
+        boolean reverse = STAR_YIN[baguaNumber - 1];
+        for (int step = 0; step < 9; step++) {
+            int palaceIndex = FLY_PATH[step];
+            int starNum;
+            if (reverse) {
+                starNum = ((baguaNumber - 1 - step) % 9 + 9) % 9 + 1;
+            } else {
+                starNum = ((baguaNumber - 1 + step) % 9) + 1;
             }
+            int starIndex = starNum - 1;
+
+            String luckColor = jiuxingLuck[starIndex].equals("吉") ? "#3FA34D" :
+                               jiuxingLuck[starIndex].equals("凶") ? "#E0593B" : "#E6C46A";
+            sb.append(jiuxingNames[starIndex]);
+            sb.append("<font color='").append(luckColor).append("'>【").append(jiuxingLuck[starIndex]).append("】</font>");
+            sb.append(directions[palaceIndex]).append("·").append(baguaList[palaceIndex]).append("卦·").append(jiuxingWuxing[starIndex]);
+            sb.append(" ").append(jiuxingMeaning[starIndex]).append("<br/>");
         }
 
         // 原因解读
@@ -759,19 +842,29 @@ public class LuoPanActivity extends android.app.Activity {
             "通达顺利，利开业求职"
         };
         
-        int[] validPositions = {0, 1, 2, 3, 5, 6, 7, 8};
+        // 洛书八方顺时针序列（跳过中宫）：坎→艮→震→巽→乾→兑→坤→离
+        int[] EIGHT_PALACES = {0, 1, 2, 3, 5, 6, 7, 8};
+        int seatAbsIdx = 5; // 坐山在 baguaList 中的绝对索引，默认中宫
+        for (int i = 0; i < baguaList.length; i++) {
+            if (baguaList[i].equals(bagua)) { seatAbsIdx = i; break; }
+        }
+        int startIdx = 0;
+        for (int k = 0; k < 8; k++) {
+            if (EIGHT_PALACES[k] == seatAbsIdx) { startIdx = k; break; }
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("<b>八门遁法（").append(bagua).append("卦起休门）：</b><br/>");
         
+        // 休门置于坐山本宫，顺排八方（跳过中宫）
         for (int i = 0; i < bamenNames.length; i++) {
-            int posIndex = (i + baguaNumber - 1 + 8) % 8;
-            int adjustedPos = validPositions[posIndex];
+            int palaceIdx = EIGHT_PALACES[(startIdx + i) % 8];
             
-            String luckColor = bamenLuck[i].equals("吉") ? "#3FA34D" : 
+            String luckColor = bamenLuck[i].equals("吉") ? "#3FA34D" :
                                bamenLuck[i].equals("凶") ? "#E0593B" : "#E6C46A";
             sb.append(bamenNames[i]);
             sb.append("<font color='").append(luckColor).append("'>【").append(bamenLuck[i]).append("】</font>");
-            sb.append(directions[adjustedPos]).append("·").append(baguaList[adjustedPos]).append("卦");
+            sb.append(directions[palaceIdx]).append("·").append(baguaList[palaceIdx]).append("卦");
             sb.append(" ").append(bamenMeaning[i]).append("<br/>");
         }
 

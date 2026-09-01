@@ -17,6 +17,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/card_background"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="五运六气"
+                android:textColor="@color/gold"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="9dp"
             android:background="@drawable/card_background">
@@ -115,7 +132,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="通俗解读"
+                        android:text="通俗释义"
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -132,7 +149,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="综合总评"
+                        android:text="综合研判"
                         android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -164,7 +181,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="当下时辰养生"
+                        android:text="时辰养生宜忌"
                         android:textColor="@color/gold"
                         android:textSize="13sp"
                         android:textStyle="bold"
@@ -175,14 +192,6 @@
                         android:layout_height="1dp"
                         android:background="@drawable/gold_separator"
                         android:layout_marginBottom="10dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="把当年的五运六气，叠加到此刻的时辰，给出起居饮食的宜忌。"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_annotation"
-                        android:layout_marginBottom="8dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -227,13 +236,6 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="五运＝木火土金水每五年一轮的气候能量，分「太过的年」和「不及的年」。"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_annotation"
-                        android:layout_marginBottom="6dp"/>
-                    <TextView
                         android:id="@+id/wuyunInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -250,13 +252,6 @@
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="六气＝风、寒、暑、湿、燥、火六种年度气候；分「主气」（固定）与「客气」（当年变化）。"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_annotation"
-                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/liuqiInfo"
                         android:layout_width="match_parent"
@@ -293,7 +288,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="专业参考"
+                        android:text="专业研判"
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"

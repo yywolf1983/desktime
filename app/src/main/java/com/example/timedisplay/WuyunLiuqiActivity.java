@@ -532,6 +532,7 @@ public class WuyunLiuqiActivity extends Activity {
         String yearZhi = yearGanZhi.substring(1, 2);
         
         String zhongYun = getZhongYunShort(yearGan);
+        String wuyunElement = zhongYun.substring(0, 1);
         int siTianIndex = getSiTianIndex(yearZhi);
         String siTian = LIUYI_NAMES[siTianIndex];
         
@@ -555,7 +556,7 @@ public class WuyunLiuqiActivity extends Activity {
         };
         
         for (String[] item : yunqiShichen) {
-            if (zhongYun.contains(item[0]) || siTian.contains(item[1]) || currentQi.contains(item[1])) {
+            if (wuyunElement.equals(item[0].substring(0, 1)) || siTian.contains(item[1]) || currentQi.contains(item[1])) {
                 relation.append("<font color='").append(item[3]).append("'>").append(item[2]).append("</font><br/>");
             }
         }
@@ -678,14 +679,20 @@ public class WuyunLiuqiActivity extends Activity {
         return TIANGAN[ganIndex] + DIZHI[zhiIndex];
     }
     
+    // 中运：天干化五运，阳干（甲丙戊庚壬）主太过，阴干（乙丁己辛癸）主不及
     private String getZhongYunShort(String yearGan) {
         switch (yearGan) {
-            case "甲": case "己": return "土太过";
-            case "乙": case "庚": return "金不及";
-            case "丙": case "辛": return "水太过";
-            case "丁": case "壬": return "木不及";
-            case "戊": case "癸": return "火太过";
-            default: return "土";
+            case "甲": return "土太过";
+            case "己": return "土不及";
+            case "乙": return "金不及";
+            case "庚": return "金太过";
+            case "丙": return "水太过";
+            case "辛": return "水不及";
+            case "丁": return "木不及";
+            case "壬": return "木太过";
+            case "戊": return "火太过";
+            case "癸": return "火不及";
+            default: return "土平";
         }
     }
     
@@ -845,11 +852,11 @@ public class WuyunLiuqiActivity extends Activity {
         yunshi.append("在泉 ").append(zaiQuan).append("：").append(getLiuyiDetailedAnalysis(zaiQuan)).append("<br/><br/>");
 
         String[][] yunshiAnalysis = {
-            {"木", "木运之年，风气偏盛，肝气易旺。<br/>财气波动，乘势进取为宜。<br/>防肝胆、头风，多青疏理。<br/>人缘舒展，利交际。<br/><br/>", COLOR_JI},
-            {"火", "火运之年，热气偏盛，心气易旺。<br/>财气宣通，理财须审慎。<br/>防心系、口疮，多红清心。<br/>情意畅达，利姻好。<br/><br/>", COLOR_XIONG},
-            {"土", "土运之年，湿气偏盛，脾气易旺。<br/>财气平顺，稳健守成。<br/>防脾胃不调，多黄健脾。<br/>情意安固，利家室。<br/><br/>", COLOR_EARTH},
-            {"金", "金运之年，燥气偏盛，肺气易旺。<br/>财气收敛，宜纳获。<br/>防肺燥、肤干，多白润肺。<br/>情意内敛，宜理性。<br/><br/>", COLOR_METAL},
-            {"水", "水运之年，寒气偏盛，肾气易旺。<br/>财气潜藏，蓄势守成。<br/>防肾系、寒痹，多黑温肾。<br/>情意沉静，宜诚悫。<br/><br/>", COLOR_WATER}
+            {"木", "木运主风，肝气当令。太过则风动眩搐，不及则肝郁筋挛；<br/>财气随风浮动，宜乘势进取、忌妄动躁进。<br/>春应肝胆，宜青蔬条达以疏。", COLOR_JI},
+            {"火", "火运主热，心气当令。太过则热盛烦渴，不及则寒悸神疲；<br/>财气宣通，宜明谨理财、忌冒进。<br/>夏应心小肠，宜赤食清静以养。", COLOR_XIONG},
+            {"土", "土运主湿，脾气当令。太过则湿壅胀满，不及则瘦薄乏力；<br/>财气平顺，宜稳守深耕、忌虚浮。<br/>长夏应脾胃，宜黄食有常以培。", COLOR_EARTH},
+            {"金", "金运主燥，肺气当令。太过则燥烈咳秘，不及则喘泻湿生；<br/>财气收敛，宜纳获储积、忌侈散。<br/>秋应肺大肠，宜白食润泽以护。", COLOR_METAL},
+            {"水", "水运主寒，肾气当令。太过则寒凝痛痹，不及则热尿频数；<br/>财气潜藏，宜蓄势守成、忌盲动。<br/>冬应肾膀胱，宜黑食温煦以涵。", COLOR_WATER}
         };
 
         String wuxing = getWuXing(yearGan);
@@ -869,31 +876,23 @@ public class WuyunLiuqiActivity extends Activity {
     
     private String getWuyunDetailedAnalysis(String zhongYun) {
         String wuxing = zhongYun.substring(0, 1);
+        boolean taiGuo = zhongYun.contains("太过");
+        boolean buJi = zhongYun.contains("不及");
 
+        String color;
+        String base;
         switch (wuxing) {
-            case "木":
-                return "<font color='" + COLOR_JI + "'>木运属风，主生发，对应肝胆。" +
-                       "<br/>太过：风盛，易眩晕抽搐；" +
-                       "<br/>不及：风弱，易肝郁拘挛。</font>";
-            case "火":
-                return "<font color='" + COLOR_XIONG + "'>火运属热，主炎上，对应心小肠。" +
-                       "<br/>太过：热盛，易烦热出血；" +
-                       "<br/>不及：热弱，易寒悸失眠。</font>";
-            case "土":
-                return "<font color='" + COLOR_EARTH + "'>土运属湿，主承载，对应脾胃。" +
-                       "<br/>太过：湿盛，易胀满水肿；" +
-                       "<br/>不及：湿弱，易燥瘦乏力。</font>";
-            case "金":
-                return "<font color='" + COLOR_METAL + "'>金运属燥，主收敛，对应肺大肠。" +
-                       "<br/>太过：燥盛，易咳嗽便秘；" +
-                       "<br/>不及：燥弱，易喘泻湿证。</font>";
-            case "水":
-                return "<font color='" + COLOR_WATER + "'>水运属寒，主封藏，对应肾膀胱。" +
-                       "<br/>太过：寒盛，易关节痛畏寒；" +
-                       "<br/>不及：寒弱，易热尿频。</font>";
-            default:
-                return "未知运气";
+            case "木": color = COLOR_JI;    base = "木运属风，主生发条达，应于肝胆。"; break;
+            case "火": color = COLOR_XIONG; base = "火运属热，主炎上温煦，应于心小肠。"; break;
+            case "土": color = COLOR_EARTH; base = "土运属湿，主承载化生，应于脾胃。"; break;
+            case "金": color = COLOR_METAL; base = "金运属燥，主收敛清肃，应于肺大肠。"; break;
+            case "水": color = COLOR_WATER; base = "水运属寒，主封藏润下，应于肾膀胱。"; break;
+            default:  color = COLOR_GOLD;   base = "运气不详。"; break;
         }
+        String tendency = taiGuo ? "本年<font color='" + COLOR_GOLD + "'>太过</font>，本气偏盛，所胜妄行、所不胜来侮，谨防本脏及乘克之疾。"
+                        : buJi ? "本年<font color='" + COLOR_GOLD + "'>不及</font>，本气衰少，所不胜乘之、所胜反侮，亦生乖变。"
+                        : "本年平气，气候调和。";
+        return "<font color='" + color + "'>" + base + "<br/>" + tendency + "</font>";
     }
     
     private String getLiuyiDetailedAnalysis(String liuyi) {
@@ -992,14 +991,13 @@ public class WuyunLiuqiActivity extends Activity {
     private String getWuyunLiuqiSummary(String yearGanZhi) {
         String yearGan = yearGanZhi.substring(0, 1);
         String yearZhi = yearGanZhi.substring(1, 2);
-        
-        String wuxing = getWuXing(yearGan);
-        String zhongYun = getZhongYunShort(yearGan);
 
+        String zhongYun = getZhongYunShort(yearGan);
         int siTianIndex = getSiTianIndex(yearZhi);
         String siTian = LIUYI_NAMES[siTianIndex];
+        String zaiQuan = LIUYI_NAMES[(siTianIndex + 3) % 6];
 
-        return yearGanZhi + "年" + zhongYun + "，司天" + siTian + "，";
+        return yearGanZhi + "年" + zhongYun + "，司天" + siTian + "，在泉" + zaiQuan + "。";
     }
     
     private int getDaysInMonth(int year, int month) {

@@ -2,10 +2,15 @@ package com.example.timedisplay;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 public class DestinyActivity extends android.app.Activity {
 
@@ -73,6 +78,10 @@ public class DestinyActivity extends android.app.Activity {
 
         // 初始化视图并填充数据
         initViews();
+        // 横屏：从「格局与十神」起将后续分组排成左右两列（与竖屏信息完全一致）
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            arrangeLandscapeColumns();
+        }
         populateAll();
     }
 
@@ -531,5 +540,96 @@ public class DestinyActivity extends android.app.Activity {
 
     private String coloredText(String text, String color) {
         return "<font color='" + color + "'><b>" + text + "</b></font>";
+    }
+
+    // 横屏布局：整体分为左右两栏，且左右两栏各自独立滚动。
+    // 左栏 = 「格局与十神」之前的所有内容；右栏 = 从「格局与十神」开始（含）之后的全部内容。
+    // 仅改变父容器，视图对象本身不变，因此横竖屏信息完全一致。
+    private void arrangeLandscapeColumns() {
+        LinearLayout content = findViewById(R.id.destinyContent);
+        View start = findViewById(R.id.patternGroup);
+        if (content == null || start == null) return;
+        int idx = content.indexOfChild(start);
+        if (idx < 0) return;
+
+        // 让外层 ScrollView 拉伸内容至视口高度，使两栏 ScrollView 获得固定高度从而独立滚动
+        ViewGroup parent = (ViewGroup) content.getParent();
+        if (parent instanceof android.widget.ScrollView) {
+            ((android.widget.ScrollView) parent).setFillViewport(true);
+        }
+        // 仅原地修改现有布局参数（destinyContent 是 ScrollView(FrameLayout) 的直接子视图，
+        // 其参数实际为 FrameLayout.LayoutParams；若整体替换为基类 ViewGroup.LayoutParams 会触发 ClassCastException）
+        ViewGroup.LayoutParams clp = content.getLayoutParams();
+        clp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        clp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+
+        // 取出 start 及其后的所有兄弟视图（保持原顺序）-> 右栏
+        ArrayList<View> right = new ArrayList<>();
+        for (int i = content.getChildCount() - 1; i >= idx; i--) {
+            View v = content.getChildAt(i);
+            content.removeViewAt(i);
+            right.add(0, v);
+        }
+        // 剩余 [0, idx) 为左栏
+        ArrayList<View> left = new ArrayList<>();
+        for (int i = content.getChildCount() - 1; i >= 0; i--) {
+            View v = content.getChildAt(i);
+            content.removeViewAt(i);
+            left.add(0, v);
+        }
+
+        // 左右两列容器（横向，占满高度）
+        LinearLayout twoCol = new LinearLayout(this);
+        twoCol.setOrientation(LinearLayout.HORIZONTAL);
+        twoCol.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
+        // 左栏：独立滚动
+        LinearLayout leftCol = new LinearLayout(this);
+        leftCol.setOrientation(LinearLayout.VERTICAL);
+        leftCol.setLayoutParams(new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.WRAP_CONTENT));
+        for (View v : left) leftCol.addView(v);
+
+        android.widget.ScrollView leftScroll = new android.widget.ScrollView(this);
+        leftScroll.setFillViewport(true);
+        LinearLayout.LayoutParams lpL = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        lpL.setMargins(0, 0, 4, 0);
+        leftScroll.setLayoutParams(lpL);
+        leftScroll.addView(leftCol);
+
+        // 右栏：独立滚动
+        LinearLayout rightCol = new LinearLayout(this);
+        rightCol.setOrientation(LinearLayout.VERTICAL);
+        rightCol.setLayoutParams(new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.WRAP_CONTENT));
+        for (View v : right) rightCol.addView(v);
+
+        android.widget.ScrollView rightScroll = new android.widget.ScrollView(this);
+        rightScroll.setFillViewport(true);
+        LinearLayout.LayoutParams lpR = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        lpR.setMargins(4, 0, 0, 0);
+        rightScroll.setLayoutParams(lpR);
+        rightScroll.addView(rightCol);
+
+        twoCol.addView(leftScroll);
+        twoCol.addView(rightScroll);
+        content.addView(twoCol);
+
+        // 外层 ScrollView 以 UNSPECIFIED 高度测量子级，内层 ScrollView 无法自动获得视口高度，
+        // 因此布局完成后把两栏高度固定为可视区域高度，使左右两栏真正独立滚动。
+        if (parent instanceof android.widget.ScrollView) {
+            final android.widget.ScrollView sv = (android.widget.ScrollView) parent;
+            sv.post(() -> {
+                int h = sv.getHeight();
+                int pad = content.getPaddingTop() + content.getPaddingBottom();
+                int colH = h - pad;
+                if (colH > 0) {
+                    ViewGroup.LayoutParams p = twoCol.getLayoutParams();
+                    p.height = colH;
+                    twoCol.setLayoutParams(p);
+                }
+            });
+        }
     }
 }

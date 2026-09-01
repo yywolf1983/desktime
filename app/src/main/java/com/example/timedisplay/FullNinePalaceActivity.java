@@ -60,6 +60,41 @@ public class FullNinePalaceActivity extends Activity {
         "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
     };
     private static final String[] MONTH_ZHI_LIST = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
+
+    // ===== 奇门定局：阳遁段 / 阴遁段节气序 =====
+    private static final String[] YANG_DUN_JIEQI = {"冬至","小寒","大寒","立春","雨水","惊蛰",
+                                                   "春分","清明","谷雨","立夏","小满","芒种"};
+    private static final String[] YIN_DUN_JIEQI  = {"夏至","小暑","大暑","立秋","处暑","白露",
+                                                   "秋分","寒露","霜降","立冬","小雪","大雪"};
+    // 三元局数表：[节气][上元/中元/下元]
+    private static final int[][] YANG_DUN_JU = {
+        {1,7,4},{2,8,5},{3,9,6},{8,5,2},{9,6,3},{1,7,4},
+        {3,9,6},{4,1,7},{5,2,8},{4,1,7},{5,2,8},{6,3,9}
+    };
+    private static final int[][] YIN_DUN_JU = {
+        {9,3,6},{8,2,5},{7,1,4},{2,5,8},{1,4,7},{9,3,6},
+        {7,1,4},{6,9,3},{5,8,2},{6,9,3},{5,8,2},{4,7,1}
+    };
+
+    // 地盘九星（九宫固定，宫序：坎坤震巽中乾兑艮离）
+    private static final String[] DI_PAN_STARS = {"天蓬","天芮","天冲","天辅","天禽","天心","天柱","天任","天英"};
+    // 地盘八门（九宫固定，中宫无门寄坤）
+    private static final String[] DI_PAN_DOORS = {"休","死","伤","杜","","开","惊","生","景"};
+    // 六甲旬首遁于六仪
+    private static final java.util.HashMap<String, String> XUNSHOU_GAN = new java.util.HashMap<String, String>();
+    static {
+        XUNSHOU_GAN.put("甲子", "戊"); XUNSHOU_GAN.put("甲戌", "己"); XUNSHOU_GAN.put("甲申", "庚");
+        XUNSHOU_GAN.put("甲午", "辛"); XUNSHOU_GAN.put("甲辰", "壬"); XUNSHOU_GAN.put("甲寅", "癸");
+    }
+
+    // 节气常用起始（月,日）：与 JIEQI_NAMES 一一对应
+    private static final int[][] JIEQI_START = {
+        {2,4},{2,19},{3,6},{3,21},{4,5},{4,20},{5,6},{5,21},{6,6},{6,21},{7,7},{7,23},
+        {8,8},{8,23},{9,8},{9,23},{10,8},{10,23},{11,7},{11,22},{12,7},{12,22},{1,6},{1,20}
+    };
+    private static final String[] JIEQI_NAMES = {"立春","雨水","惊蛰","春分","清明","谷雨","立夏","小满","芒种","夏至",
+                                                "小暑","大暑","立秋","处暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至","小寒","大寒"};
+
     private static final java.util.HashMap<String, String> WUHUDUN = new java.util.HashMap<String, String>();
     private static final java.util.HashMap<String, String> WUSHUDUN_MAP = new java.util.HashMap<String, String>();
     private static final java.util.HashMap<Integer, String> MONTH_ZHI_MAP = new java.util.HashMap<Integer, String>();
@@ -218,14 +253,15 @@ public class FullNinePalaceActivity extends Activity {
         String dayPillar = calculateDayPillar(calcYear, calcMonth, calcDay);
         String timePillar = calculateTimePillar(hour, minute, dayPillar.substring(0, 1));
 
-        // 根据节气确定阴阳遁和用局数
+        // 根据节气（含三元）确定阴阳遁和用局数
         String jieqi = getJieqi(year, month, day);
+        int dayInJieqi = getDayInJieqi(year, month, day, jieqi);
         
         // 计算落宫信息
-        calculateAndSetPalaceData(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
+        calculateAndSetPalaceData(yearPillar, monthPillar, dayPillar, timePillar, jieqi, dayInJieqi);
 
         // 更新各解读区域
-        updateExplanation(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
+        updateExplanation(yearPillar, monthPillar, dayPillar, timePillar, jieqi, dayInJieqi);
     }
 
     // 获取空亡
@@ -258,11 +294,12 @@ public class FullNinePalaceActivity extends Activity {
 
     // 获取马星
     private String getMaXing(String dayPillar) {
+        // 马星（三合局）：申子辰→寅；寅午戌→申；巳酉丑→亥；亥卯未→巳
         java.util.Map<String, String> maXingMap = new java.util.HashMap<>();
-        maXingMap.put("申", "寅"); maXingMap.put("子", "午"); maXingMap.put("辰", "申");
-        maXingMap.put("寅", "午"); maXingMap.put("午", "申"); maXingMap.put("戌", "子");
-        maXingMap.put("巳", "亥"); maXingMap.put("酉", "巳"); maXingMap.put("丑", "酉");
-        maXingMap.put("亥", "巳"); maXingMap.put("卯", "酉"); maXingMap.put("未", "亥");
+        maXingMap.put("申", "寅"); maXingMap.put("子", "寅"); maXingMap.put("辰", "寅");
+        maXingMap.put("寅", "申"); maXingMap.put("午", "申"); maXingMap.put("戌", "申");
+        maXingMap.put("巳", "亥"); maXingMap.put("酉", "亥"); maXingMap.put("丑", "亥");
+        maXingMap.put("亥", "巳"); maXingMap.put("卯", "巳"); maXingMap.put("未", "巳");
         String dayZhi = dayPillar.substring(1, 2);
         return maXingMap.get(dayZhi) != null ? maXingMap.get(dayZhi) : "--";
     }
@@ -317,14 +354,19 @@ public class FullNinePalaceActivity extends Activity {
     private String calculateDayPillar(int year, int month, int day) {
         try {
             java.util.Calendar targetCalendar = java.util.Calendar.getInstance();
-            targetCalendar.set(year, month - 1, day);
+            targetCalendar.clear();
+            targetCalendar.set(year, month - 1, day, 0, 0, 0);
+            targetCalendar.set(java.util.Calendar.MILLISECOND, 0);
             java.util.Calendar baseCalendar = java.util.Calendar.getInstance();
-            baseCalendar.set(1900, 0, 1);
+            baseCalendar.clear();
+            baseCalendar.set(1900, 0, 1, 0, 0, 0);
+            baseCalendar.set(java.util.Calendar.MILLISECOND, 0);
             long targetTime = targetCalendar.getTimeInMillis();
             long baseTime = baseCalendar.getTimeInMillis();
-            long daysDiff = (targetTime - baseTime) / (1000 * 60 * 60 * 24);
-            int baseGanzhiIndex = 10;
+            long daysDiff = (targetTime - baseTime) / (1000L * 60 * 60 * 24);
+            int baseGanzhiIndex = 10;  // 1900-01-01 = 甲戌日
             int ganzhiIndex = (baseGanzhiIndex + (int)daysDiff) % 60;
+            if (ganzhiIndex < 0) ganzhiIndex += 60;
             return LIUJIAZI[ganzhiIndex];
         } catch (Exception e) {
             e.printStackTrace();
@@ -384,10 +426,10 @@ public class FullNinePalaceActivity extends Activity {
         return hourGan + hourZhi;
     }
 
-    private String[] calculateAndSetPalaceData(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
-        // 根据节气确定阴阳遁和用局数
+    private String[] calculateAndSetPalaceData(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi, int dayInJieqi) {
+        // 根据节气（含三元）确定阴阳遁和用局数
         boolean isYangDun = isYangDunByJieqi(jieqi);
-        int ju = getJuShuByJieqi(jieqi);
+        int ju = getJuShuByJieqi(jieqi, dayInJieqi);
 
         String timeGan = timePillar != null && timePillar.length() >= 1 ? timePillar.substring(0, 1) : "甲";
         String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
@@ -397,17 +439,18 @@ public class FullNinePalaceActivity extends Activity {
         int diPanJu = isYangDun ? ju : -ju;
         String[] diPanTianGan = arrangeDiPanTianGanStandard(diPanJu);
 
-        // 2. 确定旬首、值符、值使
-        Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi);
+        // 2. 确定旬首、值符、值使（值符星/值使门由地盘旬首宫推出）
+        Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi, diPanTianGan);
         String xunShou = (String) xunShouInfo[0];
-        String zhiFuStar = (String) xunShouInfo[1];
-        String zhiShiDoor = (String) xunShouInfo[2];
+        String xunShouGan = (String) xunShouInfo[1];
+        int xunShouPalace = (Integer) xunShouInfo[2];
+        String zhiFuStar = (String) xunShouInfo[3];
+        String zhiShiDoor = (String) xunShouInfo[4];
 
-        // 3. 值符落宫：时干在地盘的位置
+        // 3. 值符落宫：时干在地盘的位置（值符随时干飞）
         int zhiFuPalace = getShiGanPosition(diPanTianGan, timeGan);
 
         // 4. 值使落宫：从旬首宫位顺/逆数时支步数
-        int xunShouPalace = getXunShouPalace(xunShou);
         int zhiShiPalace = getZhiShiPalace(xunShouPalace, timeZhi, isYangDun);
 
         // 5. 排九星
@@ -416,14 +459,14 @@ public class FullNinePalaceActivity extends Activity {
         // 6. 排八门
         String[] eightDoors = arrangeEightDoorsStandard(zhiShiDoor, zhiShiPalace, isYangDun);
 
-        // 7. 排天盘
-        String[] tianPanTianGan = arrangeTianPanTianGanStandard(diPanTianGan, timeGan, zhiFuPalace, isYangDun);
+        // 7. 排天盘（以旬首六仪随值符旋转）
+        String[] tianPanTianGan = arrangeTianPanTianGanStandard(diPanTianGan, xunShouGan, zhiFuPalace, isYangDun);
 
         // 8. 排八神
         String[] eightGods = arrangeEightGodsStandard(zhiFuPalace, isYangDun);
 
-        // 9. 判断旺衰
-        String[] wangCui = calculateWangCui(dayGan);
+        // 9. 判断旺衰（以节气月令为准）
+        String[] wangCui = calculateWangCui(jieqi);
 
         String[] PALACE_NAMES = {"坎一", "坤二", "震三", "巽四", "中五", "乾六", "兑七", "艮八", "离九"};
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
@@ -477,102 +520,107 @@ public class FullNinePalaceActivity extends Activity {
 
     // ==================== 标准算法方法 ====================
     
-    // 根据节气判断阴阳遁
+    // 根据节气判断阴阳遁（冬至→芒种用阳遁，夏至→大雪用阴遁）
     private boolean isYangDunByJieqi(String jieqi) {
-        String[] yangDunJieqi = {"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", 
-                                "春分", "清明", "谷雨", "立夏", "小满", "芒种"};
-        for (String jq : yangDunJieqi) {
-            if (jq.equals(jieqi)) {
-                return true;
-            }
+        for (String jq : YANG_DUN_JIEQI) {
+            if (jq.equals(jieqi)) return true;
         }
         return false;
     }
-    
-    // 根据节气确定用局数
-    private int getJuShuByJieqi(String jieqi) {
-        java.util.Map<String, Integer> jieqiJuMap = new java.util.HashMap<>();
-        jieqiJuMap.put("冬至", 1); jieqiJuMap.put("小寒", 2); jieqiJuMap.put("大寒", 3);
-        jieqiJuMap.put("立春", 8); jieqiJuMap.put("雨水", 9); jieqiJuMap.put("惊蛰", 1);
-        jieqiJuMap.put("春分", 3); jieqiJuMap.put("清明", 4); jieqiJuMap.put("谷雨", 5);
-        jieqiJuMap.put("立夏", 4); jieqiJuMap.put("小满", 5); jieqiJuMap.put("芒种", 6);
-        jieqiJuMap.put("夏至", 9); jieqiJuMap.put("小暑", 8); jieqiJuMap.put("大暑", 7);
-        jieqiJuMap.put("立秋", 2); jieqiJuMap.put("处暑", 1); jieqiJuMap.put("白露", 9);
-        jieqiJuMap.put("秋分", 7); jieqiJuMap.put("寒露", 6); jieqiJuMap.put("霜降", 5);
-        jieqiJuMap.put("立冬", 6); jieqiJuMap.put("小雪", 5); jieqiJuMap.put("大雪", 4);
-        return jieqiJuMap.getOrDefault(jieqi, 1);
+
+    /** 三元序号：0上元(第1-5日)、1中元(第6-10日)、2下元(第11-15日) */
+    private int getYuanIndex(int dayInJieqi) {
+        if (dayInJieqi <= 5) return 0;
+        if (dayInJieqi <= 10) return 1;
+        return 2;
+    }
+
+    /** 根据节气与节气内第几日确定用局数（上中下三元） */
+    private int getJuShuByJieqi(String jieqi, int dayInJieqi) {
+        int yuan = getYuanIndex(dayInJieqi);
+        for (int i = 0; i < YANG_DUN_JIEQI.length; i++) {
+            if (YANG_DUN_JIEQI[i].equals(jieqi)) return YANG_DUN_JU[i][yuan];
+        }
+        for (int i = 0; i < YIN_DUN_JIEQI.length; i++) {
+            if (YIN_DUN_JIEQI[i].equals(jieqi)) return YIN_DUN_JU[i][yuan];
+        }
+        return 1;
+    }
+
+    /** 该日处于当前节气内的第几天（1..15），用于定三元 */
+    private int getDayInJieqi(int year, int month, int day, String jieqi) {
+        int idx = -1;
+        for (int i = 0; i < JIEQI_NAMES.length; i++) {
+            if (JIEQI_NAMES[i].equals(jieqi)) { idx = i; break; }
+        }
+        if (idx < 0) return 1;
+
+        int startMonth = JIEQI_START[idx][0];
+        int startDay = JIEQI_START[idx][1];
+        int startYear = year;
+        // 节气起始月晚于当前月 → 起始在上一年的年底（如冬至12月起始，当前1月）
+        if (startMonth > month) startYear = year - 1;
+
+        java.util.Calendar start = java.util.Calendar.getInstance();
+        start.clear();
+        start.set(startYear, startMonth - 1, startDay);
+        java.util.Calendar cur = java.util.Calendar.getInstance();
+        cur.clear();
+        cur.set(year, month - 1, day);
+
+        long diff = (cur.getTimeInMillis() - start.getTimeInMillis()) / (1000L * 60 * 60 * 24);
+        if (diff < 0) diff += 365;
+        return (int) diff + 1;
     }
     
     // 获取节气
     private String getJieqi(int year, int month, int day) {
-        String[][] jieqiDates = {
-            {"立春", "2", "4", "2", "18"},
-            {"雨水", "2", "19", "3", "5"},
-            {"惊蛰", "3", "6", "3", "20"},
-            {"春分", "3", "21", "4", "4"},
-            {"清明", "4", "5", "4", "19"},
-            {"谷雨", "4", "20", "5", "5"},
-            {"立夏", "5", "6", "5", "20"},
-            {"小满", "5", "21", "6", "5"},
-            {"芒种", "6", "6", "6", "20"},
-            {"夏至", "6", "21", "7", "6"},
-            {"小暑", "7", "7", "7", "22"},
-            {"大暑", "7", "23", "8", "7"},
-            {"立秋", "8", "8", "8", "22"},
-            {"处暑", "8", "23", "8", "31"},
-            {"白露", "9", "1", "9", "16"},
-            {"秋分", "9", "17", "10", "7"},
-            {"寒露", "10", "8", "10", "23"},
-            {"霜降", "10", "24", "11", "7"},
-            {"立冬", "11", "8", "11", "22"},
-            {"小雪", "11", "23", "12", "6"},
-            {"大雪", "12", "7", "12", "21"},
-            {"冬至", "12", "22", "1", "4"},
-            {"小寒", "1", "5", "1", "19"},
-            {"大寒", "1", "20", "2", "3"}
-        };
-        
-        for (String[] jieqiEntry : jieqiDates) {
-            String jieqiName = jieqiEntry[0];
-            int startMonth = Integer.parseInt(jieqiEntry[1]);
-            int startDay = Integer.parseInt(jieqiEntry[2]);
-            int endMonth = Integer.parseInt(jieqiEntry[3]);
-            int endDay = Integer.parseInt(jieqiEntry[4]);
-            
-            if (startMonth == endMonth) {
-                if (month == startMonth && day >= startDay && day <= endDay) {
-                    return jieqiName;
-                }
-            } else {
-                if ((month == startMonth && day >= startDay) ||
-                    (month == endMonth && day <= endDay)) {
-                    return jieqiName;
-                }
+        // 统一以 JIEQI_START 为唯一数据源：取「距当前日最近且已过」的节气
+        int cur = dayOfYear(month, day);
+        String result = "立春";
+        int bestDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < JIEQI_NAMES.length; i++) {
+            int s = dayOfYear(JIEQI_START[i][0], JIEQI_START[i][1]);
+            int diff = cur - s;
+            if (diff < 0) diff += 365;   // 节气起始在上一年（如冬至12月，当前1月）
+            if (diff < bestDiff) {
+                bestDiff = diff;
+                result = JIEQI_NAMES[i];
             }
         }
-        return "立春";
+        return result;
+    }
+
+    /** 一年中的第几天（按平年 365 天计，用于节气比较） */
+    private int dayOfYear(int month, int day) {
+        int[] mdays = {31,28,31,30,31,30,31,31,30,31,30,31};
+        int sum = 0;
+        for (int i = 0; i < month - 1 && i < 12; i++) sum += mdays[i];
+        return sum + day;
     }
     
     // 排地盘天干（标准算法）
+    /**
+     * 排地盘三奇六仪。
+     * 阳遁：自局数宫起顺排 戊己庚辛壬癸丁丙乙（如阳遁一局：坎戊 坤己 震庚 巽辛 中壬 乾癸 兑丁 艮丙 离乙）
+     * 阴遁：自局数宫起逆排 戊乙丙丁癸壬辛庚己（如阴遁九局：离戊 艮乙 兑丙 乾丁 中癸 巽壬 震辛 坤庚 坎己）
+     */
     private String[] arrangeDiPanTianGanStandard(int ju) {
         String[] result = new String[9];
-        String[] tianGanOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
-        
+        String[] yangOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        String[] yinOrder  = {"戊", "乙", "丙", "丁", "癸", "壬", "辛", "庚", "己"};
+
         if (ju > 0) {
             int startPos = ju - 1;
             for (int i = 0; i < 9; i++) {
-                int pos = (startPos + i) % 9;
-                result[pos] = tianGanOrder[i];
+                result[(startPos + i) % 9] = yangOrder[i];
             }
         } else {
-            int yinJu = -ju;
-            int startPos = 9 - yinJu;
+            int startPos = (-ju) - 1;
             for (int i = 0; i < 9; i++) {
-                int pos = (startPos - i + 9) % 9;
-                result[pos] = tianGanOrder[i];
+                result[(startPos - i + 9) % 9] = yinOrder[i];
             }
         }
-        
         return result;
     }
     
@@ -586,12 +634,17 @@ public class FullNinePalaceActivity extends Activity {
         return 0;
     }
     
-    // 获取旬首宫位
-    private int getXunShouPalace(String xunShou) {
-        java.util.Map<String, Integer> map = new java.util.HashMap<>();
-        map.put("甲子", 0); map.put("甲戌", 1); map.put("甲申", 2);
-        map.put("甲午", 3); map.put("甲辰", 4); map.put("甲寅", 5);
-        return map.getOrDefault(xunShou, 0);
+    /**
+     * 获取旬首宫位：六甲遁于六仪，旬首所在宫 = 对应六仪在「地盘」的宫位（随局数变化，不可写死）
+     */
+    private int getXunShouPalace(String xunShou, String[] diPan) {
+        String gan = XUNSHOU_GAN.get(xunShou);
+        if (gan != null) {
+            for (int i = 0; i < 9; i++) {
+                if (gan.equals(diPan[i])) return i;
+            }
+        }
+        return 0;
     }
     
     // 计算值使落宫
@@ -608,8 +661,12 @@ public class FullNinePalaceActivity extends Activity {
         }
     }
     
-    // 获取旬首信息（标准算法）
-    private Object[] getXunShouInfoStandard(String timeGan, String timeZhi) {
+    /**
+     * 获取旬首信息。
+     * 值符星 = 旬首所在宫的「地盘九星」；值使门 = 旬首所在宫的「地盘八门」（中宫寄坤）。
+     * @return {旬首, 旬首六仪, 旬首宫, 值符星, 值使门}
+     */
+    private Object[] getXunShouInfoStandard(String timeGan, String timeZhi, String[] diPan) {
         String shiGanzhi = timeGan + timeZhi;
         int shiIdx = -1;
         for (int i = 0; i < LIUJIAZI.length; i++) {
@@ -618,26 +675,24 @@ public class FullNinePalaceActivity extends Activity {
                 break;
             }
         }
-        
+
         String[] xunshouList = {"甲子", "甲戌", "甲申", "甲午", "甲辰", "甲寅"};
         String xunShou = "甲子";
         if (shiIdx >= 0) {
-            int xunIndex = shiIdx / 10;
-            xunShou = xunshouList[xunIndex];
+            xunShou = xunshouList[shiIdx / 10];
         }
-        
-        java.util.Map<String, String> zhiFuMap = new java.util.HashMap<>();
-        zhiFuMap.put("甲子", "天蓬"); zhiFuMap.put("甲戌", "天芮"); zhiFuMap.put("甲申", "天冲");
-        zhiFuMap.put("甲午", "天辅"); zhiFuMap.put("甲辰", "天禽"); zhiFuMap.put("甲寅", "天心");
-        
-        java.util.Map<String, String> zhiShiMap = new java.util.HashMap<>();
-        zhiShiMap.put("甲子", "休"); zhiShiMap.put("甲戌", "生"); zhiShiMap.put("甲申", "伤");
-        zhiShiMap.put("甲午", "杜"); zhiShiMap.put("甲辰", "景"); zhiShiMap.put("甲寅", "死");
-        
-        String zhiFuStar = zhiFuMap.getOrDefault(xunShou, "天蓬");
-        String zhiShiDoor = zhiShiMap.getOrDefault(xunShou, "休");
-        
-        return new Object[]{xunShou, zhiFuStar, zhiShiDoor};
+
+        String xunShouGan = XUNSHOU_GAN.get(xunShou);
+        if (xunShouGan == null) xunShouGan = "戊";
+        int xunShouPalace = getXunShouPalace(xunShou, diPan);
+
+        String zhiFuStar = DI_PAN_STARS[xunShouPalace];
+        String zhiShiDoor = DI_PAN_DOORS[xunShouPalace];
+        if (zhiShiDoor == null || zhiShiDoor.isEmpty()) {
+            zhiShiDoor = DI_PAN_DOORS[1]; // 中宫寄坤二宫
+        }
+
+        return new Object[]{xunShou, xunShouGan, xunShouPalace, zhiFuStar, zhiShiDoor};
     }
     
     // 排九星（标准算法）
@@ -695,29 +750,26 @@ public class FullNinePalaceActivity extends Activity {
         return eightDoors;
     }
     
-    // 排天盘（标准算法）
-    private String[] arrangeTianPanTianGanStandard(String[] diPan, String timeGan, int zhiFuPalace, boolean isYangDun) {
+    /**
+     * 排天盘三奇六仪：天盘随地盘整体旋转，使「旬首六仪」（值符星原本携带之干）落值符宫。
+     * 例：阳遁一局己巳时，旬首甲子(戊)原在坎，值符落坤 → 天盘坤宫为戊，而非时干己。
+     */
+    private String[] arrangeTianPanTianGanStandard(String[] diPan, String xunShouGan, int zhiFuPalace, boolean isYangDun) {
         String[] tianPan = new String[9];
-        String[] tianGanOrder = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
-        
-        int shiGanIndex = -1;
-        for (int i = 0; i < tianGanOrder.length; i++) {
-            if (tianGanOrder[i].equals(timeGan)) {
-                shiGanIndex = i;
-                break;
-            }
+        String[] order = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+
+        int startIdx = 0;
+        for (int i = 0; i < order.length; i++) {
+            if (order[i].equals(xunShouGan)) { startIdx = i; break; }
         }
-        if (shiGanIndex == -1) shiGanIndex = 0;
-        
+
         if (isYangDun) {
             for (int i = 0; i < 9; i++) {
-                int pos = (zhiFuPalace + i) % 9;
-                tianPan[pos] = tianGanOrder[(shiGanIndex + i) % 9];
+                tianPan[(zhiFuPalace + i) % 9] = order[(startIdx + i) % 9];
             }
         } else {
             for (int i = 0; i < 9; i++) {
-                int pos = (zhiFuPalace - i + 9) % 9;
-                tianPan[pos] = tianGanOrder[(shiGanIndex + i) % 9];
+                tianPan[(zhiFuPalace - i + 9) % 9] = order[(startIdx + i) % 9];
             }
         }
         return tianPan;
@@ -756,29 +808,50 @@ public class FullNinePalaceActivity extends Activity {
         return eightGods;
     }
     
-    // 计算旺衰
-    private String[] calculateWangCui(String dayGan) {
+    /**
+     * 计算各宫旺相休囚死：以「宫五行」为用神，「节气月令五行」为时令。
+     * 用神=时令→旺；时令生用神→相；用神生时令→休；时令克用神→囚；用神克时令→死。
+     */
+    private String[] calculateWangCui(String jieqi) {
         String[] wangCui = new String[9];
         String[] PALACE_WUXING = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
-        String riGanWuXing = getWuXing(dayGan);
-        
+        String lingWuXing = getYueLingWuXing(jieqi);
+
         for (int i = 0; i < 9; i++) {
-            String gongWuXing = PALACE_WUXING[i];
-            if (riGanWuXing.equals(gongWuXing)) {
+            String yongWuXing = PALACE_WUXING[i];
+            if (yongWuXing.equals(lingWuXing)) {
                 wangCui[i] = "旺";
-            } else if (isSheng(gongWuXing, riGanWuXing)) {
+            } else if (isSheng(lingWuXing, yongWuXing)) {
                 wangCui[i] = "相";
-            } else if (isSheng(riGanWuXing, gongWuXing)) {
+            } else if (isSheng(yongWuXing, lingWuXing)) {
                 wangCui[i] = "休";
-            } else if (isKe(gongWuXing, riGanWuXing)) {
+            } else if (isKe(lingWuXing, yongWuXing)) {
                 wangCui[i] = "囚";
-            } else if (isKe(riGanWuXing, gongWuXing)) {
-                wangCui[i] = "死";
             } else {
-                wangCui[i] = "平";
+                wangCui[i] = "死";
             }
         }
         return wangCui;
+    }
+
+    /** 节气所属月令五行：寅卯木、巳午火、申酉金、亥子水、辰戌丑未土 */
+    private String getYueLingWuXing(String jieqi) {
+        if (jieqi == null) return "木";
+        switch (jieqi) {
+            case "立春": case "雨水": return "木";   // 寅月
+            case "惊蛰": case "春分": return "木";   // 卯月
+            case "清明": case "谷雨": return "土";   // 辰月
+            case "立夏": case "小满": return "火";   // 巳月
+            case "芒种": case "夏至": return "火";   // 午月
+            case "小暑": case "大暑": return "土";   // 未月
+            case "立秋": case "处暑": return "金";   // 申月
+            case "白露": case "秋分": return "金";   // 酉月
+            case "寒露": case "霜降": return "土";   // 戌月
+            case "立冬": case "小雪": return "水";   // 亥月
+            case "大雪": case "冬至": return "水";   // 子月
+            case "小寒": case "大寒": return "土";   // 丑月
+            default: return "木";
+        }
     }
     
     // 获取天干五行
@@ -977,9 +1050,9 @@ public class FullNinePalaceActivity extends Activity {
         }
     }
 
-    private void updateExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi) {
+    private void updateExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi, int dayInJieqi) {
         boolean isYangDun = isYangDunByJieqi(jieqi);
-        int ju = getJuShuByJieqi(jieqi);
+        int ju = getJuShuByJieqi(jieqi, dayInJieqi);
         
         String timeGan = timePillar != null && timePillar.length() >= 1 ? timePillar.substring(0, 1) : "甲";
         String timeZhi = timePillar != null && timePillar.length() >= 2 ? timePillar.substring(1, 2) : "子";
@@ -987,20 +1060,21 @@ public class FullNinePalaceActivity extends Activity {
 
         int diPanJu = isYangDun ? ju : -ju;
         String[] diPanTianGan = arrangeDiPanTianGanStandard(diPanJu);
-        Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi);
-        String zhiFuStar = (String) xunShouInfo[1];
-        String zhiShiDoor = (String) xunShouInfo[2];
+        Object[] xunShouInfo = getXunShouInfoStandard(timeGan, timeZhi, diPanTianGan);
+        String xunShouGan = (String) xunShouInfo[1];
+        int xunShouPalace = (Integer) xunShouInfo[2];
+        String zhiFuStar = (String) xunShouInfo[3];
+        String zhiShiDoor = (String) xunShouInfo[4];
         
         int zhiFuPalace = getShiGanPosition(diPanTianGan, timeGan);
         String[] nineStars = arrangeNineStarsStandard(zhiFuStar, zhiFuPalace, isYangDun);
         
         String xunShou = (String) xunShouInfo[0];
-        int xunShouPalace = getXunShouPalace(xunShou);
         int zhiShiPalace = getZhiShiPalace(xunShouPalace, timeZhi, isYangDun);
         String[] eightDoors = arrangeEightDoorsStandard(zhiShiDoor, zhiShiPalace, isYangDun);
         String[] eightGods = arrangeEightGodsStandard(zhiFuPalace, isYangDun);
         String zhiFuGod = eightGods[zhiFuPalace];
-        String[] wangCui = calculateWangCui(dayGan);
+        String[] wangCui = calculateWangCui(jieqi);
         
         String[] DIRECTIONS = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
         String[] PALACE_NAMES = {"坎一", "坤二", "震三", "巽四", "中五", "乾六", "兑七", "艮八", "离九"};
@@ -1011,7 +1085,7 @@ public class FullNinePalaceActivity extends Activity {
         String shiGanWuXing = getWuXing(timeGan);
         String dayZhi = dayPillar.substring(1, 2);
         
-        String[] tianPan = arrangeTianPanTianGanStandard(diPanTianGan, timeGan, zhiFuPalace, isYangDun);
+        String[] tianPan = arrangeTianPanTianGanStandard(diPanTianGan, xunShouGan, zhiFuPalace, isYangDun);
         
         int riGanPalace = -1;
         int shiGanPalace = -1;

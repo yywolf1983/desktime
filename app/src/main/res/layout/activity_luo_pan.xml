@@ -14,6 +14,23 @@
         android:padding="16dp">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/card_background"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="罗盘堪舆"
+                android:textColor="@color/gold"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/luoPanContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,39 +67,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="10dp"
-                        android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/card_background">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="通俗解读"
+                        android:text="当前方位"
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
                         android:letterSpacing="0.1" />
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="9dp"
-                        android:layout_marginBottom="10dp"
-                    android:background="@drawable/card_background">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="综合总评"
-                        android:textSize="13sp"
-                        android:textColor="@color/gold"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.05"
-                        android:layout_marginBottom="6dp"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@drawable/gold_separator"
-                        android:layout_marginBottom="6dp"/>
                     <TextView
                         android:id="@+id/luopanSummary"
                         android:layout_width="match_parent"
@@ -91,41 +86,34 @@
                         android:textSize="13sp"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold"
-                        android:lineSpacingExtra="3dp" />
-                </LinearLayout>
+                        android:lineSpacingExtra="3dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="10dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="9dp"
-                        android:layout_marginBottom="10dp"
-                    android:background="@drawable/card_background">
-                    <TextView
-                        android:id="@+id/directionInfo"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="坎(北)"
-                        android:textSize="22sp"
-                        android:textColor="@color/gold"
-                        android:textStyle="bold"
-                        android:layout_marginRight="16dp" />
-                    <TextView
-                        android:id="@+id/mountainInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="坐山: 子"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
-                </LinearLayout>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+                        <TextView
+                            android:id="@+id/directionInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="坎(北)"
+                            android:textSize="22sp"
+                            android:textColor="@color/gold"
+                            android:textStyle="bold"
+                            android:layout_marginRight="16dp" />
+                        <TextView
+                            android:id="@+id/mountainInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="坐山: 子"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="9dp"
-                        android:layout_marginBottom="10dp"
-                    android:background="@drawable/card_background">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -239,7 +227,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="方位综合解读"
+                        android:text="八方形势宜忌"
                         android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -581,7 +569,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="山水风水"
+                        android:text="山水形势"
                         android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -665,7 +653,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="专业参考"
+                        android:text="专业研判"
                         android:textSize="16sp"
                         android:textColor="@color/gold"
                         android:textStyle="bold"
@@ -683,7 +671,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="八宅吉凶研判"
+                        android:text="八宅吉凶"
                         android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
@@ -714,7 +702,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="九星飞宫研判"
+                        android:text="九星飞宫"
                         android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"
@@ -745,7 +733,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="八门遁法研判"
+                        android:text="八门遁法"
                         android:textSize="13sp"
                         android:textColor="@color/gold"
                         android:layout_marginBottom="4dp"

@@ -107,6 +107,20 @@
                     tools:text="2024年12月31日" />
 
                 <TextView
+                    android:id="@+id/auspiciousButton"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:text="择"
+                    android:textSize="15sp"
+                    android:textColor="@color/gold_faint"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/btn_round_transparent"
+                    android:contentDescription="吉日查询" />
+
+                <TextView
                     android:id="@+id/resetTimeButton"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
@@ -278,7 +292,7 @@
                     android:textSize="12sp"
                     android:textColor="#88FFFFFF"
                     android:fontFamily="sans-serif-light"
-                    android:text="奇门九宫 ›"
+                    android:text="奇门九宫"
                     android:clickable="true"
                     android:focusable="true" />
 

@@ -63,6 +63,10 @@
             android:name=".DestinyActivity"
             android:exported="false"
             android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".AuspiciousDayActivity"
+            android:exported="false"
+            android:screenOrientation="fullSensor" />
 
         <activity
             android:name="com.reggate.lib.RegistrationGateActivity"
