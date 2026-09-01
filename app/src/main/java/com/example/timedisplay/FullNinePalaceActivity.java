@@ -25,11 +25,9 @@ public class FullNinePalaceActivity extends Activity {
     private TextView expZhifuZhishi;
     private TextView expGan;
     private TextView expSummary;
-    private DetailedNinePalacePanel expTianDiPan;
     private TextView expDirection;
     private TextView expYiJi;
     private TextView expLife;
-    private DetailedNinePalacePanel expPalaces;
     private TextView expTime;
     private TextView expOverall;
 
@@ -37,12 +35,9 @@ public class FullNinePalaceActivity extends Activity {
     private TextView expPalacesDesc;
     private TextView expPaipanYiju;
 
-    // 九星/八门/八神 分栏详细排布（横竖屏一致）
-    private DetailedNinePalacePanel expNineStars;
+    // 九星/八门/八神 分栏详细解释（横竖屏一致）
     private TextView expNineStarsDesc;
-    private DetailedNinePalacePanel expEightDoors;
     private TextView expEightDoorsDesc;
-    private DetailedNinePalacePanel expGods;
     private TextView expGodsDesc;
 
     private static final long UPDATE_INTERVAL = 60000;
@@ -156,22 +151,17 @@ public class FullNinePalaceActivity extends Activity {
         expZhifuZhishi = (TextView) findViewById(R.id.expZhifuZhishi);
         expGan = (TextView) findViewById(R.id.expGan);
         expSummary = (TextView) findViewById(R.id.expSummary);
-        expTianDiPan = (DetailedNinePalacePanel) findViewById(R.id.expTianDiPan);
         expDirection = (TextView) findViewById(R.id.expDirection);
         expYiJi = (TextView) findViewById(R.id.expYiJi);
         expLife = (TextView) findViewById(R.id.expLife);
-        expPalaces = (DetailedNinePalacePanel) findViewById(R.id.expPalaces);
         expTime = (TextView) findViewById(R.id.expTime);
         expOverall = (TextView) findViewById(R.id.expOverall);
         expTianDiPanDesc = (TextView) findViewById(R.id.expTianDiPanDesc);
         expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
         expPaipanYiju = (TextView) findViewById(R.id.expPaipanYiju);
 
-        expNineStars = (DetailedNinePalacePanel) findViewById(R.id.expNineStars);
         expNineStarsDesc = (TextView) findViewById(R.id.expNineStarsDesc);
-        expEightDoors = (DetailedNinePalacePanel) findViewById(R.id.expEightDoors);
         expEightDoorsDesc = (TextView) findViewById(R.id.expEightDoorsDesc);
-        expGods = (DetailedNinePalacePanel) findViewById(R.id.expGods);
         expGodsDesc = (TextView) findViewById(R.id.expGodsDesc);
         
         updateHandler = new Handler(Looper.getMainLooper());
@@ -188,9 +178,15 @@ public class FullNinePalaceActivity extends Activity {
         long first = ((SystemClock.uptimeMillis() / UPDATE_INTERVAL) + 1) * UPDATE_INTERVAL;
         updateHandler.postAtTime(updateRunnable, first);
 
-        // 横屏：以「综合研判」为界，之前放左栏、之后（含综合研判）放右栏，且左右独立滚动
-        if (android.content.res.Configuration.ORIENTATION_LANDSCAPE == getResources().getConfiguration().orientation) {
+        int orientation = getResources().getConfiguration().orientation;
+        if (android.content.res.Configuration.ORIENTATION_LANDSCAPE == orientation) {
+            // 横屏：以「综合研判」为界，之前放左栏、之后（含综合研判）放右栏，且左右独立滚动
             arrangeLandscapeColumns();
+        } else {
+            // 竖屏：九宫尺寸随屏幕自适应（横屏由 layout-land 的 match_parent 自动贴合可用高度，无需干预）
+            if (fullNinePalacePanel != null) {
+                fullNinePalacePanel.post(() -> applyNinePalaceResponsiveSize());
+            }
         }
     }
 
@@ -236,7 +232,12 @@ public class FullNinePalaceActivity extends Activity {
         android.view.View start = findViewById(R.id.zhkyGroup);
         if (content == null || start == null) return;
         int idx = content.indexOfChild(start);
-        if (idx < 0) return;
+        // 横屏分栏已由 res/layout-land/activity_full_nine_palace.xml 完成：
+        // 九宫是 fullNinePalaceLayout 之外的独立左列，因此 zhkyGroup 是该容器的第一个子视图（idx == 0），
+        // 「zhkyGroup 之前」没有任何内容。此时若继续重建两栏，会凭空生成一个占 50% 宽度的空列，
+        // 把所有文字挤到右栏的 50%（表现为文字只占右半区的一半、中间大片空白）。
+        // 故 idx == 0（无左栏内容）时直接返回，保持 XML 的左九宫 / 右文字结构不变。
+        if (idx <= 0) return;
 
         android.view.ViewGroup parent = (android.view.ViewGroup) content.getParent();
         if (parent instanceof android.widget.ScrollView) {
@@ -316,6 +317,25 @@ public class FullNinePalaceActivity extends Activity {
                 }
             });
         }
+    }
+
+    // 竖屏：九宫尺寸随屏幕自适应，避免小屏过大、大屏过小。
+    // 取「屏宽×0.86」与「屏高×0.50」的较小值，再夹到 [200,460]dp，并至少左右各留 12dp。
+    private void applyNinePalaceResponsiveSize() {
+        if (fullNinePalacePanel == null) return;
+        android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
+        float density = dm.density;
+        if (density <= 0f) return;
+        int wdp = (int) (dm.widthPixels / density);
+        int hdp = (int) (dm.heightPixels / density);
+        int size = (int) (Math.min(wdp * 0.86f, hdp * 0.50f));
+        size = Math.min(size, wdp - 24);           // 左右至少各留 12dp
+        size = Math.max(200, Math.min(460, size)); // 下限防小屏过大，上限防大屏过小
+        android.view.ViewGroup.LayoutParams lp = fullNinePalacePanel.getLayoutParams();
+        if (lp == null) return;
+        lp.width = (int) (size * density + 0.5f);
+        lp.height = (int) (size * density + 0.5f);
+        fullNinePalacePanel.setLayoutParams(lp);
     }
 
     private void updateFullNinePalace() {
@@ -1225,21 +1245,14 @@ public class FullNinePalaceActivity extends Activity {
         sbGan.append("日时关系：<font color='").append(riShiColor).append("'>").append(riShiRelation).append("</font>");
         expGan.setText(android.text.Html.fromHtml(sbGan.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
-        String[][] tianDiPanData = new String[9][2];
         String[] luckData = new String[9];
         
         for (int i = 0; i < 9; i++) {
-            tianDiPanData[i][0] = PALACE_NAMES[i];
-            tianDiPanData[i][1] = tianPan[i] + "/" + diPanTianGan[i];
-            
             String door = eightDoors[i] != null && !eightDoors[i].isEmpty() ? eightDoors[i] : "";
             String god = eightGods[i] != null && !eightGods[i].isEmpty() ? eightGods[i] : "";
             
             luckData[i] = getLuckSymbol(nineStars[i], door, god, wangCui[i]);
         }
-        
-        expTianDiPan.setPalaceData(tianDiPanData);
-        expTianDiPan.setLuckData(luckData);
         
         StringBuilder sbDirection = new StringBuilder();
         StringBuilder luckyDirections = new StringBuilder();
@@ -1329,23 +1342,6 @@ public class FullNinePalaceActivity extends Activity {
               .append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append("，出行").append(getTravelAdvice(zhiShiDoor, zhiFuStar)).append("。");
         expLife.setText(android.text.Html.fromHtml(sbLife.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
-        String[][] palacesData = new String[9][3];
-        for (int i = 0; i < 9; i++) {
-            String doorText = eightDoors[i] != null && !eightDoors[i].isEmpty() ? eightDoors[i] + "门" : "";
-            String godText = eightGods[i] != null && !eightGods[i].isEmpty() ? eightGods[i] : "";
-            palacesData[i][0] = PALACE_NAMES[i];
-            palacesData[i][1] = nineStars[i] + "星" + (doorText.isEmpty() ? "" : doorText);
-            palacesData[i][2] = godText + tianPan[i] + "/" + diPanTianGan[i] + wangCui[i];
-        }
-        expPalaces.setPalaceData(palacesData);
-        expPalaces.setLuckData(luckData);
-        
-        String[] palaceTips = new String[9];
-        for (int i = 0; i < 9; i++) {
-            palaceTips[i] = getPalaceTip(i, PALACE_NAMES[i], nineStars[i], eightDoors[i], eightGods[i]);
-        }
-        expPalaces.setPalaceTips(palaceTips);
-        
         StringBuilder sbTime = new StringBuilder();
         sbTime.append(getShichenName(timeZhi)).append(" ").append(timeGan).append(timeZhi).append("(").append(shiGanWuXing).append(")\n");
         sbTime.append(getTimeFortune(timeZhi, zhiShiDoor, zhiFuStar));
@@ -1354,66 +1350,23 @@ public class FullNinePalaceActivity extends Activity {
         expOverall.setText(getOverallAdviceSimple(isYangDun, ju, zhiFuStar, zhiShiDoor));
         
         if (expTianDiPanDesc != null) expTianDiPanDesc.setText(android.text.Html.fromHtml(getTianDiPanDesc(PALACE_NAMES, nineStars, PALACE_NAMES), android.text.Html.FROM_HTML_MODE_LEGACY));
-        if (expPalacesDesc != null) expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData), android.text.Html.FROM_HTML_MODE_LEGACY));
+        if (expPalacesDesc != null) expPalacesDesc.setText(android.text.Html.fromHtml(getPalacesDesc(PALACE_NAMES, nineStars, eightDoors, eightGods, luckData, tianPan, diPanTianGan, wangCui, DIRECTIONS), android.text.Html.FROM_HTML_MODE_LEGACY));
 
-        // 九星排布：每宫显示星名 + 旺衰
-        if (expNineStars != null) {
-            String[][] nineStarsData = new String[9][3];
-            for (int i = 0; i < 9; i++) {
-                nineStarsData[i][0] = PALACE_NAMES[i];
-                nineStarsData[i][1] = (nineStars[i] != null ? nineStars[i] : "") + "星";
-                nineStarsData[i][2] = wangCui[i];
-            }
-            expNineStars.setPalaceData(nineStarsData);
-            expNineStars.setLuckData(luckData);
-        }
+        // 九星 / 八门 / 八神 详细解释（已合并进主九宫，此处给出含义详解）
         if (expNineStarsDesc != null) {
-            StringBuilder sbNine = new StringBuilder();
-            sbNine.append("<font color='#CCB866'><b>九星</b></font>：天蓬、天芮、天冲、天辅、天禽、天心、天柱、天任、天英，");
-            sbNine.append("分布于九宫之中，<b>值符</b>星为当前关键吉星。<br/>");
-            sbNine.append("值符星：<font color='#").append(getStarLuckColor(zhiFuStar)).append("'><b>").append(zhiFuStar).append("</b></font>，");
-            sbNine.append("落于<b>").append(PALACE_NAMES[zhiFuPalace]).append("</b>宫。");
-            expNineStarsDesc.setText(android.text.Html.fromHtml(sbNine.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
-        }
-
-        // 八门排布：每宫显示门名 + 吉凶
-        if (expEightDoors != null) {
-            String[][] doorsData = new String[9][3];
-            for (int i = 0; i < 9; i++) {
-                String door = eightDoors[i] != null && !eightDoors[i].isEmpty() ? eightDoors[i] : "";
-                doorsData[i][0] = PALACE_NAMES[i];
-                doorsData[i][1] = door.isEmpty() ? "—" : door + "门";
-                doorsData[i][2] = getDoorLuckLevel(door);
-            }
-            expEightDoors.setPalaceData(doorsData);
-            expEightDoors.setLuckData(luckData);
+            expNineStarsDesc.setText(android.text.Html.fromHtml(
+                buildNineStarsDetail(nineStars, wangCui, PALACE_NAMES, DIRECTIONS, zhiFuStar, zhiFuPalace),
+                android.text.Html.FROM_HTML_MODE_LEGACY));
         }
         if (expEightDoorsDesc != null) {
-            StringBuilder sbDoor = new StringBuilder();
-            sbDoor.append("<font color='#CCB866'><b>八门</b></font>：休、生、伤、杜、景、死、惊、开，");
-            sbDoor.append("<b>值使</b>门为当前关键用事之门。<br/>");
-            sbDoor.append("值使门：<font color='#").append(getDoorLuckColor(zhiShiDoor)).append("'><b>").append(zhiShiDoor).append("门</b></font>，");
-            sbDoor.append("落于<b>").append(PALACE_NAMES[zhiShiPalace]).append("</b>宫。");
-            expEightDoorsDesc.setText(android.text.Html.fromHtml(sbDoor.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
-        }
-
-        // 八神排布：每宫显示神名 + 简要
-        if (expGods != null) {
-            String[][] godsData = new String[9][3];
-            for (int i = 0; i < 9; i++) {
-                String god = eightGods[i] != null && !eightGods[i].isEmpty() ? eightGods[i] : "";
-                godsData[i][0] = PALACE_NAMES[i];
-                godsData[i][1] = god.isEmpty() ? "—" : god;
-                godsData[i][2] = getGodBrief(god);
-            }
-            expGods.setPalaceData(godsData);
-            expGods.setLuckData(luckData);
+            expEightDoorsDesc.setText(android.text.Html.fromHtml(
+                buildEightDoorsDetail(eightDoors, wangCui, PALACE_NAMES, DIRECTIONS, zhiShiDoor, zhiShiPalace),
+                android.text.Html.FROM_HTML_MODE_LEGACY));
         }
         if (expGodsDesc != null) {
-            StringBuilder sbGod = new StringBuilder();
-            sbGod.append("<font color='#CCB866'><b>八神</b></font>：值符、螣蛇、太阴、六合、白虎、玄武、九地、九天，");
-            sbGod.append("环绕九宫，代表不同的气场与作用。");
-            expGodsDesc.setText(android.text.Html.fromHtml(sbGod.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
+            expGodsDesc.setText(android.text.Html.fromHtml(
+                buildEightGodsDetail(eightGods, PALACE_NAMES, DIRECTIONS),
+                android.text.Html.FROM_HTML_MODE_LEGACY));
         }
         
         if (expPaipanYiju != null) {
@@ -1459,6 +1412,104 @@ public class FullNinePalaceActivity extends Activity {
         return desc.toString();
     }
     
+    // 九星详细解释：列出本盘每宫之星的含义，并标出值符
+    private String buildNineStarsDetail(String[] nineStars, String[] wangCui,
+            String[] PALACE_NAMES, String[] DIRECTIONS, String zhiFuStar, int zhiFuPalace) {
+        String[][] info = {
+            {"天蓬", "水", "凶", "坎位，主智谋，亦主凶险；宜暗谋，忌妄动，防水厄。"},
+            {"天任", "土", "吉", "主敦厚承载；宜置业守成，稳步乃成。"},
+            {"天冲", "木", "平", "主迅烈果断；宜速进，忌迟疑。"},
+            {"天辅", "木", "吉", "主文昌教化；宜求学、文书，百事渐吉。"},
+            {"天英", "火", "平", "主声名礼法；宜文事，忌躁进虚浮。"},
+            {"天芮", "土", "凶", "主疾病，亦主求学；宜静养访医，忌争讼远行。"},
+            {"天柱", "金", "凶", "主破败口舌；宜毁旧立新，忌嫁娶营建。"},
+            {"天心", "金", "吉", "主谋略医卜；宜策划、求医、决断。"},
+            {"天禽", "土", "吉", "中宫本位，主中正；宜协调任命，诸事平稳。"}
+        };
+        StringBuilder sb = new StringBuilder();
+        sb.append("<font color='#CCB866'><b>九星</b></font>：随值符飞布九宫，各有所司。");
+        sb.append("本盘<b>值符</b>为 <font color='#3FA34D'><b>").append(zhiFuStar).append("星</b></font>，落<b>")
+          .append(PALACE_NAMES[zhiFuPalace]).append("</b>宫，乃当前关键吉星。<br/><br/>");
+        for (int i = 0; i < 9; i++) {
+            String star = nineStars[i];
+            String[] detail = null;
+            for (String[] it : info) { if (it[0].equals(star)) { detail = it; break; } }
+            if (detail == null) continue;
+            String luckColor = detail[2].equals("吉") ? "#3FA34D" : (detail[2].equals("凶") ? "#E0593B" : "#E6C46A");
+            boolean isZhiFu = star.equals(zhiFuStar);
+            sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
+            sb.append("<font color='").append(luckColor).append("'><b>").append(star).append("星</b></font>");
+            sb.append("（").append(detail[1]).append("·").append(detail[2]).append("）");
+            if (isZhiFu) sb.append(" <font color='#3FA34D'>★值符</font>");
+            sb.append("：").append(detail[3]).append("<br/>");
+        }
+        return sb.toString();
+    }
+
+    // 八门详细解释：列出本盘每宫之门的含义，并标出值使
+    private String buildEightDoorsDetail(String[] eightDoors, String[] wangCui,
+            String[] PALACE_NAMES, String[] DIRECTIONS, String zhiShiDoor, int zhiShiPalace) {
+        String[][] info = {
+            {"休", "水", "吉", "百事皆宜，气平；利休养谋划、婚姻谒贵。"},
+            {"生", "土", "吉", "主生机，求财谋事得成；利经商置业、生育出行。"},
+            {"伤", "木", "凶", "主损伤争斗；宜捕猎索债，忌出行嫁娶。"},
+            {"杜", "木", "平", "主闭塞藏形；宜守静避难，事宜保密。"},
+            {"景", "火", "平", "主文书声名；利献策求名，忌争讼远行。"},
+            {"死", "土", "凶", "主衰败，百事忌；唯宜决断旧事、屯兵固守。"},
+            {"惊", "金", "凶", "主惊恐官非；宜诉讼捕盗，忌安静喜庆。"},
+            {"开", "金", "吉", "主通达，诸事开启；利开业出行、求官谋事。"}
+        };
+        StringBuilder sb = new StringBuilder();
+        sb.append("<font color='#CCB866'><b>八门</b></font>：随值使飞布，主人事吉凶宜忌。");
+        sb.append("本盘<b>值使</b>为 <font color='#3FA34D'><b>").append(zhiShiDoor).append("门</b></font>，落<b>")
+          .append(PALACE_NAMES[zhiShiPalace]).append("</b>宫，乃用事之要。<br/><br/>");
+        for (int i = 0; i < 9; i++) {
+            String door = eightDoors[i];
+            if (door == null || door.isEmpty()) continue;
+            String[] detail = null;
+            for (String[] it : info) { if (it[0].equals(door)) { detail = it; break; } }
+            if (detail == null) continue;
+            String luckColor = detail[2].equals("吉") ? "#3FA34D" : (detail[2].equals("凶") ? "#E0593B" : "#E6C46A");
+            boolean isZhiShi = door.equals(zhiShiDoor);
+            sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
+            sb.append("<font color='").append(luckColor).append("'><b>").append(door).append("门</b></font>");
+            sb.append("（").append(detail[1]).append("·").append(detail[2]).append("）");
+            if (isZhiShi) sb.append(" <font color='#3FA34D'>★值使</font>");
+            sb.append("：").append(detail[3]).append("<br/>");
+        }
+        return sb.toString();
+    }
+
+    // 八神详细解释：列出本盘每宫之神的含义
+    private String buildEightGodsDetail(String[] eightGods,
+            String[] PALACE_NAMES, String[] DIRECTIONS) {
+        String[][] info = {
+            {"值符", "吉", "八神之首，主尊贵；得贵扶助，百恶消散。"},
+            {"螣蛇", "凶", "主虚惊怪异；防口舌纠缠、心神不宁。"},
+            {"太阴", "吉", "主暗助庇护；利密谋、和合、避难。"},
+            {"六合", "吉", "主和合欢乐；利婚嫁交易、调解结盟。"},
+            {"白虎", "凶", "主血光刑伤；宜武事镇煞，防争斗损伤。"},
+            {"玄武", "凶", "主盗骗失脱；防小人、失物、口舌。"},
+            {"九地", "平", "主沉稳潜藏；宜守成静养、迟缓之事。"},
+            {"九天", "吉", "主飞扬显达；利远行扬名、进攻开拓。"}
+        };
+        StringBuilder sb = new StringBuilder();
+        sb.append("<font color='#CCB866'><b>八神</b></font>：环绕九宫，各主气场。");
+        sb.append("值符统御，余神随阴阳遁顺逆飞布。<br/><br/>");
+        for (int i = 0; i < 9; i++) {
+            String god = eightGods[i];
+            if (god == null || god.isEmpty()) continue;
+            String[] detail = null;
+            for (String[] it : info) { if (it[0].equals(god)) { detail = it; break; } }
+            if (detail == null) continue;
+            String luckColor = detail[1].equals("吉") ? "#3FA34D" : (detail[1].equals("凶") ? "#E0593B" : "#E6C46A");
+            sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
+            sb.append("<font color='").append(luckColor).append("'><b>").append(god).append("</b></font>");
+            sb.append("（").append(detail[1]).append("）").append("：").append(detail[2]).append("<br/>");
+        }
+        return sb.toString();
+    }
+
     private String getNineStarsDesc(String[] stars) {
         String[][] starInfo = {
             {"天蓬", "#DC143C", "水·凶星，险陷，利智谋慎涉险"},
@@ -1517,27 +1568,58 @@ public class FullNinePalaceActivity extends Activity {
         return desc.toString().trim();
     }
     
-    private String getPalacesDesc(String[] palaces, String[] stars, String[] doors, String[] gods, String[] lucks) {
+    private String getPalacesDesc(String[] palaces, String[] stars, String[] doors, String[] gods, String[] lucks,
+            String[] tianPan, String[] diPanTianGan, String[] wangCui, String[] DIRECTIONS) {
+        String[] palaceElement = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#7C8C9C'>九宫组合定吉凶</font><br/>");
+        desc.append("<font color='#7C8C9C'>逐宫列天盘地盘、星门神与旺衰吉凶宜忌。</font><br/><br/>");
         for (int i = 0; i < 9; i++) {
             String palace = palaces[i];
             String star = stars[i];
             String door = doors[i];
             String god = gods[i];
             String luck = lucks[i];
-            desc.append("<font color='#98D8F0'>").append(palace).append("</font>");
-            if (!star.isEmpty()) {
-                desc.append("·<font color='#E6C46A'>").append(star).append("星</font>");
+            String dir = DIRECTIONS[i];
+            String element = palaceElement[i];
+            String tp = tianPan[i];
+            String dp = diPanTianGan[i];
+            String wang = wangCui[i];
+
+            desc.append("<font color='#98D8F0'><b>").append(palace).append("·").append(dir).append("</b></font>");
+            desc.append("（属").append(element).append("）<br/>");
+
+            desc.append("天盘 <font color='#E6C46A'>").append(tp).append("</font> ｜ 地盘 <font color='#E6C46A'>").append(dp).append("</font>");
+            if (star != null && !star.isEmpty()) {
+                desc.append(" ｜ <font color='#E6C46A'>").append(star).append("星</font>");
+                if (wang != null && !wang.isEmpty()) desc.append("(").append(wang).append(")");
             }
             if (door != null && !door.isEmpty()) {
-                desc.append("·<font color='#3FA34D'>").append(door).append("门</font>");
+                desc.append(" ｜ <font color='#3FA34D'>").append(door).append("门</font>");
             }
             if (god != null && !god.isEmpty()) {
-                desc.append("·<font color='#DDA0DD'>").append(god).append("</font>");
+                desc.append(" ｜ <font color='#DDA0DD'>").append(god).append("</font>");
             }
+            desc.append("<br/>");
+
             String luckColor = luck.contains("吉") ? "#3FA34D" : (luck.contains("凶") ? "#E0593B" : "#7C8C9C");
-            desc.append(" → <font color='").append(luckColor).append("'>").append(luck).append("</font><br/>");
+            desc.append("吉凶：<font color='").append(luckColor).append("'><b>").append(luck).append("</b></font>　");
+
+            String yiji;
+            if (door == null || door.isEmpty()) {
+                yiji = "无门，气平";
+            } else if (door.equals("开")) yiji = "宜进取，利求官";
+            else if (door.equals("休")) yiji = "宜休养，利婚姻谒贵";
+            else if (door.equals("生")) yiji = "宜求财置业，利出行";
+            else if (door.equals("伤")) yiji = "防损伤，忌出行";
+            else if (door.equals("杜")) yiji = "宜守静，事宜密";
+            else if (door.equals("景")) yiji = "宜献策求名，忌争讼";
+            else if (door.equals("死")) yiji = "忌动，宜守成";
+            else if (door.equals("惊")) yiji = "防口舌，宜诉讼";
+            else yiji = "";
+
+            desc.append("<font color='#7C8C9C'>解曰：").append(dir).append("属").append(element);
+            if (!yiji.isEmpty()) desc.append("，").append(yiji);
+            desc.append("。</font><br/><br/>");
         }
         return desc.toString();
     }
