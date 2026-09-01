@@ -146,7 +146,9 @@ public class StopwatchActivity extends Activity {
         super.onResume();
         IntentFilter filter = new IntentFilter(StopwatchService.ACTION_UPDATE);
         filter.addAction(CountdownService.ACTION_CD_UPDATE);
-        registerReceiver(updateReceiver, filter);
+        registerReceiver(updateReceiver, filter,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? Context.RECEIVER_NOT_EXPORTED : 0);
 
         Intent intent = new Intent(this, StopwatchService.class);
         startService(intent);

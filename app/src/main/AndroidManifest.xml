@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.timedisplay">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -72,7 +71,8 @@
         <activity
             android:name="com.reggate.lib.RegistrationGateActivity"
             android:exported="true"
-            android:theme="@style/Theme.RegGate" />
+            android:theme="@style/Theme.RegGate"
+            tools:replace="android:theme" />
         <activity
             android:name="com.reggate.lib.RegistrationActivity"
             android:exported="false"

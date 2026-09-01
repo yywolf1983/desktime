@@ -1298,7 +1298,9 @@ public class MainActivity extends Activity {
         // 注册后立即用当前粘性广播刷新一次
         android.content.Intent current = registerReceiver(
                 batteryReceiver,
-                new android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED));
+                new android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED),
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU
+                        ? android.content.Context.RECEIVER_NOT_EXPORTED : 0);
         updateBattery(current);
     }
 
@@ -1476,7 +1478,9 @@ public class MainActivity extends Activity {
         // 注册接收 CountdownService 更新
         countdownReceiver = new CountdownReceiver();
         IntentFilter filter = new IntentFilter(CountdownService.ACTION_CD_UPDATE);
-        registerReceiver(countdownReceiver, filter);
+        registerReceiver(countdownReceiver, filter,
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU
+                        ? android.content.Context.RECEIVER_NOT_EXPORTED : 0);
 
         // 首次打开时主动请求一次状态
         requestCountdownState();

@@ -145,7 +145,9 @@ public class CountdownService extends Service {
         filter.addAction(ACTION_CD_PAUSE);
         filter.addAction(ACTION_CD_RESET);
         filter.addAction(ACTION_CD_STOP_RING);
-        registerReceiver(commandReceiver, filter);
+        registerReceiver(commandReceiver, filter,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? Context.RECEIVER_NOT_EXPORTED : 0);
 
         // 进程被杀后重建时，从持久化恢复状态
         SharedPreferences sp = getSharedPreferences(CD_SPREFS, MODE_PRIVATE);

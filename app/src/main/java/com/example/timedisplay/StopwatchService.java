@@ -85,7 +85,9 @@ public class StopwatchService extends Service {
         filter.addAction(ACTION_STOP);
         filter.addAction(ACTION_RESET);
         filter.addAction(ACTION_LAP);
-        registerReceiver(commandReceiver, filter);
+        registerReceiver(commandReceiver, filter,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                        ? Context.RECEIVER_NOT_EXPORTED : 0);
     }
 
     @Override
