@@ -187,6 +187,11 @@ public class FullNinePalaceActivity extends Activity {
         updateFullNinePalace();
         long first = ((SystemClock.uptimeMillis() / UPDATE_INTERVAL) + 1) * UPDATE_INTERVAL;
         updateHandler.postAtTime(updateRunnable, first);
+
+        // 横屏：以「综合研判」为界，之前放左栏、之后（含综合研判）放右栏，且左右独立滚动
+        if (android.content.res.Configuration.ORIENTATION_LANDSCAPE == getResources().getConfiguration().orientation) {
+            arrangeLandscapeColumns();
+        }
     }
 
     // 获取自定义时间（如果有）
@@ -221,6 +226,96 @@ public class FullNinePalaceActivity extends Activity {
     protected void onPause() {
         super.onPause();
         updateHandler.removeCallbacks(updateRunnable);
+    }
+
+    // 横屏布局：整体分为左右两栏，且左右两栏各自独立滚动。
+    // 左栏 = 「综合研判」之前的所有内容；右栏 = 从「综合研判」开始（含）之后的全部内容。
+    // 仅改变父容器，视图对象本身不变，因此横竖屏信息完全一致。
+    private void arrangeLandscapeColumns() {
+        android.widget.LinearLayout content = (android.widget.LinearLayout) findViewById(R.id.fullNinePalaceLayout);
+        android.view.View start = findViewById(R.id.zhkyGroup);
+        if (content == null || start == null) return;
+        int idx = content.indexOfChild(start);
+        if (idx < 0) return;
+
+        android.view.ViewGroup parent = (android.view.ViewGroup) content.getParent();
+        if (parent instanceof android.widget.ScrollView) {
+            ((android.widget.ScrollView) parent).setFillViewport(true);
+        }
+        // 仅原地修改现有布局参数（fullNinePalaceLayout 是 ScrollView(FrameLayout) 的直接子视图，
+        // 其参数实际为 FrameLayout.LayoutParams；若整体替换为基类会触发 ClassCastException）
+        android.view.ViewGroup.LayoutParams clp = content.getLayoutParams();
+        clp.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+        clp.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+        // 取出 start 及其后的所有兄弟视图（保持原顺序）-> 右栏
+        java.util.ArrayList<android.view.View> right = new java.util.ArrayList<>();
+        for (int i = content.getChildCount() - 1; i >= idx; i--) {
+            android.view.View v = content.getChildAt(i);
+            content.removeViewAt(i);
+            right.add(0, v);
+        }
+        // 剩余 [0, idx) 为左栏
+        java.util.ArrayList<android.view.View> left = new java.util.ArrayList<>();
+        for (int i = content.getChildCount() - 1; i >= 0; i--) {
+            android.view.View v = content.getChildAt(i);
+            content.removeViewAt(i);
+            left.add(0, v);
+        }
+
+        // 左右两列容器（横向，占满高度）
+        android.widget.LinearLayout twoCol = new android.widget.LinearLayout(this);
+        twoCol.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        twoCol.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT, android.widget.LinearLayout.LayoutParams.MATCH_PARENT));
+
+        // 左栏：独立滚动
+        android.widget.LinearLayout leftCol = new android.widget.LinearLayout(this);
+        leftCol.setOrientation(android.widget.LinearLayout.VERTICAL);
+        leftCol.setLayoutParams(new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.WRAP_CONTENT));
+        for (android.view.View v : left) leftCol.addView(v);
+
+        android.widget.ScrollView leftScroll = new android.widget.ScrollView(this);
+        leftScroll.setFillViewport(true);
+        android.widget.LinearLayout.LayoutParams lpL = new android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        lpL.setMargins(0, 0, 4, 0);
+        leftScroll.setLayoutParams(lpL);
+        leftScroll.addView(leftCol);
+
+        // 右栏：独立滚动
+        android.widget.LinearLayout rightCol = new android.widget.LinearLayout(this);
+        rightCol.setOrientation(android.widget.LinearLayout.VERTICAL);
+        rightCol.setLayoutParams(new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.WRAP_CONTENT));
+        for (android.view.View v : right) rightCol.addView(v);
+
+        android.widget.ScrollView rightScroll = new android.widget.ScrollView(this);
+        rightScroll.setFillViewport(true);
+        android.widget.LinearLayout.LayoutParams lpR = new android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        lpR.setMargins(4, 0, 0, 0);
+        rightScroll.setLayoutParams(lpR);
+        rightScroll.addView(rightCol);
+
+        twoCol.addView(leftScroll);
+        twoCol.addView(rightScroll);
+        content.addView(twoCol);
+
+        // 外层 ScrollView 以 UNSPECIFIED 高度测量子级，内层 ScrollView 无法自动获得视口高度，
+        // 因此布局完成后把两栏高度固定为可视区域高度，使左右两栏真正独立滚动。
+        if (parent instanceof android.widget.ScrollView) {
+            final android.widget.ScrollView sv = (android.widget.ScrollView) parent;
+            sv.post(() -> {
+                int h = sv.getHeight();
+                int pad = content.getPaddingTop() + content.getPaddingBottom();
+                int colH = h - pad;
+                if (colH > 0) {
+                    android.view.ViewGroup.LayoutParams p = twoCol.getLayoutParams();
+                    p.height = colH;
+                    twoCol.setLayoutParams(p);
+                }
+            });
+        }
     }
 
     private void updateFullNinePalace() {

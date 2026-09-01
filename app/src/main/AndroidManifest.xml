@@ -28,6 +28,7 @@
             android:name=".SplashScreenActivity"
             android:exported="true"
             android:screenOrientation="fullSensor"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboardHidden|navigation"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
