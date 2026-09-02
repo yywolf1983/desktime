@@ -58,6 +58,7 @@ let currentDate = new Date();
 let isCustomTime = false;
 let customDate = null;
 let currentJieqiData = null;
+let currentQimen = null;
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
@@ -566,9 +567,10 @@ function calculateSiZhu(date) {
     };
 }
 
-// 查看排盘
+// 查看排盘（统一计算引擎见 qimen.js 的 window.QiMenCalc）
 function viewPaiPan(date) {
-    currentJieqiData = calculateSiZhu(date);
+    currentQimen = QiMenCalc.calculate(date);
+    currentJieqiData = currentQimen;
     updateQiMen(date);
 }
 
@@ -591,9 +593,9 @@ function getShiChen(hour, minute) {
     return shichen[index];
 }
 
-// 更新奇门遁甲
+// 更新奇门遁甲（数据来自 qimen.js 的 QiMenCalc.calculate）
 function updateQiMen(date) {
-    if (!currentJieqiData) return;
+    if (!currentQimen) return;
 
     // 显示排盘时间
     const year = date.getFullYear();
@@ -602,53 +604,48 @@ function updateQiMen(date) {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const shiChen = getShiChen(date.getHours(), date.getMinutes());
-    
+
     document.getElementById('paiPanDate').textContent = `${year}-${month}-${day}`;
     document.getElementById('paiPanTimeDisplay').textContent = `${hours}:${minutes}`;
     document.getElementById('paiPanShiChen').textContent = shiChen;
     document.getElementById('paiPanTime').textContent = `${year}-${month}-${day} ${hours}:${minutes} ${shiChen}`;
 
-    const jieqi = currentJieqiData.jieqi;
-    const isYangDun = YANG_DUN_JIEQI.includes(jieqi);
-    const ju = JIEQI_JU_MAP[jieqi] || 1;
+    const q = currentQimen;
+    const jieqi = q.jieqi;
+    const isYangDun = q.isYangDun;
+    const ju = q.ju;
 
     document.getElementById('qimenJieqi').textContent = jieqi;
     document.getElementById('qimenDun').textContent = isYangDun ? '阳遁' : '阴遁';
     document.getElementById('qimenJu').textContent = ju + '局';
 
-    const timePillar = currentJieqiData.timePillar;
-    const timeGan = timePillar[0];
-    const timeZhi = timePillar[1];
+    document.getElementById('xunshou').textContent = q.xunShou;
+    document.getElementById('zhifu').textContent = q.zhiFuStar;
+    document.getElementById('zhishi').textContent = q.zhiShiDoor + '门';
 
-    const xunshou = getXunShou(timeGan, timeZhi);
-    const xunshouInfo = XUNSHOU_MAP[xunshou];
-
-    document.getElementById('xunshou').textContent = xunshou;
-    document.getElementById('zhifu').textContent = xunshouInfo.star;
-    document.getElementById('zhishi').textContent = xunshouInfo.door + '门';
-
-    const sizhuStr = currentJieqiData.yearPillar + ' ' + currentJieqiData.monthPillar + ' ' + currentJieqiData.dayPillar + ' ' + currentJieqiData.timePillar;
+    const sizhuStr = q.yearPillar + ' ' + q.monthPillar + ' ' + q.dayPillar + ' ' + q.timePillar;
     document.getElementById('sizhu').textContent = sizhuStr;
 
     // 计算空亡
-    const kongwang = getKongWang(currentJieqiData.dayPillar);
+    const kongwang = getKongWang(q.dayPillar);
     document.getElementById('kongwang').textContent = kongwang;
 
     // 计算马星
-    const maxing = getMaXing(currentJieqiData.dayPillar);
+    const maxing = getMaXing(q.dayPillar);
     document.getElementById('maxing').textContent = maxing;
 
     // 获取日干和时干
-    const dayPillar = currentJieqiData.dayPillar;
+    const dayPillar = q.dayPillar;
     const riGan = dayPillar[0];
     const riZhi = dayPillar[1];
     document.getElementById('riGan').textContent = riGan + riZhi;
 
+    const timePillar = q.timePillar;
     const shiGan = timePillar[0];
-    document.getElementById('shiGan').textContent = shiGan + timeZhi;
+    document.getElementById('shiGan').textContent = shiGan + timePillar[1];
 
-    const palaceData = calculateQiMenPanel(currentJieqiData.yearPillar, currentJieqiData.monthPillar, currentJieqiData.dayPillar, timePillar, jieqi);
-    
+    const palaceData = q.palaceData;
+
     // 获取落宫信息
     const gongwei = ['坎一宫', '坤二宫', '震三宫', '巽四宫', '中五宫', '乾六宫', '兑七宫', '艮八宫', '离九宫'];
     let zhifuPalace = '';
@@ -657,10 +654,10 @@ function updateQiMen(date) {
     let shiGanPalace = '';
 
     palaceData.forEach((data, index) => {
-        if (data.star === xunshouInfo.star) {
+        if (data.star === q.zhiFuStar) {
             zhifuPalace = gongwei[index];
         }
-        if (data.door === xunshouInfo.door) {
+        if (data.door === q.zhiShiDoor) {
             zhishiPalace = gongwei[index];
         }
         if (data.tianGan === riGan) {
@@ -957,8 +954,8 @@ function renderNinePalace(palaceData) {
         const div = document.createElement('div');
         let classes = ['palace'];
         if (index === 4) classes.push('center');
-        if (data.luck === '吉') classes.push('lucky');
-        if (data.luck === '凶') classes.push('unlucky');
+        if (data.luck === '大吉' || data.luck === '吉' || data.luck === '平吉') classes.push('lucky');
+        if (data.luck === '大凶' || data.luck === '凶') classes.push('unlucky');
 
         div.className = classes.join(' ');
         div.innerHTML = `
@@ -1000,21 +997,17 @@ function getPalaceNumber(index) {
 // 复制排盘信息
 function copyPaiPan(palaceData) {
     const displayDate = isCustomTime ? customDate : new Date();
-    const jieqi = getCurrentJieqi(displayDate);
-    const isYangDun = YANG_DUN_JIEQI.includes(jieqi);
-    const ju = JIEQI_JU_MAP[jieqi] || 1;
-    const timePillar = currentJieqiData.timePillar;
-    const timeGan = timePillar[0];
-    const timeZhi = timePillar[1];
-    const xunshou = getXunShou(timeGan, timeZhi);
-    const xunshouInfo = XUNSHOU_MAP[xunshou];
+    const q = currentQimen;
+    const jieqi = q.jieqi;
+    const isYangDun = q.isYangDun;
+    const ju = q.ju;
 
     let text = '[' + '奇门遁甲排盘' + ']\n';
     text += '━━━━━━━━━━━━━━━\n';
     text += '时间：' + displayDate.getFullYear() + '年' + (displayDate.getMonth() + 1) + '月' + displayDate.getDate() + '日 ' + displayDate.getHours() + ':' + String(displayDate.getMinutes()).padStart(2, '0') + '\n';
-    text += '四柱：' + currentJieqiData.yearPillar + ' ' + currentJieqiData.monthPillar + ' ' + currentJieqiData.dayPillar + ' ' + currentJieqiData.timePillar + '\n';
+    text += '四柱：' + q.yearPillar + ' ' + q.monthPillar + ' ' + q.dayPillar + ' ' + q.timePillar + '\n';
     text += '节气：' + jieqi + ' ' + (isYangDun ? '阳遁' : '阴遁') + ju + '局\n';
-    text += '旬首：' + xunshou + ' 值符：' + xunshouInfo.star + ' 值使：' + xunshouInfo.door + '门\n\n';
+    text += '旬首：' + q.xunShou + ' 值符：' + q.zhiFuStar + ' 值使：' + q.zhiShiDoor + '门\n\n';
     text += '[' + '九宫排盘' + ']\n';
     text += '─────────────\n';
 
@@ -1221,10 +1214,10 @@ function renderAnalysisGrid(palaceData) {
     
     palaceData.forEach((data, index) => {
         const gongName = gongwei[index];
-        if (data.luck === '吉') {
+        if (data.luck === '大吉' || data.luck === '吉' || data.luck === '平吉') {
             luckyPalaces.push(gongName);
             luckyDirections.push(`${data.direction} ${gongName}`);
-        } else if (data.luck === '凶') {
+        } else if (data.luck === '大凶' || data.luck === '凶') {
             unluckyPalaces.push(gongName);
             unluckyDirections.push(`${data.direction} ${gongName}`);
         }

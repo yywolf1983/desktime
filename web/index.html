@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="errBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#c0392b;color:#fff;padding:10px 16px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.3);"></div>
     <div class="container">
         <!-- 头部 -->
         <div class="header">
@@ -260,6 +261,21 @@
     <!-- 隐藏的排盘时间字段 -->
     <div id="paiPanTime" style="display: none;"></div>
 
+    <script src="qimen.js"></script>
     <script src="app.js"></script>
+    <script>
+        window.addEventListener('error', function (e) {
+            var b = document.getElementById('errBanner');
+            if (b) {
+                b.style.display = 'block';
+                b.textContent = '⚠ 页面脚本出错：' + (e.message || (e.error && e.error.message) || '未知错误') + '  [' + (e.filename || '') + ':' + (e.lineno || '') + ']';
+            }
+            console.error(e.error || e.message);
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+            var b = document.getElementById('errBanner');
+            if (b) { b.style.display = 'block'; b.textContent = '⚠ 异步错误：' + (e.reason && e.reason.message ? e.reason.message : e.reason); }
+        });
+    </script>
 </body>
 </html>
