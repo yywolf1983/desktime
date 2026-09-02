@@ -6,6 +6,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.view.Surface;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -56,6 +60,11 @@ public class MainActivity extends Activity {
     private TextView copyButton;
     private TextView rotationLockButton;
 
+    // 顶部图标行容器：锁 / 电池 / 倒计时 / 功能入口 统一水平排列
+    private LinearLayout topBar;
+    // 顶部所有图标统一尺寸（px），保证视觉一致
+    private int iconSize;
+
     // 电池电量显示（纯代码动态创建，不依赖任何 XML 资源，避免资源合并冲突）
     private LinearLayout batteryContainer;
     private View batteryIcon;
@@ -97,6 +106,9 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        // 沉浸式全屏：隐藏系统状态栏/导航栏，让顶部图标行真正贴到屏幕最顶边
+        hideSystemBars();
+
         requestPermissionsIfNeeded();
 
         hour1TextView = (SevenSegmentDisplay) findViewById(R.id.hour1TextView);
@@ -130,7 +142,6 @@ public class MainActivity extends Activity {
         // 背景/亮度只需初始化时设置一次，避免每秒触发九宫格整屏重绘
         updateBackground();
         timeContainer = findViewById(R.id.timeContainer);
-        rotationLockButton = findViewById(R.id.rotationLockButton);
 
         updateRotationLockButton();
 
@@ -428,29 +439,12 @@ public class MainActivity extends Activity {
             }
         });
 
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
-        lp.topMargin = dpToPx(8);
-        lp.leftMargin = dpToPx(10);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.leftMargin = dpToPx(8);
         featureEntryBar.setLayoutParams(lp);
-        mainLayout.addView(featureEntryBar);
-
-        // 定位到倒计时入口右侧，与电池同一行
-        featureEntryBar.post(() -> {
-            if (countdownEntryContainer != null) {
-                countdownEntryContainer.addOnLayoutChangeListener(
-                        (v, l, t, r, b, ol, ot, or, ob) -> layoutFeatureAfterCountdown());
-                if (countdownEntryContainer.getWidth() > 0) layoutFeatureAfterCountdown();
-                syncIconSizes();
-            }
-            if (batteryContainer != null) {
-                batteryContainer.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
-                    if (batteryContainer.getWidth() > 0) layoutFeatureAfterCountdown();
-                });
-            }
-        });
+        topBar.addView(featureEntryBar);
     }
 
     private void addFeatureButton(int iconRes, String desc, android.view.View.OnClickListener listener) {
@@ -474,7 +468,7 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         btn.setOnClickListener(listener);
-        featureEntryBar.addView(btn, new LinearLayout.LayoutParams(dpToPx(28), dpToPx(28)));
+        featureEntryBar.addView(btn, new LinearLayout.LayoutParams(iconSize, iconSize));
     }
 
     private void addFeatureDivider() {
@@ -486,42 +480,9 @@ public class MainActivity extends Activity {
         featureEntryBar.addView(d);
     }
 
-    private void layoutFeatureAfterCountdown() {
-        if (countdownEntryContainer == null || featureEntryBar == null) return;
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) featureEntryBar.getLayoutParams();
-        if (lp == null) return;
-        int cdLeft = countdownEntryContainer.getLeft();
-        int cdW = countdownEntryContainer.getWidth();
-        if (cdW <= 0) cdLeft = dpToPx(10);
-        lp.leftMargin = cdLeft + cdW + dpToPx(6);
-        lp.topMargin = dpToPx(8);
-        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
-        featureEntryBar.setLayoutParams(lp);
-    }
 
-    // 所有入口图标统一为电池显示的高度，保证视觉一致
-    private void syncIconSizes() {
-        if (batteryContainer == null) return;
-        int h = batteryContainer.getHeight();
-        if (h <= 0) return;
-        if (featureEntryBar != null) {
-            for (int i = 0; i < featureEntryBar.getChildCount(); i++) {
-                View c = featureEntryBar.getChildAt(i);
-                if (c instanceof ImageView) {
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(h, h);
-                    lp.gravity = android.view.Gravity.CENTER_VERTICAL;
-                    c.setLayoutParams(lp);
-                    c.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
-                }
-            }
-        }
-        if (countdownEntryIcon != null) {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(h, h);
-            lp.gravity = android.view.Gravity.CENTER_VERTICAL;
-            countdownEntryIcon.setLayoutParams(lp);
-            countdownEntryIcon.setPadding(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
-        }
-    }
+
+
 
     private void openJieqi() {
         try {
@@ -1183,19 +1144,90 @@ public class MainActivity extends Activity {
         return score;
     }
 
+    /**
+     * 沉浸式全屏：隐藏系统状态栏与导航栏，让顶部图标行真正贴到屏幕最顶边。
+     * Android R(11) 及以上用 WindowInsetsController；旧版本用 SYSTEM_UI_FLAG。
+     */
+    private void hideSystemBars() {
+        // FLAG_FULLSCREEN 是各 ROM 最普遍尊重的隐藏状态栏方式
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+        // 传统 systemUiVisibility 标志：对所有 API 都有效，与上面叠加更稳
+        // LAYOUT_FULLSCREEN 让内容从 y=0 铺到状态栏下方（保证"贴顶"，无论状态栏能否隐藏）
+        int legacyFlags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // 关闭 decor 自动适配系统窗，让内容真正铺到 y=0（含状态栏/挖孔区）
+            getWindow().setDecorFitsSystemWindows(false);
+            WindowInsetsController controller = getWindow().getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        }
+        getWindow().getDecorView().setSystemUiVisibility(legacyFlags);
+
+        // 允许内容延伸到刘海/挖孔区，避免系统预留顶部安全区把图标行顶下去
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        // 应用进入后台时，停止时间更新
         handler.removeCallbacks(timeRunnable);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        hideSystemBars();
         updateDateTime();
         handler.removeCallbacks(timeRunnable);
         handler.postDelayed(timeRunnable, 1000);
+        // 临时诊断：量出图标行真实屏幕位置（定位“上面距离”的来源）
+        final android.view.View tb = findViewById(R.id.topBarContainer);
+        if (tb != null) {
+            tb.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            tb.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            int[] loc = new int[2];
+                            tb.getLocationOnScreen(loc);
+                            float density = getResources().getDisplayMetrics().density;
+                            int sbH = 0;
+                            int resId = getResources().getIdentifier(
+                                    "status_bar_height", "dimen", "android");
+                            if (resId > 0) {
+                                sbH = getResources().getDimensionPixelSize(resId);
+                            }
+                            int topDp = Math.round(loc[1] / density);
+                            int sbDp = Math.round(sbH / density);
+                            android.util.Log.d("TOPCHECK",
+                                    "topBarContainer screenY=" + topDp + "dp, statusBar=" + sbDp + "dp");
+                            android.widget.Toast.makeText(MainActivity.this,
+                                    "图标行距屏幕顶=" + topDp + "dp，状态栏=" + sbDp + "dp",
+                                    android.widget.Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemBars();
+        }
     }
 
     @Override
@@ -1239,6 +1271,19 @@ public class MainActivity extends Activity {
 
     // 动态创建电池电量视图（右上角、锁按钮左侧），不引用任何 XML/drawable 资源
     private void initBatteryView() {
+        // 顶部图标行容器：锁 / 电池 / 倒计时 / 功能入口 统一水平排列、垂直居中，避免错位与相互覆盖
+        topBar = new LinearLayout(this);
+        topBar.setOrientation(LinearLayout.HORIZONTAL);
+        topBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams topLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        topLp.topMargin = dpToPx(2);
+        topBar.setLayoutParams(topLp);
+
+        // 顶部所有图标统一尺寸（锁 / 功能 / 倒计时），电池图单独更小
+        iconSize = dpToPx(22);
+
         batteryContainer = new LinearLayout(this);
         batteryContainer.setOrientation(LinearLayout.HORIZONTAL);
         batteryContainer.setGravity(android.view.Gravity.CENTER_VERTICAL);
@@ -1250,44 +1295,57 @@ public class MainActivity extends Activity {
         batteryContainer.setBackgroundDrawable(bg);
         batteryContainer.setElevation(dpToPx(8));
 
-        batteryContainer.setPadding(dpToPx(10), dpToPx(6), dpToPx(12), dpToPx(6));
+        batteryContainer.setPadding(dpToPx(8), dpToPx(3), dpToPx(10), dpToPx(3));
 
-        // 左上角定位（位于时间内容上方留白区，不覆盖时间）
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
-        lp.topMargin = dpToPx(8);
-        lp.leftMargin = dpToPx(10);
-        batteryContainer.setLayoutParams(lp);
+        // 锁屏按钮：独立图标，作为首行第一个元素（与其它图标同尺寸）
+        final int lockSize = iconSize;
+        rotationLockButton = new TextView(this);
+        rotationLockButton.setText("🔓");
+        rotationLockButton.setTextSize(18);
+        rotationLockButton.setTextColor(getResources().getColor(R.color.lock_icon));
+        rotationLockButton.setGravity(android.view.Gravity.CENTER);
+        rotationLockButton.setBackgroundResource(R.drawable.btn_round_transparent);
+        rotationLockButton.setClickable(true);
+        rotationLockButton.setFocusable(true);
+        rotationLockButton.setContentDescription("锁定/解锁横竖屏");
+        LinearLayout.LayoutParams lockLp = new LinearLayout.LayoutParams(dpToPx(lockSize), dpToPx(lockSize));
+        rotationLockButton.setLayoutParams(lockLp);
+        topBar.addView(rotationLockButton);
+
+        // 电池胶囊：与锁之间留 8dp 间距，随电量可见性显示/隐藏
+        LinearLayout.LayoutParams batLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        batLp.leftMargin = dpToPx(8);
+        batteryContainer.setLayoutParams(batLp);
         batteryContainer.setVisibility(View.GONE);
+        topBar.addView(batteryContainer);
 
-        // 把时间等主体内容整体下移，给左上角的电池留出空间，避免覆盖
-        View content = findViewById(R.id.contentLayout);
-        if (content != null) {
-            int pl = content.getPaddingLeft();
-            int pt = content.getPaddingTop();
-            int pr = content.getPaddingRight();
-            int pb = content.getPaddingBottom();
-            content.setPadding(pl, pt + dpToPx(40), pr, pb);
+        // 图标行挂到布局里的 topBarContainer（竖屏在内容上方、横屏在左半屏顶部），
+        // 时间自然排在它下方；横竖屏都不存在 contentLayout 缺失导致图标丢失的问题
+        ViewGroup topBarContainer = findViewById(R.id.topBarContainer);
+        if (topBarContainer != null) {
+            if (topBar.getParent() != null) {
+                ((ViewGroup) topBar.getParent()).removeView(topBar);
+            }
+            topBarContainer.addView(topBar);
         }
 
         batteryIcon = new BatteryView(this);
         LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(
-                dpToPx(22), dpToPx(11));
+                dpToPx(24), dpToPx(14));
         iconLp.rightMargin = dpToPx(5);
         batteryIcon.setLayoutParams(iconLp);
 
         batteryPercentTextView = new TextView(this);
         batteryPercentTextView.setText("--%");
-        batteryPercentTextView.setTextSize(12);
+        batteryPercentTextView.setTextSize(11);
         batteryPercentTextView.setTextColor(0xFFFFD27F);   // 金色调，与首页整体风格一致
         batteryPercentTextView.setIncludeFontPadding(false);
         batteryPercentTextView.setTypeface(android.graphics.Typeface.create("sans-serif-light", android.graphics.Typeface.NORMAL));
 
         batteryContainer.addView(batteryIcon);
         batteryContainer.addView(batteryPercentTextView);
-        mainLayout.addView(batteryContainer);
     }
 
     private int dpToPx(int dp) {
@@ -1424,16 +1482,14 @@ public class MainActivity extends Activity {
         countdownEntryContainer.setElevation(dpToPx(8));
         countdownEntryContainer.setPadding(dpToPx(8), 0, dpToPx(10), 0);
 
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
-        lp.topMargin = dpToPx(8);
-        lp.leftMargin = dpToPx(10);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.leftMargin = dpToPx(8);
         countdownEntryContainer.setLayoutParams(lp);
 
         countdownEntryText = new TextView(this);
-        countdownEntryText.setTextSize(12);
+        countdownEntryText.setTextSize(11);
         countdownEntryText.setTextColor(0xFFFFD27F);
         countdownEntryText.setIncludeFontPadding(false);
         countdownEntryText.setTypeface(android.graphics.Typeface.create("sans-serif-light", android.graphics.Typeface.NORMAL));
@@ -1452,7 +1508,7 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LinearLayout.LayoutParams cdilp = new LinearLayout.LayoutParams(dpToPx(18), dpToPx(18));
+        LinearLayout.LayoutParams cdilp = new LinearLayout.LayoutParams(iconSize, iconSize);
         cdilp.gravity = android.view.Gravity.CENTER_VERTICAL;
         countdownEntryIcon.setLayoutParams(cdilp);
 
@@ -1480,7 +1536,7 @@ public class MainActivity extends Activity {
         countdownEntryContainer.setClickable(true);
         countdownEntryContainer.setFocusable(true);
 
-        mainLayout.addView(countdownEntryContainer);
+        topBar.addView(countdownEntryContainer);
 
         // 注册接收 CountdownService 更新
         countdownReceiver = new CountdownReceiver();
@@ -1492,20 +1548,6 @@ public class MainActivity extends Activity {
         // 首次打开时主动请求一次状态
         requestCountdownState();
 
-        // 电量视图渲染完成后，动态将入口贴到电量右侧
-        countdownEntryContainer.post(() -> {
-            if (batteryContainer == null) return;
-            // 监听电量容器宽度变化（包括从 GONE 变为 VISIBLE 的首次渲染）
-            batteryContainer.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                if (batteryContainer.getWidth() > 0) {
-                    layoutCountdownAfterBattery();
-                }
-            });
-            // 如果电量已布局好，立即定位
-            if (batteryContainer.getWidth() > 0) {
-                layoutCountdownAfterBattery();
-            }
-        });
     }
 
     private void requestCountdownState() {
@@ -1625,23 +1667,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void layoutCountdownAfterBattery() {
-        if (batteryContainer == null || countdownEntryContainer == null) return;
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) countdownEntryContainer.getLayoutParams();
-        if (lp == null) return;
-        int bw = batteryContainer.getWidth();
-        int topMargin = lp.topMargin;
-        if (topMargin <= 0) topMargin = dpToPx(8);
-        int leftMargin = dpToPx(10) + bw + dpToPx(6);
-        lp.leftMargin = leftMargin;
-        lp.topMargin = topMargin;
-        lp.gravity = android.view.Gravity.TOP | android.view.Gravity.START;
-        countdownEntryContainer.setLayoutParams(lp);
-        // 入口按钮与倒计时同行，倒计时位置变化时同步
-        layoutFeatureAfterCountdown();
-        // 所有图标尺寸与电池显示高度保持一致
-        syncIconSizes();
-    }
+
 
     
     private String getTimeFortune(String timeZhi) {
@@ -1714,11 +1740,7 @@ public class MainActivity extends Activity {
 
     private void updateRotationLockButton() {
         if (rotationLockButton != null) {
-            if (isRotationLocked) {
-                rotationLockButton.setText("🔓");
-            } else {
-                rotationLockButton.setText("锁");
-            }
+            rotationLockButton.setText(isRotationLocked ? "🔒" : "🔓");
             rotationLockButton.setTextColor(getResources().getColor(R.color.lock_icon));
         }
     }

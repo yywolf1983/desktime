@@ -10,24 +10,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:scrollbars="none"
-        android:background="@android:color/transparent">
+        android:orientation="vertical"
+        android:fitsSystemWindows="false">
 
-    <LinearLayout
-        android:id="@+id/contentLayout"
+        <!-- 顶部图标行容器（锁/电池/倒计时/功能入口），由代码填充 -->
+        <LinearLayout
+            android:id="@+id/topBarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="6dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:fitsSystemWindows="true"
+            android:scrollbars="none"
+            android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:paddingStart="14dp"
         android:paddingEnd="14dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="12dp"
-        android:layout_gravity="center">
+        android:paddingTop="@dimen/home_content_padding_top"
+        android:paddingBottom="@dimen/home_content_padding_bottom"
+        android:layout_gravity="top">
 
         <LinearLayout
             android:id="@+id/timeContainer"
@@ -35,27 +54,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="10dp"
-            android:padding="8dp"
+            android:layout_marginBottom="@dimen/home_time_container_margin_bottom"
+            android:padding="@dimen/home_time_container_padding"
             android:background="@drawable/card_background"
             android:clickable="true"
             android:focusable="true">
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour1TextView"
-                android:layout_width="72dp"
-                android:layout_height="100dp" />
+                android:layout_width="@dimen/home_time_digit_width"
+                android:layout_height="@dimen/home_time_digit_height" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/hour2TextView"
-                android:layout_width="72dp"
-                android:layout_height="100dp" />
+                android:layout_width="@dimen/home_time_digit_width"
+                android:layout_height="@dimen/home_time_digit_height" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=":"
-                android:textSize="64sp"
+                android:textSize="@dimen/home_time_colon_size"
                 android:includeFontPadding="false"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-black"
@@ -64,13 +83,13 @@
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute1TextView"
-                android:layout_width="72dp"
-                android:layout_height="100dp" />
+                android:layout_width="@dimen/home_time_digit_width"
+                android:layout_height="@dimen/home_time_digit_height" />
 
             <com.example.timedisplay.SevenSegmentDisplay
                 android:id="@+id/minute2TextView"
-                android:layout_width="72dp"
-                android:layout_height="100dp" />
+                android:layout_width="@dimen/home_time_digit_width"
+                android:layout_height="@dimen/home_time_digit_height" />
 
         </LinearLayout>
 
@@ -79,9 +98,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="@dimen/home_date_container_margin_bottom"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
+            android:paddingVertical="@dimen/home_date_container_padding_v"
             android:background="@drawable/card_background">
 
             <!-- 第1行: 日期 + 按钮 -->
@@ -95,7 +114,7 @@
                     android:id="@+id/dateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/home_date_text_size"
                     android:textColor="@color/date_blue"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
@@ -108,8 +127,8 @@
 
                 <TextView
                     android:id="@+id/auspiciousButton"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="@dimen/home_small_button_size"
+                    android:layout_height="@dimen/home_small_button_size"
                     android:text="择"
                     android:textSize="15sp"
                     android:textColor="@color/gold_faint"
@@ -122,8 +141,8 @@
 
                 <TextView
                     android:id="@+id/resetTimeButton"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="@dimen/home_small_button_size"
+                    android:layout_height="@dimen/home_small_button_size"
                     android:text="⟳"
                     android:textSize="18sp"
                     android:textColor="@color/colon_color"
@@ -147,7 +166,7 @@
                     android:id="@+id/weekdayTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/home_weekday_text_size"
                     android:textColor="@color/text_accent"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
@@ -157,7 +176,7 @@
                     android:id="@+id/jieqiTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/home_jieqi_text_size"
                     android:textColor="@color/jieqi_orange"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
@@ -307,23 +326,8 @@
 
     </LinearLayout>
 
-    </ScrollView>
+        </ScrollView>
 
-    <TextView
-        android:id="@+id/rotationLockButton"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:text="锁"
-        android:textSize="18sp"
-        android:textColor="@color/gold_faint"
-        android:gravity="center"
-            android:layout_gravity="top|end"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:elevation="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/btn_round_transparent"
-            android:contentDescription="锁定/解锁横竖屏" />
+    </LinearLayout>
 
 </FrameLayout>
