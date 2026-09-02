@@ -1170,14 +1170,6 @@ public class MainActivity extends Activity {
             }
         }
         getWindow().getDecorView().setSystemUiVisibility(legacyFlags);
-
-        // 允许内容延伸到刘海/挖孔区，避免系统预留顶部安全区把图标行顶下去
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
     }
 
     @Override
@@ -1193,33 +1185,6 @@ public class MainActivity extends Activity {
         updateDateTime();
         handler.removeCallbacks(timeRunnable);
         handler.postDelayed(timeRunnable, 1000);
-        // 临时诊断：量出图标行真实屏幕位置（定位“上面距离”的来源）
-        final android.view.View tb = findViewById(R.id.topBarContainer);
-        if (tb != null) {
-            tb.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            tb.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                            int[] loc = new int[2];
-                            tb.getLocationOnScreen(loc);
-                            float density = getResources().getDisplayMetrics().density;
-                            int sbH = 0;
-                            int resId = getResources().getIdentifier(
-                                    "status_bar_height", "dimen", "android");
-                            if (resId > 0) {
-                                sbH = getResources().getDimensionPixelSize(resId);
-                            }
-                            int topDp = Math.round(loc[1] / density);
-                            int sbDp = Math.round(sbH / density);
-                            android.util.Log.d("TOPCHECK",
-                                    "topBarContainer screenY=" + topDp + "dp, statusBar=" + sbDp + "dp");
-                            android.widget.Toast.makeText(MainActivity.this,
-                                    "图标行距屏幕顶=" + topDp + "dp，状态栏=" + sbDp + "dp",
-                                    android.widget.Toast.LENGTH_LONG).show();
-                        }
-                    });
-        }
     }
 
     @Override
@@ -1278,11 +1243,13 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams topLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        topLp.topMargin = dpToPx(2);
+        // 顶部间距统一由 topBarContainer 的 paddingTop 控制，此处不再叠加 margin，
+        // 避免多层偏移叠加把图标顶下去
+        topLp.topMargin = 0;
         topBar.setLayoutParams(topLp);
 
-        // 顶部所有图标统一尺寸（锁 / 功能 / 倒计时），电池图单独更小
-        iconSize = dpToPx(22);
+        // 功能入口 / 倒计时 图标尺寸；锁屏按钮尺寸独立（见 lockSize），电池图也独立
+        iconSize = dpToPx(24);
 
         batteryContainer = new LinearLayout(this);
         batteryContainer.setOrientation(LinearLayout.HORIZONTAL);
@@ -1298,7 +1265,8 @@ public class MainActivity extends Activity {
         batteryContainer.setPadding(dpToPx(8), dpToPx(3), dpToPx(10), dpToPx(3));
 
         // 锁屏按钮：独立图标，作为首行第一个元素（与其它图标同尺寸）
-        final int lockSize = iconSize;
+        // 锁屏按钮独立尺寸，不跟随 iconSize；注意它已是像素值，不能再套 dpToPx
+        final int lockSize = dpToPx(22);
         rotationLockButton = new TextView(this);
         rotationLockButton.setText("🔓");
         rotationLockButton.setTextSize(18);
@@ -1308,7 +1276,9 @@ public class MainActivity extends Activity {
         rotationLockButton.setClickable(true);
         rotationLockButton.setFocusable(true);
         rotationLockButton.setContentDescription("锁定/解锁横竖屏");
-        LinearLayout.LayoutParams lockLp = new LinearLayout.LayoutParams(dpToPx(lockSize), dpToPx(lockSize));
+        // iconSize 已是像素值，此处不能再套 dpToPx（否则会二次换算，
+        // 让锁屏按钮背景圈被放大约 density 倍，并把整行高度撑高）
+        LinearLayout.LayoutParams lockLp = new LinearLayout.LayoutParams(lockSize, lockSize);
         rotationLockButton.setLayoutParams(lockLp);
         topBar.addView(rotationLockButton);
 

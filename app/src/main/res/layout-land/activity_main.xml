@@ -34,7 +34,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="14dp"
-                android:paddingTop="2dp"
+                android:paddingTop="6dp"
                 android:paddingBottom="6dp" />
 
             <ScrollView
