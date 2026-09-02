@@ -1177,6 +1177,55 @@ public class MainActivity extends Activity {
             }
         }
         getWindow().getDecorView().setSystemUiVisibility(legacyFlags);
+
+        // 挖孔/刘海屏：允许内容延伸到短边挖孔区。
+        // DEFAULT 模式下，全屏窗口会被系统整条下移避让，空出一条与状态栏等高的区域；
+        // 该区域由 windowBackground 填充，所以颜色与页面背景一致（看不到黑条），
+        // 但内容实际仍被顶下去了 safeInsetTop（约 24dp+）。
+        // 设成 SHORT_EDGES 可回收这块空间，让图标行真正到顶。
+        // 无挖孔的机器此设置没有任何副作用。
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+    }
+
+    /**
+     * 顶部图标行的顶部内边距 = 挖孔/刘海安全区高度 + 基础微距（6dp）。
+     * - 有挖孔的机器：安全区高度即避开挖孔所需距离，图标行整体让开，不会被孔压住；
+     *   由于窗口已设 SHORT_EDGES，背景仍铺满整屏，不会出现那条与背景同色的空带。
+     * - 无挖孔的机器：安全区高度为 0，只剩 6dp 基础微距，与传统全屏机贴顶效果一致。
+     */
+    private void applyTopBarSafePadding(final View topBarContainer) {
+        final int basePadding = dpToPx(6);
+        // 挖孔安全区预留比例：1.0 = 完全避开挖孔；小于 1 可让图标行更靠上。
+        // 挖孔多在屏幕横向居中、而图标行左对齐，按比例收紧一般不会压到图标。
+        final float reserveRatio = 0.6f;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            topBarContainer.setPadding(topBarContainer.getPaddingLeft(), basePadding,
+                    topBarContainer.getPaddingRight(), topBarContainer.getPaddingBottom());
+            return;
+        }
+        final View decor = getWindow().getDecorView();
+        decor.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                int safeTop = 0;
+                android.view.DisplayCutout cutout = insets.getDisplayCutout();
+                if (cutout != null) {
+                    safeTop = Math.round(cutout.getSafeInsetTop() * reserveRatio);
+                }
+                topBarContainer.setPadding(topBarContainer.getPaddingLeft(),
+                        basePadding + safeTop,
+                        topBarContainer.getPaddingRight(),
+                        topBarContainer.getPaddingBottom());
+                // 继续走默认分发，保证其它 fitsSystemWindows 的视图仍正常处理 insets
+                return v.onApplyWindowInsets(insets);
+            }
+        });
+        decor.requestApplyInsets();
     }
 
     @Override
@@ -1306,6 +1355,7 @@ public class MainActivity extends Activity {
                 ((ViewGroup) topBar.getParent()).removeView(topBar);
             }
             topBarContainer.addView(topBar);
+            applyTopBarSafePadding(topBarContainer);
         }
 
         batteryIcon = new BatteryView(this);
