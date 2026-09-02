@@ -47,6 +47,8 @@ public class MainActivity extends Activity {
     public TextView dateTextView;
     public TextView weekdayTextView;
     public TextView jieqiTextView;
+    // 当前节气纯名称（不含首页显示的「候 / 日」后缀），供打开节气页时传参
+    private String currentJieqiName;
     public TextView fourPillarsTextView;
     public TextView timeFortuneTextView;
     public TextView panExplanation;
@@ -336,6 +338,7 @@ public class MainActivity extends Activity {
 
         // 更新节气显示：附「第几候」与候内第几天的丁正记号（一 / 丁 / 上 / 止 / 正）
         String jieqi = JieqiData.getCurrentJieqi(displayCalendar);
+        currentJieqiName = jieqi;
         if (jieqiTextView != null) {
             int daysIntoJieqi = JieqiData.getDaysIntoJieqi(displayCalendar, jieqi);
             String hou = JieqiData.getHouName(daysIntoJieqi);
