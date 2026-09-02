@@ -14,41 +14,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 标题 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="9dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/card_background"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/fullPageTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="奇门遁甲排盘"
-                android:textColor="@color/gold"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08"/>
-        </LinearLayout>
-
-        <!-- 九宫（竖屏：上方，居中显示） -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="9dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/card_background"
-            android:gravity="center">
-            <com.example.timedisplay.FullNinePalacePanel
-                android:id="@+id/fullNinePalacePanel"
-                android:layout_width="260dp"
-                android:layout_height="260dp"
-                android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
-
-        <!-- 下方内容：可独立滚动 -->
+        <!-- 整页统一滚动：标题、九宫与下方内容同处一个 ScrollView -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -62,6 +28,40 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
+
+                <!-- 标题 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="9dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/card_background"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/fullPageTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="奇门遁甲排盘"
+                        android:textColor="@color/gold"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"/>
+                </LinearLayout>
+
+                <!-- 九宫（竖屏：上方，居中显示） -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="9dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/card_background"
+                    android:gravity="center">
+                    <com.example.timedisplay.FullNinePalacePanel
+                        android:id="@+id/fullNinePalacePanel"
+                        android:layout_width="260dp"
+                        android:layout_height="260dp"
+                        android:layout_gravity="center_horizontal"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/zhkyGroup"
