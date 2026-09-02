@@ -18,6 +18,8 @@ public class FullNinePalacePanel extends View {
     private String[] luckData;
     private float brightness = 1.0f;
     private float scale = 1f;
+    // 数据行的默认文字色（随亮度变化），与首页九宫同一口径
+    private int defaultTextColor = 0xFF4A90D9;
     
     private static final int COLOR_BG_CARD = 0xFF191C26;
     private static final int COLOR_BG_PRIMARY = 0xFF0F1219;
@@ -25,6 +27,7 @@ public class FullNinePalacePanel extends View {
     private static final int COLOR_GOLD = 0xFFE6C46A;
     private static final int COLOR_GREEN = 0xFF3FA34D;
     private static final int COLOR_RED = 0xFFE0593B;
+    private Paint tintPaint;
 
     private static final int[][] PALACE_POSITIONS = {
         {0, 1}, {2, 0}, {1, 2}, {2, 2}, {1, 1}, {0, 0}, {1, 0}, {0, 2}, {2, 1}
@@ -71,6 +74,9 @@ public class FullNinePalacePanel extends View {
         borderPaint.setAntiAlias(true);
         borderPaint.setStrokeWidth(2);
 
+        tintPaint = new Paint();
+        tintPaint.setAntiAlias(true);
+
         palaceData = new String[9][4];
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 4; j++) {
@@ -107,6 +113,10 @@ public class FullNinePalacePanel extends View {
 
         textPaint.setTextSize(cellSize * 0.15f);
 
+        // 与首页九宫一致：整块九宫使用一次对角渐变（而非每格重复），保证整体明暗统一
+        bgPaint.setShader(new android.graphics.LinearGradient(0, 0, width, height,
+            COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
+
         for (int i = 0; i < 9; i++) {
             int row = PALACE_POSITIONS[i][0];
             int col = PALACE_POSITIONS[i][1];
@@ -118,53 +128,35 @@ public class FullNinePalacePanel extends View {
 
             String luck = luckData != null && luckData[i] != null ? luckData[i] : "平";
 
-            bgPaint.setShader(new android.graphics.LinearGradient(left, top, right, bottom, 
-                COLOR_BG_CARD, COLOR_BG_PRIMARY, android.graphics.Shader.TileMode.CLAMP));
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint);
+
+            // 与首页九宫一致：按吉凶等级铺一层约 10% 透明的底色，区分大吉/凶/平凶等
+            int luckColor = NinePalacePanel.getLuckColorByLabel(luck);
+            tintPaint.setColor((luckColor & 0x00FFFFFF) | 0x1A000000);
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, tintPaint);
 
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
-            } else if (luck.equals("大吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 220), 52, 168, 83));
-            } else if (luck.equals("吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 200), 74, 175, 94));
-            } else if (luck.equals("平吉")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 180), 126, 186, 139));
-            } else if (luck.equals("大凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 220), 220, 38, 38));
-            } else if (luck.equals("凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 200), 239, 68, 68));
-            } else if (luck.equals("平凶")) {
-                borderPaint.setColor(Color.argb((int)(brightness * 180), 239, 108, 108));
+                borderPaint.setStrokeWidth(4f);
             } else {
-                borderPaint.setColor(COLOR_BORDER);
+                // 吉凶配色统一取自首页九宫的公共色源，避免两处吉凶颜色不一致
+                borderPaint.setColor(NinePalacePanel.getLuckColorByLabel(luck));
+                borderPaint.setStrokeWidth(3f);
             }
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
 
             float x = offsetX + (col + 0.5f) * cellSize;
             float y = offsetY + (row + 0.22f) * cellSize;
 
-            if (luck.equals("大吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 240), 34, 197, 94));
-            } else if (luck.equals("吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 52, 211, 153));
-            } else if (luck.equals("平吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 147, 197, 114));
-            } else if (luck.equals("大凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 240), 239, 68, 68));
-            } else if (luck.equals("凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 248, 113, 113));
-            } else if (luck.equals("平凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 251, 146, 60));
-            } else {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 107, 114, 128));
-            }
-
+            // 宫名：与首页九宫一致（中宫金色，其余浅灰）
+            textPaint.setColor(i == 4 ? COLOR_GOLD : 0xFFE6E6E6);
             textPaint.setTextSize(cellSize * 0.15f);
             canvas.drawText(palaceData[i][0], x, y, textPaint);
 
+            // 数据行：与首页九宫一致，用默认文字色，不随吉凶染色
             y += cellSize * 0.22f;
             textPaint.setTextSize(cellSize * 0.12f);
+            textPaint.setColor(defaultTextColor);
             canvas.drawText(palaceData[i][1], x, y, textPaint);
 
             y += cellSize * 0.22f;
@@ -173,21 +165,8 @@ public class FullNinePalacePanel extends View {
 
             y += cellSize * 0.18f;
             textPaint.setTextSize(cellSize * 0.10f);
-            if (luck.equals("大吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 240), 34, 197, 94));
-            } else if (luck.equals("吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 52, 211, 153));
-            } else if (luck.equals("平吉")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 147, 197, 114));
-            } else if (luck.equals("大凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 240), 239, 68, 68));
-            } else if (luck.equals("凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 248, 113, 113));
-            } else if (luck.equals("平凶")) {
-                textPaint.setColor(Color.argb((int)(brightness * 200), 251, 146, 60));
-            } else {
-                textPaint.setColor(Color.argb((int)(brightness * 220), 107, 114, 128));
-            }
+            // 吉凶行：与首页九宫同源
+            textPaint.setColor(NinePalacePanel.getLuckColorByLabel(luck));
             canvas.drawText(palaceData[i][3], x, y, textPaint);
         }
     }
@@ -217,6 +196,7 @@ public class FullNinePalacePanel extends View {
         gridPaint.setColor(Color.argb((int)(brightness * 120), 160, 174, 192));
         textPaint.setColor(Color.argb((int)(brightness * 255), 74, 144, 217));
         centerPaint.setColor(Color.argb((int)(brightness * 200), 44, 199, 194));
+        defaultTextColor = Color.argb((int)(brightness * 255), 74, 144, 217);
         invalidate();
     }
 }

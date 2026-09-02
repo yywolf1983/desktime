@@ -619,7 +619,8 @@ public class MainActivity extends Activity {
         minute2TextView.setBrightness(0.7f);
 
         // 设置九宫格亮度
-        ninePalacePanel.setBrightness(0.7f);
+        // 亮度需与奇门遁甲页（FullNinePalaceActivity）保持一致，避免两处九宫明暗不同
+        ninePalacePanel.setBrightness(0.8f);
     }
 
     // 更新四柱显示
@@ -666,12 +667,12 @@ public class MainActivity extends Activity {
         }
         timeFortuneTextView.setText(fortune);
 
-        // 获取当前节气
-        // 统一使用 JieqiData 计算节气，与界面显示的节气保持一致
+        // 获取当前节气与节气内第几天（三元），统一使用 JieqiData，与奇门遁甲页保持一致
         String jieqi = JieqiData.getCurrentJieqi(calendar);
-        
-        // 更新奇门排盘（传入节气参数）
-        ninePalacePanel.calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar, jieqi);
+        int dayInJieqi = JieqiData.getDaysIntoJieqi(calendar, jieqi) + 1; // 转 1 基（1..15）
+
+        // 更新奇门排盘（统一调用 QiMenCalculator 单一算法）
+        ninePalacePanel.calculateQiMenPanel(yearPillar, monthPillar, dayPillar, timePillar, jieqi, dayInJieqi);
 
         // 更新九宫格解释
         updateNinePalaceExplanation(yearPillar, monthPillar, dayPillar, timePillar);
