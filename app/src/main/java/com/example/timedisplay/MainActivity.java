@@ -323,10 +323,17 @@ public class MainActivity extends Activity {
             weekdayTextView.setTextColor(dateColor);
         }
 
-        // 更新节气显示
+        // 更新节气显示：附「第几候」与候内第几天的丁正记号（一 / 丁 / 上 / 止 / 正）
         String jieqi = JieqiData.getCurrentJieqi(displayCalendar);
         if (jieqiTextView != null) {
-            jieqiTextView.setText(jieqi);
+            int daysIntoJieqi = JieqiData.getDaysIntoJieqi(displayCalendar, jieqi);
+            String hou = JieqiData.getHouName(daysIntoJieqi);
+            String dayMark = JieqiData.getDayMark(daysIntoJieqi);
+            if (hou.isEmpty() || dayMark.isEmpty()) {
+                jieqiTextView.setText(jieqi);
+            } else {
+                jieqiTextView.setText(jieqi + " · " + hou + " · " + dayMark);
+            }
         }
 
         // 四柱排盘：使用自定义时间（如有）或当前时间

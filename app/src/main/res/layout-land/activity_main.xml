@@ -92,7 +92,7 @@
                 android:paddingVertical="6dp"
                 android:background="@drawable/card_background">
 
-                <!-- 横屏全部一行: 日期 + 星期 + 节气 + 按钮 -->
+                <!-- 横屏与竖屏一致：第1行 日期 + 按钮 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,6 +128,29 @@
                         android:contentDescription="吉日查询" />
 
                     <TextView
+                        android:id="@+id/resetTimeButton"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:text="⟳"
+                        android:textSize="18sp"
+                        android:textColor="@color/colon_color"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/btn_round_transparent"
+                        android:contentDescription="恢复当前时间" />
+
+                </LinearLayout>
+
+                <!-- 第2行: 星期 + 节气 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
                         android:id="@+id/weekdayTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -151,20 +174,6 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:paddingHorizontal="4dp"
                         tools:text="立春" />
-
-                    <TextView
-                        android:id="@+id/resetTimeButton"
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        android:text="⟳"
-                        android:textSize="18sp"
-                        android:textColor="@color/colon_color"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/btn_round_transparent"
-                        android:contentDescription="恢复当前时间" />
 
                 </LinearLayout>
 

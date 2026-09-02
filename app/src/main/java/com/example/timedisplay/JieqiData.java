@@ -380,4 +380,65 @@ public class JieqiData {
 
         return days;
     }
+
+    // ===== 候：一元五日，一气三候 =====
+    // 每个节气 15 天，分初候 / 二候 / 三候，每候 5 天；
+    // 候内五日依次以「一、丁、上、止、正」记之（即节气页所用的丁正记日法）。
+    public static final String[] HOU_NAMES = {"初候", "二候", "三候"};
+    public static final String[] DAY_MARKS = {"一", "丁", "上", "止", "正"};
+
+    /** 该日处于当前节气内的第几天（0 基，0..14；节气起始日尚未到返回 -1） */
+    public static int getDaysIntoJieqi(Calendar calendar) {
+        return getDaysIntoJieqi(calendar, getCurrentJieqi(calendar));
+    }
+
+    /** 指定节气：该日处于该节气内的第几天（0 基，0..14；节气起始日尚未到返回 -1） */
+    public static int getDaysIntoJieqi(Calendar calendar, String jieqi) {
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int index = getJieqiIndex(jieqi);
+        if (index < 0) return -1;
+        // 小寒、大寒跨年：1月、2月初取当年1月日期，否则取下一年1月日期
+        int[] date = getJieqiDateByContext(currentYear, currentMonth, currentDay, index);
+        int jieqiYear = date[0], jieqiMonth = date[1], jieqiDay = date[2];
+
+        if (compareYmd(jieqiYear, jieqiMonth, jieqiDay, currentYear, currentMonth, currentDay) > 0) {
+            return -1;
+        }
+
+        Calendar jieqiCalendar = Calendar.getInstance();
+        jieqiCalendar.set(jieqiYear, jieqiMonth - 1, jieqiDay, 0, 0, 0);
+        Calendar todayStart = Calendar.getInstance();
+        todayStart.set(currentYear, currentMonth - 1, currentDay, 0, 0, 0);
+
+        long diff = todayStart.getTimeInMillis() - jieqiCalendar.getTimeInMillis();
+        int days = (int) (diff / (1000L * 60 * 60 * 24));
+        return Math.max(0, Math.min(days, 14));
+    }
+
+    /** 候序：0初候、1二候、2三候；天数非法返回 -1 */
+    public static int getHouIndex(int daysIntoJieqi) {
+        if (daysIntoJieqi < 0) return -1;
+        return daysIntoJieqi / 5;
+    }
+
+    /** 候名：初候 / 二候 / 三候；天数非法返回空串 */
+    public static String getHouName(int daysIntoJieqi) {
+        int i = getHouIndex(daysIntoJieqi);
+        return (i < 0 || i >= HOU_NAMES.length) ? "" : HOU_NAMES[i];
+    }
+
+    /** 候内第几天的丁正记号：一 / 丁 / 上 / 止 / 正；天数非法返回空串 */
+    public static String getDayMark(int daysIntoJieqi) {
+        if (daysIntoJieqi < 0) return "";
+        return DAY_MARKS[daysIntoJieqi % 5];
+    }
+
+    private static int compareYmd(int y1, int m1, int d1, int y2, int m2, int d2) {
+        if (y1 != y2) return Integer.compare(y1, y2);
+        if (m1 != m2) return Integer.compare(m1, m2);
+        return Integer.compare(d1, d2);
+    }
 }

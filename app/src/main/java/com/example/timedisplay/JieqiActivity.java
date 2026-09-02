@@ -21,7 +21,8 @@ public class JieqiActivity extends Activity {
     private static final String HOU_PREFIX_1 = "初候 · ";
     private static final String HOU_PREFIX_2 = "二候 · ";
     private static final String HOU_PREFIX_3 = "三候 · ";
-    private static final String[] DAY_MARKS = {"一", "丁", "上", "止", "正"};
+    // 丁正记日符号统一取自 JieqiData，避免与首页口径不一致
+    private static final String[] DAY_MARKS = JieqiData.DAY_MARKS;
     private static final int COLS = 4;
     private static final int ROWS = 6;
 
@@ -158,27 +159,8 @@ public class JieqiActivity extends Activity {
     }
 
     private int calculateDaysIntoJieqi(Calendar cal) {
-        int currentYear = cal.get(Calendar.YEAR);
-        int currentMonth = cal.get(Calendar.MONTH) + 1;
-        int currentDay = cal.get(Calendar.DAY_OF_MONTH);
-
-        int index = JieqiData.getJieqiIndex(currentJieqi);
-        // 小寒、大寒跨年:1月、2月初时取当年1月日期,否则取下一年1月日期
-        int[] date = JieqiData.getJieqiDateByContext(currentYear, currentMonth, currentDay, index);
-        int jieqiYear = date[0], jieqiMonth = date[1], jieqiDay = date[2];
-
-        if (compareJieqiDate(jieqiYear, jieqiMonth, jieqiDay, currentYear, currentMonth, currentDay) > 0) {
-            return -1;
-        }
-
-        Calendar jieqiCalendar = Calendar.getInstance();
-        jieqiCalendar.set(jieqiYear, jieqiMonth - 1, jieqiDay, 0, 0, 0);
-        Calendar todayStart = Calendar.getInstance();
-        todayStart.set(currentYear, currentMonth - 1, currentDay, 0, 0, 0);
-
-        long diff = todayStart.getTimeInMillis() - jieqiCalendar.getTimeInMillis();
-        int days = (int) (diff / (1000 * 60 * 60 * 24));
-        return Math.max(0, Math.min(days, 14));
+        // 统一由 JieqiData 计算，与首页「第几候 / 第几天」保持同一口径
+        return JieqiData.getDaysIntoJieqi(cal, currentJieqi);
     }
 
     private int compareJieqiDate(int jieqiYear, int jieqiMonth, int jieqiDay,
