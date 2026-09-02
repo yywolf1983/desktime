@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 首页顶部尺寸（默认 = 小屏/紧凑排版，屏幕高 < 700dp 时生效） -->
+    <!-- 图标栏已改为正常布局行（非覆盖层），内容无需避让，仅留微距 -->
+    <dimen name="home_content_padding_top">2dp</dimen>
+    <dimen name="home_content_padding_bottom">8dp</dimen>
+
+    <!-- 大号时间 -->
+    <dimen name="home_time_digit_width">58dp</dimen>
+    <dimen name="home_time_digit_height">78dp</dimen>
+    <dimen name="home_time_colon_size">50sp</dimen>
+    <dimen name="home_time_container_padding">5dp</dimen>
+    <dimen name="home_time_container_margin_bottom">5dp</dimen>
+
+    <!-- 日期 / 星期 / 节气 板块 -->
+    <dimen name="home_date_container_padding_v">4dp</dimen>
+    <dimen name="home_date_container_margin_bottom">4dp</dimen>
+    <dimen name="home_date_text_size">17sp</dimen>
+    <dimen name="home_weekday_text_size">13sp</dimen>
+    <dimen name="home_jieqi_text_size">13sp</dimen>
+    <dimen name="home_small_button_size">28dp</dimen>
+</resources>
