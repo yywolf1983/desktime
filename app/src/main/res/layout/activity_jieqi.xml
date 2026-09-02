@@ -212,14 +212,6 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/card_background">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="三候＝每个节气分初候、二候、三候三段，古人据此观察动植物与气候的细微变化。"
-                    android:textSize="15sp"
-                    android:textColor="@color/text_annotation"
-                    android:layout_marginBottom="8dp"/>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

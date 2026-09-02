@@ -490,7 +490,11 @@ public class MainActivity extends Activity {
     private void openJieqi() {
         try {
             Intent intent = new Intent(MainActivity.this, JieqiActivity.class);
-            String jieqi = jieqiTextView.getText().toString().replace("·", "").replace("›", "").trim();
+            // 首页显示文本形如「立秋 · 初候 · 一」，改为直接传计算好的纯节气名，
+            // 避免解析残留「初候 一」导致节气名匹配失败、页面文字被清空
+            String jieqi = (currentJieqiName != null && !currentJieqiName.isEmpty())
+                    ? currentJieqiName
+                    : JieqiData.getCurrentJieqi(Calendar.getInstance());
             intent.putExtra("jieqi", jieqi);
             startActivity(intent);
         } catch (Exception e) {

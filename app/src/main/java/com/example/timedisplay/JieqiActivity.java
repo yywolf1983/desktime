@@ -98,11 +98,19 @@ public class JieqiActivity extends Activity {
     }
 
     private String getCurrentJieqiInfo(String jieqi, Calendar cal) {
-        if (jieqi == null || jieqi.isEmpty()) {
+        if (jieqi != null) {
+            // 兼容形如「立秋 · 初候 · 一」的传入值：只取第一个分隔符之前的部分作为节气名，
+            // 否则会残留「初候 一」导致匹配失败、本页文字被清空
+            int cut = jieqi.indexOf('·');
+            int arrow = jieqi.indexOf('›');
+            if (cut < 0 || (arrow >= 0 && arrow < cut)) cut = arrow;
+            if (cut >= 0) jieqi = jieqi.substring(0, cut);
+            jieqi = jieqi.trim();
+        }
+        // 注意：getJieqiIndex 对未知名称返回 0（而非 -1），故用 getJieqiInfo 判空来校验
+        if (jieqi == null || jieqi.isEmpty() || JieqiData.getJieqiInfo(jieqi) == null) {
             return JieqiData.getCurrentJieqi(cal);
         }
-        // 去除首页传入文本中可能携带的引导箭头“›”或分隔符“·”，确保节气名可匹配
-        jieqi = jieqi.replace("›", "").replace("·", "").trim();
         return jieqi;
     }
 
