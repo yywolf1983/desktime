@@ -42,7 +42,7 @@
                 android:id="@+id/backButton"
                 android:layout_width="40dp"
                 android:layout_height="34dp"
-                android:text="‹ 返回"
+                android:text="‹"
                 android:textSize="14sp"
                 android:textColor="@color/gold_faint"
                 android:gravity="center"

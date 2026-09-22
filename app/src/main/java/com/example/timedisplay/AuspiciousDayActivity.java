@@ -27,6 +27,7 @@ import java.util.Locale;
 public class AuspiciousDayActivity extends Activity {
 
     private static final int RANGE_DAYS = 180;
+    private static final String KEY_SELECTED_CATEGORY = "selected_category";
 
     // 事项类别：name + 宜此事的建除神(good) + 忌此事的建除神(bad)
     private static class Category {
@@ -88,8 +89,21 @@ public class AuspiciousDayActivity extends Activity {
         updateRangeText();
         buildCategoryButtons();
 
+        // 旋转后（横竖屏切换）恢复已选事项，避免结果被清空
+        if (savedInstanceState != null) {
+            restoreSelection(savedInstanceState.getString(KEY_SELECTED_CATEGORY));
+        }
+
         TextView backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (currentCategory != null) {
+            outState.putString(KEY_SELECTED_CATEGORY, currentCategory.name);
+        }
     }
 
     private void initCategories() {
@@ -118,9 +132,11 @@ public class AuspiciousDayActivity extends Activity {
 
     private void buildCategoryButtons() {
         categoryContainer.removeAllViews();
+        // 每行 3 个分类按钮（横屏左栏与竖屏一致）
+        final int columns = getCategoryColumns();
         LinearLayout row = null;
         for (int i = 0; i < categories.size(); i++) {
-            if (i % 3 == 0) {
+            if (i % columns == 0) {
                 row = new LinearLayout(this);
                 row.setOrientation(LinearLayout.HORIZONTAL);
                 row.setLayoutParams(new LinearLayout.LayoutParams(
@@ -133,7 +149,7 @@ public class AuspiciousDayActivity extends Activity {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
             int margin = dpToPx(4);
-            if (i % 3 == 1 || i % 3 == 2) lp.leftMargin = margin;
+            if (i % columns != 0) lp.leftMargin = margin;
             btn.setLayoutParams(lp);
             btn.setText(cat.name);
             btn.setTextSize(13);
@@ -165,6 +181,40 @@ public class AuspiciousDayActivity extends Activity {
         selectedBtn.setTextColor(getResources().getColor(R.color.gold));
         currentCategory = cat;
         computeAndShow(cat);
+    }
+
+    /** 分类按钮始终每行 3 个（横屏左栏与竖屏一致） */
+    private int getCategoryColumns() {
+        return 3;
+    }
+
+    /** 按事项名称恢复选中（旋转重建后调用） */
+    private void restoreSelection(String name) {
+        if (name == null) return;
+        for (Category cat : categories) {
+            if (cat.name.equals(name)) {
+                TextView btn = findCategoryButton(name);
+                if (btn != null) {
+                    selectCategory(cat, btn);
+                }
+                return;
+            }
+        }
+    }
+
+    private TextView findCategoryButton(String name) {
+        for (int i = 0; i < categoryContainer.getChildCount(); i++) {
+            View child = categoryContainer.getChildAt(i);
+            if (!(child instanceof ViewGroup)) continue;
+            ViewGroup g = (ViewGroup) child;
+            for (int j = 0; j < g.getChildCount(); j++) {
+                View b = g.getChildAt(j);
+                if (b instanceof TextView && name.equals(((TextView) b).getText().toString())) {
+                    return (TextView) b;
+                }
+            }
+        }
+        return null;
     }
 
     private void computeAndShow(Category cat) {
