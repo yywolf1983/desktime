@@ -3,6 +3,8 @@ package com.example.timedisplay;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -66,6 +68,15 @@ public class AuspiciousDayActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 必须在 setContentView 之前应用方向锁定，避免进入后再切换方向
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
+        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+            setRequestedOrientation(lockedOrientation);
+        }
+
         setContentView(R.layout.activity_auspicious_day);
 
         categoryContainer = findViewById(R.id.categoryContainer);
