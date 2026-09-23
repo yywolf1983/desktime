@@ -75,18 +75,18 @@ public class JieqiActivity extends Activity {
         daysToNext = findViewById(R.id.daysToNext);
         jieqiListLayout = findViewById(R.id.jieqiListLayout);
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = TimeState.getActiveCalendar();
         currentJieqi = getCurrentJieqiInfo(getIntent().getStringExtra("jieqi"), cal);
         refreshViews(cal);
 
         prevJieqi.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
+            Calendar c = TimeState.getActiveCalendar();
             currentJieqi = JieqiData.getPrevJieqi(currentJieqi);
             refreshViews(c);
         });
 
         nextJieqi.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
+            Calendar c = TimeState.getActiveCalendar();
             currentJieqi = JieqiData.getNextJieqi(currentJieqi);
             refreshViews(c);
         });
@@ -264,7 +264,7 @@ public class JieqiActivity extends Activity {
         jieqiBoxDates[index] = boxDate;
         jieqiBox.setOnClickListener(v -> {
             currentJieqi = name;
-            refreshViews(Calendar.getInstance());
+            refreshViews(TimeState.getActiveCalendar());
         });
         return jieqiBox;
     }

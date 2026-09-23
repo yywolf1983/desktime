@@ -378,6 +378,7 @@ public class MainActivity extends Activity {
             customCalendar.set(year, month - 1, day, hour, minute, 0);
             customCalendar.set(Calendar.MILLISECOND, 0);
             isCustomTime = true;
+            TimeState.setCustomCalendar(customCalendar);
             if (resetTimeButton != null) {
                 resetTimeButton.setVisibility(View.VISIBLE);
             }
@@ -391,6 +392,7 @@ public class MainActivity extends Activity {
     private void resetToCurrentTime() {
         isCustomTime = false;
         customCalendar = null;
+        TimeState.clear();
         if (resetTimeButton != null) {
             resetTimeButton.setVisibility(View.GONE);
         }
@@ -1264,6 +1266,7 @@ public class MainActivity extends Activity {
                 customCalendar.set(y, m - 1, d, 12, 0, 0);
                 customCalendar.set(Calendar.MILLISECOND, 0);
                 isCustomTime = true;
+                TimeState.setCustomCalendar(customCalendar);
                 if (resetTimeButton != null) {
                     resetTimeButton.setVisibility(View.VISIBLE);
                 }
