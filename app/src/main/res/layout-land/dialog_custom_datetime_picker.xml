@@ -21,242 +21,218 @@
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
+            android:layout_gravity="center"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginVertical="8dp">
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/card_background">
 
-            <!-- 顶部：标题 + 摘要（点击各部分展开对应面板） -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择日期时间"
+                android:textColor="@color/gold_faint"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="8dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/gold_separator"
+                android:layout_marginBottom="6dp"/>
+
+            <!-- 顶部日期时间文字：各部分单独可点击 -->
             <LinearLayout
+                android:id="@+id/summaryRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="8dp"
-                android:layout_marginBottom="6dp"
-                android:background="@drawable/card_background">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="选择日期时间"
-                    android:textColor="@color/gold_faint"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.08"
-                    android:layout_marginBottom="8dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@drawable/gold_separator"
-                    android:layout_marginBottom="6dp"/>
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:layout_marginBottom="4dp">
 
                 <LinearLayout
-                    android:id="@+id/summaryRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:paddingHorizontal="4dp"
-                    android:paddingVertical="6dp">
+                    android:baselineAligned="false">
+                    <TextView android:id="@+id/sumYear" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2"
+                        android:maxWidth="84dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
+                        android:textColor="@color/gold_faint" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
+                    <TextView android:id="@+id/sumMonth" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
+                        android:textColor="@color/gold_faint" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
+                    <TextView android:id="@+id/sumDay" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_background"/>
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:baselineAligned="false">
-                        <TextView android:id="@+id/sumYear" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="2"
-                            android:maxWidth="84dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
-                            android:clickable="true" android:singleLine="true" android:ellipsize="none"
-                            android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
-                            android:background="@drawable/card_background"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
-                            android:textColor="@color/gold_faint" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
-                        <TextView android:id="@+id/sumMonth" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                            android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
-                            android:clickable="true" android:singleLine="true" android:ellipsize="none"
-                            android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
-                            android:background="@drawable/card_background"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-"
-                            android:textColor="@color/gold_faint" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
-                        <TextView android:id="@+id/sumDay" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                            android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
-                            android:clickable="true" android:singleLine="true" android:ellipsize="none"
-                            android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
-                            android:background="@drawable/card_background"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:baselineAligned="false"
-                        android:layout_marginTop="4dp">
-                        <TextView android:id="@+id/sumHour" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                            android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
-                            android:clickable="true" android:singleLine="true" android:ellipsize="none"
-                            android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
-                            android:background="@drawable/card_background"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":"
-                            android:textColor="@color/gold_faint" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
-                        <TextView android:id="@+id/sumMinute" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                            android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
-                            android:clickable="true" android:singleLine="true" android:ellipsize="none"
-                            android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
-                            android:background="@drawable/card_background"/>
-                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:baselineAligned="false"
+                    android:layout_marginTop="4dp">
+                    <TextView android:id="@+id/sumHour" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_background"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=":"
+                        android:textColor="@color/gold_faint" android:textSize="16sp" android:textStyle="bold"
+                        android:layout_marginStart="1dp" android:layout_marginEnd="1dp" android:singleLine="true"/>
+                    <TextView android:id="@+id/sumMinute" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:maxWidth="56dp" android:textColor="@color/time_gold" android:textSize="18sp" android:textStyle="bold"
+                        android:clickable="true" android:singleLine="true" android:ellipsize="none"
+                        android:gravity="center" android:paddingHorizontal="4dp" android:paddingVertical="2dp"
+                        android:background="@drawable/card_background"/>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 主体：左右分屏 -->
+            <!-- 选择面板：年/月/日/时/分各自独立点击展开 -->
             <LinearLayout
+                android:id="@+id/choosePanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:baselineAligned="false">
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <!-- 左半屏：日期（年 / 月 / 日） -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_background"
-                    android:padding="6dp"
-                    android:layout_marginEnd="4dp">
-
-                    <LinearLayout android:id="@+id/yearRow" android:layout_width="match_parent" android:layout_height="0dp"
-                        android:visibility="gone" android:orientation="horizontal">
-                        <TextView android:id="@+id/yearChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:id="@+id/yearPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="6dp">
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp" android:orientation="horizontal"
-                            android:gravity="center" android:paddingHorizontal="8dp">
-                            <TextView android:id="@+id/yearPrev" android:layout_width="36dp" android:layout_height="36dp" android:text="‹"
-                                android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
-                                android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
-                            <TextView android:id="@+id/yearPage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                                android:textColor="@color/gold_faint" android:textSize="15sp" android:gravity="center"
-                                android:singleLine="true" android:ellipsize="none"/>
-                            <TextView android:id="@+id/yearNext" android:layout_width="36dp" android:layout_height="36dp" android:text="›"
-                                android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
-                                android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
-                        </LinearLayout>
-                        <GridView android:id="@+id/yearGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:numColumns="5" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="4dp"
-                            android:scrollbars="none" android:overScrollMode="never"/>
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="4dp"/>
-
-                    <LinearLayout android:id="@+id/monthRow" android:layout_width="match_parent" android:layout_height="0dp"
-                        android:visibility="gone" android:orientation="horizontal">
-                        <TextView android:id="@+id/monthChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:id="@+id/monthPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="6dp">
-                        <GridView android:id="@+id/monthGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:numColumns="3" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="6dp"
-                            android:scrollbars="none" android:overScrollMode="never"/>
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="4dp"/>
-
-                    <LinearLayout android:id="@+id/dayRow" android:layout_width="match_parent" android:layout_height="0dp"
-                        android:visibility="gone" android:orientation="horizontal">
-                        <TextView android:id="@+id/dayChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:id="@+id/dayPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="6dp">
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp" android:orientation="horizontal"
-                            android:gravity="center" android:paddingHorizontal="8dp">
-                            <TextView android:id="@+id/dayPrev" android:layout_width="36dp" android:layout_height="36dp" android:text="‹"
-                                android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
-                                android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
-                            <TextView android:id="@+id/dayTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                                android:textColor="@color/gold_faint" android:textSize="17sp" android:textStyle="bold" android:gravity="center"
-                                android:singleLine="true" android:ellipsize="none"/>
-                            <TextView android:id="@+id/dayNext" android:layout_width="36dp" android:layout_height="36dp" android:text="›"
-                                android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
-                                android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
-                        </LinearLayout>
-                        <GridView android:id="@+id/dayGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:numColumns="7" android:verticalSpacing="4dp" android:horizontalSpacing="3dp"
-                            android:paddingHorizontal="4dp" android:layout_marginTop="3dp"
-                            android:scrollbars="none" android:overScrollMode="never"/>
-                    </LinearLayout>
+                <!-- 年 -->
+                <LinearLayout android:id="@+id/yearRow" android:layout_width="match_parent" android:layout_height="0dp"
+                    android:visibility="gone" android:orientation="horizontal">
+                    <TextView android:id="@+id/yearChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                 </LinearLayout>
-
-                <!-- 右半屏：时间（时 / 分） + 宜忌信息 + 按钮 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_background"
-                    android:padding="6dp"
-                    android:layout_marginStart="4dp">
-
-                    <LinearLayout android:id="@+id/hourRow" android:layout_width="match_parent" android:layout_height="0dp"
-                        android:visibility="gone" android:orientation="horizontal">
-                        <TextView android:id="@+id/hourChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:id="@+id/hourPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="6dp">
-                        <GridView android:id="@+id/hourGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:numColumns="4" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="6dp"
-                            android:scrollbars="none" android:overScrollMode="never"/>
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="4dp"/>
-
-                    <LinearLayout android:id="@+id/minuteRow" android:layout_width="match_parent" android:layout_height="0dp"
-                        android:visibility="gone" android:orientation="horizontal">
-                        <TextView android:id="@+id/minuteChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:id="@+id/minutePanel" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="6dp">
-                        <GridView android:id="@+id/minuteGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:numColumns="6" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="4dp"
-                            android:scrollbars="none" android:overScrollMode="never"/>
-                    </LinearLayout>
-
-                    <!-- 宜忌 + 相差天数信息块 -->
-                    <LinearLayout android:id="@+id/infoBlock" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
-                            android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
-
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
-                            android:paddingHorizontal="12dp" android:layout_marginBottom="4dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="当日宜忌"
-                                android:textColor="@color/gold_faint" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
-                            <TextView android:id="@+id/tvYiJi" android:layout_width="match_parent" android:layout_height="wrap_content"
-                                android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="3dp" android:text="加载中..."/>
-                            <TextView android:id="@+id/tvDateGap" android:layout_width="match_parent" android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp" android:textColor="@color/gold_faint" android:textSize="13sp"
-                                android:lineSpacingExtra="3dp" android:gravity="center" android:text="与今日：—"/>
-                        </LinearLayout>
-
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
-                            android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <!-- 按钮 -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"
-                        android:gravity="center">
-                        <TextView android:id="@+id/cancelButton" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
-                            android:text="取消" android:textColor="@color/text_primary" android:textSize="15sp" android:gravity="center"
+                <LinearLayout android:id="@+id/yearPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="36dp" android:orientation="horizontal"
+                        android:gravity="center" android:paddingHorizontal="8dp">
+                        <TextView android:id="@+id/yearPrev" android:layout_width="36dp" android:layout_height="36dp" android:text="‹"
+                            android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
                             android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
-                        <View android:layout_width="1dp" android:layout_height="22dp" android:background="@color/border_light" android:layout_marginHorizontal="12dp"/>
-                        <TextView android:id="@+id/confirmButton" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
-                            android:text="确定" android:textColor="@color/gold_faint" android:textSize="15sp" android:textStyle="bold"
-                            android:gravity="center" android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
+                        <TextView android:id="@+id/yearPage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:textColor="@color/gold_faint" android:textSize="15sp" android:gravity="center"
+                            android:singleLine="true" android:ellipsize="none"/>
+                        <TextView android:id="@+id/yearNext" android:layout_width="36dp" android:layout_height="36dp" android:text="›"
+                            android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
+                            android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
                     </LinearLayout>
+                    <GridView android:id="@+id/yearGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:numColumns="5" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="4dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
                 </LinearLayout>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="8dp"/>
+
+                <!-- 月 -->
+                <LinearLayout android:id="@+id/monthRow" android:layout_width="match_parent" android:layout_height="0dp"
+                    android:visibility="gone" android:orientation="horizontal">
+                    <TextView android:id="@+id/monthChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/monthPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
+                    <GridView android:id="@+id/monthGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:numColumns="3" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="8dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
+                </LinearLayout>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="8dp"/>
+
+                <!-- 日 -->
+                <LinearLayout android:id="@+id/dayRow" android:layout_width="match_parent" android:layout_height="0dp"
+                    android:visibility="gone" android:orientation="horizontal">
+                    <TextView android:id="@+id/dayChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/dayPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="36dp" android:orientation="horizontal"
+                        android:gravity="center" android:paddingHorizontal="8dp">
+                        <TextView android:id="@+id/dayPrev" android:layout_width="36dp" android:layout_height="36dp" android:text="‹"
+                            android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
+                            android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
+                        <TextView android:id="@+id/dayTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                            android:textColor="@color/gold_faint" android:textSize="17sp" android:textStyle="bold" android:gravity="center"
+                            android:singleLine="true" android:ellipsize="none"/>
+                        <TextView android:id="@+id/dayNext" android:layout_width="36dp" android:layout_height="36dp" android:text="›"
+                            android:textColor="@color/gold_faint" android:textSize="22sp" android:textStyle="bold" android:gravity="center"
+                            android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
+                    </LinearLayout>
+                    <GridView android:id="@+id/dayGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:numColumns="7" android:verticalSpacing="4dp" android:horizontalSpacing="3dp"
+                        android:paddingHorizontal="4dp" android:layout_marginTop="3dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
+                </LinearLayout>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="8dp"/>
+
+                <!-- 时 -->
+                <LinearLayout android:id="@+id/hourRow" android:layout_width="match_parent" android:layout_height="0dp"
+                    android:visibility="gone" android:orientation="horizontal">
+                    <TextView android:id="@+id/hourChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/hourPanel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
+                    <GridView android:id="@+id/hourGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:numColumns="4" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="8dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
+                </LinearLayout>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator" android:layout_marginHorizontal="8dp"/>
+
+                <!-- 分 -->
+                <LinearLayout android:id="@+id/minuteRow" android:layout_width="match_parent" android:layout_height="0dp"
+                    android:visibility="gone" android:orientation="horizontal">
+                    <TextView android:id="@+id/minuteChevron" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/minutePanel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:visibility="gone" android:paddingHorizontal="8dp">
+                    <GridView android:id="@+id/minuteGrid" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:numColumns="6" android:verticalSpacing="4dp" android:horizontalSpacing="3dp" android:paddingHorizontal="4dp"
+                        android:scrollbars="none" android:overScrollMode="never"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 宜忌 + 相差天数信息块 -->
+            <LinearLayout android:id="@+id/infoBlock" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+                    android:paddingHorizontal="12dp" android:layout_marginBottom="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="当日宜忌"
+                        android:textColor="@color/gold_faint" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/tvYiJi" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" android:textSize="13sp" android:lineSpacingExtra="3dp" android:text="加载中..."/>
+                    <TextView android:id="@+id/tvDateGap" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp" android:textColor="@color/gold_faint" android:textSize="13sp"
+                        android:lineSpacingExtra="3dp" android:gravity="center" android:text="与今日：—"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@drawable/gold_separator"
+                    android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"
+                android:gravity="center">
+                <TextView android:id="@+id/cancelButton" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+                    android:text="取消" android:textColor="@color/text_primary" android:textSize="15sp" android:gravity="center"
+                    android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
+                <View android:layout_width="1dp" android:layout_height="22dp" android:background="@color/border_light" android:layout_marginHorizontal="12dp"/>
+                <TextView android:id="@+id/confirmButton" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+                    android:text="确定" android:textColor="@color/gold_faint" android:textSize="15sp" android:textStyle="bold"
+                    android:gravity="center" android:clickable="true" android:background="?android:attr/selectableItemBackground"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
