@@ -22,6 +22,10 @@ mkdir -p "$OUT_DIR/gen"
 
 # 注册库目录与 AAR 解压：项目使用 .aar（内含 classes.jar 与 res），不再依赖独立的 .jar
 REG_LIB_DIR="$APP_DIR/../libs"
+# AndroidX core 运行时（FileProvider 等），由 Gradle :app:exportCoreJars 导出到 libs/core_exported
+CORE_LIB_DIR="$APP_DIR/../libs/core_exported"
+CORE_JARS=$(find "$CORE_LIB_DIR" -name "*.jar" 2>/dev/null)
+CORE_CLASSPATH=$(echo "$CORE_JARS" | tr '\n' ':')
 REG_LIB_AAR="$APP_DIR/libs/registration-lib.aar"
 REG_AAR_EXTRACT="$OUT_DIR/reg_lib_extract"
 REG_LIB_SRC=""
@@ -33,6 +37,13 @@ if [ -f "$REG_LIB_AAR" ]; then
     REG_LIB_SRC="$REG_AAR_EXTRACT/res"
     cp "$REG_AAR_EXTRACT/classes.jar" "$OUT_DIR/reg_lib_classes.jar"
     REG_LIB_JAR="$OUT_DIR/reg_lib_classes.jar"
+    # 复制 AAR 内 libs/ 下的第三方 jar（如 zxing-core，用于运行时动态生成二维码）
+    REG_LIB_LIBS=""
+    if [ -d "$REG_AAR_EXTRACT/libs" ]; then
+        mkdir -p "$OUT_DIR/reg_lib_libs"
+        cp -r "$REG_AAR_EXTRACT/libs/." "$OUT_DIR/reg_lib_libs/" 2>/dev/null || true
+        REG_LIB_LIBS=$(find "$OUT_DIR/reg_lib_libs" -name "*.jar" 2>/dev/null)
+    fi
     # 复制 AAR 内 assets（如注册配置文件）
     if [ -d "$REG_AAR_EXTRACT/assets" ]; then
         mkdir -p "$OUT_DIR/assets"
@@ -163,7 +174,7 @@ JAVA_FILES=$(find "$JAVA_DIR" -name "*.java")
 GEN_JAVA_FILES=$(find "$OUT_DIR/gen" -name "*.java")
 
 # 编译Java文件
-CLASSPATH="$PLATFORM_DIR/android.jar:$OUT_DIR/classes:$REG_LIB_JAR:$REG_LIB_DIR/jetified-security-crypto-1.1.0-alpha06-runtime.jar:$REG_LIB_DIR/tink-android-1.8.0.jar"
+CLASSPATH="$PLATFORM_DIR/android.jar:$OUT_DIR/classes:$REG_LIB_JAR:$REG_LIB_DIR/jetified-security-crypto-1.1.0-alpha06-runtime.jar:$REG_LIB_DIR/tink-android-1.8.0.jar:$CORE_CLASSPATH:$(echo "$REG_LIB_LIBS" | tr '\n' ':')"
 
 "$JAVAC" -d "$OUT_DIR/classes" \
     -classpath "$CLASSPATH" \
@@ -197,6 +208,8 @@ CLASS_FILES=$(find "$OUT_DIR/classes" -name "*.class")
     "$REG_LIB_JAR" \
     "$REG_LIB_DIR/jetified-security-crypto-1.1.0-alpha06-runtime.jar" \
     "$REG_LIB_DIR/tink-android-1.8.0.jar" \
+    $CORE_JARS \
+    $REG_LIB_LIBS \
     --output "$OUT_DIR"
 
 if [ $? -ne 0 ]; then

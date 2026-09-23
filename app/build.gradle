@@ -37,3 +37,36 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
+
+// 仅为 build.sh 手工打包导出 androidx.core 运行时（含其传递依赖：
+// collection / annotation / lifecycle-runtime / versionedparcelable 等），
+// 供 AndroidManifest 中声明的 androidx.core.content.FileProvider 在运行时可用。
+// 不引入 appcompat / material，保持与历史 build.sh 产物一致。
+// 注意：AndroidX 库是 AAR，需解压取其中的 classes.jar 才能被 d8 打包。
+configurations {
+    coreRuntime
+}
+dependencies {
+    coreRuntime 'androidx.core:core:1.12.0'
+}
+task exportCoreJars {
+    doLast {
+        def outDir = file("${rootDir}/libs/core_exported")
+        outDir.mkdirs()
+        configurations.coreRuntime.files.each { File f ->
+            if (f.name.endsWith('.jar')) {
+                copy { from f; into outDir }
+            } else if (f.name.endsWith('.aar')) {
+                def aarBase = f.name.replaceFirst(/\.aar$/, '')
+                def tmp = File.createTempFile('aar_extract_', '_dir')
+                tmp.delete(); tmp.mkdirs()
+                copy { from zipTree(f); into tmp }
+                def cj = new File(tmp, 'classes.jar')
+                if (cj.exists()) {
+                    copy { from cj; into outDir; rename { "${aarBase}.jar" } }
+                }
+                tmp.deleteDir()
+            }
+        }
+    }
+}

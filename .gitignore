@@ -16,6 +16,7 @@ out/
 build_output/
 build/
 app/build/
+libs/core_exported/
 
 # Gradle files
 .gradle/
