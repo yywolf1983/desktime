@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="罗盘堪舆"
-                android:textColor="@color/gold"
+                android:textColor="@color/gold_light"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.08"/>
@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:text="当前方位"
                         android:textSize="16sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:textStyle="bold"
                         android:letterSpacing="0.1" />
 
@@ -100,7 +100,7 @@
                             android:layout_height="wrap_content"
                             android:text="坎(北)"
                             android:textSize="22sp"
-                            android:textColor="@color/gold"
+                            android:textColor="@color/gold_light"
                             android:textStyle="bold"
                             android:layout_marginRight="16dp" />
                         <TextView
@@ -227,7 +227,7 @@
                         android:layout_height="wrap_content"
                         android:text="八方形势宜忌"
                         android:textSize="13sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:layout_marginBottom="6dp"/>
@@ -569,7 +569,7 @@
                         android:layout_height="wrap_content"
                         android:text="山水形势"
                         android:textSize="13sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:textStyle="bold"
                         android:letterSpacing="0.05"
                         android:layout_marginBottom="6dp"/>
@@ -614,7 +614,7 @@
                             android:layout_height="wrap_content"
                             android:text="阴宅风水"
                             android:textSize="13sp"
-                            android:textColor="@color/gold"
+                            android:textColor="@color/gold_light"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"
                             android:layout_marginLeft="8dp"/>
@@ -653,7 +653,7 @@
                         android:layout_height="wrap_content"
                         android:text="专业研判"
                         android:textSize="16sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:textStyle="bold"
                         android:letterSpacing="0.1" />
                 </LinearLayout>
@@ -671,7 +671,7 @@
                         android:layout_height="wrap_content"
                         android:text="八宅吉凶"
                         android:textSize="13sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05" />
@@ -685,6 +685,7 @@
                         android:id="@+id/bazhaiDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:lineSpacingExtra="1dp"/>
                 </LinearLayout>
@@ -702,7 +703,7 @@
                         android:layout_height="wrap_content"
                         android:text="九星飞宫"
                         android:textSize="13sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05" />
@@ -716,6 +717,7 @@
                         android:id="@+id/jiuxingDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:lineSpacingExtra="1dp"/>
                 </LinearLayout>
@@ -733,7 +735,7 @@
                         android:layout_height="wrap_content"
                         android:text="八门遁法"
                         android:textSize="13sp"
-                        android:textColor="@color/gold"
+                        android:textColor="@color/gold_light"
                         android:layout_marginBottom="4dp"
                         android:textStyle="bold"
                         android:letterSpacing="0.05" />
@@ -747,6 +749,7 @@
                         android:id="@+id/bamenDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:lineSpacingExtra="1dp"/>
                 </LinearLayout>
