@@ -98,7 +98,11 @@ if [ -d "$REG_LIB_SRC" ]; then
     cp -r "$REG_LIB_SRC/layout/." "$MERGED_RES_DIR/layout/" 2>/dev/null || true
     cp -r "$REG_LIB_SRC/raw/." "$MERGED_RES_DIR/raw/" 2>/dev/null || true
     cp -r "$REG_LIB_SRC/drawable/." "$MERGED_RES_DIR/drawable/" 2>/dev/null || true
-    
+
+    # 复制 xml 目录（含 reggate_file_paths.xml，FileProvider 的 FILE_PROVIDER_PATHS 引用所需）
+    mkdir -p "$MERGED_RES_DIR/xml"
+    cp -r "$REG_LIB_SRC/xml/." "$MERGED_RES_DIR/xml/" 2>/dev/null || true
+
     # 复制 values 目录中的 reggate 资源（字符串、颜色、主题），重命名避免覆盖应用自身资源
     mkdir -p "$MERGED_RES_DIR/values"
     for vf in "$REG_LIB_SRC/values/"*.xml; do

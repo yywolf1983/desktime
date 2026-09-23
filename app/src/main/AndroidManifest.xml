@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <!-- 注册库：扫描激活码二维码所需权限/特性 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
     <application
         android:name=".TimeDisplayApplication"
         android:allowBackup="true"
@@ -86,6 +91,26 @@
             android:name="com.reggate.lib.ExpiredNagActivity"
             android:exported="false"
             android:theme="@style/Theme.RegGate.Dialog" />
+
+        <!-- 注册库：二维码扫码界面（字段与 AAR 内声明一致，保证手动 build.sh 编译亦包含） -->
+        <activity
+            android:name="com.reggate.lib.PortraitCaptureActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <!-- 注册库：安装码图片分享 FileProvider。
+             authority 与库代码 getPackageName()+".reggate.fileprovider" 一致；
+             Gradle 合并时按 authority 同值合并（不冲突），手动 build.sh 版亦直接提供。 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.reggate.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:name">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/reggate_file_paths" />
+        </provider>
+
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
