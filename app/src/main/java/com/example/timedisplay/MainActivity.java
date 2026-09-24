@@ -1240,6 +1240,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadRotationLockState();
         hideSystemBars();
         updateDateTime();
         handler.removeCallbacks(timeRunnable);
@@ -1745,22 +1746,13 @@ public class MainActivity extends Activity {
             android.widget.Toast.makeText(this, "已解锁横竖屏", android.widget.Toast.LENGTH_SHORT).show();
         } else {
             isRotationLocked = true;
-            int currentRotation = getWindowManager().getDefaultDisplay().getRotation();
-            switch (currentRotation) {
-                case Surface.ROTATION_0:
-                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    break;
-                case Surface.ROTATION_90:
-                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                    break;
-                case Surface.ROTATION_180:
-                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-                    break;
-                case Surface.ROTATION_270:
-                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-                    break;
-                default:
-                    lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            // 用当前 UI 的宽高方向判定（比 getRotation() 的传感器原始角度更可靠），
+            // 避免横屏下读到的旋转角度被误判成竖屏、从而把“横屏”锁成“竖屏”。
+            int currentUiOrientation = getResources().getConfiguration().orientation;
+            if (currentUiOrientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+                lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+            } else {
+                lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
             }
             setRequestedOrientation(lockedOrientation);
             android.widget.Toast.makeText(this, "已锁定当前方向", android.widget.Toast.LENGTH_SHORT).show();
