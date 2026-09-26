@@ -1735,7 +1735,9 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
         editor.putBoolean("rotationLocked", isRotationLocked);
         editor.putInt("lockedOrientation", lockedOrientation);
-        editor.apply();
+        // 用同步 commit() 而非异步 apply()：锁定后若立刻跳转子页面或系统重建 Activity，
+        // 新页面 onCreate 读取时必须已落盘，否则会读到“未锁定”而跟随传感器导致偶发失效。
+        editor.commit();
     }
 
     private void toggleRotationLock() {
