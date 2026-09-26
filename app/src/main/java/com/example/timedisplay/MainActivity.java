@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
     private android.os.Handler handler;
     private Runnable timeRunnable;
     private TextView copyButton;
-    private TextView rotationLockButton;
+    private android.widget.ImageView rotationLockButton;
 
     // 顶部图标行容器：锁 / 电池 / 倒计时 / 功能入口 统一水平排列
     private LinearLayout topBar;
@@ -90,9 +90,8 @@ public class MainActivity extends Activity {
     private TextView resetTimeButton;
     private TextView auspiciousButton;
 
-    // 横竖屏锁定状态
-    private boolean isRotationLocked = false;
-    private int lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+    // 当前固定方向（横屏/竖屏）；不自动跟随系统，靠旋转按钮手动切换并锁死
+    private int lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
     // 上一次的时间值，用于比较哪些部分发生了变化
     private int lastHour1 = -1;
@@ -1325,21 +1324,29 @@ public class MainActivity extends Activity {
 
         batteryContainer.setPadding(dpToPx(8), dpToPx(3), dpToPx(10), dpToPx(3));
 
-        // 锁屏按钮：独立图标，作为首行第一个元素（与其它图标同尺寸）
-        // 锁屏按钮独立尺寸，不跟随 iconSize；注意它已是像素值，不能再套 dpToPx
-        final int lockSize = dpToPx(22);
-        rotationLockButton = new TextView(this);
-        rotationLockButton.setText("🔓");
-        rotationLockButton.setTextSize(18);
-        rotationLockButton.setTextColor(getResources().getColor(R.color.lock_icon));
-        rotationLockButton.setGravity(android.view.Gravity.CENTER);
-        rotationLockButton.setBackgroundResource(R.drawable.btn_round_transparent);
+        // 旋转按钮：与其它顶部图标同尺寸、同色、同点击态（金色 + 涟漪 + ImageView 精确居中）
+        rotationLockButton = new android.widget.ImageView(this);
+        rotationLockButton.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
+        rotationLockButton.setPadding(dpToPx(3), dpToPx(3), dpToPx(3), dpToPx(3));
+        try {
+            android.graphics.drawable.Drawable d = getResources().getDrawable(R.drawable.ic_rotate, getTheme());
+            if (d != null) {
+                d = d.mutate();
+                d.setTint(0xFFFFD27F);   // 金色，与功能入口/倒计时图标一致
+                rotationLockButton.setImageDrawable(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        android.util.TypedValue outSel = new android.util.TypedValue();
+        getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outSel, true);
+        if (outSel.resourceId != 0) {
+            rotationLockButton.setBackgroundResource(outSel.resourceId);
+        }
         rotationLockButton.setClickable(true);
         rotationLockButton.setFocusable(true);
-        rotationLockButton.setContentDescription("锁定/解锁横竖屏");
-        // iconSize 已是像素值，此处不能再套 dpToPx（否则会二次换算，
-        // 让锁屏按钮背景圈被放大约 density 倍，并把整行高度撑高）
-        LinearLayout.LayoutParams lockLp = new LinearLayout.LayoutParams(lockSize, lockSize);
+        rotationLockButton.setContentDescription("旋转屏幕");
+        LinearLayout.LayoutParams lockLp = new LinearLayout.LayoutParams(iconSize, iconSize);
         rotationLockButton.setLayoutParams(lockLp);
         topBar.addView(rotationLockButton);
 
@@ -1723,51 +1730,34 @@ public class MainActivity extends Activity {
 
     private void loadRotationLockState() {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        isRotationLocked = prefs.getBoolean("rotationLocked", false);
-        lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        
-        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-            setRequestedOrientation(lockedOrientation);
-        }
+        // 始终按保存的方向固定屏幕（不跟随系统）；默认竖屏
+        lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(lockedOrientation);
     }
 
     private void saveRotationLockState() {
         SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
-        editor.putBoolean("rotationLocked", isRotationLocked);
+        // 同步 commit() 落盘：旋转后若立刻跳转子页面或系统重建 Activity，
+        // 新页面读取时已生效，不会回退到跟随系统方向。
         editor.putInt("lockedOrientation", lockedOrientation);
-        // 用同步 commit() 而非异步 apply()：锁定后若立刻跳转子页面或系统重建 Activity，
-        // 新页面 onCreate 读取时必须已落盘，否则会读到“未锁定”而跟随传感器导致偶发失效。
         editor.commit();
     }
 
+    // 旋转按钮：在横屏/竖屏之间切换并固定；旋转后锁死当前方向，只有再次点击才会旋转
     private void toggleRotationLock() {
-        if (isRotationLocked) {
-            isRotationLocked = false;
-            lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-            android.widget.Toast.makeText(this, "已解锁横竖屏", android.widget.Toast.LENGTH_SHORT).show();
-        } else {
-            isRotationLocked = true;
-            // 用当前 UI 的宽高方向判定（比 getRotation() 的传感器原始角度更可靠），
-            // 避免横屏下读到的旋转角度被误判成竖屏、从而把“横屏”锁成“竖屏”。
-            int currentUiOrientation = getResources().getConfiguration().orientation;
-            if (currentUiOrientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
-                lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-            } else {
-                lockedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            }
-            setRequestedOrientation(lockedOrientation);
-            android.widget.Toast.makeText(this, "已锁定当前方向", android.widget.Toast.LENGTH_SHORT).show();
-        }
+        lockedOrientation = (lockedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        setRequestedOrientation(lockedOrientation);
         saveRotationLockState();
         updateRotationLockButton();
+        android.widget.Toast.makeText(this,
+                lockedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ? "已切换至横屏" : "已切换至竖屏",
+                android.widget.Toast.LENGTH_SHORT).show();
     }
 
     private void updateRotationLockButton() {
-        if (rotationLockButton != null) {
-            rotationLockButton.setText(isRotationLocked ? "🔒" : "🔓");
-            rotationLockButton.setTextColor(getResources().getColor(R.color.lock_icon));
-        }
+        // 旋转按钮图标固定为旋转箭头（金色），方向锁定由各页面方向本身体现，无需切换图标
     }
     
     private int getDaysInMonth(int year, int month) {

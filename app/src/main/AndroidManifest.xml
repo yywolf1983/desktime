@@ -32,7 +32,7 @@
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboardHidden|navigation"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -43,36 +43,36 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FullNinePalaceActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".StopwatchActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="behind"
             android:configChanges="orientation|screenSize|smallestScreenSize" />
         <activity
             android:name=".WuyunLiuqiActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".LuoPanActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".JieqiActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".DestinyActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".AuspiciousDayActivity"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="behind" />
 
         <activity
             android:name="com.reggate.lib.RegistrationGateActivity"

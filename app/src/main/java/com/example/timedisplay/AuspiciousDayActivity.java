@@ -70,12 +70,8 @@ public class AuspiciousDayActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         // 必须在 setContentView 之前应用方向锁定，避免进入后再切换方向
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
-        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-            setRequestedOrientation(lockedOrientation);
-        }
+        // 始终按保存的方向固定屏幕（不跟随系统），由旋转按钮手动切换
+        RotationLockUtil.apply(this);
 
         setContentView(R.layout.activity_auspicious_day);
 

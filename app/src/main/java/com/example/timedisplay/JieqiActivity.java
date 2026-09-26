@@ -47,12 +47,8 @@ public class JieqiActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
-        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-            setRequestedOrientation(lockedOrientation);
-        }
+        // 始终按保存的方向固定屏幕（不跟随系统），由旋转按钮手动切换
+        RotationLockUtil.apply(this);
 
         setContentView(R.layout.activity_jieqi);
 

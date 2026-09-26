@@ -25,12 +25,8 @@ public class SplashScreenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        boolean isRotationLocked = prefs.getBoolean("rotationLocked", false);
-        int lockedOrientation = prefs.getInt("lockedOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        if (isRotationLocked && lockedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-            setRequestedOrientation(lockedOrientation);
-        }
+        // 始终按保存的方向固定屏幕（不跟随系统），由旋转按钮手动切换
+        RotationLockUtil.apply(this);
 
         // 已经被（重建前的）实例触发过跳转：直接把门禁拉到前台并结束本次启动页，不再展示。
         if (sHandedOff.get()) {
