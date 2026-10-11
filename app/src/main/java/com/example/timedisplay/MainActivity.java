@@ -194,6 +194,13 @@ public class MainActivity extends Activity {
         ninePalacePanel.setOnClickListener(openFullNinePalace);
         ninePalaceChevron.setOnClickListener(openFullNinePalace);
 
+        // 九宫可手动旋转改变时辰;初始化九宫所代表的当前实时时辰
+        ninePalacePanel.setOnBranchChangeListener(branch -> onNinePalaceBranchChanged(branch));
+        Calendar initCal = Calendar.getInstance();
+        int initBranch = getTimeBranch(initCal.get(Calendar.HOUR_OF_DAY), initCal.get(Calendar.MINUTE));
+        ninePalacePanel.initBranch(initBranch);
+        lastShownBranch = initBranch;
+
         // 罗盘解释点击改由首页顶部入口胶囊按钮进入
 
         // 五运六气改由首页顶部入口胶囊按钮进入
@@ -285,6 +292,17 @@ public class MainActivity extends Activity {
 
         int currentHour = activeCalendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = activeCalendar.get(Calendar.MINUTE);
+
+        // 实时模式下,当前时间跨过时辰边界时重排九宫并播放打散重排动画(自定义模式由手动控制)
+        if (!isCustomTime && ninePalacePanel != null) {
+            int realBranch = getTimeBranch(currentHour, currentMinute);
+            if (realBranch != lastShownBranch) {
+                lastShownBranch = realBranch;
+                updateFourPillars(realCalendar.getTime()); // 重排到新时辰
+                ninePalacePanel.initBranch(realBranch);    // 同步九宫基准并归正
+                ninePalacePanel.playRecompose();           // 打散重排动画
+            }
+        }
 
         int currentHour1 = currentHour / 10;
         int currentHour2 = currentHour % 10;
@@ -398,6 +416,48 @@ public class MainActivity extends Activity {
         // 立即更新四柱和排盘
         updateFourPillars(new Date());
         updateDateTime();
+        // 九宫重排回当前实时时辰
+        if (ninePalacePanel != null) {
+            Calendar nowC = Calendar.getInstance();
+            lastShownBranch = getTimeBranch(nowC.get(Calendar.HOUR_OF_DAY), nowC.get(Calendar.MINUTE));
+            ninePalacePanel.initBranch(lastShownBranch);
+            ninePalacePanel.playRecompose();
+        }
+    }
+
+    // 由小时/分钟求时辰索引(0=子 ... 11=亥),复用 calculateTimePillar 的地支
+    private int getTimeBranch(int hour, int minute) {
+        String pillar = calculateTimePillar(hour, minute, "甲");
+        String zhi = pillar.length() >= 2 ? pillar.substring(1, 2) : "子";
+        int idx = java.util.Arrays.asList(DIZHI).indexOf(zhi);
+        return idx < 0 ? 0 : idx;
+    }
+
+    // 当前已呈现(重排)的时辰索引,避免重复触发动画
+    private int lastShownBranch = -1;
+
+    // 九宫手动旋转改变时辰后:与「修改时间」一致地拨动时间(可跨日期)并重排
+    private void onNinePalaceBranchChanged(int branch) {
+        // 计算相对当前已显示时辰的最短偏移(可正可负,范围 -6..6),据此拨动时间,从而能跨日期
+        int prev = (lastShownBranch >= 0) ? lastShownBranch : getTimeBranch(
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                Calendar.getInstance().get(Calendar.MINUTE));
+        int delta = ((branch - prev + 18) % 12) - 6; // 最短路径
+        Calendar base = (isCustomTime && customCalendar != null) ? customCalendar : Calendar.getInstance();
+        customCalendar = (Calendar) base.clone();
+        customCalendar.add(Calendar.HOUR_OF_DAY, delta * 2); // 每个时辰 = 2 小时,可正可负,自动跨日
+        customCalendar.set(Calendar.MINUTE, 0);
+        customCalendar.set(Calendar.SECOND, 0);
+        customCalendar.set(Calendar.MILLISECOND, 0);
+        isCustomTime = true;
+        TimeState.setCustomCalendar(customCalendar);
+        if (resetTimeButton != null) {
+            resetTimeButton.setVisibility(View.VISIBLE);
+        }
+        updateFourPillars(customCalendar.getTime());
+        updateDateTime();
+        lastShownBranch = branch;
+        ninePalacePanel.playRecompose();
     }
 
     // 进入吉日查询页（以当前显示日期为基准，向后推 180 天）

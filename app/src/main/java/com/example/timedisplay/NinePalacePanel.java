@@ -4,12 +4,43 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.animation.ValueAnimator;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
+
+import java.util.Random;
 
 public class NinePalacePanel extends View {
     private View.OnClickListener onClickListener;
+
+    // 旋转/时辰联动
+    public interface OnBranchChangeListener {
+        /** 九宫旋转吸附后所对应的时辰索引: 0=子,1=丑,...,11=亥 */
+        void onBranchChanged(int branch);
+    }
+    private OnBranchChangeListener branchListener;
+    private float lastAngle;
+    private float dragStartRotation;
+    private float accumMoveDeg;
+    private boolean dragging;
+    private int displayBranch = 0;
+    private static final float DRAG_TRIGGER_DEG = 6f;
+
+    // 打散重排动画状态:时辰切换时每个宫位散开飞入归位
+    private ValueAnimator recomposeAnim;
+    private float recomposeProgress = 1f;
+    private final float[] scatterAngle = new float[9];
+    private final float[] scatterScale = new float[9];
+    private final float[] scatterFX = new float[9];
+    private final float[] scatterFY = new float[9];
+    private static final long RECOMPOSE_DURATION = 720L;
+    private final Random recomposeRandom = new Random();
+
+    // 法阵重组特效画笔(玄感 / 科技感)
+    private final Paint ringPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint gridPaint;
     private Paint textPaint;
     private Paint centerPaint;
@@ -150,14 +181,43 @@ public class NinePalacePanel extends View {
 
         textPaint.setTextSize(cellSize * 0.15f);
 
+        // 打散重排动画期间整体淡入,避免突兀
+        boolean animating = recomposeProgress < 0.999f;
+        int layer = -1;
+        if (animating) {
+            int alpha = (int) (255 * Math.min(1f, recomposeProgress * 1.5f));
+            layer = canvas.saveLayerAlpha(0, 0, width, height, alpha, Canvas.ALL_SAVE_FLAG);
+            // 整体先偏旋再归正,增强转动感
+            canvas.rotate((1f - recomposeProgress) * 30f, width / 2f, height / 2f);
+            // 法阵重组特效:扩散金环 + 旋转八角星阵(玄感 + 科技感)
+            drawFormation(width, height, cellSize, recomposeProgress, canvas);
+        }
+
         for (int i = 0; i < 9; i++) {
             int row = PALACE_POSITIONS[i][0];
             int col = PALACE_POSITIONS[i][1];
-            
+
             float left = col * cellSize + padding;
             float top = row * cellSize + padding;
             float right = (col + 1) * cellSize - padding;
             float bottom = (row + 1) * cellSize - padding;
+
+            // 错峰归位进度:每个宫位依序飞入,灵动
+            float local = animating
+                    ? Math.min(1f, Math.max(0f, recomposeProgress * 1.5f - i * 0.05f))
+                    : 1f;
+            float angle = scatterAngle[i] * (1f - local);
+            float scale = scatterScale[i] + (1f - scatterScale[i]) * local;
+            float dx = scatterFX[i] * cellSize * (1f - local);
+            float dy = scatterFY[i] * cellSize * (1f - local);
+            float ccx = (col + 0.5f) * cellSize;
+            float ccy = (row + 0.5f) * cellSize;
+
+            canvas.save();
+            canvas.translate(ccx + dx, ccy + dy);
+            canvas.rotate(angle);
+            canvas.scale(scale, scale);
+            canvas.translate(-ccx, -ccy);
 
             String luck = "平";
             if (copyPalaceData != null && copyPalaceData[i][5] != null) {
@@ -214,7 +274,38 @@ public class NinePalacePanel extends View {
                 canvas.drawText(dataParts[2], x, y, textPaint);
             }
 
+            canvas.restore();
         }
+
+        if (layer != -1) canvas.restoreToCount(layer);
+    }
+
+    // 法阵重组特效:金色能量环扩散 + 旋转八角星阵,随进度淡出,营造奇门阵法重组的玄感与科技感
+    private void drawFormation(int width, int height, int cellSize, float p, Canvas canvas) {
+        float cx = width / 2f;
+        float cy = height / 2f;
+        ringPaint.setStyle(Paint.Style.STROKE);
+        ringPaint.setColor(COLOR_GOLD);
+        ringPaint.setStrokeWidth(2f);
+        int fade = (int) (255 * (1f - p));
+        // 两道由内向外扩散的金环
+        if (fade > 0) {
+            ringPaint.setAlpha(fade);
+            canvas.drawCircle(cx, cy, cellSize * (0.25f + p * 1.6f), ringPaint);
+            ringPaint.setAlpha((int) (fade * 0.6f));
+            canvas.drawCircle(cx, cy, cellSize * (0.1f + p * 1.1f), ringPaint);
+        }
+        // 旋转八角星阵(两个交错正方形),随进度旋转并放大淡出
+        ringPaint.setStrokeWidth(1.5f);
+        ringPaint.setAlpha((int) (fade * 0.9f));
+        float side = cellSize * (0.45f + p * 1.3f);
+        float h = side / 2f;
+        canvas.save();
+        canvas.rotate(p * 120f, cx, cy);
+        canvas.drawRect(cx - h, cy - h, cx + h, cy + h, ringPaint);
+        canvas.rotate(45f, cx, cy);
+        canvas.drawRect(cx - h, cy - h, cx + h, cy + h, ringPaint);
+        canvas.restore();
     }
 
     // 仅在宫格尺寸变化时计算一次：渐变、字体度量、行高
@@ -353,15 +444,106 @@ public class NinePalacePanel extends View {
         this.onClickListener = l;
     }
     
-    // 处理触摸事件
+    // 处理触摸事件：拖动旋转九宫(改变时辰)，轻点仍打开详情
     @Override
-    public boolean onTouchEvent(android.view.MotionEvent event) {
-        if (event.getAction() == android.view.MotionEvent.ACTION_UP && onClickListener != null) {
-            onClickListener.onClick(this);
-            return true;
+    public boolean onTouchEvent(MotionEvent event) {
+        float cx = getWidth() / 2f;
+        float cy = getHeight() / 2f;
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                dragStartRotation = getRotation();
+                lastAngle = angleFromCenter(cx, cy, event.getX(), event.getY());
+                accumMoveDeg = 0f;
+                dragging = false;
+                return true;
+            case MotionEvent.ACTION_MOVE: {
+                float ang = angleFromCenter(cx, cy, event.getX(), event.getY());
+                float delta = normalizeDeg(ang - lastAngle);
+                lastAngle = ang;
+                accumMoveDeg += Math.abs(delta);
+                if (accumMoveDeg > DRAG_TRIGGER_DEG) dragging = true;
+                if (dragging) {
+                    applyTransform(getRotation() + delta);
+                }
+                return true;
+            }
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (dragging) {
+                    // 吸附到整时辰角度,但每次转动最多只切换一个时辰(步进感),拖不足半时辰则不切
+                    float snapped = Math.round(getRotation() / 30f) * 30f;
+                    int rawDelta = Math.round((snapped - dragStartRotation) / 30f);
+                    int deltaBranches = Math.max(-1, Math.min(1, rawDelta));
+                    setRotation(0f);
+                    setScaleX(1f);
+                    setScaleY(1f);
+                    if (deltaBranches != 0 && branchListener != null) {
+                        displayBranch = ((displayBranch + deltaBranches) % 12 + 12) % 12;
+                        branchListener.onBranchChanged(displayBranch);
+                    }
+                    return true;
+                } else {
+                    if (onClickListener != null) onClickListener.onClick(this);
+                    return true;
+                }
         }
         return super.onTouchEvent(event);
     }
+
+    // 应用旋转 + 缩放：旋转时适当缩小,避免方形对角溢出覆盖其它 UI
+    private void applyTransform(float rotation) {
+        setRotation(rotation);
+        float s = getScale(rotation);
+        setScaleX(s);
+        setScaleY(s);
+    }
+
+    private float getScale(float rotation) {
+        float norm = Math.abs(normalizeDeg(rotation));
+        float f = Math.min(1f, norm / 45f);
+        return 1f - 0.30f * f;
+    }
+
+    private float normalizeDeg(float deg) {
+        float d = deg % 360f;
+        if (d > 180f) d -= 360f;
+        if (d < -180f) d += 360f;
+        return d;
+    }
+
+    private float angleFromCenter(float cx, float cy, float x, float y) {
+        return (float) Math.toDegrees(Math.atan2(y - cy, x - cx));
+    }
+
+    /** 初始化九宫所代表的时辰(九宫正立 = 该时辰) */
+    public void initBranch(int branch) {
+        displayBranch = ((branch % 12) + 12) % 12;
+        applyTransform(0f);
+    }
+
+    /** 打散重排动画:每个宫位随机散开(带整圈旋转)后错峰飞入归位,用于时辰切换呈现 */
+    public void playRecompose() {
+        for (int i = 0; i < 9; i++) {
+            scatterAngle[i] = (recomposeRandom.nextFloat() * 2f - 1f) * 360f; // 整圈旋转飞入,转动感更强
+            scatterScale[i] = 0.1f + recomposeRandom.nextFloat() * 0.4f;
+            scatterFX[i] = (recomposeRandom.nextFloat() * 2f - 1f) * 0.9f;
+            scatterFY[i] = (recomposeRandom.nextFloat() * 2f - 1f) * 0.9f;
+        }
+        if (recomposeAnim != null) recomposeAnim.cancel();
+        recomposeProgress = 0f;
+        recomposeAnim = ValueAnimator.ofFloat(0f, 1f);
+        recomposeAnim.setDuration(RECOMPOSE_DURATION);
+        recomposeAnim.setInterpolator(new OvershootInterpolator(1.2f));
+        recomposeAnim.addUpdateListener(anim -> {
+            recomposeProgress = (float) anim.getAnimatedValue();
+            invalidate();
+        });
+        recomposeAnim.start();
+    }
+
+    public int getDisplayBranch() { return displayBranch; }
+
+    public void setOnBranchChangeListener(OnBranchChangeListener l) { this.branchListener = l; }
 
     // 计算奇门排盘（统一调用 QiMenCalculator，全 app 唯一的排盘算法实现）
     public void calculateQiMenPanel(String yearPillar, String monthPillar, String dayPillar, String timePillar, String jieqi, int dayInJieqi) {
