@@ -13,6 +13,9 @@ public class TimeDisplayApplication extends Application {
         RegGateConfig.init(this).mainActivity(MainActivity.class)
                 .exemptActivity(SplashScreenActivity.class).build();
 
+        // 全局屏幕策略：插电常亮；未充电 5 分钟无操作后熄屏（任意界面生效）
+        ScreenKeepOnController.getInstance().init(this);
+
         // 每次页面恢复(onResume)都强制应用方向锁定，作为兜底：
         // 进入子页面 / 从后台返回 / 系统重建 Activity 时，即使 onCreate 的锁定因异步落盘
         // 竞态未生效，这里也会重新纠正，避免“锁定后偶尔变竖屏/横屏”的偶发失效。
