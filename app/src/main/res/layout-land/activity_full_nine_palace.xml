@@ -474,7 +474,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="格局克应"
+                            android:text="格局克应 · 吉凶诸格"
                             android:textColor="@color/gold"
                             android:textSize="13sp"
                             android:textStyle="bold"

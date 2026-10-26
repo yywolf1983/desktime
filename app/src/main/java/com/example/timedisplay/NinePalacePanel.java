@@ -381,6 +381,7 @@ public class NinePalacePanel extends View {
     private String copyXunShou = "";
     private String copyZhiFu = "";
     private String copyZhiShi = "";
+    private int copyZhiShiPalace = -1;
     // 存储每宫完整的复制数据: [0]八神 [1]九星 [2]八门 [3]天盘天干 [4]地盘天干 [5]吉凶 [6]旺衰
     private String[][] copyPalaceData = new String[9][7];
 
@@ -428,6 +429,21 @@ public class NinePalacePanel extends View {
     public String getCopyXunShou() { return copyXunShou; }
     public String getCopyZhiFu() { return copyZhiFu; }
     public String getCopyZhiShi() { return copyZhiShi; }
+    public int getCopyZhiShiPalace() { return copyZhiShiPalace; }
+
+    /** 供首页格局判定使用：返回每宫八神、八门、天盘干、地盘干、九星（可为 null）。 */
+    public String[] getCopyGods() { return columnOf(copyPalaceData, 0); }
+    public String[] getCopyDoors() { return columnOf(copyPalaceData, 2); }
+    public String[] getCopyTianPan() { return columnOf(copyPalaceData, 3); }
+    public String[] getCopyDiPan() { return columnOf(copyPalaceData, 4); }
+    public String[] getCopyStars() { return columnOf(copyPalaceData, 1); }
+
+    private static String[] columnOf(String[][] src, int col) {
+        if (src == null) return null;
+        String[] out = new String[src.length];
+        for (int i = 0; i < src.length; i++) out[i] = src[i][col];
+        return out;
+    }
 
     // 设置亮度
     public void setBrightness(float brightness) {
@@ -558,6 +574,7 @@ public class NinePalacePanel extends View {
         copyXunShou = r.xunShou;
         copyZhiFu = r.zhiFuStar;
         copyZhiShi = r.zhiShiDoor;
+        copyZhiShiPalace = r.zhiShiPalace;
 
         // 计算九宫格数据（按照宫位顺序）
         String[] gongwei = {"坎", "坤", "震", "巽", "中", "乾", "兑", "艮", "离"};

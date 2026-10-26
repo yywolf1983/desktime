@@ -51,8 +51,8 @@ public class MainActivity extends Activity {
     private String currentJieqiName;
     public TextView fourPillarsTextView;
     public TextView timeFortuneTextView;
-    public TextView panExplanation;
     public TextView panStarTextView;
+    public TextView panGejuTextView;
     public NinePalacePanel ninePalacePanel;
     private android.widget.TextView ninePalaceChevron;
     private android.view.ViewGroup mainLayout;
@@ -124,8 +124,8 @@ public class MainActivity extends Activity {
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
         copyButton = findViewById(R.id.copyButton);
         timeFortuneTextView = findViewById(R.id.timeFortuneTextView);
-        panExplanation = findViewById(R.id.panExplanation);
         panStarTextView = findViewById(R.id.panStarTextView);
+        panGejuTextView = findViewById(R.id.panGejuTextView);
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
         ninePalaceChevron = (android.widget.TextView) findViewById(R.id.ninePalaceChevron);
         mainLayout = findViewById(R.id.mainLayout);
@@ -980,19 +980,28 @@ public class MainActivity extends Activity {
     
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
-        if (panExplanation != null && panStarTextView != null && ninePalacePanel != null) {
+        if (panStarTextView != null && ninePalacePanel != null) {
             String zhiFu = ninePalacePanel.getCopyZhiFu();
             String zhiShi = ninePalacePanel.getCopyZhiShi();
 
-            String luckLabel = ninePalacePanel.getZhiFuPalaceLuck();
-            String simpleMeaning = getSimpleMeaning(zhiFu, zhiShi);
-            String simpleAdvice = getSimpleAdviceByLabel(luckLabel);
-
             // 第二行：值符星义（灰色）
-            panStarTextView.setText(simpleMeaning);
+            panStarTextView.setText(getSimpleMeaning(zhiFu, zhiShi));
+        }
 
-            // 第三行：门义/建议（橙色），由首页图标按钮进入罗盘解析
-            panExplanation.setText(simpleAdvice);
+        // 第三行：格局克应（吉格绿色、凶格红色），与排盘页共用 QiMenGeJu 同一判定
+        if (panGejuTextView != null && ninePalacePanel != null) {
+            String[] tianPan = ninePalacePanel.getCopyTianPan();
+            String[] diPan = ninePalacePanel.getCopyDiPan();
+            String[] doors = ninePalacePanel.getCopyDoors();
+            String[] gods = ninePalacePanel.getCopyGods();
+            String[] stars = ninePalacePanel.getCopyStars();
+            String dGan = (dayPillar != null && dayPillar.length() >= 1) ? dayPillar.substring(0, 1) : null;
+            String tGan = (timePillar != null && timePillar.length() >= 1) ? timePillar.substring(0, 1) : null;
+            panGejuTextView.setText(android.text.Html.fromHtml(
+                QiMenGeJu.buildBriefGeJu(tianPan, diPan, doors, gods, stars, dGan, tGan, timePillar,
+                                         ninePalacePanel.getCopyZhiShiPalace(),
+                                         ninePalacePanel.getCopyXunShou()),
+                android.text.Html.FROM_HTML_MODE_LEGACY));
         }
     }
     
@@ -1074,39 +1083,6 @@ public class MainActivity extends Activity {
             return doorDesc + "，但" + starDesc;
         } else {
             return starDesc + "，" + doorDesc;
-        }
-    }
-    
-    private String getSimpleAdviceByLabel(String label) {
-        int score;
-        switch (label) {
-            case "大吉": score = 7; break;
-            case "吉":   score = 5; break;
-            case "平吉": score = 3; break;
-            case "平":   score = 1; break;
-            case "平凶": score = -2; break;
-            case "凶":   score = -4; break;
-            case "大凶": score = -7; break;
-            default:     score = 0;
-        }
-        return getLuckAdvice(score);
-    }
-
-    private String getLuckAdvice(int score) {
-        if (score >= 5) {
-            return "星门俱吉，可倾力举事";
-        } else if (score >= 3) {
-            return "吉星照临，宜启新猷";
-        } else if (score >= 1) {
-            return "星门尚可，宜循序进";
-        } else if (score >= -1) {
-            return "星门夷平，守常毋妄动";
-        } else if (score >= -3) {
-            return "星门渐衰，宜缓行观变";
-        } else if (score >= -5) {
-            return "星门乖违，宜韬光守晦";
-        } else {
-            return "星门俱凶，宜静守俟时";
         }
     }
     

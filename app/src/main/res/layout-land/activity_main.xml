@@ -272,21 +272,22 @@
                                 android:paddingHorizontal="4dp"
                                 tools:text="文星主事，利学业文书" />
 
-                            <!-- 第5行: 八门/建议 -->
+                            <!-- 第5行: 格局克应 -->
                             <TextView
-                                android:id="@+id/panExplanation"
+                                android:id="@+id/panGejuTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:textColor="@color/jieqi_orange"
+                                android:maxLines="2"
+                                android:textSize="11sp"
+                                android:textColor="@color/explanation_gray"
                                 android:fontFamily="sans-serif-light"
                                 android:gravity="center"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="1dp"
-                                android:letterSpacing="0.06"
+                                android:layout_marginTop="3dp"
+                                android:letterSpacing="0.05"
                                 android:lineSpacingExtra="2dp"
                                 android:paddingHorizontal="4dp"
-                                tools:text="开门通达，诸事可成" />
+                                tools:text="吉｜青龙回首、飞鸟跌穴　凶｜朱雀投江" />
 
                         </LinearLayout>
 

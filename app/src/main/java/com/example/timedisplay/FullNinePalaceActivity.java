@@ -839,10 +839,12 @@ public class FullNinePalaceActivity extends Activity {
                 android.text.Html.FROM_HTML_MODE_LEGACY));
         }
         
-        // 格局克应：逐宫天盘加地盘之格，并总列击刑、门迫、入墓、五不遇之忌
+        // 格局克应：十干克应八十一格 + 经典格局（三奇得使、玉女守门、天网四张等）+ 忌例
         if (expGejuKeying != null) {
             expGejuKeying.setText(android.text.Html.fromHtml(
-                buildGeJuKeying(tianPan, diPanTianGan, eightDoors, PALACE_NAMES, DIRECTIONS, dayGan, timeGan),
+                buildGeJuKeying(tianPan, diPanTianGan, eightDoors, eightGods, nineStars,
+                                PALACE_NAMES, DIRECTIONS, dayGan, timeGan, timePillar,
+                                zhiShiPalace, xunShou),
                 android.text.Html.FROM_HTML_MODE_LEGACY));
         }
 
@@ -1043,32 +1045,11 @@ public class FullNinePalaceActivity extends Activity {
      * 注：甲遁于六仪，故「甲加丙」即天盘戊加地盘丙；「丙加甲」即天盘丙加地盘戊。
      * {天盘干, 地盘干, 格名, 吉凶, 原文}
      */
-    private static final String[][] KE_YING_GE = {
-        {"戊", "丙", "青龙反首", "吉", "甲加丙为青龙反首，而动作无阻"},
-        {"丙", "戊", "飞鸟跌穴", "吉", "丙加甲为飞鸟跌穴，而运用有成"},
-        {"戊", "丁", "青龙耀明", "吉", "戊加丁奇，富贵荣耀"},
-        {"丁", "戊", "青龙转光", "吉", "青龙转光，邑长县令"},
-        {"乙", "丙", "奇仪顺遂", "吉", "乙丙相生，奇仪顺遂，谋为多成"},
-        {"丙", "乙", "日月并行", "吉", "丙乙相会，日月并行，显达可期"},
-        {"乙", "辛", "青龙逃走", "凶", "乙加辛是青龙逃走，而财物废坠"},
-        {"辛", "乙", "白虎猖狂", "凶", "辛加乙是白虎猖狂，而身体毁伤"},
-        {"丁", "癸", "朱雀投江", "凶", "丁加癸为朱雀投江，而讼狱所由起也"},
-        {"癸", "丁", "螣蛇夭矫", "凶", "癸加丁为螣蛇夭矫，而忧惶之事必至也"},
-        {"庚", "癸", "大格", "凶", "天地大格，庚下加癸，萍迹四海"},
-        {"壬", "庚", "小格", "凶", "天地小格，壬上加庚，阻滞难行"},
-        {"庚", "己", "刑格", "凶", "庚加于己，士卒死于中途"},
-        {"己", "庚", "刑格", "凶", "己加于庚，将兵厄于危路"},
-        {"庚", "丙", "太白入荧", "凶", "庚加于丙，是为太白入荧惑，而贼必来"},
-        {"丙", "庚", "荧入太白", "凶", "丙加于庚，是为丙火入金乡，而贼必退也，此主客皆不利"}
-    };
+        private static final String[][] KE_YING_GE = QiMenGeJu.KE_YING_GE;
 
     /** 查十干克应格；无格则返回 null。 */
     private String[] findKeYingGe(String tianGan, String diGan) {
-        if (tianGan == null || diGan == null) return null;
-        for (String[] g : KE_YING_GE) {
-            if (g[0].equals(tianGan) && g[1].equals(diGan)) return g;
-        }
-        return null;
+        return QiMenGeJu.findKeYingGe(tianGan, diGan);
     }
 
     /**
@@ -1076,94 +1057,253 @@ public class FullNinePalaceActivity extends Activity {
      * 歌曰：「六仪击刑为太凶，甲子值符愁向东。戌刑在未申在寅，寅巳辰辰午刑午。」
      * 宫序：0坎 1坤 2震 3巽 4中 5乾 6兑 7艮 8离
      */
-    private static final String[][] JI_XING = {
-        {"戊", "震三", "子刑卯"}, {"己", "坤二", "戌刑未"}, {"庚", "艮八", "申刑寅"},
-        {"辛", "离九", "午自刑"}, {"壬", "巽四", "辰自刑"}, {"癸", "巽四", "寅刑巳"}
-    };
-    private static final int[] JI_XING_PALACE = {2, 1, 7, 8, 3, 3}; // 与 JI_XING 一一对应
+        private static final String[][] JI_XING = QiMenGeJu.JI_XING;
+    private static final int[] JI_XING_PALACE = QiMenGeJu.JI_XING_PALACE;
 
     /**
      * 三奇入墓：歌曰「乙日哪堪见未时，丙丁入火火墓戌」，即乙奇入坤二（未）、丙丁奇入乾六（戌）。
      */
     private boolean isQiRuMu(String tianGan, int palace) {
-        if (tianGan == null) return false;
-        if ("乙".equals(tianGan) && palace == 1) return true;
-        if (("丙".equals(tianGan) || "丁".equals(tianGan)) && palace == 5) return true;
-        return false;
+        return QiMenGeJu.isQiRuMu(tianGan, palace);
     }
 
     /** 门迫：门五行克宫五行，谓之迫。宫五行序：水土木木土金金土火；门五行：休水 生土 伤木 杜木 景火 死土 惊金 开金。 */
     private boolean isMenPo(String door, int palace) {
-        if (door == null || door.isEmpty()) return false;
-        String[] PALACE_WX = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
-        String doorWx = null;
-        switch (door) {
-            case "休": doorWx = "水"; break;
-            case "生": case "死": doorWx = "土"; break;
-            case "伤": case "杜": doorWx = "木"; break;
-            case "景": doorWx = "火"; break;
-            case "惊": case "开": doorWx = "金"; break;
-            default: return false;
-        }
-        return QiMenCalculator.isKe(doorWx, PALACE_WX[palace]);
+        return QiMenGeJu.isMenPo(door, palace);
     }
 
     /** 五不遇时：时干克日干。原文「时干克日，为五不遇，而定损其明」。 */
     private boolean isWuBuYuShi(String dayGan, String timeGan) {
-        if (dayGan == null || timeGan == null) return false;
-        String dw = QiMenCalculator.getWuXing(dayGan);
-        String tw = QiMenCalculator.getWuXing(timeGan);
-        return QiMenCalculator.isKe(tw, dw) && !tw.equals(dw);
+        return QiMenGeJu.isWuBuYuShi(dayGan, timeGan);
+    }
+
+    /** 地盘九星本位：坎天蓬 坤天芮 震天冲 巽天辅 中天禽 乾天心 兑天柱 艮天任 离天英。 */
+    private static final String[] BEN_WEI_STAR = QiMenGeJu.BEN_WEI_STAR;
+    /** 九宫对冲：坎↔离 坤↔艮 震↔兑 巽↔乾 中↔中。 */
+    private static final int[] DUI_CHONG = QiMenGeJu.DUI_CHONG;
+    /** 六甲遁仪：甲子戊 甲戌己 甲申庚 甲午辛 甲辰壬 甲寅癸。 */
+        private static final String[][] LIU_JIA_YI = QiMenGeJu.LIU_JIA_YI;
+    /** 时干入墓：歌曰「又有时干入墓宫，课中时下忌相逢。戊戌壬辰兼丙戌，癸未丁丑己同凶。」 */
+    private static final String[] SHI_GAN_RU_MU = QiMenGeJu.SHI_GAN_RU_MU;
+    /**
+     * 三奇得使：《烟波钓叟歌》「乙逢犬马丙鼠猴，六丁玉女骑龙虎」。
+     * 甲戌甲午乙为使，甲子甲申丙为使，甲辰甲寅丁为使。
+     * {天盘奇, 地盘仪, 格名, 六甲}
+     */
+        private static final String[][] SAN_QI_DE_SHI = QiMenGeJu.SAN_QI_DE_SHI;
+    /** 得使而带微疵者。原文「乙奇加甲午辛乃青龙逃走，丙奇加甲申庚乃荧入太白，丁奇加甲寅癸乃朱雀投江，凡此三者尚有微疵不吉。」 */
+        private static final String[][] DE_SHI_WEI_CI = QiMenGeJu.DE_SHI_WEI_CI;
+    /**
+     * 三奇贵人升殿 / 三奇受制。
+     * 升殿：乙奇临震（日出扶桑）、丙奇临离（月照端门）、丁奇临兑（贵人升殿）。
+     * 受制：乙奇临乾（木入金乡）、丙奇临坎（火入水乡）。王璋曰「此谓三奇受制，万事不可举也。」
+     */
+        private static final String[][] SAN_QI_LIN_GONG = QiMenGeJu.SAN_QI_LIN_GONG;
+
+    /** 由旬首（如「甲子」）取其遁仪（如「戊」）。 */
+    private String liuJiaYi(String xunShou) {
+        return QiMenGeJu.liuJiaYi(xunShou);
+    }
+
+    /** 吉凶配色：吉绿、凶红、平黄。 */
+    private String luckColor(String luck) {
+        return QiMenGeJu.luckColor(luck);
     }
 
     /**
-     * 构建「格局克应」卡片：逐宫列天盘加地盘之格，并总列击刑、门迫、入墓、五不遇之忌。
+     * 构建「格局克应」卡片。
+     * 一、十干克应（天盘干加地盘干，凡八十一格）逐宫列之；
+     * 二、经典格局：三奇得使、玉女守门、天网四张、伏宫、飞宫、悖格、伏吟、反吟、三奇升殿受制；
+     * 三、忌例：六仪击刑、门迫、三奇入墓、五不遇时、时干入墓。
      */
-    private String buildGeJuKeying(String[] tianPan, String[] diPan, String[] doors,
-                                   String[] PALACE_NAMES, String[] DIRECTIONS,
-                                   String dayGan, String timeGan) {
+    private String buildGeJuKeying(String[] tianPan, String[] diPan, String[] doors, String[] eightGods,
+                                   String[] nineStars, String[] PALACE_NAMES, String[] DIRECTIONS,
+                                   String dayGan, String timeGan, String timePillar,
+                                   int zhiShiPalace, String xunShou) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<font color='#7C8C9C'>《秘笈》曰：「甲加丙为青龙反首，而动作无阻；丙加甲为飞鸟跌穴，")
-          .append("而运用有成；乙加辛是青龙逃走；辛加乙是白虎猖狂；丁加癸为朱雀投江；癸加丁为螣蛇夭矫。」</font><br/><br/>");
-
         java.util.ArrayList<String> jiList = new java.util.ArrayList<>();
         java.util.ArrayList<String> xiongList = new java.util.ArrayList<>();
+
+        sb.append("<font color='#CCB866'><b>一、十干克应</b></font><br/>");
+        sb.append("<font color='#7C8C9C'>《秘笈》曰：「甲加丙为青龙反首，而动作无阻；丙加甲为飞鸟跌穴，")
+          .append("而运用有成；乙加辛是青龙逃走；辛加乙是白虎猖狂；丁加癸为朱雀投江；癸加丁为螣蛇夭矫。」</font><br/><br/>");
 
         for (int i = 0; i < 9; i++) {
             String tp = tianPan[i];
             String dp = diPan[i];
+            if (tp == null || dp == null) continue;
             String[] ge = findKeYingGe(tp, dp);
             boolean isPo = isMenPo(doors[i], i);
             boolean isMu = isQiRuMu(tp, i);
-            if (ge == null && !isPo && !isMu) continue;
 
             sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
             sb.append("<font color='#E6C46A'>").append(tp).append("加").append(dp).append("</font>");
             if (ge != null) {
-                String color = "吉".equals(ge[3]) ? "#3FA34D" : "#E0593B";
-                sb.append("　<font color='").append(color).append("'><b>").append(ge[2])
+                sb.append("　<font color='").append(luckColor(ge[3])).append("'><b>").append(ge[2])
                   .append("</b>（").append(ge[3]).append("）</font>");
                 if ("吉".equals(ge[3])) {
-                    jiList.add(PALACE_NAMES[i] + ge[2]);
-                } else {
-                    xiongList.add(PALACE_NAMES[i] + ge[2]);
+                    if (!jiList.contains(ge[2])) jiList.add(ge[2]);
+                } else if ("凶".equals(ge[3])) {
+                    if (!xiongList.contains(ge[2])) xiongList.add(ge[2]);
                 }
+                sb.append("<br/><font color='#7C8C9C'>　").append(ge[4]).append("</font>");
             }
             if (isMu) {
-                sb.append("　<font color='#E0593B'>三奇入墓</font>");
-                xiongList.add(PALACE_NAMES[i] + "奇入墓");
+                sb.append("<br/>　<font color='#E0593B'>三奇入墓</font><font color='#7C8C9C'>　乙奇临坤、丙丁临乾，入墓则不可举兵</font>");
+                if (!xiongList.contains("三奇入墓")) xiongList.add("三奇入墓");
             }
             if (isPo) {
-                sb.append("　<font color='#E0593B'>门迫</font>");
-                xiongList.add(PALACE_NAMES[i] + "门迫");
+                sb.append("<br/>　<font color='#E0593B'>门迫</font><font color='#7C8C9C'>　门制其宫为之迫，吉门被迫则吉事不成</font>");
+                if (!xiongList.contains("门迫")) xiongList.add("门迫");
             }
-            sb.append("<br/>");
-            if (ge != null) {
-                sb.append("<font color='#7C8C9C'>　").append(ge[4]).append("</font><br/>");
+            sb.append("<br/><br/>");
+        }
+
+        // ============ 二、经典格局 ============
+        StringBuilder jd = new StringBuilder();
+
+        // 九遁（天遁、地遁、人遁、神遁、鬼遁、风遁、云遁、龙遁、虎遁，皆为大吉）
+        for (int i = 0; i < 9; i++) {
+            String dun = QiMenGeJu.detectJiuDun(doors != null ? doors[i] : null, tianPan[i], diPan[i],
+                                                eightGods != null ? eightGods[i] : null, i);
+            if (dun == null) continue;
+            String[] d = QiMenGeJu.jiuDunDetail(dun);
+            jd.append("<font color='#3FA34D'><b>").append(dun).append("</b></font>　")
+              .append(PALACE_NAMES[i]).append("宫<br/>");
+            if (d != null) {
+                jd.append("<font color='#7C8C9C'>　").append(d[1]).append("，").append(d[2]).append("。</font>");
+            }
+            jd.append("<br/><br/>");
+            if (!jiList.contains(dun)) jiList.add(dun);
+        }
+
+        // 三奇得使
+        for (int i = 0; i < 9; i++) {
+            String tp = tianPan[i], dp = diPan[i];
+            if (tp == null || dp == null) continue;
+            for (String[] s : SAN_QI_DE_SHI) {
+                if (s[0].equals(tp) && s[1].equals(dp)) {
+                    jd.append("<font color='#3FA34D'><b>").append(s[2]).append("</b></font>　")
+                      .append(PALACE_NAMES[i]).append("宫　").append(tp).append("加").append(dp)
+                      .append("（").append(s[3]).append("）<br/>");
+                    jd.append("<font color='#7C8C9C'>　歌曰：「三奇得使诚堪使，六甲遇之非小补。」</font>");
+                    for (String[] w : DE_SHI_WEI_CI) {
+                        if (w[0].equals(tp) && w[1].equals(dp)) {
+                            jd.append("<br/><font color='#E6C46A'>　微疵：此格即").append(w[2])
+                              .append("，原文谓「尚有微疵不吉，如遇本旬直符同临其上，方可用之而吉也」。</font>");
+                        }
+                    }
+                    jd.append("<br/><br/>");
+                    if (!jiList.contains(s[2])) jiList.add(s[2]);
+                }
             }
         }
 
-        // 六仪击刑（天盘六仪加临所刑之宫）
+        // 玉女守门：地盘六丁守直使之门
+        if (zhiShiPalace >= 0 && zhiShiPalace < 9 && "丁".equals(diPan[zhiShiPalace])) {
+            jd.append("<font color='#3FA34D'><b>玉女守门</b></font>　值使落").append(PALACE_NAMES[zhiShiPalace])
+              .append("宫，地盘为丁<br/>");
+            jd.append("<font color='#7C8C9C'>　歌曰：「又有三奇游六仪，号为玉女守门扉。若作阴私和合事，请君但向此中推。」")
+              .append("丁为玉女而会天乙直使之门，利谋秘密阴私、营建宴会和乐之事。</font><br/><br/>");
+            if (!jiList.contains("玉女守门")) jiList.add("玉女守门");
+        }
+
+        // 天网四张：天上六癸所加，一二三四宫为低，六七八九宫为高
+        for (int i = 0; i < 9; i++) {
+            if (!"癸".equals(tianPan[i])) continue;
+            boolean gao = (i != 4) && (i + 1) >= 6;
+            jd.append("<font color='#E0593B'><b>天网四张</b></font>　").append(PALACE_NAMES[i])
+              .append("宫　六癸临").append(gao ? "六七八九宫，其网高" : "一二三四宫，其网低").append("<br/>");
+            jd.append("<font color='#7C8C9C'>　歌曰：「天网四张无路走，一二网低有路踪。」")
+              .append(gao ? "网高则万事不宜，虽合奇门吉宿亦不可用。" : "网低尚可匍匐而出，然亦宜隐伏。")
+              .append("</font><br/><br/>");
+            if (!xiongList.contains("天网四张")) xiongList.add("天网四张");
+        }
+
+        // 伏宫格、飞宫格（以本旬遁仪为直符）
+        String yi = liuJiaYi(xunShou);
+        if (yi != null) {
+            for (int i = 0; i < 9; i++) {
+                String tp = tianPan[i], dp = diPan[i];
+                if (tp == null || dp == null) continue;
+                if ("庚".equals(tp) && yi.equals(dp)) {
+                    jd.append("<font color='#E0593B'><b>伏宫格</b></font>　").append(PALACE_NAMES[i])
+                      .append("宫　六庚加直符<br/>");
+                    jd.append("<font color='#7C8C9C'>　歌曰：「庚加直符天乙伏，交锋多不利，为客少成功。」主客皆凶。</font><br/><br/>");
+                    if (!xiongList.contains("伏宫格")) xiongList.add("伏宫格");
+                }
+                if (yi.equals(tp) && "庚".equals(dp)) {
+                    jd.append("<font color='#E0593B'><b>飞宫格</b></font>　").append(PALACE_NAMES[i])
+                      .append("宫　直符加六庚<br/>");
+                    jd.append("<font color='#7C8C9C'>　歌曰：「直符加庚天乙飞，两敌不堪争，为主似不赢。」出则大将遭擒。</font><br/><br/>");
+                    if (!xiongList.contains("飞宫格")) xiongList.add("飞宫格");
+                }
+            }
+        }
+
+        // 悖格（勃格）：丙为勃，庚为格；丙加庚、丙加丙、丙加直符皆为悖
+        for (int i = 0; i < 9; i++) {
+            String tp = tianPan[i], dp = diPan[i];
+            if (tp == null || dp == null) continue;
+            if ("丙".equals(tp) && ("庚".equals(dp) || "丙".equals(dp) || (yi != null && yi.equals(dp)))) {
+                jd.append("<font color='#E0593B'><b>悖格</b></font>　").append(PALACE_NAMES[i])
+                  .append("宫　天丙加地").append(dp).append("<br/>");
+                jd.append("<font color='#7C8C9C'>　歌曰：「丙为勃兮庚为格，格则不通勃乱逆。」主纲纪紊乱，百事不宜。</font><br/><br/>");
+                if (!xiongList.contains("悖格")) xiongList.add("悖格");
+            }
+        }
+
+        // 伏吟、反吟（九星）
+        StringBuilder fy = new StringBuilder(), fany = new StringBuilder();
+        for (int i = 0; i < 9; i++) {
+            String star = nineStars[i];
+            if (star == null || star.isEmpty()) continue;
+            if (star.equals(BEN_WEI_STAR[i])) {
+                if (fy.length() > 0) fy.append("、");
+                fy.append(PALACE_NAMES[i]);
+            }
+            if (star.equals(BEN_WEI_STAR[DUI_CHONG[i]]) && DUI_CHONG[i] != i) {
+                if (fany.length() > 0) fany.append("、");
+                fany.append(PALACE_NAMES[i]);
+            }
+        }
+        if (fy.length() > 0) {
+            jd.append("<font color='#E0593B'><b>九星伏吟</b></font>　").append(fy).append("<br/>");
+            jd.append("<font color='#7C8C9C'>　歌曰：「就中伏吟为最凶，天蓬加着地天蓬。」主孝服损人口，惟宜收敛货财。</font><br/><br/>");
+            if (!xiongList.contains("九星伏吟")) xiongList.add("九星伏吟");
+        }
+        if (fany.length() > 0) {
+            jd.append("<font color='#E0593B'><b>九星反吟</b></font>　").append(fany).append("<br/>");
+            jd.append("<font color='#7C8C9C'>　歌曰：「天蓬若到天英上，须知即是反吟宫。」不利举兵动众，惟宜散恤仓库之事。</font><br/><br/>");
+            if (!xiongList.contains("九星反吟")) xiongList.add("九星反吟");
+        }
+
+        // 三奇升殿 / 三奇受制
+        for (int i = 0; i < 9; i++) {
+            String tp = tianPan[i];
+            if (tp == null) continue;
+            for (String[] s : SAN_QI_LIN_GONG) {
+                if (s[0].equals(tp) && Integer.parseInt(s[1]) == i) {
+                    jd.append("<font color='").append(luckColor(s[3])).append("'><b>").append(s[2])
+                      .append("</b></font>　").append(PALACE_NAMES[i]).append("宫　").append(tp).append("奇临此<br/>");
+                    jd.append("<font color='#7C8C9C'>　").append(s[4]).append("</font><br/><br/>");
+                    if ("吉".equals(s[3])) {
+                        if (!jiList.contains(s[2])) jiList.add(s[2]);
+                    } else {
+                        if (!xiongList.contains(s[2])) xiongList.add(s[2]);
+                    }
+                }
+            }
+        }
+
+        if (jd.length() > 0) {
+            sb.append("<font color='#CCB866'><b>二、经典格局</b></font><br/><br/>").append(jd);
+        }
+
+        // ============ 三、忌例 ============
+        StringBuilder ji = new StringBuilder();
+
+        // 六仪击刑
         StringBuilder jx = new StringBuilder();
         for (int k = 0; k < JI_XING.length; k++) {
             int p = JI_XING_PALACE[k];
@@ -1173,34 +1313,50 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
         if (jx.length() > 0) {
-            sb.append("<br/><font color='#E0593B'><b>六仪击刑</b></font>：").append(jx)
-              .append("<br/><font color='#7C8C9C'>　歌曰：「六仪击刑为太凶，甲子值符愁向东。」</font><br/>");
-            xiongList.add("六仪击刑");
+            ji.append("<font color='#E0593B'><b>六仪击刑</b></font>：").append(jx).append("<br/>");
+            ji.append("<font color='#7C8C9C'>　歌曰：「六仪击刑何太凶，甲子直符愁向东。」其时极凶，不可用事。</font><br/><br/>");
+            if (!xiongList.contains("六仪击刑")) xiongList.add("六仪击刑");
         }
 
         // 五不遇时
         if (isWuBuYuShi(dayGan, timeGan)) {
-            sb.append("<br/><font color='#E0593B'><b>五不遇时</b></font>：时干 ")
-              .append(timeGan).append(" 克日干 ").append(dayGan)
-              .append("<br/><font color='#7C8C9C'>　《秘笈》曰：「时干克日，为五不遇，而定损其明。」</font><br/>");
-            xiongList.add("五不遇时");
+            ji.append("<font color='#E0593B'><b>五不遇时</b></font>：时干 ").append(timeGan)
+              .append(" 克日干 ").append(dayGan).append("<br/>");
+            ji.append("<font color='#7C8C9C'>　歌曰：「五不遇时龙不精，号为日月损光明。」纵有奇门，不可行百事。</font><br/><br/>");
+            if (!xiongList.contains("五不遇时")) xiongList.add("五不遇时");
         }
 
-        sb.append("<br/>");
+        // 时干入墓
+        if (timePillar != null) {
+            for (String s : SHI_GAN_RU_MU) {
+                if (s.equals(timePillar)) {
+                    ji.append("<font color='#E0593B'><b>时干入墓</b></font>：时柱 ").append(timePillar).append("<br/>");
+                    ji.append("<font color='#7C8C9C'>　歌曰：「又有时干入墓宫，课中时下忌相逢。戊戌壬辰兼丙戌，癸未丁丑己同凶。」</font><br/><br/>");
+                    if (!xiongList.contains("时干入墓")) xiongList.add("时干入墓");
+                    break;
+                }
+            }
+        }
+
+        if (ji.length() > 0) {
+            sb.append("<font color='#CCB866'><b>三、忌例</b></font><br/><br/>").append(ji);
+        }
+
+        // ============ 汇总 ============
+        sb.append("<font color='#CCB866'><b>四、吉凶总断</b></font><br/>");
         if (!jiList.isEmpty()) {
-            sb.append("<font color='#3FA34D'>吉格</font>：");
-            sb.append(android.text.TextUtils.join("、", jiList)).append("<br/>");
+            sb.append("<font color='#3FA34D'>吉格</font>：")
+              .append(android.text.TextUtils.join("、", jiList)).append("<br/>");
         }
         if (!xiongList.isEmpty()) {
-            sb.append("<font color='#E0593B'>凶格</font>：");
-            sb.append(android.text.TextUtils.join("、", xiongList)).append("<br/>");
+            sb.append("<font color='#E0593B'>凶格</font>：")
+              .append(android.text.TextUtils.join("、", xiongList)).append("<br/>");
         }
         if (jiList.isEmpty() && xiongList.isEmpty()) {
-            sb.append("<font color='#7C8C9C'>本盘未见显著的十干克应吉格凶格，亦无击刑、门迫、入墓、五不遇之忌，")
-              .append("可依星门神之常理而行。</font><br/>");
+            sb.append("<font color='#7C8C9C'>本盘未见显著吉格凶格，可依星门神之常理而行。</font><br/>");
         }
         sb.append("<br/><font color='#7C8C9C'>《烟波钓叟歌》：「吉门仍又合三奇，大概须云百事宜；")
-          .append("其间倘或多凶吉，一篇未足究精微。」</font>");
+          .append("其间倘或多凶吉，一篇未足究精微。」又云：「更合从旁加检点，临宫不可有微疵。」</font>");
         return sb.toString();
     }
 
@@ -1320,7 +1476,7 @@ public class FullNinePalaceActivity extends Activity {
 
             String[] ge = findKeYingGe(tp, dp);
             if (ge != null) {
-                String geColor = "吉".equals(ge[3]) ? "#3FA34D" : "#E0593B";
+                String geColor = luckColor(ge[3]);
                 desc.append("<br/><font color='#7C8C9C'>格曰：</font><font color='").append(geColor)
                     .append("'><b>").append(ge[2]).append("</b>（").append(ge[3]).append("）</font>")
                     .append("<font color='#7C8C9C'>　").append(ge[4]).append("</font>");
