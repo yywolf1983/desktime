@@ -34,6 +34,7 @@ public class FullNinePalaceActivity extends Activity {
     private TextView expTianDiPanDesc;
     private TextView expPalacesDesc;
     private TextView expPaipanYiju;
+    private TextView expGejuKeying;
 
     // 九星/八门/八神 分栏详细解释（横竖屏一致）
     private TextView expNineStarsDesc;
@@ -108,6 +109,7 @@ public class FullNinePalaceActivity extends Activity {
         expTianDiPanDesc = (TextView) findViewById(R.id.expTianDiPanDesc);
         expPalacesDesc = (TextView) findViewById(R.id.expPalacesDesc);
         expPaipanYiju = (TextView) findViewById(R.id.expPaipanYiju);
+        expGejuKeying = (TextView) findViewById(R.id.expGejuKeying);
 
         expNineStarsDesc = (TextView) findViewById(R.id.expNineStarsDesc);
         expEightDoorsDesc = (TextView) findViewById(R.id.expEightDoorsDesc);
@@ -567,18 +569,14 @@ public class FullNinePalaceActivity extends Activity {
 
 
     
+    /** 九星吉凶配色，依《三元经》品级：上吉绿、次吉浅绿、小凶黄、大凶红。 */
     private String getStarLuckColor(String star) {
         if (star == null) return "#E6C46A";
         switch (star) {
-            case "天蓬": return "#3FA34D";
-            case "天任": return "#3FA34D";
-            case "天冲": return "#E0593B";
-            case "天辅": return "#3FA34D";
-            case "天英": return "#E0593B";
-            case "天芮": return "#F3BA66";
-            case "天柱": return "#E6C46A";
-            case "天心": return "#3FA34D";
-            case "天禽": return "#3FA34D";
+            case "天辅": case "天禽": case "天心": return "#3FA34D"; // 上吉
+            case "天冲": case "天任": return "#7FBF5F";             // 次吉
+            case "天柱": case "天英": return "#E6C46A";             // 小凶
+            case "天蓬": case "天芮": return "#E0593B";             // 大凶
             default: return "#E6C46A";
         }
     }
@@ -602,14 +600,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getDoorLuckLevel(String door) {
         if (door == null || door.isEmpty()) return "";
         switch (door) {
-            case "开": return "吉·大开大合";
-            case "休": return "吉·休养生息";
-            case "生": return "吉·生机勃发";
-            case "伤": return "凶·伤害损耗";
-            case "杜": return "平·闭塞不通";
-            case "景": return "平·光明假象";
-            case "死": return "凶·闭塞不通";
-            case "惊": return "凶·惊恐怪异";
+            case "开": return "吉门·谒贵求谋";
+            case "休": return "吉门·赴官迁徙";
+            case "生": return "吉门·求财造作";
+            case "伤": return "凶门·损伤争斗";
+            case "杜": return "平门·藏形避难";
+            case "景": return "平门·文书求名";
+            case "死": return "凶门·衰败收敛";
+            case "惊": return "凶门·惊疑词讼";
             default: return "";
         }
     }
@@ -618,14 +616,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getGodBrief(String god) {
         if (god == null || god.isEmpty()) return "";
         switch (god) {
-            case "值符": return "吉神之首";
-            case "螣蛇": return "虚惊怪异";
-            case "太阴": return "荫蔽暗助";
-            case "六合": return "和合婚姻";
-            case "白虎": return "凶险道路";
-            case "玄武": return "盗贼私谋";
-            case "九地": return "柔顺守势";
-            case "九天": return "刚健威武";
+            case "值符": return "百恶消散";
+            case "螣蛇": return "惊恐怪异";
+            case "太阴": return "阴匿暗助";
+            case "六合": return "婚姻和合";
+            case "白虎": return "兵戈死丧";
+            case "玄武": return "盗贼逃亡";
+            case "九地": return "柔顺潜藏";
+            case "九天": return "扬兵显达";
             default: return "";
         }
     }
@@ -675,16 +673,19 @@ public class FullNinePalaceActivity extends Activity {
         String dayZhi = dayPillar.substring(1, 2);
         
         StringBuilder sbBasic = new StringBuilder();
-        sbBasic.append("<font color='#CCB866'><b>").append(jieqi).append(" · ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局</b></font><br/><br/>");
+        sbBasic.append("<font color='#CCB866'><b>").append(jieqi).append(" · ").append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局</b></font><br/>");
         
-        sbBasic.append("📆 旬首 <font color='#E6C46A'><b>").append(xunShou).append("</b></font> · 空亡 <font color='#F3BA66'><b>").append(kongWang).append("</b></font><br/>");
+        sbBasic.append("　《秘笈》曰：<font color='#7C8C9C'>「六甲为时首，而应局斯灵。」</font><br/><br/>");
+
+        sbBasic.append("📆 旬首 <font color='#E6C46A'><b>").append(xunShou).append("</b></font>　空亡 <font color='#F3BA66'><b>").append(kongWang).append("</b></font><br/>");
         sbBasic.append("<font color='#7C8C9C'>").append(getKongWangExplanation(kongWang)).append("</font><br/><br/>");
         
         sbBasic.append("🐴 马星 <font color='#E6C46A'><b>").append(maXing).append("</b></font><br/>");
         sbBasic.append("<font color='#7C8C9C'>").append(getMaXingExplanation(maXing)).append("</font><br/><br/>");
         
-        sbBasic.append("<font color='#CCB866'><b>旺衰判断</b></font><br/>");
-        sbBasic.append("<font color='#7C8C9C'>").append(getWangCuiDescription(wangCui, riGanPalace)).append("</font>");
+        sbBasic.append("<font color='#CCB866'><b>旺相休囚</b></font><br/>");
+        sbBasic.append("<font color='#7C8C9C'>").append(getWangCuiDescription(wangCui, riGanPalace)).append("</font><br/>");
+        sbBasic.append("<font color='#7C8C9C'>　《烟波钓叟歌》：「与我同行即为相，我生之月诚为旺，废于父母休于财，囚于官鬼真不妄。」</font>");
         expBasic.setText(android.text.Html.fromHtml(sbBasic.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         if (expSummary != null) {
@@ -694,11 +695,16 @@ public class FullNinePalaceActivity extends Activity {
         StringBuilder sbZhifuZhishi = new StringBuilder();
         String zhiFuColor = getStarLuckColor(zhiFuStar);
         String zhiShiColor = getDoorLuckColor(zhiShiDoor);
-        sbZhifuZhishi.append("值符：<font color='").append(zhiFuColor).append("'>").append(zhiFuStar).append("星</font>").append("落").append(PALACE_NAMES[zhiFuPalace]).append("<br/>");
-        sbZhifuZhishi.append("值使：<font color='").append(zhiShiColor).append("'>").append(zhiShiDoor).append("门</font>").append("落").append(PALACE_NAMES[zhiShiPalace]);
+        sbZhifuZhishi.append("值符：<font color='").append(zhiFuColor).append("'>").append(zhiFuStar).append("星</font>")
+          .append("（").append(getStarGrade(zhiFuStar)).append("）落").append(PALACE_NAMES[zhiFuPalace])
+          .append("<font color='#7C8C9C'>　九星之领袖，所到之处百恶消散</font><br/>");
+        sbZhifuZhishi.append("值使：<font color='").append(zhiShiColor).append("'>").append(zhiShiDoor).append("门</font>")
+          .append("（").append(getDoorGrade(zhiShiDoor)).append("）落").append(PALACE_NAMES[zhiShiPalace])
+          .append("<font color='#7C8C9C'>　八门之枢机，用事之要</font>");
         expZhifuZhishi.setText(android.text.Html.fromHtml(sbZhifuZhishi.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbGan = new StringBuilder();
+        sbGan.append("<font color='#7C8C9C'>日干为人，时干为事，观其落宫与生克，以定主客。</font><br/>");
         sbGan.append("日干 ").append(dayGan).append(dayZhi).append("(").append(riGanWuXing).append(")").append("落").append(riGanPalace >= 0 ? PALACE_NAMES[riGanPalace] : "--").append("<br/>");
         sbGan.append("时干 ").append(timeGan).append(timeZhi).append("(").append(shiGanWuXing).append(")").append("落").append(shiGanPalace >= 0 ? PALACE_NAMES[shiGanPalace] : "--").append("<br/>");
         String riShiRelation = getRiShiRelationship(dayGan, timeGan);
@@ -759,13 +765,15 @@ public class FullNinePalaceActivity extends Activity {
             }
         }
         
-        if (luckyDirections.length() > 0) sbDirection.append("<font color='#3FA34D'>吉方</font>：").append(luckyDirections).append("<br/>");
-        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#E6C46A'>平方</font>：").append(neutralDirections).append("<br/>");
-        if (unluckyDirections.length() > 0) sbDirection.append("<font color='#E0593B'>凶方</font>：").append(unluckyDirections).append("<br/>");
+        sbDirection.append("<font color='#7C8C9C'>《秘笈》曰：「九天之上好扬兵，九地潜藏可立营，伏兵但向太阴位，若逢六合利逃形。」")
+          .append("三吉门所在之方，为出行谋事之所宜。</font><br/><br/>");
+        if (luckyDirections.length() > 0) sbDirection.append("<font color='#3FA34D'>吉方</font>：").append(luckyDirections).append("（开休生三吉门）<br/>");
+        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#E6C46A'>平方</font>：").append(neutralDirections).append("（杜景二门）<br/>");
+        if (unluckyDirections.length() > 0) sbDirection.append("<font color='#E0593B'>凶方</font>：").append(unluckyDirections).append("（死惊伤三凶门）<br/>");
 
         sbDirection.append("<br/>");
         sbDirection.append("<b>旺相休囚死分布：</b><br/>");
-        // 紧凑汇总形式，省去5行解释
+        sbDirection.append("<font color='#7C8C9C'>「吉宿更能逢旺相，万举万全必成功；若遇休囚并废没，劝君不必进前程。」</font><br/>");
         if (wangPositions.length() > 0) sbDirection.append("<font color='#3FA34D'>旺</font>：").append(wangPositions).append("（得时·百事顺）<br/>");
         if (xiangPositions.length() > 0) sbDirection.append("<font color='#3FA34D'>相</font>：").append(xiangPositions).append("（得生·次吉）<br/>");
         if (xiuPositions.length() > 0) sbDirection.append("<font color='#E6C46A'>休</font>：").append(xiuPositions).append("（退藏·静养）<br/>");
@@ -774,8 +782,9 @@ public class FullNinePalaceActivity extends Activity {
         expDirection.setText(android.text.Html.fromHtml(sbDirection.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
         StringBuilder sbYiJi = new StringBuilder();
+        sbYiJi.append("《秘笈》曰：").append(getShiGanZhuShi(timeGan)).append("\n");
         sbYiJi.append("宜：");
-        String[] yiItems = getYiActivitiesDetailed(zhiFuStar, zhiShiDoor);
+        String[] yiItems = getYiActivitiesDetailed(zhiShiDoor, timeGan);
         for (int i = 0; i < Math.min(yiItems.length, 5); i++) {
             if (i > 0) {
                 sbYiJi.append("、");
@@ -784,7 +793,7 @@ public class FullNinePalaceActivity extends Activity {
         }
         sbYiJi.append("\n");
         sbYiJi.append("忌：");
-        String[] jiItems = getJiActivitiesDetailed(zhiFuStar, zhiShiDoor);
+        String[] jiItems = getJiActivitiesDetailed(zhiShiDoor, timeGan);
         for (int i = 0; i < Math.min(jiItems.length, 5); i++) {
             if (i > 0) {
                 sbYiJi.append("、");
@@ -797,7 +806,7 @@ public class FullNinePalaceActivity extends Activity {
         String shiGanLuck = shiGanPalace >= 0 ? luckData[shiGanPalace] : "未知";
         
         StringBuilder sbLife = new StringBuilder();
-        sbLife.append("今日以").append(getMindAdvice(zhiShiDoor, zhiFuStar)).append("；事业学业")
+        sbLife.append("当前宜以").append(getMindAdvice(zhiShiDoor, zhiFuStar)).append("；事业学业")
               .append(getCareerAdvice(zhiShiDoor, zhiFuStar)).append("，财运").append(getWealthAdvice(zhiShiDoor, zhiFuStar))
               .append("，健康饮食").append(getHealthAdvice(zhiShiDoor, zhiFuStar)).append("，感情人际")
               .append(getRelationshipAdvice(zhiShiDoor, zhiFuStar)).append("，出行").append(getTravelAdvice(zhiShiDoor, zhiFuStar)).append("。");
@@ -830,6 +839,13 @@ public class FullNinePalaceActivity extends Activity {
                 android.text.Html.FROM_HTML_MODE_LEGACY));
         }
         
+        // 格局克应：逐宫天盘加地盘之格，并总列击刑、门迫、入墓、五不遇之忌
+        if (expGejuKeying != null) {
+            expGejuKeying.setText(android.text.Html.fromHtml(
+                buildGeJuKeying(tianPan, diPanTianGan, eightDoors, PALACE_NAMES, DIRECTIONS, dayGan, timeGan),
+                android.text.Html.FROM_HTML_MODE_LEGACY));
+        }
+
         if (expPaipanYiju != null) {
             expPaipanYiju.setText(android.text.Html.fromHtml(getPaipanYiju(yearPillar, monthPillar, dayPillar, timePillar, jieqi, isYangDun, ju, xunShou, zhiFuStar, zhiShiDoor, zhiFuPalace, zhiShiPalace), android.text.Html.FROM_HTML_MODE_LEGACY));
         }
@@ -840,32 +856,29 @@ public class FullNinePalaceActivity extends Activity {
 
         String[] directions = {"北方", "西南", "东方", "东南", "中心", "西北", "西方", "东北", "南方"};
 
+        // 九宫：卦名、五行、方位、九星本位（《秘笈》：惟天禽无定位，寄西南而属中宫）
         String[][] palaceDesc = {
-            {"坎", "水·北，主智主险，对应肾、泌尿"},
-            {"坤", "土·西南，主顺主静，对应脾胃"},
-            {"震", "木·东，主动主长，对应肝胆"},
-            {"巽", "木·东南，主风主变，对应肝胆"},
-            {"中", "土·中，主和主守，对应脾胃"},
-            {"乾", "金·西北，主健主尊，对应肺、大肠"},
-            {"兑", "金·西，主悦主泽，对应肺"},
-            {"艮", "土·东北，主止主蓄，对应脾胃"},
-            {"离", "火·南，主明主礼，对应心、眼"}
+            {"坎", "水", "正北", "天蓬本位，主智主险"},
+            {"坤", "土", "西南", "天芮本位，天禽寄此"},
+            {"震", "木", "正东", "天冲本位，主动主长"},
+            {"巽", "木", "东南", "天辅本位，主风主变"},
+            {"中", "土", "中央", "天禽本位，寄于坤二"},
+            {"乾", "金", "西北", "天心本位，主健主尊"},
+            {"兑", "金", "正西", "天柱本位，主悦主泽"},
+            {"艮", "土", "东北", "天任本位，主止主蓄"},
+            {"离", "火", "正南", "天英本位，主明主礼"}
         };
 
-        desc.append("<font color='#F3BA66'><b>地盘（九宫）</b></font><br/>");
+        desc.append("<font color='#F3BA66'><b>天盘</b></font>");
+        desc.append("<font color='#7C8C9C'>　九星、八门、八神与三奇六仪随时而转，附于地盘之上者。</font><br/>");
+        desc.append("<font color='#F3BA66'><b>地盘（九宫）</b></font>");
+        desc.append("<font color='#7C8C9C'>　《秘笈》曰：「夫星有阴阳，门有开阖，惟天禽则无定位，寄西南而属中宫。」</font><br/>");
         for (int i = 0; i < 9; i++) {
             if (!palaceNames[i].isEmpty() && !palaceNames[i].equals("--")) {
                 String palace = palaceNames[i].substring(0, 1);
-                String palaceInfo = "";
-                for (String[] info : palaceDesc) {
-                    if (info[0].equals(palace)) {
-                        palaceInfo = info[1];
-                        break;
-                    }
-                }
                 desc.append("<font color='#F3BA66'>").append(palace).append("宫</font> ");
-                desc.append("<font color='#98D8F0'>(").append(directions[i]).append(")</font> ");
-                desc.append("<font color='#7C8C9C'>").append(palaceInfo).append("</font>");
+                desc.append("<font color='#98D8F0'>(").append(palaceDesc[i][1]).append("·").append(palaceDesc[i][2]).append(")</font> ");
+                desc.append("<font color='#7C8C9C'>").append(palaceDesc[i][3]).append("</font>");
                 if (i < 8) desc.append("<br/>");
             }
         }
@@ -873,55 +886,86 @@ public class FullNinePalaceActivity extends Activity {
         return desc.toString();
     }
     
-    // 九星详细解释：列出本盘每宫之星的含义，并标出值符
+    // 九星详细解释：依《奇门遁甲秘笈大全》卷二十二「九星吉凶诗诀」原文，辅以疏义。
+    // 吉凶等级依《三元经》："辅禽心星为上吉，冲任次吉理须明；大凶天蓬与天芮，小凶天柱及天英。"
     private String buildNineStarsDetail(String[] nineStars, String[] wangCui,
             String[] PALACE_NAMES, String[] DIRECTIONS, String zhiFuStar, int zhiFuPalace) {
+        // {星名, 五行, 三元经品级, 诗诀原文(前四句), 疏义}
         String[][] info = {
-            {"天蓬", "水", "凶", "坎位，主智谋，亦主凶险；宜暗谋，忌妄动，防水厄。"},
-            {"天任", "土", "吉", "主敦厚承载；宜置业守成，稳步乃成。"},
-            {"天冲", "木", "平", "主迅烈果断；宜速进，忌迟疑。"},
-            {"天辅", "木", "吉", "主文昌教化；宜求学、文书，百事渐吉。"},
-            {"天英", "火", "平", "主声名礼法；宜文事，忌躁进虚浮。"},
-            {"天芮", "土", "凶", "主疾病，亦主求学；宜静养访医，忌争讼远行。"},
-            {"天柱", "金", "凶", "主破败口舌；宜毁旧立新，忌嫁娶营建。"},
-            {"天心", "金", "吉", "主谋略医卜；宜策划、求医、决断。"},
-            {"天禽", "土", "吉", "中宫本位，主中正；宜协调任命，诸事平稳。"}
+            {"天蓬", "水", "大凶", "天蓬主事异秋冬，用讼安边春夏功，嫁娶俱亡移徙火，入官险道门逢凶。",
+             "蓬星属水，主讼争险陷。惟春夏用事、安边固守为功；贾商埋葬居行皆否，纵逢奇门亦减福。"},
+            {"天芮", "土", "大凶", "芮星授道结交宜，作事征行不必为，盗贼忧惊伤小口，灾刑囚事被官羁。",
+             "芮星属土，宜授道结交、求医问药；征行嫁娶营葬皆忌，大凶春夏、秋冬稍吉，纵得奇门福亦亏。"},
+            {"天冲", "木", "次吉", "天冲报怨趁春温，万里威风胆气雄，不利秋冬春夏胜，贾商行徙入官迍。",
+             "冲星属木，主报怨雪耻、出师振威。宜春夏而忌秋冬；造葬修方、嫁娶产育多迍。"},
+            {"天辅", "木", "上吉", "天辅修身利造营，征赢春夏地开平，罪刑此出逢天赦，远出居官功亦成。",
+             "辅星属木，主文教修身。营造征行、远出居官、嫁娶多儿皆成，惟谒求迁移稍逊。"},
+            {"天禽", "土", "上吉", "天禽中主四时通，硬冲坚大有奇功，宜用智谋机活伏，祭神感应上官亨。",
+             "禽星属土，居中无定位而寄坤，四时皆通。贾商嫁娶、行修造作，奇门加之尽亨通。"},
+            {"天心", "金", "上吉", "心宿星机神道辉，求仙合药百为宜，入官嫁娶及移徙，造葬征行祭祀时。",
+             "心星属金，主机谋神道。求仙合药、入官嫁娶、造葬征行皆宜；泰在秋冬，春夏则利君子而危小人。"},
+            {"天柱", "金", "小凶", "天柱山方修造良，祀神嫁娶亦生光，藏形谨守斯为美，移徙征行却受殃。",
+             "柱星属金，宜藏形谨守、山方修造；移徙征行受殃，营谋轻动、妄行相交主中伤。"},
+            {"天任", "土", "次吉", "天任之宿属星仪，百事求谋利四时，造葬入官并请谒，行商娶祀吉迁移。",
+             "任星属土，百事求谋四时皆利。造葬入官、请谒行商、嫁娶祭祀迁移俱吉，更喜气神旺相。"},
+            {"天英", "火", "小凶", "天英之宿是天衢，远行饮宴乐愉愉，出入葬埋宜嫁娶，徙宫筑室祀商违。",
+             "英星属火，主远行饮宴、出入葬埋；徙宫筑室、祭祀营商相违，主令慎勿轻加于客。"}
         };
         StringBuilder sb = new StringBuilder();
         sb.append("<font color='#CCB866'><b>九星</b></font>：随值符飞布九宫，各有所司。");
+        sb.append("《三元经》曰：<font color='#7C8C9C'>「辅禽心星为上吉，冲任次吉理须明；")
+          .append("大凶天蓬与天芮，小凶天柱及天英。」</font>");
         sb.append("本盘<b>值符</b>为 <font color='#3FA34D'><b>").append(zhiFuStar).append("星</b></font>，落<b>")
-          .append(PALACE_NAMES[zhiFuPalace]).append("</b>宫，乃当前关键吉星。<br/><br/>");
+          .append(PALACE_NAMES[zhiFuPalace]).append("</b>宫，为九星之领袖。<br/><br/>");
         for (int i = 0; i < 9; i++) {
             String star = nineStars[i];
             String[] detail = null;
             for (String[] it : info) { if (it[0].equals(star)) { detail = it; break; } }
             if (detail == null) continue;
-            String luckColor = detail[2].equals("吉") ? "#3FA34D" : (detail[2].equals("凶") ? "#E0593B" : "#E6C46A");
+            String level = detail[2];
+            String luckColor = "上吉".equals(level) ? "#3FA34D"
+                    : ("次吉".equals(level) ? "#7FBF5F"
+                    : ("小凶".equals(level) ? "#E6C46A" : "#E0593B"));
             boolean isZhiFu = star.equals(zhiFuStar);
             sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
             sb.append("<font color='").append(luckColor).append("'><b>").append(star).append("星</b></font>");
-            sb.append("（").append(detail[1]).append("·").append(detail[2]).append("）");
+            sb.append("（").append(detail[1]).append("·").append(level).append("）");
             if (isZhiFu) sb.append(" <font color='#3FA34D'>★值符</font>");
-            sb.append("：").append(detail[3]).append("<br/>");
+            sb.append("<br/>");
+            sb.append("<font color='#B9A05C'>").append(detail[3]).append("</font><br/>");
+            sb.append("<font color='#7C8C9C'>疏：").append(detail[4]).append("</font><br/><br/>");
         }
         return sb.toString();
     }
 
-    // 八门详细解释：列出本盘每宫之门的含义，并标出值使
+    // 八门详细解释：依《奇门遁甲秘笈大全》卷二十二「八门吉凶诗诀」与卷五「八门克应」衢仙断语。
+    // 吉凶以开、休、生为三吉门，死、惊、伤为凶门，杜、景为中平，本《统宗大全》八门主事歌之义。
     private String buildEightDoorsDetail(String[] eightDoors, String[] wangCui,
             String[] PALACE_NAMES, String[] DIRECTIONS, String zhiShiDoor, int zhiShiPalace) {
+        // {门名, 五行, 吉凶, 诗诀原文(前四句), 疏义}
         String[][] info = {
-            {"休", "水", "吉", "百事皆宜，气平；利休养谋划、婚姻谒贵。"},
-            {"生", "土", "吉", "主生机，求财谋事得成；利经商置业、生育出行。"},
-            {"伤", "木", "凶", "主损伤争斗；宜捕猎索债，忌出行嫁娶。"},
-            {"杜", "木", "平", "主闭塞藏形；宜守静避难，事宜保密。"},
-            {"景", "火", "平", "主文书声名；利献策求名，忌争讼远行。"},
-            {"死", "土", "凶", "主衰败，百事忌；唯宜决断旧事、屯兵固守。"},
-            {"惊", "金", "凶", "主惊恐官非；宜诉讼捕盗，忌安静喜庆。"},
-            {"开", "金", "吉", "主通达，诸事开启；利开业出行、求官谋事。"}
+            {"休", "水", "吉", "休门一一气盈室，富贵子孙田土吉，祭祀修营入宅基，赴官迁徙事周悉。",
+             "休门属水，主休养谒贵。赴官迁徙、祭祀入宅、婚姻产育皆宜，为三吉门之一，百事最为良。"},
+            {"生", "土", "吉", "生门八八气盈星，凶煞皆降尊土精，因待女财人寄物，从兹致富子孙兴。",
+             "生门属土，主生发致富。嫁娶种萌、造作求财、出入经营俱吉，凶煞皆降，为求财第一吉门。"},
+            {"伤", "木", "凶", "伤门气短数三三，寅卯旺方音角间，渔猎捕征搜索债，更宜赌博追亡还。",
+             "伤门属木，主损伤争斗。惟宜渔猎捕捉、索债追亡；官司口舌、血光伤身，上官出行嫁娶大凶。"},
+            {"杜", "木", "平", "杜门四四星凶恶，木性时方寅卯泊，闭堤绝水事封培，追邪伐盗并勾捉。",
+             "杜门属木，为藏形之方。宜躲灾避难、隐伏逃藏、追邪伐盗；用动则防官刑财散，余事不利。"},
+            {"景", "火", "平", "景门九九紫气盈，巳午旺南寅戌结，遣使上书能解危，求谋修造访寻谒。",
+             "景门属火，主文书声名。惟宜上书献策、奏对选拔；献策求名、举科选士得之，余者不利。"},
+            {"死", "土", "凶", "死门二二凶星逆，戊己坤艮方位即，穿猎渔网刑戳宜，送丧吊死葬埋益。",
+             "死门属土，主肃杀衰败。惟宜吊死送丧、葬埋捕捉畋猎；所求不利不宜行，动见败亡官落职。"},
+            {"惊", "金", "凶", "惊门无化气为逆，旺在庚辛申酉地，罗网张疑立狱讼，攻门刑击一齐到。",
+             "惊门属金，主争讼惊疑。惟宜词讼捕捉、设疑伏兵；市贾营修皆可忌，致讼虚惊疾疫兴。"},
+            {"开", "金", "吉", "开门六六气营奇，谒贵求谋利有为，立宅扦修官职进，外来财帛马牛肥。",
+             "开门属金，主通达开启。谒贵求谋、立宅赴官、商贾畜产俱宜，金上庚辛秋月旺，为三吉门之首。"}
         };
         StringBuilder sb = new StringBuilder();
         sb.append("<font color='#CCB866'><b>八门</b></font>：随值使飞布，主人事吉凶宜忌。");
+        sb.append("《统宗大全》八门主事歌：<font color='#7C8C9C'>「欲求财利往生方，葬猎须知死路强；")
+          .append("征战远行开门吉，休门见贵最为良；捉贼惊门无不获，杜门无事好逃藏；")
+          .append("索债须知伤上去，思量饮酒景门高。」</font>");
         sb.append("本盘<b>值使</b>为 <font color='#3FA34D'><b>").append(zhiShiDoor).append("门</b></font>，落<b>")
           .append(PALACE_NAMES[zhiShiPalace]).append("</b>宫，乃用事之要。<br/><br/>");
         for (int i = 0; i < 9; i++) {
@@ -930,58 +974,248 @@ public class FullNinePalaceActivity extends Activity {
             String[] detail = null;
             for (String[] it : info) { if (it[0].equals(door)) { detail = it; break; } }
             if (detail == null) continue;
-            String luckColor = detail[2].equals("吉") ? "#3FA34D" : (detail[2].equals("凶") ? "#E0593B" : "#E6C46A");
+            String luckColor = "吉".equals(detail[2]) ? "#3FA34D" : ("凶".equals(detail[2]) ? "#E0593B" : "#E6C46A");
             boolean isZhiShi = door.equals(zhiShiDoor);
             sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
             sb.append("<font color='").append(luckColor).append("'><b>").append(door).append("门</b></font>");
             sb.append("（").append(detail[1]).append("·").append(detail[2]).append("）");
             if (isZhiShi) sb.append(" <font color='#3FA34D'>★值使</font>");
-            sb.append("：").append(detail[3]).append("<br/>");
+            sb.append("<br/>");
+            sb.append("<font color='#B9A05C'>").append(detail[3]).append("</font><br/>");
+            sb.append("<font color='#7C8C9C'>疏：").append(detail[4]).append("</font><br/><br/>");
         }
         return sb.toString();
     }
 
-    // 八神详细解释：列出本盘每宫之神的含义
+    // 八神详细解释：依《奇门遁甲秘笈大全》卷六「九神主论章」原文，辅以疏义。
     private String buildEightGodsDetail(String[] eightGods,
             String[] PALACE_NAMES, String[] DIRECTIONS) {
+        // {神名, 吉凶, 九神主论章原文, 疏义}
         String[][] info = {
-            {"值符", "吉", "八神之首，主尊贵；得贵扶助，百恶消散。"},
-            {"螣蛇", "凶", "主虚惊怪异；防口舌纠缠、心神不宁。"},
-            {"太阴", "吉", "主暗助庇护；利密谋、和合、避难。"},
-            {"六合", "吉", "主和合欢乐；利婚嫁交易、调解结盟。"},
-            {"白虎", "凶", "主血光刑伤；宜武事镇煞，防争斗损伤。"},
-            {"玄武", "凶", "主盗骗失脱；防小人、失物、口舌。"},
-            {"九地", "平", "主沉稳潜藏；宜守成静养、迟缓之事。"},
-            {"九天", "吉", "主飞扬显达；利远行扬名、进攻开拓。"}
+            {"值符", "吉", "值符者，诸神之元首，九星之领袖。其神所到之处，百恶消散，诸凶寂灭，至吉之神。所畏者，太白金星，忌入墓。",
+             "值符所临，百恶消散。经云「急从神兮缓从门」，有急难宜弃门而从值符方下而行。"},
+            {"螣蛇", "凶", "螣蛇者，丁火之气，其实属阴土，兑纳丁，其神性柔而口毒，专司惊恐、怪异、火妖蛊之事。",
+             "螣蛇主虚惊怪异、口舌纠缠，事多反复变诈；宜防不宜进，忌妄动远行。"},
+            {"太阴", "吉", "太阴者，西方之阴金也。其神好阴匿、暗昧、欺蔽、妾妇之事。",
+             "太阴主荫庇暗助。宜密谋潜伏、避难藏形，经云「伏兵但向太阴位」。"},
+            {"六合", "吉", "六合者，甲木之化气也，东方之阴木也。其神性和平，专司婚姻、交易、媒妁、和合之事。",
+             "六合主和合欢乐。宜婚嫁交易、调解结盟，经云「若逢六合利逃形」。"},
+            {"白虎", "凶", "白虎者，庚金也。统辖西方之威，其神好杀，专司兵戈、杀伐、争斗、疾病、死丧、道路之事。",
+             "白虎主血光刑伤、道路死丧；宜武事镇煞，忌争斗出行，防损伤官非。"},
+            {"玄武", "凶", "玄武者，水之精也。统辖北方之气，其神好阴谋、贼害，专司盗贼、逃亡之事。",
+             "玄武主盗骗失脱。防小人、失物、口舌，凡事宜慎密，忌托付财货。"},
+            {"九地", "平", "九地者，坤土也。其性好静，所主者，乃柔顺虚恭之事，亦操生杀之权，半吉半凶之神，畏克制，忌入墓，春夏则生，秋冬则杀。",
+             "九地主沉稳潜藏。宜固守静养、埋伏藏兵、迟缓之事，经云「九地潜藏可立营」。"},
+            {"九天", "吉", "九天者，乾金也。其体属金，乾纳甲壬，性刚而好动。所主者，名正言顺之事，值其令而无阻，至吉之神。若得门、得奇，万福咸集，即不得奇，亦不为凶。",
+             "九天主飞扬显达。宜远行扬名、进攻开拓，经云「九天之上好扬兵」。"}
         };
         StringBuilder sb = new StringBuilder();
-        sb.append("<font color='#CCB866'><b>八神</b></font>：环绕九宫，各主气场。");
-        sb.append("值符统御，余神随阴阳遁顺逆飞布。<br/><br/>");
+        sb.append("<font color='#CCB866'><b>八神</b></font>：值符统七神，环绕九宫，各主气场。");
+        sb.append("《秘笈》云：<font color='#7C8C9C'>「逆顺直符统七神，地宜伏匿天扬兵，太阴六合可回避，")
+          .append("蛇远勾连田土争，白虎西方凶神杀，玄武盗贼防征途。」</font>");
+        sb.append("又云：<font color='#7C8C9C'>「九天之上好扬兵，九地潜藏可立营，伏兵但向太阴位，")
+          .append("若逢六合利逃形。」</font>余神随阴阳遁顺逆飞布。<br/><br/>");
         for (int i = 0; i < 9; i++) {
             String god = eightGods[i];
             if (god == null || god.isEmpty()) continue;
             String[] detail = null;
             for (String[] it : info) { if (it[0].equals(god)) { detail = it; break; } }
             if (detail == null) continue;
-            String luckColor = detail[1].equals("吉") ? "#3FA34D" : (detail[1].equals("凶") ? "#E0593B" : "#E6C46A");
+            String luckColor = "吉".equals(detail[1]) ? "#3FA34D" : ("凶".equals(detail[1]) ? "#E0593B" : "#E6C46A");
             sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
             sb.append("<font color='").append(luckColor).append("'><b>").append(god).append("</b></font>");
-            sb.append("（").append(detail[1]).append("）").append("：").append(detail[2]).append("<br/>");
+            sb.append("（").append(detail[1]).append("）").append("<br/>");
+            sb.append("<font color='#B9A05C'>").append(detail[2]).append("</font><br/>");
+            sb.append("<font color='#7C8C9C'>疏：").append(detail[3]).append("</font><br/><br/>");
         }
         return sb.toString();
     }
 
+    // ==================== 十干克应格局（《奇门遁甲秘笈大全》原文） ====================
+
+    /**
+     * 十干克应：天盘干加临地盘干所成之格。
+     * 原文：「甲加丙为青龙反首，而动作无阻。丙加甲为飞鸟跌穴，而运用有成。
+     *       乙加辛是青龙逃走，而财物废坠。辛加乙是白虎猖狂，而身体毁伤。
+     *       丁加癸为朱雀投江，而讼狱所由起也。癸加丁为螣蛇夭矫，而忧惶之事必至也。
+     *       天地大格，庚下加癸，天地小格，壬上加庚。庚加于己，士卒死于中途；己加于庚，将兵厄于危路。
+     *       庚加于丙，是为太白入荧惑，而贼必来；丙加于庚，是为丙火入金乡，而贼必退也。」
+     * 注：甲遁于六仪，故「甲加丙」即天盘戊加地盘丙；「丙加甲」即天盘丙加地盘戊。
+     * {天盘干, 地盘干, 格名, 吉凶, 原文}
+     */
+    private static final String[][] KE_YING_GE = {
+        {"戊", "丙", "青龙反首", "吉", "甲加丙为青龙反首，而动作无阻"},
+        {"丙", "戊", "飞鸟跌穴", "吉", "丙加甲为飞鸟跌穴，而运用有成"},
+        {"戊", "丁", "青龙耀明", "吉", "戊加丁奇，富贵荣耀"},
+        {"丁", "戊", "青龙转光", "吉", "青龙转光，邑长县令"},
+        {"乙", "丙", "奇仪顺遂", "吉", "乙丙相生，奇仪顺遂，谋为多成"},
+        {"丙", "乙", "日月并行", "吉", "丙乙相会，日月并行，显达可期"},
+        {"乙", "辛", "青龙逃走", "凶", "乙加辛是青龙逃走，而财物废坠"},
+        {"辛", "乙", "白虎猖狂", "凶", "辛加乙是白虎猖狂，而身体毁伤"},
+        {"丁", "癸", "朱雀投江", "凶", "丁加癸为朱雀投江，而讼狱所由起也"},
+        {"癸", "丁", "螣蛇夭矫", "凶", "癸加丁为螣蛇夭矫，而忧惶之事必至也"},
+        {"庚", "癸", "大格", "凶", "天地大格，庚下加癸，萍迹四海"},
+        {"壬", "庚", "小格", "凶", "天地小格，壬上加庚，阻滞难行"},
+        {"庚", "己", "刑格", "凶", "庚加于己，士卒死于中途"},
+        {"己", "庚", "刑格", "凶", "己加于庚，将兵厄于危路"},
+        {"庚", "丙", "太白入荧", "凶", "庚加于丙，是为太白入荧惑，而贼必来"},
+        {"丙", "庚", "荧入太白", "凶", "丙加于庚，是为丙火入金乡，而贼必退也，此主客皆不利"}
+    };
+
+    /** 查十干克应格；无格则返回 null。 */
+    private String[] findKeYingGe(String tianGan, String diGan) {
+        if (tianGan == null || diGan == null) return null;
+        for (String[] g : KE_YING_GE) {
+            if (g[0].equals(tianGan) && g[1].equals(diGan)) return g;
+        }
+        return null;
+    }
+
+    /**
+     * 六仪击刑：天盘六仪加临所刑之宫。
+     * 歌曰：「六仪击刑为太凶，甲子值符愁向东。戌刑在未申在寅，寅巳辰辰午刑午。」
+     * 宫序：0坎 1坤 2震 3巽 4中 5乾 6兑 7艮 8离
+     */
+    private static final String[][] JI_XING = {
+        {"戊", "震三", "子刑卯"}, {"己", "坤二", "戌刑未"}, {"庚", "艮八", "申刑寅"},
+        {"辛", "离九", "午自刑"}, {"壬", "巽四", "辰自刑"}, {"癸", "巽四", "寅刑巳"}
+    };
+    private static final int[] JI_XING_PALACE = {2, 1, 7, 8, 3, 3}; // 与 JI_XING 一一对应
+
+    /**
+     * 三奇入墓：歌曰「乙日哪堪见未时，丙丁入火火墓戌」，即乙奇入坤二（未）、丙丁奇入乾六（戌）。
+     */
+    private boolean isQiRuMu(String tianGan, int palace) {
+        if (tianGan == null) return false;
+        if ("乙".equals(tianGan) && palace == 1) return true;
+        if (("丙".equals(tianGan) || "丁".equals(tianGan)) && palace == 5) return true;
+        return false;
+    }
+
+    /** 门迫：门五行克宫五行，谓之迫。宫五行序：水土木木土金金土火；门五行：休水 生土 伤木 杜木 景火 死土 惊金 开金。 */
+    private boolean isMenPo(String door, int palace) {
+        if (door == null || door.isEmpty()) return false;
+        String[] PALACE_WX = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
+        String doorWx = null;
+        switch (door) {
+            case "休": doorWx = "水"; break;
+            case "生": case "死": doorWx = "土"; break;
+            case "伤": case "杜": doorWx = "木"; break;
+            case "景": doorWx = "火"; break;
+            case "惊": case "开": doorWx = "金"; break;
+            default: return false;
+        }
+        return QiMenCalculator.isKe(doorWx, PALACE_WX[palace]);
+    }
+
+    /** 五不遇时：时干克日干。原文「时干克日，为五不遇，而定损其明」。 */
+    private boolean isWuBuYuShi(String dayGan, String timeGan) {
+        if (dayGan == null || timeGan == null) return false;
+        String dw = QiMenCalculator.getWuXing(dayGan);
+        String tw = QiMenCalculator.getWuXing(timeGan);
+        return QiMenCalculator.isKe(tw, dw) && !tw.equals(dw);
+    }
+
+    /**
+     * 构建「格局克应」卡片：逐宫列天盘加地盘之格，并总列击刑、门迫、入墓、五不遇之忌。
+     */
+    private String buildGeJuKeying(String[] tianPan, String[] diPan, String[] doors,
+                                   String[] PALACE_NAMES, String[] DIRECTIONS,
+                                   String dayGan, String timeGan) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<font color='#7C8C9C'>《秘笈》曰：「甲加丙为青龙反首，而动作无阻；丙加甲为飞鸟跌穴，")
+          .append("而运用有成；乙加辛是青龙逃走；辛加乙是白虎猖狂；丁加癸为朱雀投江；癸加丁为螣蛇夭矫。」</font><br/><br/>");
+
+        java.util.ArrayList<String> jiList = new java.util.ArrayList<>();
+        java.util.ArrayList<String> xiongList = new java.util.ArrayList<>();
+
+        for (int i = 0; i < 9; i++) {
+            String tp = tianPan[i];
+            String dp = diPan[i];
+            String[] ge = findKeYingGe(tp, dp);
+            boolean isPo = isMenPo(doors[i], i);
+            boolean isMu = isQiRuMu(tp, i);
+            if (ge == null && !isPo && !isMu) continue;
+
+            sb.append("<font color='#98D8F0'>").append(PALACE_NAMES[i]).append("·").append(DIRECTIONS[i]).append("</font>　");
+            sb.append("<font color='#E6C46A'>").append(tp).append("加").append(dp).append("</font>");
+            if (ge != null) {
+                String color = "吉".equals(ge[3]) ? "#3FA34D" : "#E0593B";
+                sb.append("　<font color='").append(color).append("'><b>").append(ge[2])
+                  .append("</b>（").append(ge[3]).append("）</font>");
+                if ("吉".equals(ge[3])) {
+                    jiList.add(PALACE_NAMES[i] + ge[2]);
+                } else {
+                    xiongList.add(PALACE_NAMES[i] + ge[2]);
+                }
+            }
+            if (isMu) {
+                sb.append("　<font color='#E0593B'>三奇入墓</font>");
+                xiongList.add(PALACE_NAMES[i] + "奇入墓");
+            }
+            if (isPo) {
+                sb.append("　<font color='#E0593B'>门迫</font>");
+                xiongList.add(PALACE_NAMES[i] + "门迫");
+            }
+            sb.append("<br/>");
+            if (ge != null) {
+                sb.append("<font color='#7C8C9C'>　").append(ge[4]).append("</font><br/>");
+            }
+        }
+
+        // 六仪击刑（天盘六仪加临所刑之宫）
+        StringBuilder jx = new StringBuilder();
+        for (int k = 0; k < JI_XING.length; k++) {
+            int p = JI_XING_PALACE[k];
+            if (JI_XING[k][0].equals(tianPan[p])) {
+                if (jx.length() > 0) jx.append("、");
+                jx.append(JI_XING[k][0]).append("加").append(JI_XING[k][1]).append("（").append(JI_XING[k][2]).append("）");
+            }
+        }
+        if (jx.length() > 0) {
+            sb.append("<br/><font color='#E0593B'><b>六仪击刑</b></font>：").append(jx)
+              .append("<br/><font color='#7C8C9C'>　歌曰：「六仪击刑为太凶，甲子值符愁向东。」</font><br/>");
+            xiongList.add("六仪击刑");
+        }
+
+        // 五不遇时
+        if (isWuBuYuShi(dayGan, timeGan)) {
+            sb.append("<br/><font color='#E0593B'><b>五不遇时</b></font>：时干 ")
+              .append(timeGan).append(" 克日干 ").append(dayGan)
+              .append("<br/><font color='#7C8C9C'>　《秘笈》曰：「时干克日，为五不遇，而定损其明。」</font><br/>");
+            xiongList.add("五不遇时");
+        }
+
+        sb.append("<br/>");
+        if (!jiList.isEmpty()) {
+            sb.append("<font color='#3FA34D'>吉格</font>：");
+            sb.append(android.text.TextUtils.join("、", jiList)).append("<br/>");
+        }
+        if (!xiongList.isEmpty()) {
+            sb.append("<font color='#E0593B'>凶格</font>：");
+            sb.append(android.text.TextUtils.join("、", xiongList)).append("<br/>");
+        }
+        if (jiList.isEmpty() && xiongList.isEmpty()) {
+            sb.append("<font color='#7C8C9C'>本盘未见显著的十干克应吉格凶格，亦无击刑、门迫、入墓、五不遇之忌，")
+              .append("可依星门神之常理而行。</font><br/>");
+        }
+        sb.append("<br/><font color='#7C8C9C'>《烟波钓叟歌》：「吉门仍又合三奇，大概须云百事宜；")
+          .append("其间倘或多凶吉，一篇未足究精微。」</font>");
+        return sb.toString();
+    }
+
     private String getNineStarsDesc(String[] stars) {
+        // 品级依《三元经》："辅禽心星为上吉，冲任次吉理须明；大凶天蓬与天芮，小凶天柱及天英。"
         String[][] starInfo = {
-            {"天蓬", "#DC143C", "水·凶星，险陷，利智谋慎涉险"},
-            {"天任", "#98FB98", "土·诚信，利置业"},
-            {"天冲", "#E0593B", "木·勇猛，忌冲动"},
-            {"天辅", "#ADFF2F", "木·文昌，利科考"},
-            {"天英", "#E6C46A", "火·名声，忌急躁"},
-            {"天芮", "#DC143C", "土·凶星，主疾病，宜静养避病"},
-            {"天柱", "#DC143C", "金·凶星，破毁，忌争斗"},
-            {"天心", "#3FA34D", "金·谋略，利策划"},
-            {"天禽", "#98FB98", "土·中正，利协调"}
+            {"天蓬", "#E0593B", "水·大凶，主讼争险陷"},
+            {"天芮", "#E0593B", "土·大凶，主疾病，宜求医"},
+            {"天冲", "#7FBF5F", "木·次吉，主报怨雪耻"},
+            {"天辅", "#3FA34D", "木·上吉，主文教修身"},
+            {"天英", "#E6C46A", "火·小凶，主远行饮宴"},
+            {"天禽", "#3FA34D", "土·上吉，居中四时通"},
+            {"天柱", "#E6C46A", "金·小凶，宜藏形谨守"},
+            {"天心", "#3FA34D", "金·上吉，主机谋合药"},
+            {"天任", "#7FBF5F", "土·次吉，百事求谋利"}
         };
         StringBuilder desc = new StringBuilder();
         for (String[] info : starInfo) {
@@ -993,14 +1227,14 @@ public class FullNinePalaceActivity extends Activity {
     
     private String getEightDoorsDesc(String[] doors) {
         String[][] doorInfo = {
-            {"休", "#3FA34D", "水·休养，百事宜"},
-            {"生", "#98FB98", "土·求财，谋事得"},
-            {"伤", "#E0593B", "木·损伤，出行忌"},
-            {"杜", "#E6C46A", "木·闭塞，宜守"},
-            {"景", "#F3BA66", "火·名声，利求名"},
-            {"死", "#DC143C", "土·衰败，百事忌"},
-            {"惊", "#E0593B", "金·惊恐，官非"},
-            {"开", "#ADFF2D", "金·通达，得贵助"}
+            {"休", "#3FA34D", "水·吉门，赴官迁徙"},
+            {"生", "#3FA34D", "土·吉门，求财造作"},
+            {"伤", "#E0593B", "木·凶门，渔猎索债"},
+            {"杜", "#E6C46A", "木·平门，藏形避难"},
+            {"景", "#E6C46A", "火·平门，上书求名"},
+            {"死", "#E0593B", "土·凶门，葬埋捕捉"},
+            {"惊", "#E0593B", "金·凶门，词讼捕捉"},
+            {"开", "#3FA34D", "金·吉门，谒贵求谋"}
         };
         StringBuilder desc = new StringBuilder();
         for (String[] info : doorInfo) {
@@ -1011,15 +1245,16 @@ public class FullNinePalaceActivity extends Activity {
     }
     
     private String getEightGodsDesc(String[] gods) {
+        // 依《秘笈大全》卷六「九神主论章」
         String[][] godInfo = {
-            {"值符", "#3FA34D", "尊贵，得贵助"},
-            {"螣蛇", "#E0593B", "怪异，虚惊"},
-            {"太阴", "#98FB98", "暗助，得庇佑"},
-            {"六合", "#ADFF2D", "合作，利婚谈"},
-            {"白虎", "#DC143C", "血光，争疾"},
-            {"玄武", "#E0593B", "偷欺，小人"},
-            {"九地", "#E6C46A", "沉稳，宜守成"},
-            {"九天", "#3FA34D", "腾达，利远行"}
+            {"值符", "#3FA34D", "诸神元首，百恶消散"},
+            {"螣蛇", "#E0593B", "性柔口毒，惊恐怪异"},
+            {"太阴", "#3FA34D", "好阴匿，宜潜伏"},
+            {"六合", "#3FA34D", "性和平，婚姻和合"},
+            {"白虎", "#E0593B", "好杀，兵戈死丧"},
+            {"玄武", "#E0593B", "好阴谋，盗贼逃亡"},
+            {"九地", "#E6C46A", "好静，柔顺潜藏"},
+            {"九天", "#3FA34D", "性刚好动，扬兵显达"}
         };
         StringBuilder desc = new StringBuilder();
         for (String[] info : godInfo) {
@@ -1033,7 +1268,7 @@ public class FullNinePalaceActivity extends Activity {
             String[] tianPan, String[] diPanTianGan, String[] wangCui, String[] DIRECTIONS) {
         String[] palaceElement = {"水", "土", "木", "木", "土", "金", "金", "土", "火"};
         StringBuilder desc = new StringBuilder();
-        desc.append("<font color='#7C8C9C'>逐宫列天盘地盘、星门神与旺衰吉凶宜忌。</font><br/><br/>");
+        desc.append("<font color='#7C8C9C'>逐宫列天盘地盘之干、星门神与旺衰吉凶宜忌，附十干克应之格。</font><br/><br/>");
         for (int i = 0; i < 9; i++) {
             String palace = palaces[i];
             String star = stars[i];
@@ -1065,66 +1300,80 @@ public class FullNinePalaceActivity extends Activity {
             String luckColor = luck.contains("吉") ? "#3FA34D" : (luck.contains("凶") ? "#E0593B" : "#7C8C9C");
             desc.append("吉凶：<font color='").append(luckColor).append("'><b>").append(luck).append("</b></font>　");
 
+            // 宜忌依《秘笈大全》八门诗诀与八门克应衢仙断语
             String yiji;
             if (door == null || door.isEmpty()) {
-                yiji = "无门，气平";
-            } else if (door.equals("开")) yiji = "宜进取，利求官";
-            else if (door.equals("休")) yiji = "宜休养，利婚姻谒贵";
-            else if (door.equals("生")) yiji = "宜求财置业，利出行";
-            else if (door.equals("伤")) yiji = "防损伤，忌出行";
-            else if (door.equals("杜")) yiji = "宜守静，事宜密";
-            else if (door.equals("景")) yiji = "宜献策求名，忌争讼";
-            else if (door.equals("死")) yiji = "忌动，宜守成";
-            else if (door.equals("惊")) yiji = "防口舌，宜诉讼";
+                yiji = "中宫无门，寄坤而用";
+            } else if (door.equals("开")) yiji = "宜谒贵求谋、立宅赴官、商贾出行";
+            else if (door.equals("休")) yiji = "宜赴官迁徙、祭祀入宅、婚姻产育";
+            else if (door.equals("生")) yiji = "宜嫁娶造作、求财营商、出入经营";
+            else if (door.equals("伤")) yiji = "惟宜渔猎捕捉、索债追亡，余皆不利";
+            else if (door.equals("杜")) yiji = "宜躲灾避难、隐伏逃藏、追邪伐盗";
+            else if (door.equals("景")) yiji = "宜上书献策、奏对选拔、求名举科";
+            else if (door.equals("死")) yiji = "惟宜吊死送丧、葬埋捕捉畋猎";
+            else if (door.equals("惊")) yiji = "惟宜词讼捕捉、设疑伏兵";
             else yiji = "";
 
-            desc.append("<font color='#7C8C9C'>解曰：").append(dir).append("属").append(element);
+            desc.append("<font color='#7C8C9C'>解曰：").append(palace).append("属").append(element);
             if (!yiji.isEmpty()) desc.append("，").append(yiji);
-            desc.append("。</font><br/><br/>");
+            desc.append("。</font>");
+
+            String[] ge = findKeYingGe(tp, dp);
+            if (ge != null) {
+                String geColor = "吉".equals(ge[3]) ? "#3FA34D" : "#E0593B";
+                desc.append("<br/><font color='#7C8C9C'>格曰：</font><font color='").append(geColor)
+                    .append("'><b>").append(ge[2]).append("</b>（").append(ge[3]).append("）</font>")
+                    .append("<font color='#7C8C9C'>　").append(ge[4]).append("</font>");
+            }
+            if (isMenPo(door, i)) {
+                desc.append("<br/><font color='#E0593B'>门迫</font>")
+                    .append("<font color='#7C8C9C'>　门克其宫，吉门被迫吉不全，凶门被迫凶更烈。</font>");
+            }
+            if (isQiRuMu(tp, i)) {
+                desc.append("<br/><font color='#E0593B'>三奇入墓</font>")
+                    .append("<font color='#7C8C9C'>　歌曰「乙日哪堪见未时，丙丁入火火墓戌」，此时诸事不须为。</font>");
+            }
+            desc.append("<br/><br/>");
         }
         return desc.toString();
     }
     
+    /** 日时关系：《秘笈》"时干克日，为五不遇，而定损其明"。 */
     private String getRiShiRelationship(String riGan, String shiGan) {
+        if (riGan == null || shiGan == null) return "日时未明";
+        // 五不遇时：时干克日干，百事不宜
+        if (isWuBuYuShi(riGan, shiGan)) {
+            return "五不遇时（时干克日干），定损其明，百事不宜";
+        }
         if (riGan.equals(shiGan)) {
-            return "比和相助，事易成，主客协和";
+            return "日时比和，主客协和，事易成";
         }
-        java.util.Map<String, String> shengMap = new java.util.HashMap<>();
-        shengMap.put("木", "火"); shengMap.put("火", "土"); 
-        shengMap.put("土", "金"); shengMap.put("金", "水"); shengMap.put("水", "木");
-        
-        java.util.Map<String, String> ganWuxing = new java.util.HashMap<>();
-        ganWuxing.put("甲", "木"); ganWuxing.put("乙", "木");
-        ganWuxing.put("丙", "火"); ganWuxing.put("丁", "火");
-        ganWuxing.put("戊", "土"); ganWuxing.put("己", "土");
-        ganWuxing.put("庚", "金"); ganWuxing.put("辛", "金");
-        ganWuxing.put("壬", "水"); ganWuxing.put("癸", "水");
-        
-        String riWuxing = ganWuxing.get(riGan);
-        String shiWuxing = ganWuxing.get(shiGan);
-        
-        if (riWuxing != null && shiWuxing != null) {
-            if (shengMap.get(riWuxing).equals(shiWuxing)) {
-                return "日生时，我生事，须奋勉乃成";
-            }
-            if (shengMap.get(shiWuxing).equals(riWuxing)) {
-                return "时生日，事生我，事半而功倍，易得外助";
-            }
+        String riWuxing = QiMenCalculator.getWuXing(riGan);
+        String shiWuxing = QiMenCalculator.getWuXing(shiGan);
+
+        if (QiMenCalculator.isSheng(shiWuxing, riWuxing)) {
+            return "时生日，事生我，事半而功倍，易得外助";
         }
-        return "日时比和，气数持平，循常以动";
+        if (QiMenCalculator.isSheng(riWuxing, shiWuxing)) {
+            return "日生时，我生事，须奋勉乃成";
+        }
+        if (QiMenCalculator.isKe(riWuxing, shiWuxing)) {
+            return "日克时，我克事，用力多而功少";
+        }
+        return "日时气数持平，循常以动";
     }
     
     private String getCareerAdvice(String door, String star) {
         if (door == null) return "谨慎行事";
         switch (door) {
-            case "开": return "主动出击，乘势进取";
-            case "生": return "把握机遇，积极进取";
-            case "休": return "休整蓄力，学习进修";
-            case "景": return "展示才华，积极表现";
-            case "伤": return "稳守待时，防小人侵";
-            case "杜": return "静守待变，加强沟通";
-            case "死": return "守不宜攻，防失机";
-            case "惊": return "慎言慎行，低调处事";
+            case "开": return "乘势进取，宜谋大事";
+            case "生": return "把握机缘，百事可成";
+            case "休": return "蓄力进修，厚积薄发";
+            case "景": return "展才扬名，宜见贵人";
+            case "伤": return "稳守待时，防人侵损";
+            case "杜": return "静守待变，慎言笃行";
+            case "死": return "守不宜攻，防失机宜";
+            case "惊": return "慎言慎行，低调自处";
             default: return "按部就班";
         }
     }
@@ -1132,14 +1381,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getWealthAdvice(String door, String star) {
         if (door == null) return "谨慎理财";
         switch (door) {
-            case "生": return "积极求财，宜投资理财";
-            case "开": return "大胆尝试，广开财源";
-            case "休": return "稳健理财，储蓄守财";
-            case "景": return "量力而行，见好就收";
+            case "生": return "求财置业，利市可期";
+            case "开": return "广开财源，可大可久";
+            case "休": return "稳健守财，储蓄为宜";
+            case "景": return "量力而行，见好即收";
             case "伤": return "不宜投资，守财为主";
             case "杜": return "静观其变，待时而动";
-            case "死": return "守财为主，防破财耗";
-            case "惊": return "不宜借贷，谨慎理财";
+            case "死": return "守财防耗，切忌妄举";
+            case "惊": return "不宜借贷，谨防牵连";
             default: return "稳健理财";
         }
     }
@@ -1147,14 +1396,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getRelationshipAdvice(String door, String star) {
         if (door == null) return "谨慎交往";
         switch (door) {
-            case "休": return "主动沟通，增进感情";
+            case "休": return "和气致祥，宜通情愫";
             case "生": return "利于表白求婚";
-            case "开": return "拓展人脉，结交贵人";
-            case "景": return "展示魅力，积极社交";
-            case "惊": return "防感情风波，冷静沟通";
-            case "伤": return "克制情绪，避免冲突";
-            case "死": return "反思修复，不宜强求";
-            case "杜": return "主动沟通，消除误会";
+            case "开": return "广结善缘，得贵人助";
+            case "景": return "展露风采，宜于社交";
+            case "惊": return "防口舌风波，冷静处之";
+            case "伤": return "克制情绪，免起争端";
+            case "死": return "宜反思修复，不可强求";
+            case "杜": return "主动沟通，消除隔阂";
             default: return "顺其自然";
         }
     }
@@ -1162,14 +1411,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getHealthAdvice(String door, String star) {
         if (door == null) return "注意保养";
         switch (door) {
-            case "休": return "养生休息，劳逸结合";
-            case "生": return "适度运动，增强体质";
-            case "开": return "户外活动，保持活力";
-            case "死": return "防身不适，定期检查";
-            case "伤": return "防意外伤害，注意安全";
-            case "景": return "清淡饮食，避免熬夜";
-            case "杜": return "防情绪郁结，放松心情";
-            case "惊": return "防精神紧张，静心安神";
+            case "休": return "调养休息，劳逸有节";
+            case "生": return "适度运动，培补元气";
+            case "开": return "户外舒展，气血通畅";
+            case "死": return "防病于未然，宜作检查";
+            case "伤": return "防意外损伤，行事宜慎";
+            case "景": return "清淡降火，忌于熬夜";
+            case "杜": return "舒解郁结，宽心为要";
+            case "惊": return "安神定志，静心为宜";
             default: return "保持良好习惯";
         }
     }
@@ -1177,14 +1426,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getStudyAdvice(String door, String star) {
         if (door == null) return "勤奋学习";
         switch (door) {
-            case "景": return "刻苦钻研，把握良机";
-            case "开": return "拓展知识，提高效率";
-            case "生": return "备考复习，技能提升";
-            case "休": return "静心学习，温故知新";
-            case "杜": return "多思多践，克服困难";
-            case "伤": return "贵在坚持，防半途废";
-            case "死": return "调整心态，另觅方法";
-            case "惊": return "放松心态，沉着应对";
+            case "景": return "文思畅达，宜应科举";
+            case "开": return "拓展见闻，进业修德";
+            case "生": return "备考复习，技艺精进";
+            case "休": return "静心温故，涵养身心";
+            case "杜": return "深思力行，克服滞碍";
+            case "伤": return "贵在有恒，防半途废";
+            case "死": return "调整心法，另辟蹊径";
+            case "惊": return "平心静气，从容应对";
             default: return "循序渐进";
         }
     }
@@ -1192,14 +1441,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getTravelAdvice(String door, String star) {
         if (door == null) return "谨慎出行";
         switch (door) {
-            case "开": return "出行顺利，宜出差游历";
-            case "休": return "休闲出行，度假放松";
-            case "生": return "出行吉利，远足求财";
-            case "景": return "观光游览，文化体验";
-            case "惊": return "防交通延误，谨慎出行";
-            case "伤": return "防出行意外，注意安全";
-            case "死": return "不宜远行，宜居家";
-            case "杜": return "出行受阻，谨慎安排";
+            case "开": return "出行顺利，宜远行游历";
+            case "休": return "休闲出行，度假为宜";
+            case "生": return "出行吉利，求财称意";
+            case "景": return "观光游览，访古寻幽";
+            case "惊": return "防延误阻滞，行宜谨慎";
+            case "伤": return "防意外损伤，慎于出行";
+            case "死": return "不宜远行，居家为安";
+            case "杜": return "出行受阻，宜另择期";
             default: return "出行平稳，注意安全";
         }
     }
@@ -1207,14 +1456,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getDietAdvice(String door, String star) {
         if (door == null) return "饮食清淡";
         switch (door) {
-            case "生": return "进补养生，营养均衡";
+            case "生": return "进补养生，五味调和";
             case "休": return "清淡素食，调理脾胃";
-            case "开": return "社交聚餐，会友欢叙";
-            case "景": return "清热降火，清淡饮食";
-            case "死": return "饮食谨慎，注意卫生";
-            case "伤": return "节制饮食，忌暴饮";
-            case "惊": return "保持规律饮食";
-            case "杜": return "简单饮食，家常便饭";
+            case "开": return "宾朋欢叙，饮食有节";
+            case "景": return "清热降火，忌于辛辣";
+            case "死": return "饮食宜慎，注意卫生";
+            case "伤": return "节制饮食，忌于暴饮";
+            case "惊": return "饮食有常，安神为先";
+            case "杜": return "家常便饭，简单为宜";
             default: return "饮食规律，营养均衡";
         }
     }
@@ -1222,14 +1471,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getSocialAdvice(String door, String star) {
         if (door == null) return "谨慎交友";
         switch (door) {
-            case "开": return "积极社交，广结善缘";
-            case "休": return "维系旧友，家庭聚会";
-            case "生": return "合作共赢，团队协作";
-            case "景": return "展示自我，参与活动";
+            case "开": return "广结善缘，宜交贵人";
+            case "休": return "维系旧友，家庭欢聚";
+            case "生": return "和合共赢，宜结同盟";
+            case "景": return "展露风采，宜与雅集";
             case "惊": return "防口舌是非，少言多行";
-            case "伤": return "人际紧张，宜低调";
-            case "死": return "减少社交，不宜聚会";
-            case "杜": return "社交受阻，主动沟通";
+            case "伤": return "人际易紧，宜守低调";
+            case "死": return "减少应酬，不宜聚会";
+            case "杜": return "社交受阻，宜主动沟通";
             default: return "社交平稳，顺其自然";
         }
     }
@@ -1237,14 +1486,14 @@ public class FullNinePalaceActivity extends Activity {
     private String getMindAdvice(String door, String star) {
         if (door == null) return "保持平和";
         switch (door) {
-            case "休": return "修身养性，保持平和";
-            case "生": return "心态积极，保持乐观";
-            case "开": return "开拓视野，突破自我";
-            case "景": return "保持热情，积极探索";
-            case "死": return "调整心态，寻找转机";
-            case "伤": return "保持冷静，克制冲动";
-            case "惊": return "减少焦虑，放松心情";
-            case "杜": return "保持耐心，静待时机";
+            case "休": return "修身养性，以静制动";
+            case "生": return "持满戒盈，顺势而发";
+            case "开": return "开拓胸襟，见机而作";
+            case "景": return "保持热忱，文思畅达";
+            case "死": return "知止不殆，另觅生机";
+            case "伤": return "制怒守静，忍而后动";
+            case "惊": return "安神定志，勿为所扰";
+            case "杜": return "守时待变，徐图后进";
             default: return "保持平常心，顺其自然";
         }
     }
@@ -1268,17 +1517,17 @@ public class FullNinePalaceActivity extends Activity {
         
         if (door != null && !door.isEmpty()) {
             switch (door) {
-                case "开": tip.append("宜开拓"); break;
-                case "生": tip.append("宜求财"); break;
-                case "休": tip.append("宜休息"); break;
-                case "景": tip.append("宜展示"); break;
-                case "伤": tip.append("防损伤"); break;
-                case "杜": tip.append("防阻塞"); break;
-                case "死": tip.append("防衰败"); break;
-                case "惊": tip.append("防口舌"); break;
+                case "开": tip.append("宜谒贵求谋"); break;
+                case "生": tip.append("宜求财造作"); break;
+                case "休": tip.append("宜赴官迁徙"); break;
+                case "景": tip.append("宜上书求名"); break;
+                case "伤": tip.append("防损伤争斗"); break;
+                case "杜": tip.append("宜藏形避难"); break;
+                case "死": tip.append("防衰败收敛"); break;
+                case "惊": tip.append("防惊疑词讼"); break;
             }
         } else {
-            tip.append("平稳");
+            tip.append("中宫无门");
         }
         
         if (star != null && !star.isEmpty()) {
@@ -1325,53 +1574,69 @@ public class FullNinePalaceActivity extends Activity {
         }
 
         if (isLuckyDoor) {
-            return timeInfo + " · 吉门当值，宜进取";
+            return timeInfo + " · 值使得吉门，此时用事为宜";
         } else {
-            return timeInfo + " · 凶门当值，宜静守";
+            return timeInfo + " · 值使不得吉门，宜静守待时";
         }
     }
     
-    private String[] getYiActivitiesDetailed(String star, String door) {
+    /** 时干主事，依《秘笈大全》：「六乙为天德……六癸为天网，六甲为时首，而应局斯灵。」 */
+    private String getShiGanZhuShi(String gan) {
+        if (gan == null) return "时临六甲，为时首，而应局斯灵。";
+        switch (gan) {
+            case "乙": return "时临六乙，为天德，出从天上日奇之下，可决胜于未然。";
+            case "丙": return "时临六丙，为天威，不得丙火销金之令，宜防败于不测。";
+            case "丁": return "时临六丁，名为玉女潜形，宜隐伏而不见其象。";
+            case "戊": return "时临六戊，号曰乘龙万里，逢凶徒而自灭其踪。";
+            case "己": return "时临六己，为地户，宜阴私而用偷劫。";
+            case "庚": return "时临六庚，出战则咎将及于其师。";
+            case "辛": return "时临六辛，行师则祸必及于其身。";
+            case "壬": return "时临六壬，为天牢，而飞祸速至。";
+            case "癸": return "时临六癸，为天网，审高下而利逃亡。";
+            default:  return "时临六甲，为时首，而应局斯灵。";
+        }
+    }
+
+    /** 宜：依《秘笈大全》八门诗诀与八门克应衢仙断语。 */
+    private String[] getYiActivitiesDetailed(String door, String shiGan) {
         java.util.ArrayList<String> yiList = new java.util.ArrayList<>();
 
         if (door != null) {
             switch (door) {
                 case "开":
-                    yiList.add("开业"); yiList.add("洽谈"); yiList.add("签约");
-                    yiList.add("投资"); yiList.add("拓市");
+                    yiList.add("谒贵求谋"); yiList.add("立宅赴官"); yiList.add("出行商贾");
+                    yiList.add("开业签约");
                     break;
                 case "生":
-                    yiList.add("投资"); yiList.add("置业"); yiList.add("储蓄");
-                    yiList.add("合作"); yiList.add("创业");
+                    yiList.add("嫁娶造作"); yiList.add("求财营商"); yiList.add("置业储蓄");
+                    yiList.add("出入经营");
                     break;
                 case "休":
-                    yiList.add("休养"); yiList.add("学习"); yiList.add("考试");
-                    yiList.add("旅游"); yiList.add("进修");
+                    yiList.add("赴官迁徙"); yiList.add("祭祀入宅"); yiList.add("婚姻产育");
+                    yiList.add("谒贵休养");
                     break;
                 case "景":
-                    yiList.add("文教"); yiList.add("考试"); yiList.add("展示");
-                    yiList.add("社交"); yiList.add("会议");
+                    yiList.add("上书献策"); yiList.add("奏对选拔"); yiList.add("求名举科");
+                    yiList.add("文书印信");
                     break;
                 case "杜":
-                    yiList.add("保密"); yiList.add("隐匿"); yiList.add("低调");
-                    yiList.add("暗查"); yiList.add("内通");
+                    yiList.add("躲灾避难"); yiList.add("隐伏逃藏"); yiList.add("追邪伐盗");
+                    yiList.add("密谋保密");
                     break;
                 case "伤":
-                    yiList.add("健身"); yiList.add("竞技"); yiList.add("出行");
-                    yiList.add("协作"); yiList.add("开拓");
+                    yiList.add("渔猎捕捉"); yiList.add("索债追亡"); yiList.add("博弈竞技");
                     break;
                 case "死":
-                    yiList.add("清理"); yiList.add("反思"); yiList.add("守财");
-                    yiList.add("调心"); yiList.add("修复");
+                    yiList.add("吊死送丧"); yiList.add("葬埋捕捉"); yiList.add("畋猎刑戮");
+                    yiList.add("清理守成");
                     break;
                 case "惊":
-                    yiList.add("咨询"); yiList.add("评估"); yiList.add("慎决");
-                    yiList.add("核实"); yiList.add("预案");
+                    yiList.add("词讼捕捉"); yiList.add("设疑伏兵"); yiList.add("掩捕逃亡");
                     break;
             }
         }
 
-        yiList.add("祭祀");
+        yiList.add("祭神");
         yiList.add("祈福");
         yiList.add("行善");
         yiList.add("敬老");
@@ -1379,43 +1644,45 @@ public class FullNinePalaceActivity extends Activity {
         return yiList.toArray(new String[0]);
     }
     
-    private String[] getJiActivitiesDetailed(String star, String door) {
+    /** 忌：依《秘笈大全》八门诗诀与八门克应衢仙断语。 */
+    private String[] getJiActivitiesDetailed(String door, String shiGan) {
         java.util.ArrayList<String> jiList = new java.util.ArrayList<>();
 
         if (door != null) {
             switch (door) {
                 case "死":
-                    jiList.add("决策"); jiList.add("签约"); jiList.add("投资");
-                    jiList.add("远行"); jiList.add("嫁娶");
+                    jiList.add("所求营谋"); jiList.add("出行"); jiList.add("嫁娶");
+                    jiList.add("修造"); jiList.add("上官");
                     break;
                 case "惊":
-                    jiList.add("决策"); jiList.add("签约"); jiList.add("演讲");
-                    jiList.add("争执"); jiList.add("诉讼");
+                    jiList.add("市贾营修"); jiList.add("安静喜庆"); jiList.add("嫁娶宴会");
+                    jiList.add("争执");
                     break;
                 case "伤":
-                    jiList.add("决策"); jiList.add("投资"); jiList.add("远行");
-                    jiList.add("争执"); jiList.add("动土");
+                    jiList.add("上官出行"); jiList.add("嫁娶修造"); jiList.add("商贾埋葬");
+                    jiList.add("争执动土");
                     break;
                 case "杜":
-                    jiList.add("演讲"); jiList.add("展示"); jiList.add("社交");
-                    jiList.add("洽谈"); jiList.add("招标");
+                    jiList.add("出行商贾"); jiList.add("谋求谒贵"); jiList.add("张扬显露");
                     break;
                 case "景":
-                    jiList.add("投资"); jiList.add("高风险"); jiList.add("娱乐");
-                    jiList.add("酒驾"); jiList.add("熬夜");
+                    jiList.add("争讼口舌"); jiList.add("远行"); jiList.add("酒色娱乐");
                     break;
                 case "开":
-                    jiList.add("保密"); jiList.add("隐匿"); jiList.add("闭关");
+                    jiList.add("阴私隐匿"); jiList.add("闭关自守");
                     break;
                 case "休":
-                    jiList.add("过劳"); jiList.add("剧动"); jiList.add("冒险");
+                    jiList.add("过劳剧动"); jiList.add("冒险躁进");
                     break;
                 case "生":
-                    jiList.add("浪费"); jiList.add("盲投"); jiList.add("投机");
+                    jiList.add("浪费盲投"); jiList.add("投机赌博");
                     break;
             }
         }
 
+        if ("庚".equals(shiGan) || "辛".equals(shiGan) || "壬".equals(shiGan)) {
+            jiList.add("出兵兴师");
+        }
         jiList.add("赌博");
         jiList.add("诉讼");
         jiList.add("口舌");
@@ -1445,71 +1712,61 @@ public class FullNinePalaceActivity extends Activity {
     private String getOverallAdviceSimple(boolean isYangDun, int ju, String star, String door) {
         StringBuilder sb = new StringBuilder();
 
-        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
-        String[] luckyDoors = {"开", "休", "生"};
-
-        boolean isLuckyStar = false, isLuckyDoor = false;
-        if (star != null) {
-            for (String s : luckyStars) if (s.equals(star)) isLuckyStar = true;
-        }
-        if (door != null) {
-            for (String d : luckyDoors) if (d.equals(door)) isLuckyDoor = true;
-        }
+        String starGrade = getStarGrade(star);
+        String doorGrade = getDoorGrade(door);
+        boolean isLuckyStar = "上吉".equals(starGrade) || "次吉".equals(starGrade);
+        boolean isLuckyDoor = "吉门".equals(doorGrade);
 
         if (isLuckyStar && isLuckyDoor) {
-            sb.append("整体运势：大吉（值符值使皆吉），宜乘时进\n");
+            sb.append("整体运势：大吉（值符值使皆吉），宜乘时而进\n");
         } else if (isLuckyStar || isLuckyDoor) {
             sb.append("整体运势：小吉（值符值使一吉），宜稳步而行\n");
         } else {
-            sb.append("整体运势：平平（值符值使欠佳），宜慎守\n");
+            sb.append("整体运势：平平（值符值使欠佳），宜慎守勿进\n");
         }
+
+        sb.append("《秘笈》曰：「急从神兮缓从门。」有急难则从值符方而行，从容行事则择吉门而出。\n");
 
         if (door != null) {
             switch (door) {
-                case "开": sb.append("行事：开门主开创，宜决策拓局"); break;
-                case "生": sb.append("行事：生门主生发，宜积累蓄势"); break;
-                case "休": sb.append("行事：休门主养息，宜蓄锐待机"); break;
-                case "景": sb.append("行事：景门主显扬，宜宣示立信"); break;
-                case "杜": sb.append("行事：杜门主闭塞，宜潜藏守密"); break;
-                case "伤": sb.append("行事：伤门主损耗，宜防损避争"); break;
-                case "死": sb.append("行事：死门主收敛，宜清整止戈"); break;
-                case "惊": sb.append("行事：惊门主破扰，宜镇定慎言"); break;
+                case "开": sb.append("行事：开门主开通，宜谒贵求谋、立宅赴官"); break;
+                case "生": sb.append("行事：生门主生发，宜嫁娶造作、求财营商"); break;
+                case "休": sb.append("行事：休门主休养，宜赴官迁徙、祭祀入宅"); break;
+                case "景": sb.append("行事：景门主文书，宜上书献策、求名举科"); break;
+                case "杜": sb.append("行事：杜门主闭塞，宜躲灾避难、隐伏藏形"); break;
+                case "伤": sb.append("行事：伤门主损伤，惟宜渔猎捕捉、索债追亡"); break;
+                case "死": sb.append("行事：死门主收敛，惟宜吊死送丧、葬埋捕捉"); break;
+                case "惊": sb.append("行事：惊门主惊疑，惟宜词讼捕捉、设疑伏兵"); break;
             }
         }
 
         return sb.toString();
     }
 
+    /** 空亡：奇门以旬空论，空亡之方谋望难成，吉凶减半。 */
     private String getKongWangExplanation(String kongWang) {
-        if (kongWang == null || kongWang.equals("--")) return "空亡主事体不实";
-        String[] explanations = {
-            "主气虚散，情思浮荡，宜收摄",
-            "主金气衰，肺易病，宜润燥固金",
-            "主火气衰，心易扰，宜宁心镇火",
-            "主土气衰，脾胃失运，宜培土健中",
-            "主木气衰，肝胆失疏，宜柔肝条达",
-            "主水气衰，肾元不藏，宜温肾固本"
-        };
+        if (kongWang == null || kongWang.equals("--")) return "空亡之方，事体不实，谋望难成。";
         java.util.Map<String, String> map = new java.util.HashMap<>();
-        map.put("戌亥", explanations[0]);
-        map.put("申酉", explanations[1]);
-        map.put("午未", explanations[2]);
-        map.put("辰巳", explanations[3]);
-        map.put("寅卯", explanations[4]);
-        map.put("子丑", explanations[5]);
-        return map.getOrDefault(kongWang, "空亡主事体不实");
+        map.put("戌亥", "戌亥空（乾、坎之界）：天门事虚，宜守不宜进。");
+        map.put("申酉", "申酉空（坤、兑之界）：金气落空，兵戈刑伤不实。");
+        map.put("午未", "午未空（离、坤之界）：火土落空，声名口舌虚浮。");
+        map.put("辰巳", "辰巳空（巽、巽位）：田宅财帛虚，宜审而后动。");
+        map.put("寅卯", "寅卯空（艮、震之界）：文书人事不实，求谋难就。");
+        map.put("子丑", "子丑空（坎、艮之界）：水土落空，谋事迟滞。");
+        return map.getOrDefault(kongWang, "空亡之方，事体不实，谋望难成。");
     }
     
+    /** 马星：主迁移动变，所临之方利出行求财；逢空亡则马不行。 */
     private String getMaXingExplanation(String maXing) {
-        if (maXing == null || maXing.equals("--")) return "马星主奔波变动";
+        if (maXing == null || maXing.equals("--")) return "马星主奔波变动，宜出行求谋。";
         java.util.Map<String, String> map = new java.util.HashMap<>();
-        map.put("寅", "主动，利趋东方");
-        map.put("午", "主动，利趋南方");
-        map.put("申", "主动，利趋西方");
-        map.put("亥", "主动，利趋北方");
-        map.put("巳", "主动，利趋东南");
-        map.put("酉", "主动，利趋西北");
-        return map.getOrDefault(maXing, "马星主动，奔波迁变");
+        map.put("寅", "马星在寅（东北）：主动主迁，利趋东北出行求财。");
+        map.put("午", "马星在午（正南）：主动主迁，利趋正南出行求财。");
+        map.put("申", "马星在申（西南）：主动主迁，利趋西南出行求财。");
+        map.put("亥", "马星在亥（西北）：主动主迁，利趋西北出行求财。");
+        map.put("巳", "马星在巳（东南）：主动主迁，利趋东南出行求财。");
+        map.put("酉", "马星在酉（正西）：主动主迁，利趋正西出行求财。");
+        return map.getOrDefault(maXing, "马星主动，奔波迁变。");
     }
     
     private String getWangCuiDescription(String[] wangCui, int riGanPalace) {
@@ -1518,11 +1775,11 @@ public class FullNinePalaceActivity extends Activity {
         }
         String status = wangCui[riGanPalace];
         switch (status) {
-            case "旺": return "得令而旺，气盛事通";
-            case "相": return "得生而相，有助易成";
-            case "休": return "气退休废，静养为宜";
-            case "囚": return "受制被囚，滞碍难行";
-            case "死": return "气临死地，守固勿攻";
+            case "旺": return "日干落宫当令而旺：气盛事通，谋为多成。";
+            case "相": return "日干落宫得生而相：有助易成，进则可望。";
+            case "休": return "日干落宫休废：气退不可用，宜静养守常。";
+            case "囚": return "日干落宫受制被囚：滞碍难行，宜守不宜攻。";
+            case "死": return "日干落宫临死地：百事无成，宜固守勿动。";
             default: return "旺衰未明";
         }
     }
@@ -1531,30 +1788,49 @@ public class FullNinePalaceActivity extends Activity {
         String dayGan = dayPillar.substring(0, 1);
         String dayGanWuXing = QiMenCalculator.getWuXing(dayGan);
 
-        String[] luckyStars = {"天辅", "天心", "天禽", "天任"};
-        String[] luckyDoors = {"开", "休", "生"};
-        boolean isLuckyStar = false, isLuckyDoor = false;
-        if (zhiFuStar != null) {
-            for (String s : luckyStars) if (s.equals(zhiFuStar)) isLuckyStar = true;
-        }
-        if (zhiShiDoor != null) {
-            for (String d : luckyDoors) if (d.equals(zhiShiDoor)) isLuckyDoor = true;
-        }
+        String starGrade = getStarGrade(zhiFuStar);
+        String doorGrade = getDoorGrade(zhiShiDoor);
+        boolean isLuckyStar = "上吉".equals(starGrade) || "次吉".equals(starGrade);
+        boolean isLuckyDoor = "吉门".equals(doorGrade);
 
         StringBuilder sb = new StringBuilder();
         sb.append(dayGanWuXing).append("日").append(dayGan).append(" · ");
         sb.append(isYangDun ? "阳遁" : "阴遁").append(ju).append("局\n");
-        sb.append("值符").append(zhiFuStar).append("星").append(isLuckyStar ? "吉" : "平");
-        sb.append(" · 值使").append(zhiShiDoor).append("门").append(isLuckyDoor ? "吉" : "平").append("\n");
+        sb.append("值符 ").append(zhiFuStar).append("星（").append(starGrade).append("）");
+        sb.append(" · 值使 ").append(zhiShiDoor).append("门（").append(doorGrade).append("）\n");
+        sb.append("《三元经》曰：「辅禽心星为上吉，冲任次吉理须明；大凶天蓬与天芮，小凶天柱及天英。」\n");
         sb.append("整体格局：");
         if (isLuckyStar && isLuckyDoor) {
-            sb.append("★★★ 大吉");
+            sb.append("★★★ 大吉　值符值使皆吉，吉门又合三奇");
         } else if (isLuckyStar || isLuckyDoor) {
-            sb.append("★★ 小吉");
+            sb.append("★★ 小吉　值符值使一吉，宜稳步而行");
         } else {
-            sb.append("★ 平平");
+            sb.append("★ 平平　值符值使欠佳，宜慎守勿进");
         }
         return sb.toString();
+    }
+
+    /** 九星品级，依《三元经》："辅禽心星为上吉，冲任次吉理须明；大凶天蓬与天芮，小凶天柱及天英。" */
+    private String getStarGrade(String star) {
+        if (star == null) return "未明";
+        switch (star) {
+            case "天辅": case "天禽": case "天心": return "上吉";
+            case "天冲": case "天任": return "次吉";
+            case "天柱": case "天英": return "小凶";
+            case "天蓬": case "天芮": return "大凶";
+            default: return "未明";
+        }
+    }
+
+    /** 八门品级：开、休、生为三吉门；伤、死、惊为凶门；杜、景为中平。 */
+    private String getDoorGrade(String door) {
+        if (door == null || door.isEmpty()) return "无门";
+        switch (door) {
+            case "开": case "休": case "生": return "吉门";
+            case "杜": case "景": return "平门";
+            case "伤": case "死": case "惊": return "凶门";
+            default: return "平门";
+        }
     }
     
     private String getPaipanYiju(String yearPillar, String monthPillar, String dayPillar, String timePillar,
@@ -1586,20 +1862,24 @@ public class FullNinePalaceActivity extends Activity {
         // 2. 局法
         sb.append(getTitleColor).append("<b>【局法】</b> ").append(getClose)
           .append(jieqi).append("　").append(dunType).append(ju).append("局").append(shunNi).append("行")
-          .append("<br/><br/>");
+          .append("<br/>");
+        sb.append("<font color='#7C8C9C'>　《烟波钓叟歌》：「阴阳二遁分顺逆，一气三元人莫测；")
+          .append("五日都来换一元，接气超神为准的。」</font><br/><br/>");
 
         // 3. 值符值使
         sb.append(getTitleColor).append("<b>【值符值使】</b> ").append(getClose)
           .append("时柱定旬首 ").append(xunShou).append("<br/>");
         sb.append("　值符 ").append(getFireColor).append(zhiFuStar).append(getClose).append("落").append(PALACE_NAMES[zhiFuPalace])
           .append("　值使 ").append(getWoodColor).append(zhiShiDoor).append(getClose).append("落").append(PALACE_NAMES[zhiShiPalace])
-          .append("<br/><br/>");
+          .append("<br/>");
+        sb.append("<font color='#7C8C9C'>　值符者，诸神之元首、九星之领袖；值使者，八门之枢机。</font><br/><br/>");
 
         // 4. 三奇六仪
         sb.append(getTitleColor).append("<b>【三奇六仪】</b> ").append(getClose)
           .append("三奇 ").append(getFireColor).append("乙丙丁").append(getClose)
           .append("　六仪 ").append(getEarthColor).append("戊己庚辛壬癸").append(getClose)
-          .append("<br/><br/>");
+          .append("<br/>");
+        sb.append("<font color='#7C8C9C'>　《秘笈》曰：「六甲为时首，而应局斯灵。」甲遁于六仪，故六仪即六甲。</font><br/><br/>");
 
         // 5. 九星
         sb.append(getTitleColor).append("<b>【九星】</b> ").append(getClose)
@@ -1616,9 +1896,17 @@ public class FullNinePalaceActivity extends Activity {
           .append("自").append(PALACE_NAMES[zhiFuPalace]).append(shunNi).append("布：符蛇阴合白玄地天")
           .append("<br/><br/>");
 
-        // 8. 关键
+        // 8. 旺衰
+        sb.append(getTitleColor).append("<b>【旺相休囚】</b> ").append(getClose)
+          .append("以宫五行为用神、月令五行为时令").append("<br/>");
+        sb.append("<font color='#7C8C9C'>　《烟波钓叟歌》：「与我同行即为相，我生之月诚为旺，")
+          .append("废于父母休于财，囚于官鬼真不妄。」</font><br/><br/>");
+
+        // 9. 关键
         sb.append(getTitleColor).append("<b>【关键】</b> ").append(getClose)
-          .append(dunType).append(shunNi).append("行　值符星随时干　值使门随时支");
+          .append(dunType).append(shunNi).append("行　值符星随时干　值使门随时支").append("<br/>");
+        sb.append("<font color='#7C8C9C'>　《秘笈》曰：「急从神兮缓从门。」有急难则从值符方，")
+          .append("从容行事则择吉门而出。</font>");
 
         return sb.toString();
     }

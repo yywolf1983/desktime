@@ -89,7 +89,7 @@
                         android:id="@+id/expSummary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="今日格局吉利，宜行动进取，东南方为吉位"
+                        android:text="当前格局待判，起局后即示吉凶方位"
                         android:textSize="13sp"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold"
@@ -310,7 +310,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="天盘＝星神飞布的上层（变化），地盘＝八卦方位的下层（固定），两层叠加看吉凶。"
+                        android:text="天盘主动，为星神随时飞布；地盘主静，为九宫方位定位。天盘加临地盘，吉凶于是乎见。"
                         android:textSize="15sp"
                         android:textColor="@color/text_annotation"
                         android:layout_marginBottom="6dp"/>
@@ -444,7 +444,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="逐宫拆解，列星、门、神之组合与吉凶。"
+                        android:text="逐宫拆解，列天盘加地盘之干，与星、门、神之组合吉凶。"
                         android:textSize="15sp"
                         android:textColor="@color/text_annotation"
                         android:layout_marginBottom="6dp"/>
@@ -453,6 +453,45 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="9dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/card_background">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="格局克应"
+                        android:textColor="@color/gold"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"
+                        android:paddingBottom="6dp"
+                        android:letterSpacing="0.05"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/gold_separator"
+                        android:layout_marginBottom="6dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="依《秘笈大全》十干克应，逐宫检天盘加地盘之格，并察击刑、门迫、入墓、五不遇之忌。"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_annotation"
+                        android:layout_marginBottom="6dp"/>
+                    <TextView
+                        android:id="@+id/expGejuKeying"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_primary"
                         android:lineSpacingExtra="2dp"
                         android:layout_marginBottom="6dp"/>
                 </LinearLayout>
@@ -482,7 +521,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="说明本盘所用的历法、奇门局数（阳遁／阴遁几局）与起局规则，便于核对。"
+                        android:text="列本盘四柱、奇门局数（阳遁／阴遁几局）与起局规则，依《烟波钓叟歌》为准，便于核对。"
                         android:textSize="15sp"
                         android:textColor="@color/text_annotation"
                         android:layout_marginBottom="6dp"/>
