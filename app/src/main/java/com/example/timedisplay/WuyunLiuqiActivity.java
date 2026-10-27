@@ -256,8 +256,8 @@ public class WuyunLiuqiActivity extends Activity {
         String timeGanZhi = timePillar;
         
         if (yearGanZhi == null || monthGanZhi == null || dayGanZhi == null || timeGanZhi == null) {
-            yearGanZhi = calculateYearGanZhi(year);
-            monthGanZhi = calculateMonthGanZhi(year, month);
+            yearGanZhi = calculateYearGanZhi(year, month, day);
+            monthGanZhi = calculateMonthGanZhi(year, month, day);
             
             int calcYear = year;
             int calcMonth = month;
@@ -307,15 +307,9 @@ public class WuyunLiuqiActivity extends Activity {
         }
     }
     
-    private String calculateMonthGanZhi(int year, int month) {
-        int calcYear = year;
-        int calcMonth = month;
-        
-        if (month < 2 || (month == 2 && getDayOfYear(year, month, 1) < getJieqiDayOfYear(year, 0))) {
-            calcYear = year - 1;
-        }
-        
-        String yearPillar = calculateYearGanZhi(calcYear);
+    private String calculateMonthGanZhi(int year, int month, int day) {
+        // calculateYearGanZhi 内部已做立春判断，这里直接用
+        String yearPillar = calculateYearGanZhi(year, month, day);
         String yearGan = yearPillar.substring(0, 1);
         
         java.util.HashMap<String, String> wuhudun = new java.util.HashMap<>();
@@ -329,44 +323,33 @@ public class WuyunLiuqiActivity extends Activity {
         if (yinMonthGan == null) yinMonthGan = "丙";
         int yinGanIndex = java.util.Arrays.asList(TIANGAN).indexOf(yinMonthGan);
         
-        String monthZhi = getMonthZhiForYear(year, month, 1);
-        String[] monthZhiList = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
-        int monthZhiIndex = java.util.Arrays.asList(monthZhiList).indexOf(monthZhi);
+        String monthZhi = getMonthZhiByJieqi(year, month, day);
+        int monthZhiIndex = java.util.Arrays.asList(DIZHI).indexOf(monthZhi);
         int monthGanIndex = (yinGanIndex + monthZhiIndex) % 10;
         
         return TIANGAN[monthGanIndex] + monthZhi;
     }
     
-    private String getMonthZhiForYear(int year, int month, int day) {
-        if (month == 1 && day < 6) return "子";
-        if (month == 1 && day >= 6) return "丑";
-        if (month == 2 && day < 4) return "丑";
-        if (month == 2 && day >= 4) return "寅";
-        
-        String[] monthZhiList = {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"};
-        return monthZhiList[(month - 1) % 12];
-    }
-    
-    private int getDayOfYear(int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day);
-        return calendar.get(Calendar.DAY_OF_YEAR);
-    }
-    
-    private int getJieqiDayOfYear(int year, int jieqiIndex) {
-        int[] jieqiDays = {4, 19, 6, 21, 5, 21, 6, 22, 8, 23, 8, 23, 8, 23, 8, 23, 8, 24, 7, 23, 7, 22, 5, 20};
-        int dayOfYear = 0;
-        for (int i = 0; i < jieqiIndex; i++) {
-            if (i < 11) {
-                dayOfYear += (i % 2 == 0) ? 31 : 28;
-            } else {
-                int m = (i / 2) + 6;
-                int daysInMonth = (m == 7 || m == 8 || m == 10 || m == 12) ? 31 :
-                                  (m == 9 || m == 11) ? 30 : 28;
-                dayOfYear += daysInMonth;
-            }
+    private String getMonthZhiByJieqi(int year, int month, int day) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(year, month - 1, day, 12, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        String jieqi = JieqiData.getCurrentJieqi(cal);
+        switch (jieqi) {
+            case "立春": case "雨水": return "寅";
+            case "惊蛰": case "春分": return "卯";
+            case "清明": case "谷雨": return "辰";
+            case "立夏": case "小满": return "巳";
+            case "芒种": case "夏至": return "午";
+            case "小暑": case "大暑": return "未";
+            case "立秋": case "处暑": return "申";
+            case "白露": case "秋分": return "酉";
+            case "寒露": case "霜降": return "戌";
+            case "立冬": case "小雪": return "亥";
+            case "大雪": case "冬至": return "子";
+            case "小寒": case "大寒": return "丑";
+            default: return "寅";
         }
-        return dayOfYear + jieqiDays[jieqiIndex];
     }
     
     private String calculateDayGanZhi(int year, int month, int day) {
@@ -662,7 +645,16 @@ public class WuyunLiuqiActivity extends Activity {
     }
     
     
-    private String calculateYearGanZhi(int year) {
+    private String calculateYearGanZhi(int year, int month, int day) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(year, month - 1, day, 12, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        int[] lichun = JieqiData.getJieqiDate(year, 0);
+        java.util.Calendar lichunCal = java.util.Calendar.getInstance();
+        lichunCal.set(lichun[0], lichun[1] - 1, lichun[2], 12, 0, 0);
+        lichunCal.set(java.util.Calendar.MILLISECOND, 0);
+        if (cal.before(lichunCal)) year = year - 1;
+
         int baseYear = 1900;
         int baseIndex = 36;
         
@@ -752,7 +744,7 @@ public class WuyunLiuqiActivity extends Activity {
     }
     
     private String[] getLiuqiForDate(int year, int month, int day) {
-        String yearGanZhi = calculateYearGanZhi(year);
+        String yearGanZhi = calculateYearGanZhi(year, month, day);
         String yearZhi = yearGanZhi.substring(1, 2);
 
         int siTianIndex = getSiTianIndex(yearZhi);

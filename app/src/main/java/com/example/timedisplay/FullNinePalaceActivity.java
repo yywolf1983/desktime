@@ -371,12 +371,15 @@ public class FullNinePalaceActivity extends Activity {
     }
 
     private String calculateYearPillar(int year, int month, int day) {
-        // 年柱以立春为界：立春之前（小寒、大寒）仍属上一年，用节气精确判定
+        // 年柱以立春为界：与当年立春日期比较精确判定
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.set(year, month - 1, day, 12, 0, 0);
         cal.set(java.util.Calendar.MILLISECOND, 0);
-        String jieqi = JieqiData.getCurrentJieqi(cal);
-        if ("小寒".equals(jieqi) || "大寒".equals(jieqi)) {
+        int[] lichun = JieqiData.getJieqiDate(year, 0);
+        java.util.Calendar lichunCal = java.util.Calendar.getInstance();
+        lichunCal.set(lichun[0], lichun[1] - 1, lichun[2], 12, 0, 0);
+        lichunCal.set(java.util.Calendar.MILLISECOND, 0);
+        if (cal.before(lichunCal)) {
             year = year - 1;
         }
 

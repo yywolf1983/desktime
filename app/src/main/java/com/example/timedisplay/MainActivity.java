@@ -785,14 +785,17 @@ public class MainActivity extends Activity {
         
     }
 
-    // 计算年柱（以立春为年分界，使用节气数据精确判定）
+    // 计算年柱（以立春为年分界，与当年立春日期比较精确判定）
     private String calculateYearPillar(int year, int month, int day) {
-        // 立春前的节气为小寒、大寒，此时八字年份仍属上一年
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.set(year, month - 1, day, 12, 0, 0);
         cal.set(java.util.Calendar.MILLISECOND, 0);
-        String jieqi = JieqiData.getCurrentJieqi(cal);
-        if ("小寒".equals(jieqi) || "大寒".equals(jieqi)) {
+        // 八字年柱以立春为界：当年立春之前（冬至/小寒/大寒段）属上一年
+        int[] lichun = JieqiData.getJieqiDate(year, 0);
+        java.util.Calendar lichunCal = java.util.Calendar.getInstance();
+        lichunCal.set(lichun[0], lichun[1] - 1, lichun[2], 12, 0, 0);
+        lichunCal.set(java.util.Calendar.MILLISECOND, 0);
+        if (cal.before(lichunCal)) {
             year = year - 1;
         }
         

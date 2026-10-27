@@ -2440,8 +2440,17 @@ public class DestinyCalculator {
         "甲寅","乙卯","丙辰","丁巳","戊午","己未","庚申","辛酉","壬戌","癸亥"
     };
 
-    // 计算年柱（立春为界，这里按公历年份近似，以春节后当年干支计）
-    public static String getYearPillar(int year) {
+    // 计算年柱（八字以立春为界，与当年立春日期比较精确判定）
+    public static String getYearPillar(int year, int month, int day) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(year, month - 1, day, 12, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        int[] lichun = JieqiData.getJieqiDate(year, 0);
+        java.util.Calendar lichunCal = java.util.Calendar.getInstance();
+        lichunCal.set(lichun[0], lichun[1] - 1, lichun[2], 12, 0, 0);
+        lichunCal.set(java.util.Calendar.MILLISECOND, 0);
+        if (cal.before(lichunCal)) year = year - 1;
+
         int baseYear = 1900;
         int baseIndex = 36; // 庚子
         int yearDiff = year - baseYear;
@@ -2450,10 +2459,10 @@ public class DestinyCalculator {
         return LIUJIAZI_ARR[idx];
     }
 
-    // 计算月柱（按节气月，简化版：以公历月近似，用五虎遁）
+    // 计算月柱（节月：以二十四节气为分界，复用 JieqiData 精确判定）
     public static String getMonthPillar(int year, int month, int day) {
-        String yearGan = getYearPillar(year).substring(0, 1);
-        String monthZhi = getMonthZhiSimple(month, day);
+        String yearGan = getYearPillar(year, month, day).substring(0, 1);
+        String monthZhi = getMonthZhiByJieqi(year, month, day);
 
         // 五虎遁
         Map<String, String> wuHuDun = new HashMap<>();
@@ -2472,14 +2481,27 @@ public class DestinyCalculator {
         return TIANGAN_ARR[ganIdx] + monthZhi;
     }
 
-    private static String getMonthZhiSimple(int month, int day) {
-        if (month == 1) return day < 6 ? "子" : "丑";
-        if (month == 2) return day < 4 ? "丑" : "寅";
-        Map<Integer, String> map = new HashMap<>();
-        map.put(3, "卯"); map.put(4, "辰"); map.put(5, "巳");
-        map.put(6, "午"); map.put(7, "未"); map.put(8, "申");
-        map.put(9, "酉"); map.put(10, "戌"); map.put(11, "亥"); map.put(12, "子");
-        return map.get(month);
+    // 节月判定：用 JieqiData 精确节气，与 MainActivity 的 getMonthZhi 保持一致
+    private static String getMonthZhiByJieqi(int year, int month, int day) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(year, month - 1, day, 12, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        String jieqi = JieqiData.getCurrentJieqi(cal);
+        switch (jieqi) {
+            case "立春": case "雨水": return "寅";
+            case "惊蛰": case "春分": return "卯";
+            case "清明": case "谷雨": return "辰";
+            case "立夏": case "小满": return "巳";
+            case "芒种": case "夏至": return "午";
+            case "小暑": case "大暑": return "未";
+            case "立秋": case "处暑": return "申";
+            case "白露": case "秋分": return "酉";
+            case "寒露": case "霜降": return "戌";
+            case "立冬": case "小雪": return "亥";
+            case "大雪": case "冬至": return "子";
+            case "小寒": case "大寒": return "丑";
+            default: return "寅";
+        }
     }
 
     // 计算日柱（1900年1月1日为甲戌日，索引10）

@@ -160,11 +160,13 @@
     }
 
     /* ===================== 四柱（年/月/日/时干支） ===================== */
-    // 年柱以「小寒/大寒」为界（与 App 一致）：处于小寒、大寒节气内（冬至后、立春前）属上一年
+    // 年柱以立春为界：与当年立春日期比较精确判定（冬至/小寒/大寒段均属上一年）
     function calculateYearPillar(year, month, day) {
-        const jieqi = getCurrentJieqi(year, month, day, 12);
         let y = year;
-        if (jieqi === '小寒' || jieqi === '大寒') y = year - 1;
+        const lichun = getJieqiDate(year, 0); // [year, month, day] — 当年立春日期
+        const lichunTime = toMillis(lichun[0], lichun[1], lichun[2], 12);
+        const now = toMillis(year, month, day, 12);
+        if (now < lichunTime) y = year - 1;
         const baseYear = 1900;
         const baseIndex = 36;
         const yearIndex = (baseIndex + (y - baseYear)) % 60;

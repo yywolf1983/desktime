@@ -76,9 +76,13 @@ class FourPillarsCalculator:
         self.base_ganzhi_index = 10  # 甲戌在60甲子中的索引
     
     def calculate_year_pillar(self, year: int, month: int, day: int) -> Tuple[str, str]:
-        """计算年柱"""
-        # 以立春为年分界
-        if month < 2 or (month == 2 and day < 4):
+        """计算年柱：八字年柱以立春为界（近似≈2月4日，精确判定见 get_month_zhi）"""
+        # 用节月分界判断立春前（丑月或小寒前1月1-4日的子月）→ 退上一年
+        month_zhi = self.get_month_zhi(month, day)
+        if month_zhi == "丑":
+            year = year - 1
+        elif month_zhi == "子" and month == 1:
+            # 1月的子月（小寒前）属上一年
             year = year - 1
         
         # 计算年干支（1900年为庚子年）
@@ -97,20 +101,36 @@ class FourPillarsCalculator:
         return f"{year_gan}{year_zhi}", year_gan
     
     def get_month_zhi(self, month: int, day: int) -> str:
-        """获取月支"""
-        # 简化处理：直接按月份分配月支
-        month_zhi_map = {
-            1: "寅",  2: "卯",  3: "辰",  4: "巳",  5: "午",  6: "未",
-            7: "申",  8: "酉",  9: "戌", 10: "亥", 11: "子", 12: "丑"
-        }
-        
-        # 2月4日立春后为寅月
-        if month == 2 and day >= 4:
-            return "寅"
-        elif month == 2 and day < 4:
-            return "丑"
-        
-        return month_zhi_map.get(month, "寅")
+        """
+        获取月支（节月：以二十四节气的「节」为分界）。
+        遍历节月分界表，取「当前日期 >= 节日期」的最后一个，即为当前月支。
+        节月顺序：立春(寅)→惊蛰(卯)→清明(辰)→立夏(巳)→芒种(午)→小暑(未)
+                  →立秋(申)→白露(酉)→寒露(戌)→立冬(亥)→大雪(子)→小寒(丑)
+        （小寒在次年1月，是子月→丑月的转换）
+        """
+        # 节月分界近似表（每个「节」的公历日期 + 对应月支）
+        # 按公历时间顺序排列，取「当前日期 >= 节日期」的最后一个即为当前月支
+        jieqi_boundaries = [
+            (1, 5,  "丑"),   # 小寒  ≈ 1月5日 起 丑月（跨年起点，必须排最前）
+            (2, 4,  "寅"),   # 立春  ≈ 2月4日 起 寅月
+            (3, 6,  "卯"),   # 惊蛰  ≈ 3月6日 起 卯月
+            (4, 5,  "辰"),   # 清明  ≈ 4月5日 起 辰月
+            (5, 6,  "巳"),   # 立夏  ≈ 5月6日 起 巳月
+            (6, 6,  "午"),   # 芒种  ≈ 6月6日 起 午月
+            (7, 7,  "未"),   # 小暑  ≈ 7月7日 起 未月
+            (8, 8,  "申"),   # 立秋  ≈ 8月8日 起 申月
+            (9, 8,  "酉"),   # 白露  ≈ 9月8日 起 酉月
+            (10, 8, "戌"),   # 寒露  ≈ 10月8日 起 戌月
+            (11, 7, "亥"),   # 立冬  ≈ 11月7日 起 亥月
+            (12, 7, "子"),   # 大雪  ≈ 12月7日 起 子月
+        ]
+        # 遍历取「当前日期 >= 节日期」的最后一个
+        # 默认：小寒前的1月1-4日属上一年的子月
+        result_zhi = "子"
+        for jq_m, jq_d, jq_zhi in jieqi_boundaries:
+            if month > jq_m or (month == jq_m and day >= jq_d):
+                result_zhi = jq_zhi
+        return result_zhi
     
     def calculate_month_pillar(self, year: int, month: int, day: int, year_gan: str) -> str:
         """计算月柱"""
