@@ -249,35 +249,18 @@
                 tools:text="辰(7-9) 胃经当令&#10;宜进朝膳，纳谷最良" />
 
             <TextView
-                android:id="@+id/panStarTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="10sp"
-                android:autoSizeMaxTextSize="13sp"
-                android:autoSizeStepGranularity="1sp"
-                android:textSize="13sp"
-                android:textColor="@color/explanation_gray"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:layout_marginTop="6dp"
-                android:letterSpacing="0.04"
-                tools:text="文星主事，利学业文书" />
-
-            <TextView
                 android:id="@+id/panGejuTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:maxLines="4"
                 android:textSize="12sp"
                 android:textColor="@color/explanation_gray"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:lineSpacingExtra="2dp"
                 android:letterSpacing="0.03"
-                tools:text="吉｜青龙回首、飞鸟跌穴　凶｜朱雀投江" />
+                tools:text="吉｜青龙回首(西北)、飞鸟跌穴(东)&#10;凶｜朱雀投江(南)" />
         </LinearLayout>
 
         <LinearLayout

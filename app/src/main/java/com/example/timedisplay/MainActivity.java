@@ -51,7 +51,6 @@ public class MainActivity extends Activity {
     private String currentJieqiName;
     public TextView fourPillarsTextView;
     public TextView timeFortuneTextView;
-    public TextView panStarTextView;
     public TextView panGejuTextView;
     public NinePalacePanel ninePalacePanel;
     private android.widget.TextView ninePalaceChevron;
@@ -124,7 +123,6 @@ public class MainActivity extends Activity {
         fourPillarsTextView = findViewById(R.id.fourPillarsTextView);
         copyButton = findViewById(R.id.copyButton);
         timeFortuneTextView = findViewById(R.id.timeFortuneTextView);
-        panStarTextView = findViewById(R.id.panStarTextView);
         panGejuTextView = findViewById(R.id.panGejuTextView);
         ninePalacePanel = (NinePalacePanel) findViewById(R.id.ninePalacePanel);
         ninePalaceChevron = (android.widget.TextView) findViewById(R.id.ninePalaceChevron);
@@ -980,15 +978,7 @@ public class MainActivity extends Activity {
     
     // 更新九宫格解释
     private void updateNinePalaceExplanation(String yearPillar, String monthPillar, String dayPillar, String timePillar) {
-        if (panStarTextView != null && ninePalacePanel != null) {
-            String zhiFu = ninePalacePanel.getCopyZhiFu();
-            String zhiShi = ninePalacePanel.getCopyZhiShi();
-
-            // 第二行：值符星义（灰色）
-            panStarTextView.setText(getSimpleMeaning(zhiFu, zhiShi));
-        }
-
-        // 第三行：格局克应（吉格绿色、凶格红色），与排盘页共用 QiMenGeJu 同一判定
+        // 格局克应（吉格绿色、凶格红色），与排盘页共用 QiMenGeJu 同一判定
         if (panGejuTextView != null && ninePalacePanel != null) {
             String[] tianPan = ninePalacePanel.getCopyTianPan();
             String[] diPan = ninePalacePanel.getCopyDiPan();

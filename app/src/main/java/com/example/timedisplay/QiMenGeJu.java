@@ -266,6 +266,9 @@ public final class QiMenGeJu {
         return null;
     }
 
+    /** 九宫方位名（宫序 0-8：北 西南 东 东南 中 西北 西 东北 南）。 */
+    private static final String[] PALACE_DIR = {"北", "西南", "东", "东南", "中", "西北", "西", "东北", "南"};
+
     /** 吉凶配色：吉绿、凶红、平黄。 */
     public static String luckColor(String luck) {
         if ("吉".equals(luck)) return "#3FA34D";
@@ -274,17 +277,17 @@ public final class QiMenGeJu {
     }
 
     /**
-     * 汇总一盘之吉格与凶格（去重），供排盘页与首页共用。
-     * 返回 [0]=吉格列表，[1]=凶格列表。
+     * 汇总一盘之吉格与凶格（去重，带方位）。
+     * 返回 [0]=吉格列表，[1]=凶格列表；每个元素为 {格局名, 方位名}，方位名为空字符串表示无固定方位。
      */
-    public static ArrayList<String>[] collectGeJu(String[] tianPan, String[] diPan, String[] doors,
+    public static ArrayList<String[]>[] collectGeJu(String[] tianPan, String[] diPan, String[] doors,
                                                   String[] eightGods, String[] nineStars, String dayGan,
                                                   String timeGan, String timePillar, int zhiShiPalace,
                                                   String xunShou) {
         @SuppressWarnings("unchecked")
-        ArrayList<String>[] result = new ArrayList[]{new ArrayList<String>(), new ArrayList<String>()};
-        ArrayList<String> ji = result[0];
-        ArrayList<String> xiong = result[1];
+        ArrayList<String[]>[] result = new ArrayList[]{new ArrayList<String[]>(), new ArrayList<String[]>()};
+        ArrayList<String[]> ji = result[0];
+        ArrayList<String[]> xiong = result[1];
         if (tianPan == null || diPan == null) return result;
 
         String yi = liuJiaYi(xunShou);
@@ -292,123 +295,147 @@ public final class QiMenGeJu {
         for (int i = 0; i < 9; i++) {
             String tp = tianPan[i], dp = diPan[i];
             if (tp == null || dp == null) continue;
+            String dir = PALACE_DIR[i];
 
             // 十干克应
             String[] ge = findKeYingGe(tp, dp);
             if (ge != null) {
-                if ("吉".equals(ge[3])) {
-                    if (!ji.contains(ge[2])) ji.add(ge[2]);
-                } else if ("凶".equals(ge[3])) {
-                    if (!xiong.contains(ge[2])) xiong.add(ge[2]);
-                }
+                if ("吉".equals(ge[3]) && !containsName(ji, ge[2])) ji.add(new String[]{ge[2], dir});
+                else if ("凶".equals(ge[3]) && !containsName(xiong, ge[2])) xiong.add(new String[]{ge[2], dir});
             }
 
             // 三奇得使
             for (String[] s : SAN_QI_DE_SHI) {
-                if (s[0].equals(tp) && s[1].equals(dp) && !ji.contains(s[2])) ji.add(s[2]);
+                if (s[0].equals(tp) && s[1].equals(dp) && !containsName(ji, s[2])) ji.add(new String[]{s[2], dir});
             }
 
             // 伏宫格、飞宫格
             if (yi != null) {
-                if ("庚".equals(tp) && yi.equals(dp) && !xiong.contains("伏宫格")) xiong.add("伏宫格");
-                if (yi.equals(tp) && "庚".equals(dp) && !xiong.contains("飞宫格")) xiong.add("飞宫格");
+                if ("庚".equals(tp) && yi.equals(dp) && !containsName(xiong, "伏宫格"))
+                    xiong.add(new String[]{"伏宫格", dir});
+                if (yi.equals(tp) && "庚".equals(dp) && !containsName(xiong, "飞宫格"))
+                    xiong.add(new String[]{"飞宫格", dir});
             }
 
             // 悖格
             if ("丙".equals(tp) && ("庚".equals(dp) || "丙".equals(dp) || (yi != null && yi.equals(dp)))) {
-                if (!xiong.contains("悖格")) xiong.add("悖格");
+                if (!containsName(xiong, "悖格")) xiong.add(new String[]{"悖格", dir});
             }
 
             // 三奇升殿 / 受制
             for (String[] s : SAN_QI_LIN_GONG) {
                 if (s[0].equals(tp) && Integer.parseInt(s[1]) == i) {
-                    if ("吉".equals(s[3])) {
-                        if (!ji.contains(s[2])) ji.add(s[2]);
-                    } else {
-                        if (!xiong.contains(s[2])) xiong.add(s[2]);
-                    }
+                    if ("吉".equals(s[3]) && !containsName(ji, s[2])) ji.add(new String[]{s[2], dir});
+                    else if ("凶".equals(s[3]) && !containsName(xiong, s[2]))
+                        xiong.add(new String[]{s[2], dir});
                 }
             }
 
             // 九遁
             String dun = detectJiuDun(doors != null ? doors[i] : null, tp, dp,
                                       eightGods != null ? eightGods[i] : null, i);
-            if (dun != null && !ji.contains(dun)) ji.add(dun);
+            if (dun != null && !containsName(ji, dun)) ji.add(new String[]{dun, dir});
 
             // 天网四张
-            if ("癸".equals(tp) && !xiong.contains("天网四张")) xiong.add("天网四张");
+            if ("癸".equals(tp) && !containsName(xiong, "天网四张"))
+                xiong.add(new String[]{"天网四张", dir});
 
             // 三奇入墓、门迫
-            if (isQiRuMu(tp, i) && !xiong.contains("三奇入墓")) xiong.add("三奇入墓");
-            if (doors != null && isMenPo(doors[i], i) && !xiong.contains("门迫")) xiong.add("门迫");
+            if (isQiRuMu(tp, i) && !containsName(xiong, "三奇入墓"))
+                xiong.add(new String[]{"三奇入墓", dir});
+            if (doors != null && isMenPo(doors[i], i) && !containsName(xiong, "门迫"))
+                xiong.add(new String[]{"门迫", dir});
         }
 
         // 玉女守门：地盘六丁守直使之门
-        if (zhiShiPalace >= 0 && zhiShiPalace < 9 && "丁".equals(diPan[zhiShiPalace]) && !ji.contains("玉女守门")) {
-            ji.add("玉女守门");
+        if (zhiShiPalace >= 0 && zhiShiPalace < 9 && "丁".equals(diPan[zhiShiPalace])
+                && !containsName(ji, "玉女守门")) {
+            ji.add(new String[]{"玉女守门", PALACE_DIR[zhiShiPalace]});
         }
 
         // 九星伏吟、反吟
         if (nineStars != null) {
             for (int i = 0; i < 9; i++) {
                 if (nineStars[i] == null || nineStars[i].isEmpty()) continue;
-                if (nineStars[i].equals(BEN_WEI_STAR[i]) && !xiong.contains("九星伏吟")) xiong.add("九星伏吟");
+                if (nineStars[i].equals(BEN_WEI_STAR[i]) && !containsName(xiong, "九星伏吟"))
+                    xiong.add(new String[]{"九星伏吟", PALACE_DIR[i]});
                 if (DUI_CHONG[i] != i && nineStars[i].equals(BEN_WEI_STAR[DUI_CHONG[i]])
-                        && !xiong.contains("九星反吟")) xiong.add("九星反吟");
+                        && !containsName(xiong, "九星反吟"))
+                    xiong.add(new String[]{"九星反吟", PALACE_DIR[i]});
             }
         }
 
         // 六仪击刑
         for (int k = 0; k < JI_XING.length; k++) {
             int p = JI_XING_PALACE[k];
-            if (JI_XING[k][0].equals(tianPan[p]) && !xiong.contains("六仪击刑")) xiong.add("六仪击刑");
+            if (JI_XING[k][0].equals(tianPan[p]) && !containsName(xiong, "六仪击刑"))
+                xiong.add(new String[]{"六仪击刑", PALACE_DIR[p]});
         }
 
-        // 五不遇时
-        if (isWuBuYuShi(dayGan, timeGan)) xiong.add("五不遇时");
-
-        // 时干入墓
+        // 五不遇时、时干入墓 —— 无固定方位
+        if (isWuBuYuShi(dayGan, timeGan) && !containsName(xiong, "五不遇时"))
+            xiong.add(new String[]{"五不遇时", ""});
         if (timePillar != null) {
             for (String s : SHI_GAN_RU_MU) {
-                if (s.equals(timePillar) && !xiong.contains("时干入墓")) xiong.add("时干入墓");
+                if (s.equals(timePillar) && !containsName(xiong, "时干入墓"))
+                    xiong.add(new String[]{"时干入墓", ""});
             }
         }
 
         return result;
     }
 
+    /** 辅助：判断列表中是否已有同名格局。 */
+    private static boolean containsName(ArrayList<String[]> list, String name) {
+        for (String[] e : list) if (e[0].equals(name)) return true;
+        return false;
+    }
+
+    /** 构造格局条目 HTML：格局名(方位)，若无方位则省略括号。 */
+    private static String formatGeJuItem(String[] item, String color) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<font color='").append(color).append("'>").append(item[0]);
+        if (item[1] != null && !item[1].isEmpty()) {
+            sb.append("<font color='#7C8C9C'>(").append(item[1]).append(")</font>");
+        }
+        sb.append("</font>");
+        return sb.toString();
+    }
+
     /**
-     * 首页用：一行简述本盘格局（HTML）。
-     * 至多列二吉二凶，无则言「诸格平和」。
+     * 首页用：吉一行、凶一行（HTML）。
+     * 每段至多列二格，无则省略；两端皆空则言「诸格平和」。
      */
     public static String buildBriefGeJu(String[] tianPan, String[] diPan, String[] doors,
                                         String[] eightGods, String[] nineStars, String dayGan, String timeGan,
                                         String timePillar, int zhiShiPalace, String xunShou) {
-        ArrayList<String>[] res = collectGeJu(tianPan, diPan, doors, eightGods, nineStars,
+        ArrayList<String[]>[] res = collectGeJu(tianPan, diPan, doors, eightGods, nineStars,
                                               dayGan, timeGan, timePillar, zhiShiPalace, xunShou);
-        ArrayList<String> ji = res[0];
-        ArrayList<String> xiong = res[1];
+        ArrayList<String[]> ji = res[0];
+        ArrayList<String[]> xiong = res[1];
 
         StringBuilder sb = new StringBuilder();
         if (ji.isEmpty() && xiong.isEmpty()) {
             sb.append("<font color='#7C8C9C'>诸格平和，可依星门之常而行</font>");
             return sb.toString();
         }
+        // 吉行
         if (!ji.isEmpty()) {
             sb.append("<font color='#3FA34D'>吉</font><font color='#7C8C9C'>｜</font>");
             int n = Math.min(ji.size(), 2);
             for (int i = 0; i < n; i++) {
                 if (i > 0) sb.append("<font color='#7C8C9C'>、</font>");
-                sb.append("<font color='#3FA34D'>").append(ji.get(i)).append("</font>");
+                sb.append(formatGeJuItem(ji.get(i), "#3FA34D"));
             }
         }
+        // 凶行（单独一行）
         if (!xiong.isEmpty()) {
-            if (sb.length() > 0) sb.append("　");
+            if (sb.length() > 0) sb.append("<br/>");
             sb.append("<font color='#E0593B'>凶</font><font color='#7C8C9C'>｜</font>");
             int n = Math.min(xiong.size(), 2);
             for (int i = 0; i < n; i++) {
                 if (i > 0) sb.append("<font color='#7C8C9C'>、</font>");
-                sb.append("<font color='#E0593B'>").append(xiong.get(i)).append("</font>");
+                sb.append(formatGeJuItem(xiong.get(i), "#E0593B"));
             }
         }
         return sb.toString();
