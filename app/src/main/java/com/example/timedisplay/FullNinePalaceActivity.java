@@ -715,14 +715,9 @@ public class FullNinePalaceActivity extends Activity {
         sbGan.append("日时关系：<font color='").append(riShiColor).append("'>").append(riShiRelation).append("</font>");
         expGan.setText(android.text.Html.fromHtml(sbGan.toString(), android.text.Html.FROM_HTML_MODE_LEGACY));
         
-        String[] luckData = new String[9];
-        
-        for (int i = 0; i < 9; i++) {
-            String door = eightDoors[i] != null && !eightDoors[i].isEmpty() ? eightDoors[i] : "";
-            String god = eightGods[i] != null && !eightGods[i].isEmpty() ? eightGods[i] : "";
-            
-            luckData[i] = QiMenCalculator.getLuckSymbol(nineStars[i], door, god, wangCui[i]);
-        }
+        // 综合评等已由 QiMenCalculator.calculate 统一融合（含格局克应），
+        // 此处直接取已融合的 r.luck，避免与首页/九宫格出现口径不一致。
+        String[] luckData = r.luck;
         
         StringBuilder sbDirection = new StringBuilder();
         StringBuilder luckyDirections = new StringBuilder();
@@ -770,9 +765,10 @@ public class FullNinePalaceActivity extends Activity {
         
         sbDirection.append("<font color='#7C8C9C'>《秘笈》曰：「九天之上好扬兵，九地潜藏可立营，伏兵但向太阴位，若逢六合利逃形。」")
           .append("三吉门所在之方，为出行谋事之所宜。</font><br/><br/>");
-        if (luckyDirections.length() > 0) sbDirection.append("<font color='#3FA34D'>吉方</font>：").append(luckyDirections).append("（开休生三吉门）<br/>");
-        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#E6C46A'>平方</font>：").append(neutralDirections).append("（杜景二门）<br/>");
-        if (unluckyDirections.length() > 0) sbDirection.append("<font color='#E0593B'>凶方</font>：").append(unluckyDirections).append("（死惊伤三凶门）<br/>");
+        sbDirection.append("<font color='#7C8C9C'>下以「门」一项论方位宜忌（仅看八门，不含星神与格局），宫之综合吉凶见九宫评等。</font><br/><br/>");
+        if (luckyDirections.length() > 0) sbDirection.append("<font color='#3FA34D'>吉门方</font>：").append(luckyDirections).append("（开休生·门吉）<br/>");
+        if (neutralDirections.length() > 0) sbDirection.append("⚪ <font color='#E6C46A'>平门方</font>：").append(neutralDirections).append("（杜景·门平）<br/>");
+        if (unluckyDirections.length() > 0) sbDirection.append("<font color='#E0593B'>凶门方</font>：").append(unluckyDirections).append("（死惊伤·门凶）<br/>");
 
         sbDirection.append("<br/>");
         sbDirection.append("<b>旺相休囚死分布：</b><br/>");

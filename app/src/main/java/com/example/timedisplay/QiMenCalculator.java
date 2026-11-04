@@ -137,8 +137,15 @@ public final class QiMenCalculator {
 
         r.wangCui = calculateWangCui(jieqi);
 
+        // 分层融合：把「格局克应」作为综合评等的输入项并入打分，
+        // 消除「综合大吉却含凶格」的表面矛盾。
+        int[][] gj = QiMenGeJu.geJuPerPalace(r.tianPanTianGan, r.diPanTianGan, r.eightDoors,
+                r.eightGods, r.nineStars, dayGan, timeGan, timePillar, r.zhiShiPalace, r.xunShou);
         for (int i = 0; i < 9; i++) {
-            r.luck[i] = getLuckSymbol(r.nineStars[i], r.eightDoors[i], r.eightGods[i], r.wangCui[i]);
+            int score = luckScore(r.nineStars[i], r.eightDoors[i], r.eightGods[i], r.wangCui[i]) + gj[i][0];
+            // 大凶格局（门迫/击刑/伏吟/反吟）硬降级：综合评等不得高于「平凶」
+            if (gj[i][1] == 1 && score > -3) score = -3;
+            r.luck[i] = scoreToLabel(score);
         }
 
         r.riGanPalace = -1;
@@ -467,7 +474,8 @@ public final class QiMenCalculator {
                (a.equals("水") && b.equals("火"));
     }
 
-    public static String getLuckSymbol(String star, String door, String god, String wangCui) {
+    /** 综合评等原始分：星+门+神+旺衰（不含格局，格局由 calculate 分层并入）。 */
+    private static int luckScore(String star, String door, String god, String wangCui) {
         int score = 0;
 
         if (star != null) {
@@ -528,6 +536,11 @@ public final class QiMenCalculator {
             }
         }
 
+        return score;
+    }
+
+    /** 把综合分映射为吉凶标签。 */
+    private static String scoreToLabel(int score) {
         if (score >= 5) {
             return "大吉";
         } else if (score >= 3) {
@@ -543,6 +556,11 @@ public final class QiMenCalculator {
         } else {
             return "大凶";
         }
+    }
+
+    /** 综合评等（星+门+神+旺衰）。 */
+    public static String getLuckSymbol(String star, String door, String god, String wangCui) {
+        return scoreToLabel(luckScore(star, door, god, wangCui));
     }
 
     public static String getLuckSymbol(String star, String door) {

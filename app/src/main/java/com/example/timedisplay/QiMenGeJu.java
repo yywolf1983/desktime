@@ -385,6 +385,81 @@ public final class QiMenGeJu {
         return result;
     }
 
+    /**
+     * 每宫格局净调整（用于并入「综合评等」打分，实现分层融合）。
+     * 返回 gj[9][2]：
+     *   gj[i][0] = 净调整分（吉格+，凶格−，大凶格局额外更负）
+     *   gj[i][1] = 是否含大凶格局（门迫/六仪击刑/九星伏吟/九星反吟），1=是
+     * 仅计入有固定方位的格局；无方位的时级格局（五不遇时、时干入墓）不计入单宫，
+     * 以免它们无故拉低某个具体宫。
+     */
+    public static int[][] geJuPerPalace(String[] tianPan, String[] diPan, String[] doors,
+                                        String[] eightGods, String[] nineStars, String dayGan,
+                                        String timeGan, String timePillar, int zhiShiPalace,
+                                        String xunShou) {
+        int[][] gj = new int[9][2];
+        if (tianPan == null || diPan == null) return gj;
+        String yi = liuJiaYi(xunShou);
+
+        for (int i = 0; i < 9; i++) {
+            String tp = tianPan[i], dp = diPan[i];
+            if (tp == null || dp == null) continue;
+            // 十干克应
+            String[] ge = findKeYingGe(tp, dp);
+            if (ge != null) {
+                if ("吉".equals(ge[3])) gj[i][0] += 1;
+                else if ("凶".equals(ge[3])) gj[i][0] -= 2;
+            }
+            // 三奇得使（吉）
+            for (String[] s : SAN_QI_DE_SHI) {
+                if (s[0].equals(tp) && s[1].equals(dp)) gj[i][0] += 1;
+            }
+            // 伏宫格、飞宫格（凶）
+            if (yi != null) {
+                if ("庚".equals(tp) && yi.equals(dp)) gj[i][0] -= 2;
+                if (yi.equals(tp) && "庚".equals(dp)) gj[i][0] -= 2;
+            }
+            // 悖格（凶）
+            if ("丙".equals(tp) && ("庚".equals(dp) || "丙".equals(dp) || (yi != null && yi.equals(dp)))) {
+                gj[i][0] -= 2;
+            }
+            // 三奇升殿（吉）/ 受制（凶）
+            for (String[] s : SAN_QI_LIN_GONG) {
+                if (s[0].equals(tp) && Integer.parseInt(s[1]) == i) {
+                    if ("吉".equals(s[3])) gj[i][0] += 1;
+                    else if ("凶".equals(s[3])) gj[i][0] -= 2;
+                }
+            }
+            // 九遁（吉）
+            String dun = detectJiuDun(doors != null ? doors[i] : null, tp, dp,
+                                      eightGods != null ? eightGods[i] : null, i);
+            if (dun != null) gj[i][0] += 1;
+            // 天网四张（凶）
+            if ("癸".equals(tp)) gj[i][0] -= 2;
+            // 三奇入墓（凶）
+            if (isQiRuMu(tp, i)) gj[i][0] -= 2;
+            // 门迫（大凶）
+            if (doors != null && isMenPo(doors[i], i)) { gj[i][0] -= 3; gj[i][1] = 1; }
+        }
+        // 玉女守门（吉）
+        if (zhiShiPalace >= 0 && zhiShiPalace < 9 && "丁".equals(diPan[zhiShiPalace]))
+            gj[zhiShiPalace][0] += 1;
+        // 九星伏吟、反吟（大凶）
+        if (nineStars != null) {
+            for (int i = 0; i < 9; i++) {
+                if (nineStars[i] == null || nineStars[i].isEmpty()) continue;
+                if (nineStars[i].equals(BEN_WEI_STAR[i])) { gj[i][0] -= 2; gj[i][1] = 1; }
+                if (DUI_CHONG[i] != i && nineStars[i].equals(BEN_WEI_STAR[DUI_CHONG[i]])) { gj[i][0] -= 3; gj[i][1] = 1; }
+            }
+        }
+        // 六仪击刑（大凶）
+        for (int k = 0; k < JI_XING.length; k++) {
+            int p = JI_XING_PALACE[k];
+            if (JI_XING[k][0].equals(tianPan[p])) { gj[p][0] -= 2; gj[p][1] = 1; }
+        }
+        return gj;
+    }
+
     /** 辅助：判断列表中是否已有同名格局。 */
     private static boolean containsName(ArrayList<String[]> list, String name) {
         for (String[] e : list) if (e[0].equals(name)) return true;
@@ -402,9 +477,65 @@ public final class QiMenGeJu {
         return sb.toString();
     }
 
+    /** 首页每类格局最多显示的条数。 */
+    private static final int BRIEF_GEJU_MAX = 2;
+
     /**
-     * 首页用：吉一行、凶一行（HTML）。
-     * 每段至多列二格，无则省略；两端皆空则言「诸格平和」。
+     * 首页摘要用：格局关键度（数值越大越关键）。
+     * 依奇门经典层级：全盘性/大凶之格 ＞ 著名凶格 ＞ 著名吉格 ＞ 一般十干克应。
+     * 只用于首页择要显示，不影响综合评等打分（打分见 geJuPerPalace）。
+     */
+    private static int geJuPriority(String name) {
+        if (name == null) return 0;
+        switch (name) {
+            // 影响整盘或该宫性质的大凶格
+            case "五不遇时": case "时干入墓": case "九星伏吟": case "九星反吟":
+            case "六仪击刑": case "门迫": case "天网四张": case "三奇入墓":
+            case "三奇受制": case "飞宫格": case "伏宫格":
+                return 4;
+            default: break;
+        }
+        switch (name) {
+            // 奇门最著名的凶格
+            case "青龙逃走": case "白虎猖狂": case "朱雀投江": case "螣蛇夭矫":
+            case "荧入太白": case "太白入荧": case "大格": case "太白同宫":
+            case "值符飞宫": case "值符伏宫": case "白虎干格": case "白虎出力":
+            case "困龙被伤": case "官符刑格": case "刑格返名": case "悖格":
+                return 3;
+            default: break;
+        }
+        switch (name) {
+            // 三奇得使、九遁等经典吉格
+            case "乙奇得使": case "丙奇得使": case "丁奇得使": case "玉女守门":
+            case "天遁": case "地遁": case "人遁": case "神遁": case "鬼遁":
+            case "风遁": case "云遁": case "龙遁": case "虎遁":
+            case "青龙回首": case "飞鸟跌穴": case "日出扶桑":
+            case "月照端门": case "丁见西方":
+                return 3;
+            default: break;
+        }
+        return 1;
+    }
+
+    /** 按关键度降序取前 n 条；同分者保持 collectGeJu 的原始顺序（稳定）。 */
+    private static ArrayList<String[]> pickKeyGeJu(ArrayList<String[]> list, int n) {
+        ArrayList<String[]> out = new ArrayList<String[]>();
+        for (String[] item : list) {
+            int p = geJuPriority(item[0]);
+            int pos = out.size();
+            for (int i = 0; i < out.size(); i++) {
+                if (p > geJuPriority(out.get(i)[0])) { pos = i; break; }
+            }
+            out.add(pos, item);
+        }
+        while (out.size() > n) out.remove(out.size() - 1);
+        return out;
+    }
+
+    /**
+     * 首页用：吉一行、凶一行（HTML），各择「最关键」的两格，不堆砌。
+     * 关键度由 geJuPriority 依经典重要度排序（非简单取前两条）。
+     * 全量格局见排盘页「吉凶总断」；两端皆空则言「诸格平和」。
      */
     public static String buildBriefGeJu(String[] tianPan, String[] diPan, String[] doors,
                                         String[] eightGods, String[] nineStars, String dayGan, String timeGan,
@@ -422,20 +553,20 @@ public final class QiMenGeJu {
         // 吉行
         if (!ji.isEmpty()) {
             sb.append("<font color='#3FA34D'>吉</font><font color='#7C8C9C'>｜</font>");
-            int n = Math.min(ji.size(), 2);
-            for (int i = 0; i < n; i++) {
+            ArrayList<String[]> show = pickKeyGeJu(ji, BRIEF_GEJU_MAX);
+            for (int i = 0; i < show.size(); i++) {
                 if (i > 0) sb.append("<font color='#7C8C9C'>、</font>");
-                sb.append(formatGeJuItem(ji.get(i), "#3FA34D"));
+                sb.append(formatGeJuItem(show.get(i), "#3FA34D"));
             }
         }
         // 凶行（单独一行）
         if (!xiong.isEmpty()) {
             if (sb.length() > 0) sb.append("<br/>");
             sb.append("<font color='#E0593B'>凶</font><font color='#7C8C9C'>｜</font>");
-            int n = Math.min(xiong.size(), 2);
-            for (int i = 0; i < n; i++) {
+            ArrayList<String[]> show = pickKeyGeJu(xiong, BRIEF_GEJU_MAX);
+            for (int i = 0; i < show.size(); i++) {
                 if (i > 0) sb.append("<font color='#7C8C9C'>、</font>");
-                sb.append(formatGeJuItem(xiong.get(i), "#E0593B"));
+                sb.append(formatGeJuItem(show.get(i), "#E0593B"));
             }
         }
         return sb.toString();
