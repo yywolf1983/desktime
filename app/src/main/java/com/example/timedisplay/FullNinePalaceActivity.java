@@ -1452,7 +1452,7 @@ public class FullNinePalaceActivity extends Activity {
             }
             desc.append("<br/>");
 
-            String luckColor = luck.contains("吉") ? "#3FA34D" : (luck.contains("凶") ? "#E0593B" : "#7C8C9C");
+            String luckColor = luck.contains("吉") ? "#3FA34D" : (luck.contains("凶") ? "#E0593B" : "#E6C46A");
             desc.append("吉凶：<font color='").append(luckColor).append("'><b>").append(luck).append("</b></font>　");
 
             // 宜忌依《秘笈大全》八门诗诀与八门克应衢仙断语

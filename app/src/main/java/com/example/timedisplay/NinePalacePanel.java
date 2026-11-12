@@ -228,16 +228,18 @@ public class NinePalacePanel extends View {
 
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint);
 
-            // 吉凶淡底纹
-            int[] luckStyle = getLuckStyle(luck);
-            tintPaint.setColor(luckStyle[0]);
+            int luckColor = getLuckColorByLabel(luck);       // 关键词用色（平=黄）
+            int accentColor = getLuckAccentColor(luck);      // 底纹/边框用色（平=灰）
+
+            // 整格吉凶淡底纹：低透明度，保证文字可读
+            tintPaint.setColor((accentColor & 0x00FFFFFF) | 0x1A000000);
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, tintPaint);
 
             if (i == 4) {
                 borderPaint.setColor(COLOR_GOLD);
                 borderPaint.setStrokeWidth(4f);
             } else {
-                borderPaint.setColor(luckStyle[1]);
+                borderPaint.setColor(accentColor);
                 borderPaint.setStrokeWidth(3f);
             }
             canvas.drawRoundRect(left, top, right, bottom, radius, radius, borderPaint);
@@ -270,8 +272,7 @@ public class NinePalacePanel extends View {
             if (dataParts.length > 2) {
                 y += h2 + lineSpacing;
                 textPaint.setTextSize(cellSize * 0.12f);
-                textPaint.setColor(luckStyle[1]);
-                canvas.drawText(dataParts[2], x, y, textPaint);
+                drawLuckLine(canvas, dataParts[2], luck, luckColor, x, y);
             }
 
             canvas.restore();
@@ -332,19 +333,50 @@ public class NinePalacePanel extends View {
             case "大吉": return 0xFF2E9E5B;
             case "吉":   return 0xFF3FA34D;
             case "平吉": return 0xFF7CA86A;
-            case "平":   return 0xFF7C8C9C;
+            case "平":   return 0xFFE6C46A;
             case "平凶": return 0xFFC9873F;
             case "凶":   return 0xFFE0593B;
             case "大凶": return 0xFFC0392B;
-            default:     return 0xFF7C8C9C;
+            default:     return 0xFFE6C46A;
         }
     }
 
-    // 吉凶等级 -> {底纹色, 边框色}
-    private int[] getLuckStyle(String label) {
-        int color = getLuckColorByLabel(label);
-        int tint = (color & 0x00FFFFFF) | 0x1A000000; // 约 10% 透明度
-        return new int[]{tint, color};
+    // 整格底纹/边框用色：平沿用原来的灰色调（关键词仍用 getLuckColorByLabel 的黄色）
+    private int getLuckAccentColor(String label) {
+        if (label == null) return 0xFF7C8C9C;
+        switch (label) {
+            case "大吉": case "吉": case "平吉": case "平凶": case "凶": case "大凶":
+                return getLuckColorByLabel(label);
+            default:
+                return 0xFF7C8C9C;
+        }
+    }
+
+    // 第三行「门 吉凶 旺衰」：只把吉凶关键词染成吉凶色，其余文字保持正文色
+    private void drawLuckLine(Canvas canvas, String text, String luck, int luckColor, float centerX, float baselineY) {
+        if (text == null) return;
+        String[] segs = text.split(" ", -1);
+        final int normalColor = 0xFFE6E6E6;
+        Paint.Align oldAlign = textPaint.getTextAlign();
+        textPaint.setTextAlign(Paint.Align.LEFT);
+
+        float spaceWidth = textPaint.measureText(" ");
+        float totalWidth = 0f;
+        for (int k = 0; k < segs.length; k++) {
+            totalWidth += textPaint.measureText(segs[k]);
+            if (k < segs.length - 1) totalWidth += spaceWidth;
+        }
+
+        float drawX = centerX - totalWidth / 2f;
+        for (int k = 0; k < segs.length; k++) {
+            if (!segs[k].isEmpty()) {
+                textPaint.setColor(segs[k].equals(luck) ? luckColor : normalColor);
+                canvas.drawText(segs[k], drawX, baselineY, textPaint);
+            }
+            drawX += textPaint.measureText(segs[k]);
+            if (k < segs.length - 1) drawX += spaceWidth;
+        }
+        textPaint.setTextAlign(oldAlign);
     }
 
     // 值符所在宫的吉凶等级（用于底部整体解读，与九宫配色同源）

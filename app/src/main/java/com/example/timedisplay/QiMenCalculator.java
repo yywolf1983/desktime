@@ -236,12 +236,15 @@ public final class QiMenCalculator {
         int shouZhiIndex = Arrays.asList(DIZHI).indexOf(xunShou.substring(1)); // 旬首地支
         int steps = (zhiIndex - shouZhiIndex + 12) % 12; // 与旬首地支的顺逆差值（0..11）
 
-        if (isYangDun) {
-            return (xunShouPalace + steps) % 9;
-        } else {
-            int result = (xunShouPalace - steps + 9) % 9;
-            return result < 0 ? result + 9 : result;
+        // 八门只占八宫（中宫无门，旬首落中宫时寄坤二宫），须按后天八卦环序移动，不能按 9 取模
+        int[] ring = {0, 7, 2, 3, 8, 1, 6, 5}; // 坎→艮→震→巽→离→坤→兑→乾（本类宫序：坎0 坤1 震2 巽3 中4 乾5 兑6 艮7 离8）
+        int seat = (xunShouPalace == 4) ? 1 : xunShouPalace;
+        int pos = 0;
+        for (int k = 0; k < 8; k++) {
+            if (ring[k] == seat) { pos = k; break; }
         }
+        int target = isYangDun ? (pos + steps) % 8 : ((pos - steps) % 8 + 8) % 8;
+        return ring[target];
     }
 
     /**
@@ -280,111 +283,105 @@ public final class QiMenCalculator {
 
     // ===================== 九星 / 八门 / 八神 =====================
 
+    /**
+     * 后天八卦八宫环序中该宫的位置（坎→艮→震→巽→离→坤→兑→乾）；中宫寄坤二宫。
+     */
+    private static int ringPositionOf(int palaceIndex, int[] ring) {
+        int target = (palaceIndex == 4) ? 1 : palaceIndex;
+        for (int k = 0; k < ring.length; k++) {
+            if (ring[k] == target) return k;
+        }
+        return 0;
+    }
+
+    /**
+     * 转盘口径排九星：天盘为整体旋转的圆盘，九星相对次序固定
+     * （坎蓬、艮任、震冲、巽辅、离英、坤芮、兑柱、乾心），旋转使值符星落值符宫。
+     * 顺逆已体现在值符宫，不按阴阳遁再反向；天禽星居中宫（寄坤，随天芮）。
+     */
     public static String[] arrangeNineStarsStandard(String zhiFuStar, int zhiFuPalace, boolean isYangDun) {
         String[] nineStars = new String[9];
-        String[] jiuxingOrder = {"天蓬", "天芮", "天冲", "天辅", "天禽", "天心", "天柱", "天任", "天英"};
+        int[] ring = {0, 7, 2, 3, 8, 1, 6, 5};
+        String[] ringStars = {"天蓬", "天任", "天冲", "天辅", "天英", "天芮", "天柱", "天心"};
 
-        int zhiFuIndex = -1;
-        for (int i = 0; i < jiuxingOrder.length; i++) {
-            if (jiuxingOrder[i].equals(zhiFuStar)) {
-                zhiFuIndex = i;
-                break;
-            }
+        int starPos = 0;
+        for (int k = 0; k < 8; k++) {
+            if (ringStars[k].equals(zhiFuStar)) { starPos = k; break; }
         }
-        if (zhiFuIndex == -1) zhiFuIndex = 0;
+        if ("天禽".equals(zhiFuStar)) starPos = 5; // 天禽寄坤，随天芮旋转
 
-        if (isYangDun) {
-            for (int i = 0; i < 9; i++) {
-                int pos = (zhiFuPalace + i) % 9;
-                nineStars[pos] = jiuxingOrder[(zhiFuIndex + i) % 9];
-            }
-        } else {
-            for (int i = 0; i < 9; i++) {
-                int pos = (zhiFuPalace - i + 9) % 9;
-                nineStars[pos] = jiuxingOrder[(zhiFuIndex + i) % 9];
-            }
+        int offset = (ringPositionOf(zhiFuPalace, ring) - starPos + 8) % 8;
+        for (int k = 0; k < 8; k++) {
+            nineStars[ring[k]] = ringStars[(k - offset + 8) % 8];
         }
+        nineStars[4] = "天禽";
         return nineStars;
     }
 
+    /**
+     * 转盘口径排八门：八门相对次序固定（坎休、艮生、震伤、巽杜、离景、坤死、兑惊、乾开），
+     * 整体旋转使值使门落值使宫；顺逆已体现在值使宫，不按阴阳遁再反向。中宫无门。
+     */
     public static String[] arrangeEightDoorsStandard(String zhiShiDoor, int zhiShiPalace, boolean isYangDun) {
         String[] eightDoors = new String[9];
-        String[] bamenOrder = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
+        int[] ring = {0, 7, 2, 3, 8, 1, 6, 5};
+        String[] ringDoors = {"休", "生", "伤", "杜", "景", "死", "惊", "开"};
 
-        int zhiShiIndex = -1;
-        for (int i = 0; i < bamenOrder.length; i++) {
-            if (bamenOrder[i].equals(zhiShiDoor)) {
-                zhiShiIndex = i;
-                break;
-            }
+        int doorPos = 0;
+        for (int k = 0; k < 8; k++) {
+            if (ringDoors[k].equals(zhiShiDoor)) { doorPos = k; break; }
         }
-        if (zhiShiIndex == -1) zhiShiIndex = 0;
 
-        int currentDoorIndex = zhiShiIndex;
-        for (int i = 0; i < 9; i++) {
-            int pos = isYangDun ? (zhiShiPalace + i) % 9 : (zhiShiPalace - i + 9) % 9;
-            if (pos == 4) {
-                eightDoors[pos] = "";
-            } else {
-                eightDoors[pos] = bamenOrder[currentDoorIndex];
-                currentDoorIndex = (currentDoorIndex + 1) % 8;
-            }
+        int offset = (ringPositionOf(zhiShiPalace, ring) - doorPos + 8) % 8;
+        for (int k = 0; k < 8; k++) {
+            eightDoors[ring[k]] = ringDoors[(k - offset + 8) % 8];
         }
+        eightDoors[4] = "";
         return eightDoors;
     }
 
     /**
      * 排天盘三奇六仪：天盘随地盘整体旋转，使「旬首六仪」（值符星原本携带之干）落值符宫。
-     * 例：阳遁一局己巳时，旬首甲子(戊)原在坎，值符落坤 → 天盘坤宫为戊，而非时干己。
+     * 旋转按后天八卦环序进行（不是按洛书数序位移），中宫干不随盘旋转。
+     * 例：阳遁一局乙丑时，旬首甲子(戊)原在坎，值符落离 → 天盘离宫为戊，坎宫为乙。
      */
     public static String[] arrangeTianPanTianGanStandard(String[] diPan, String xunShouGan, int zhiFuPalace, boolean isYangDun) {
         String[] tianPan = new String[9];
-        String[] order = {"戊", "己", "庚", "辛", "壬", "癸", "丁", "丙", "乙"};
+        int[] ring = {0, 7, 2, 3, 8, 1, 6, 5};
 
-        int startIdx = 0;
-        for (int i = 0; i < order.length; i++) {
-            if (order[i].equals(xunShouGan)) { startIdx = i; break; }
+        String[] diRing = new String[8];
+        for (int k = 0; k < 8; k++) {
+            diRing[k] = diPan[ring[k]];
         }
 
-        if (isYangDun) {
-            for (int i = 0; i < 9; i++) {
-                tianPan[(zhiFuPalace + i) % 9] = order[(startIdx + i) % 9];
-            }
-        } else {
-            for (int i = 0; i < 9; i++) {
-                tianPan[(zhiFuPalace - i + 9) % 9] = order[(startIdx + i) % 9];
-            }
+        int ganPos = 5; // 旬首六仪若在中宫，寄坤二宫
+        for (int k = 0; k < 8; k++) {
+            if (diRing[k].equals(xunShouGan)) { ganPos = k; break; }
         }
+
+        int offset = (ringPositionOf(zhiFuPalace, ring) - ganPos + 8) % 8;
+        for (int k = 0; k < 8; k++) {
+            tianPan[ring[k]] = diRing[(k - offset + 8) % 8];
+        }
+        tianPan[4] = diPan[4];
         return tianPan;
     }
 
+    /**
+     * 排八神：值符落值符宫，其余七神按后天八卦环序顺布（阳遁顺行 / 阴遁逆行），中宫无神。
+     */
     public static String[] arrangeEightGodsStandard(int zhiFuPalace, boolean isYangDun) {
         String[] eightGods = new String[9];
+        int[] ring = {0, 7, 2, 3, 8, 1, 6, 5};
         String[] yangShenOrder = {"值符", "螣蛇", "太阴", "六合", "白虎", "玄武", "九地", "九天"};
         String[] yinShenOrder = {"值符", "九天", "九地", "玄武", "白虎", "六合", "太阴", "螣蛇"};
 
         String[] bashenOrder = isYangDun ? yangShenOrder : yinShenOrder;
 
-        if (isYangDun) {
-            int currentGodIndex = 0;
-            int pos = zhiFuPalace;
-            while (currentGodIndex < 8) {
-                if (pos != 4) {
-                    eightGods[pos] = bashenOrder[currentGodIndex];
-                    currentGodIndex++;
-                }
-                pos = (pos + 1) % 9;
-            }
-        } else {
-            int currentGodIndex = 0;
-            int pos = zhiFuPalace;
-            while (currentGodIndex < 8) {
-                if (pos != 4) {
-                    eightGods[pos] = bashenOrder[currentGodIndex];
-                    currentGodIndex++;
-                }
-                pos = (pos - 1 + 9) % 9;
-            }
+        int pos = ringPositionOf(zhiFuPalace, ring);
+        for (int i = 0; i < 8; i++) {
+            eightGods[ring[pos]] = bashenOrder[i];
+            pos = isYangDun ? (pos + 1) % 8 : (pos - 1 + 8) % 8;
         }
         eightGods[4] = "";
         return eightGods;

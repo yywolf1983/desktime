@@ -210,9 +210,10 @@ public class LuoPanActivity extends android.app.Activity {
 
     private void updateInfo() {
         float normalizedAzimuth = ((-azimuth % 360) + 360) % 360;
-        int mountainIndex = (int) (normalizedAzimuth / 15);
+        // 二十四山/八卦扇区以标签为中心，取索引需补半宫偏移（山 7.5°、卦 22.5°）
+        int mountainIndex = (int) (((normalizedAzimuth + 7.5f) % 360) / 15) % 24;
         // 坐山卦按方位角查后天八卦（baguaNames 是洛书数序，不可用于方位索引）
-        int baguaDirIndex = (int) (normalizedAzimuth / 45) % 8;
+        int baguaDirIndex = (int) (((normalizedAzimuth + 22.5f) % 360) / 45) % 8;
 
         String mountain = mountainNames[mountainIndex];
         String bagua = BAGUA_BY_DIRECTION[baguaDirIndex];
@@ -480,7 +481,7 @@ public class LuoPanActivity extends android.app.Activity {
     
     private String getMountainDirection(String mountain) {
         String[] mountains = {"子", "癸", "丑", "艮", "寅", "甲", "卯", "乙", "辰", "巽", "巳", "丙", "午", "丁", "未", "坤", "申", "庚", "酉", "辛", "戌", "乾", "亥", "壬"};
-        String[] directions = {"北方", "北方", "东北", "东北", "东方", "东方", "东方", "东方", "东南", "东南", "南方", "南方", "南方", "南方", "西南", "西南", "西方", "西方", "西方", "西方", "西北", "西北", "北方", "北方"};
+        String[] directions = {"北方", "北方", "东北", "东北", "东方", "东方", "东方", "东方", "东南", "东南", "南方", "南方", "南方", "南方", "西南", "西南", "西方", "西方", "西方", "西方", "西北", "西北", "西北", "北方"};
         for (int i = 0; i < mountains.length; i++) {
             if (mountains[i].equals(mountain)) {
                 return directions[i];
@@ -573,7 +574,8 @@ public class LuoPanActivity extends android.app.Activity {
 
     private String getJiXiong(String mountain, String wuxing) {
         // 以坐山五行与当前月令（节气）五行生克判定旺衰：得令生扶为吉，失令受克为凶，其余为平
-        String rel = getWuxingRelation(currentMonthWuxing, wuxing);
+        // 我 = 坐山，客 = 月令：生我=月令生坐山(得生扶)；我生=坐山泄于月令
+        String rel = getWuxingRelation(wuxing, currentMonthWuxing);
         if (rel.equals("【比和】") || rel.equals("【生我】")) return "吉";
         if (rel.equals("【克我】")) return "凶";
         return "平";
@@ -724,10 +726,10 @@ public class LuoPanActivity extends android.app.Activity {
             "喜气骈集，婚好谐睦"
         };
         
-        // 洛书飞星轨迹（宫索引序）：中→坎→坤→震→巽→乾→兑→艮→离
-        int[] FLY_PATH = {4, 0, 1, 2, 3, 5, 6, 7, 8};
+        // 洛书飞星轨迹（宫索引序）：中→乾→兑→艮→离→坎→坤→震→巽
+        int[] FLY_PATH = {4, 5, 6, 1, 8, 0, 7, 2, 3};
         // 九星阴阳（索引0-8 对应一白..九紫）：阳顺飞、阴逆飞
-        boolean[] STAR_YIN = {false, true, false, true, false, false, true, true, false};
+        boolean[] STAR_YIN = {false, true, false, true, false, false, true, false, true};
 
         String sbTitle = new StringBuilder().append("<b>九星飞宫（")
                 .append(bagua).append("卦入中·").append(jiuxingNames[baguaNumber - 1])
@@ -838,8 +840,8 @@ public class LuoPanActivity extends android.app.Activity {
             "通达顺利，利开业求职"
         };
         
-        // 洛书八方顺时针序列（跳过中宫）：坎→艮→震→巽→乾→兑→坤→离
-        int[] EIGHT_PALACES = {0, 1, 2, 3, 5, 6, 7, 8};
+        // 后天八卦顺时针序列（跳过中宫）：坎→艮→震→巽→离→坤→兑→乾
+        int[] EIGHT_PALACES = {0, 1, 2, 3, 8, 7, 6, 5};
         int seatAbsIdx = 5; // 坐山在 baguaList 中的绝对索引，默认中宫
         for (int i = 0; i < baguaList.length; i++) {
             if (baguaList[i].equals(bagua)) { seatAbsIdx = i; break; }
@@ -965,7 +967,7 @@ public class LuoPanActivity extends android.app.Activity {
             if (forYinzhai) {
                 sb.append(jiXiong.equals("凶") ? yinzhaiXiong[i] : yinzhaiJi[i]);
             } else {
-                sb.append(jiXiong.equals("吉") ? yangzhaiJi[i] : yangzhaiXiong[i]);
+                sb.append(jiXiong.equals("凶") ? yangzhaiXiong[i] : yangzhaiJi[i]);
             }
             sb.append("<br/>");
         }

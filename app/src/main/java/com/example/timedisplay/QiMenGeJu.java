@@ -444,9 +444,10 @@ public final class QiMenGeJu {
         // 玉女守门（吉）
         if (zhiShiPalace >= 0 && zhiShiPalace < 9 && "丁".equals(diPan[zhiShiPalace]))
             gj[zhiShiPalace][0] += 1;
-        // 九星伏吟、反吟（大凶）
+        // 九星伏吟、反吟（大凶）。转盘口径下天禽常居中宫，中宫不参与伏反吟判定
         if (nineStars != null) {
             for (int i = 0; i < 9; i++) {
+                if (i == 4) continue;
                 if (nineStars[i] == null || nineStars[i].isEmpty()) continue;
                 if (nineStars[i].equals(BEN_WEI_STAR[i])) { gj[i][0] -= 2; gj[i][1] = 1; }
                 if (DUI_CHONG[i] != i && nineStars[i].equals(BEN_WEI_STAR[DUI_CHONG[i]])) { gj[i][0] -= 3; gj[i][1] = 1; }
